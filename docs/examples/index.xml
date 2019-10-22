@@ -1,0 +1,439 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>HAProxy Ingress – Examples</title>
+    <link>/docs/examples/</link>
+    <description>Recent content in Examples on HAProxy Ingress</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	  <atom:link href="/docs/examples/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+      
+        
+      
+    
+    
+    <item>
+      <title>Docs: Blue/green</title>
+      <link>/docs/examples/blue-green/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/examples/blue-green/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;This example demonstrates how to configure
+&lt;a href=&#34;https://www.martinfowler.com/bliki/BlueGreenDeployment.html&#34;&gt;blue/green deployment&lt;/a&gt;
+on HAProxy Ingress controller, in order to route requests based on distict weight on
+deployment groups as well as selecting a group based on http header or cookie value.&lt;/p&gt;
+
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+
+&lt;p&gt;This document has the following prerequisite:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A Kubernetes cluster with a running HAProxy Ingress controller v0.6 or above.
+See the &lt;a href=&#34;/examples/setup-cluster.md#five-minutes-deployment&#34;&gt;five minutes deployment&lt;/a&gt;
+or the &lt;a href=&#34;/examples/deployment&#34;&gt;deployment example&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;deploying-applications&#34;&gt;Deploying applications&lt;/h2&gt;
+
+&lt;p&gt;In order to the configuration have effect, at least two deployments, or daemon sets, or replication
+controllers should be used with at least two pairs of label name/value.&lt;/p&gt;
+
+&lt;p&gt;The following instructions create two deployment objects using &lt;code&gt;run&lt;/code&gt; label as the service selector
+and &lt;code&gt;group&lt;/code&gt; label as the blue/green deployment selector:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl run blue \
+  --image=jcmoraisjr/whoami \
+  --port=8000 --labels=run=bluegreen,group=blue
+deployment &amp;quot;blue&amp;quot; created
+
+$ kubectl run green \
+  --image=jcmoraisjr/whoami \
+  --port=8000 --labels=run=bluegreen,group=green
+deployment &amp;quot;green&amp;quot; created
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Certify that the pods are running and have the correct labels. Note that both &lt;code&gt;group&lt;/code&gt; and &lt;code&gt;run&lt;/code&gt;
+labels were applied:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl get pod -lrun=bluegreen --show-labels
+NAME                     READY     STATUS    RESTARTS   AGE       LABELS
+blue-79c9b67d5b-5hd2r    1/1       Running   0          35s       group=blue,pod-template-hash=3575623816,run=bluegreen
+green-7546d648c4-p7pmz   1/1       Running   0          28s       group=green,pod-template-hash=3102820470,run=bluegreen
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;configure&#34;&gt;Configure&lt;/h2&gt;
+
+&lt;p&gt;Create a service that bind both deployments together using the &lt;code&gt;run&lt;/code&gt; label. The expose command need
+a deployment object, take anyone, we will override it&amp;rsquo;s selector:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl expose deploy blue --name bluegreen --selector=run=bluegreen
+service &amp;quot;bluegreen&amp;quot; exposed
+
+$ kubectl get svc bluegreen -otemplate --template &#39;{{.spec.selector}}&#39;
+map[run:bluegreen]
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Check also the endpoints, it should list both blue and green pods:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl get ep bluegreen
+NAME         ENDPOINTS                           AGE
+bluegreen    172.17.0.11:8000,172.17.0.19:8000   2m
+
+$ kubectl get pod -lrun=bluegreen -owide
+NAME                     READY     STATUS    RESTARTS   AGE       IP            NODE
+blue-79c9b67d5b-5hd2r    1/1       Running   0          2m        172.17.0.11   192.168.100.99
+green-7546d648c4-p7pmz   1/1       Running   0          2m        172.17.0.19   192.168.100.99
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Configure the ingress resource. No need to change the host below, &lt;code&gt;bluegreen.example.com&lt;/code&gt; is fine:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl create -f - &amp;lt;&amp;lt;EOF
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/balance-algorithm: roundrobin
+    ingress.kubernetes.io/blue-green-deploy: group=blue=1,group=green=1
+    ingress.kubernetes.io/blue-green-mode: pod
+    ingress.kubernetes.io/ssl-redirect: &amp;quot;false&amp;quot;
+  name: bluegreen
+spec:
+  rules:
+  - host: bluegreen.example.com
+    http:
+      paths:
+      - backend:
+          serviceName: bluegreen
+          servicePort: 8000
+        path: /
+EOF
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl get ing
+NAME        HOSTS                   ADDRESS   PORTS     AGE
+bluegreen   bluegreen.example.com             80        11s
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;test-blue-green-balance&#34;&gt;Test blue/green balance&lt;/h2&gt;
+
+&lt;p&gt;Lets test! The following snippets use an alias &lt;code&gt;hareq&lt;/code&gt; declared below.
+Change &lt;code&gt;IP&lt;/code&gt; to your HAProxy Ingress controller IP address:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ IP=192.168.100.99
+$ alias hareq=&#39;echo Running 100 requests...; for i in `seq 1 100`; do
+    curl -fsS $IP -H &amp;quot;Host: bluegreen.example.com&amp;quot; | cut -d- -f1
+  done | sort | uniq -c&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;BG Mode: pod&lt;/li&gt;
+&lt;li&gt;BG Balance: blue=1, green=1&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Replicas: blue=1, green=1&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ hareq
+Running 100 requests...
+50 blue
+50 green
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Now changing green replicas to 3 and wait all the replicas to be running.
+BG Mode is pod, so the number of replicas will increase the load of the green deployment.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl scale deploy green --replicas=3
+$ kubectl get pod -w
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;BG Mode: pod&lt;/li&gt;
+&lt;li&gt;BG Balance: blue=1, green=1&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Replicas: blue=1, green=3&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ hareq
+Running 100 requests...
+25 blue
+75 green
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Changing to &lt;em&gt;deploy&lt;/em&gt; mode. This mode targets the balance config to the whole deployment
+instead of single pods.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; BG mode was added on v0.7. On v0.6, the only supported mode is &lt;code&gt;pod&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl annotate --overwrite ingress bluegreen \
+  ingress.kubernetes.io/blue-green-mode=deploy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;BG Mode: deploy&lt;/li&gt;
+&lt;li&gt;BG Balance: blue=1, green=1&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Replicas: blue=1, green=3&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ hareq
+Running 100 requests...
+50 blue
+50 green
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Changing now the balance to &lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;3&lt;/sub&gt; blue and &lt;sup&gt;2&lt;/sup&gt;&amp;frasl;&lt;sub&gt;3&lt;/sub&gt; green:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl annotate --overwrite ingress bluegreen \
+  ingress.kubernetes.io/blue-green-deploy=group=blue=1,group=green=2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;BG Mode: deploy&lt;/li&gt;
+&lt;li&gt;BG Balance: blue=1, green=2&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Replicas: blue=1, green=3&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ hareq
+Running 100 requests...
+33 blue
+67 green
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;The balance will be the same despite the number of replicas:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl scale deploy green --replicas=6
+$ kubectl get pod -w
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;BG Mode: deploy&lt;/li&gt;
+&lt;li&gt;BG Balance: blue=1, green=2&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Replicas: blue=1, green=6&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ hareq
+Running 100 requests...
+33 blue
+67 green
+&lt;/code&gt;&lt;/pre&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;test-blue-green-selector&#34;&gt;Test blue/green selector&lt;/h2&gt;
+
+&lt;p&gt;Blue/green selector requires HAProxy Ingress controller v0.9 or above.&lt;/p&gt;
+
+&lt;p&gt;Follow the &lt;a href=&#34;#deploying-applications&#34;&gt;deployment&lt;/a&gt; and &lt;a href=&#34;#configure&#34;&gt;configuration&lt;/a&gt;
+instructions to deploy the sample application.&lt;/p&gt;
+
+&lt;p&gt;After that, add the following annotation:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl annotate --overwrite ingress bluegreen \
+  ingress.kubernetes.io/blue-green-header=x-server:group
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Create (or update) the &lt;code&gt;hareq&lt;/code&gt; alias. Change &lt;code&gt;IP&lt;/code&gt; to your HAProxy Ingress controller
+IP address:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ IP=192.168.100.99
+$ alias hareq=&#39;echo Running 100 requests...; for i in `seq 1 100`; do
+    curl -fsS $IP -H &amp;quot;Host: bluegreen.example.com&amp;quot; -H &amp;quot;X-Server: $GROUP&amp;quot; | cut -d- -f1
+  done | sort | uniq -c&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Choose &lt;code&gt;blue&lt;/code&gt; group:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ GROUP=blue
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The envvar &lt;code&gt;GROUP&lt;/code&gt; will populate the &lt;code&gt;X-Server&lt;/code&gt; header with the value &lt;code&gt;blue&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Run the requests:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ hareq
+Running 100 requests...
+ 100 blue
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Choose &lt;code&gt;green&lt;/code&gt; group:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ GROUP=blue
+$ hareq
+Running 100 requests...
+ 100 green
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Choose an invalid group, the configured blue/green balance will be used:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl annotate --overwrite ingress bluegreen \
+  ingress.kubernetes.io/blue-green-deploy=group=blue=1,group=green=3
+$ GROUP=invalid
+$ hareq
+Running 100 requests...
+  25 blue
+  75 green
+&lt;/code&gt;&lt;/pre&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: ModSecurity</title>
+      <link>/docs/examples/modsecurity/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/examples/modsecurity/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;This example demonstrates how to configure ModSecurity
+web application firewall on HAProxy Ingress controller.&lt;/p&gt;
+
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+
+&lt;p&gt;This document has the following prerequisites:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A Kubernetes cluster with a running HAProxy Ingress controller. See the &lt;a href=&#34;/examples/setup-cluster.md#five-minutes-deployment&#34;&gt;five minutes deployment&lt;/a&gt; or the &lt;a href=&#34;/examples/deployment&#34;&gt;deployment example&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ingress-controller&lt;/code&gt; namespace, the default of the five minutes deployment&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;deploying-agent&#34;&gt;Deploying agent&lt;/h2&gt;
+
+&lt;p&gt;A ModSecurity agent can be deployed in a number of ways: as a sidecar container
+in the same HAProxy Ingress deployment/daemonset resource, as a standalone container
+in the same host of ingress, or in dedicated host(s), inside or outside a k8s cluster.
+The steps below will deploy ModSecurity in some dedicated hosts of a k8s cluster,
+adjust the steps to fit your need.&lt;/p&gt;
+
+&lt;p&gt;The ModSecurity agent used is &lt;a href=&#34;https://github.com/jcmoraisjr/modsecurity-spoa&#34;&gt;jcmoraisjr/modsecurity-spoa&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Create the ModSecurity agent daemonset:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl create -f https://haproxy-ingress.github.io/resources/modsecurity-daemonset.yaml
+daemonset &amp;quot;modsecurity-spoa&amp;quot; created
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Select the node(s) where ModSecurity agent should run:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl get node
+NAME             STATUS    AGE       VERSION
+192.168.100.99   Ready     102d      v1.9.2
+...
+
+$ kubectl label node 192.168.100.99 waf=modsec
+node &amp;quot;192.168.100.99&amp;quot; labeled
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Check if the agent is up and running:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl -n ingress-controller get pod -lrun=modsecurity-spoa -owide
+NAME                     READY     STATUS    RESTARTS   AGE       IP               NODE
+modsecurity-spoa-pp6jz   1/1       Running   0          7s        192.168.100.99   192.168.100.99
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;configuring-haproxy-ingress&#34;&gt;Configuring HAProxy Ingress&lt;/h2&gt;
+
+&lt;p&gt;Add the configmap key &lt;code&gt;modsecurity-endpoints&lt;/code&gt; with a comma-separated list of &lt;code&gt;IP:port&lt;/code&gt;
+of the ModSecurity agent server(s). The default port number of the agent is &lt;code&gt;12345&lt;/code&gt;.
+A &lt;code&gt;kubectl -n ingress-controller edit configmap haproxy-ingress&lt;/code&gt; should work.&lt;/p&gt;
+
+&lt;p&gt;Example of a configmap content if ModSecurity agents has IPs &lt;code&gt;192.168.100.99&lt;/code&gt; and
+&lt;code&gt;192.168.100.100&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;apiVersion&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;v1&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;data&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;modsecurity-endpoints&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;192.168.100.99&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;12345&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;192.168.100.100&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;12345&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;...&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;kind&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;ConfigMap&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;test&#34;&gt;Test&lt;/h2&gt;
+
+&lt;p&gt;Deploy any application:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl run echo \
+  --image=gcr.io/google_containers/echoserver:1.3 \
+  --port=8080 \
+  --expose
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;hellip; and create its ingress resource. Remember to annotate waf as &lt;code&gt;modsecurity&lt;/code&gt;.
+No need to use a valid domain, &lt;code&gt;echo.domain&lt;/code&gt; below is fine:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;$ kubectl create -f - &amp;lt;&amp;lt;EOF
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: &amp;#34;false&amp;#34;
+    ingress.kubernetes.io/waf: &amp;#34;modsecurity&amp;#34;
+  name: echo
+spec:
+  rules:
+  - host: echo.domain
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: echo
+          servicePort: 8080
+EOF&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Test with a simple request. Change the IP below to the IP of your Ingress controller:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ curl -I 192.168.100.99 -H &#39;Host: echo.domain&#39;
+HTTP/1.1 200 OK
+Server: nginx/1.9.11
+Date: Sun, 27 May 2018 23:28:58 GMT
+Content-Type: text/plain
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Test now with a malicious request:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;curl -i &#39;192.168.100.99?p=/etc/passwd&#39; -H &#39;Host: echo.domain&#39;
+HTTP/1.0 403 Forbidden
+Cache-Control: no-cache
+Connection: close
+Content-Type: text/html
+
+&amp;lt;html&amp;gt;&amp;lt;body&amp;gt;&amp;lt;h1&amp;gt;403 Forbidden&amp;lt;/h1&amp;gt;
+Request forbidden by administrative rules.
+&amp;lt;/body&amp;gt;&amp;lt;/html&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Check the agent logs:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl -n ingress-controller get pod -lrun=modsecurity-spoa
+NAME                     READY     STATUS    RESTARTS   AGE
+modsecurity-spoa-5g5h2   1/1       Running   0          1h
+...
+
+$ kubectl -n ingress-controller logs --tail=10 modsecurity-spoa-5g5h2
+...
+1527464273.942819 [00] [client 127.0.0.1] ModSecurity: Access denied with code 403 (phase 2). Matche
+d phrase &amp;quot;etc/passwd&amp;quot; at ARGS:p. [file &amp;quot;/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APP
+LICATION-ATTACK-LFI.conf&amp;quot;] [line &amp;quot;108&amp;quot;] [id &amp;quot;930120&amp;quot;] [rev &amp;quot;4&amp;quot;] [msg &amp;quot;OS File Access Attempt&amp;quot;] [data
+ &amp;quot;Matched Data: etc/passwd found within ARGS:p: /etc/passwd&amp;quot;] [severity &amp;quot;CRITICAL&amp;quot;] [ver &amp;quot;OWASP_CRS/
+3.0.0&amp;quot;] [maturity &amp;quot;9&amp;quot;] [accuracy &amp;quot;9&amp;quot;] [tag &amp;quot;application-multi&amp;quot;] [tag &amp;quot;language-multi&amp;quot;] [tag &amp;quot;platfor
+m-multi&amp;quot;] [tag &amp;quot;attack-lfi&amp;quot;] [tag &amp;quot;OWASP_CRS/WEB_ATTACK/FILE_INJECTION&amp;quot;] [tag &amp;quot;WASCTC/WASC-33&amp;quot;] [tag
+ &amp;quot;OWASP_TOP_10/A4&amp;quot;] [tag &amp;quot;PCI/6.5.4&amp;quot;] [hostname &amp;quot;ingress.localdomain&amp;quot;] [uri &amp;quot;http://echo.domain/&amp;quot;] [
+unique_id &amp;quot;&amp;quot;]
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+      </description>
+    </item>
+    
+  </channel>
+</rss>
