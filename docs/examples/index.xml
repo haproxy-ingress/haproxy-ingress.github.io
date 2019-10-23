@@ -35,8 +35,8 @@ deployment groups as well as selecting a group based on http header or cookie va
 
 &lt;ul&gt;
 &lt;li&gt;A Kubernetes cluster with a running HAProxy Ingress controller v0.6 or above.
-See the &lt;a href=&#34;/examples/setup-cluster.md#five-minutes-deployment&#34;&gt;five minutes deployment&lt;/a&gt;
-or the &lt;a href=&#34;/examples/deployment&#34;&gt;deployment example&lt;/a&gt;&lt;/li&gt;
+See the &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/setup-cluster.md#five-minutes-deployment&#34;&gt;five minutes deployment&lt;/a&gt;
+or the &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment&#34;&gt;deployment example&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&#34;deploying-applications&#34;&gt;Deploying applications&lt;/h2&gt;
@@ -309,7 +309,7 @@ web application firewall on HAProxy Ingress controller.&lt;/p&gt;
 &lt;p&gt;This document has the following prerequisites:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;A Kubernetes cluster with a running HAProxy Ingress controller. See the &lt;a href=&#34;/examples/setup-cluster.md#five-minutes-deployment&#34;&gt;five minutes deployment&lt;/a&gt; or the &lt;a href=&#34;/examples/deployment&#34;&gt;deployment example&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;A Kubernetes cluster with a running HAProxy Ingress controller. See the &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/setup-cluster.md#five-minutes-deployment&#34;&gt;five minutes deployment&lt;/a&gt; or the &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment&#34;&gt;deployment example&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;ingress-controller&lt;/code&gt; namespace, the default of the five minutes deployment&lt;/li&gt;
 &lt;/ul&gt;
 

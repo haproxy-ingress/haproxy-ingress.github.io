@@ -198,7 +198,7 @@ that shares ingress and service objects without conflicting each other.&lt;/p&gt
 &lt;p&gt;Defines the &lt;code&gt;namespace/servicename&lt;/code&gt; that should be used if the incoming request doesn&amp;rsquo;t match any
 hostname, or the requested path doesn&amp;rsquo;t match any location within the desired hostname.&lt;/p&gt;
 
-&lt;p&gt;This is a mandatory argument used in the &lt;a href=&#34;/examples/deployment&#34;&gt;deployment&lt;/a&gt; example page.&lt;/p&gt;
+&lt;p&gt;This is a mandatory argument used in the &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment&#34;&gt;deployment&lt;/a&gt; example page.&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -207,8 +207,8 @@ hostname, or the requested path doesn&amp;rsquo;t match any location within the 
 &lt;p&gt;Defines the &lt;code&gt;namespace/secretname&lt;/code&gt; of the default certificate that should be used if ingress
 resources using TLS configuration doesn&amp;rsquo;t provide it&amp;rsquo;s own certificate.&lt;/p&gt;
 
-&lt;p&gt;This is a mandatory argument used in the &lt;a href=&#34;/examples/deployment&#34;&gt;deployment&lt;/a&gt; and
-&lt;a href=&#34;/examples/tls-termination&#34;&gt;TLS termination&lt;/a&gt; example pages.&lt;/p&gt;
+&lt;p&gt;This is a mandatory argument used in the &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment&#34;&gt;deployment&lt;/a&gt; and
+&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/tls-termination&#34;&gt;TLS termination&lt;/a&gt; example pages.&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -1601,7 +1601,7 @@ the DN of the certificate.&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/examples/auth/client-certs&#34;&gt;example&lt;/a&gt; page.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/auth/client-certs&#34;&gt;example&lt;/a&gt; page.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -2111,8 +2111,8 @@ to add more than one line of configuration.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;cors-enable&lt;/code&gt;: Enable CORS if defined as &lt;code&gt;true&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;cors-allow-origin&lt;/code&gt;: Optional, configures &lt;code&gt;Access-Control-Allow-Origin&lt;/code&gt; header which defines the URL that may access the resource. Defaults to &lt;code&gt;*&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;cors-allow-methods&lt;/code&gt;: Optional, configures &lt;code&gt;Access-Control-Allow-Methods&lt;/code&gt; header which defines the allowed methods. See defaults &lt;a href=&#34;/pkg/common/ingress/annotations/cors/main.go#L34&#34;&gt;here&lt;/a&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;cors-allow-headers&lt;/code&gt;: Optional, configures &lt;code&gt;Access-Control-Allow-Headers&lt;/code&gt; header which defines the allowed headers. See defaults &lt;a href=&#34;/pkg/common/ingress/annotations/cors/main.go#L34&#34;&gt;here&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cors-allow-methods&lt;/code&gt;: Optional, configures &lt;code&gt;Access-Control-Allow-Methods&lt;/code&gt; header which defines the allowed methods. Default value is &lt;code&gt;DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cors-allow-headers&lt;/code&gt;: Optional, configures &lt;code&gt;Access-Control-Allow-Headers&lt;/code&gt; header which defines the allowed headers. Default value is &lt;code&gt;GET, PUT, POST, DELETE, PATCH, OPTIONS&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;cors-allow-credentials&lt;/code&gt;: Optional, configures &lt;code&gt;Access-Control-Allow-Credentials&lt;/code&gt; header which defines whether or not credentials (cookies, authorization headers or client certificates) should be exposed. Defaults to &lt;code&gt;true&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;cors-max-age&lt;/code&gt;: Optional, configures &lt;code&gt;Access-Control-Max-Age&lt;/code&gt; header which defines the time in seconds the result should be cached. Defaults to &lt;code&gt;86400&lt;/code&gt; (1 day).&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;cors-expose-headers&lt;/code&gt;: Optional, configures &lt;code&gt;Access-Control-Expose-Headers&lt;/code&gt; header which defines what headers are allowed to be passed through to the CORS application. Defaults to not add the header.&lt;/li&gt;
@@ -2218,7 +2218,7 @@ to add more than one line of configuration.&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/examples/dns-service-discovery&#34;&gt;example&lt;/a&gt; page.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/dns-service-discovery&#34;&gt;example&lt;/a&gt; page.&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.3.2&#34;&gt;https://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.3.2&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-resolvers&#34;&gt;https://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-resolvers&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/&#34;&gt;https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/&lt;/a&gt;&lt;/li&gt;
@@ -2924,7 +2924,7 @@ service - all paths from that domain will be protected.&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/examples/auth/oauth&#34;&gt;example&lt;/a&gt; page.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/auth/oauth&#34;&gt;example&lt;/a&gt; page.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -3499,7 +3499,7 @@ configured to SSL offload on HAProxy.&lt;/p&gt;
 &lt;p&gt;Configures if an encripted connection should be used.&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;ssl-redirect&lt;/code&gt;: Defines if HAProxy should send a &lt;code&gt;302 redirect&lt;/code&gt; response to requests made on unencripted connections. Note that this configuration will only make effect if TLS is &lt;a href=&#34;/examples/tls-termination&#34;&gt;configured&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ssl-redirect&lt;/code&gt;: Defines if HAProxy should send a &lt;code&gt;302 redirect&lt;/code&gt; response to requests made on unencripted connections. Note that this configuration will only make effect if TLS is &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/tls-termination&#34;&gt;configured&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;no-tls-redirect-locations&lt;/code&gt;: Defines a comma-separated list of URLs that should be removed from the TLS redirect. Requests to &lt;code&gt;:80&lt;/code&gt; http port and starting with one of the URLs from the list will not be redirected to https despite of the TLS redirect configuration. This option defaults to &lt;code&gt;/.well-known/acme-challenge&lt;/code&gt;, used by ACME protocol.&lt;/li&gt;
 &lt;/ul&gt;
 
