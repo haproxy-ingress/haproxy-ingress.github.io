@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2019-10-26T16:19:17-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2019-10-27T18:16:37-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="Global configmap and per ingress/service configuration keys.
 ">
 
 
-<meta itemprop="dateModified" content="2019-10-26T16:19:17-03:00" />
-<meta itemprop="wordCount" content="6917">
+<meta itemprop="dateModified" content="2019-10-27T18:16:37-03:00" />
+<meta itemprop="wordCount" content="7002">
 
 
 
@@ -381,6 +381,7 @@ if (!doNotTrack) {
 <li><a href="#rewrite-target">Rewrite target</a></li>
 <li><a href="#secure-backend">Secure backend</a></li>
 <li><a href="#server-alias">Server alias</a></li>
+<li><a href="#service-upstream">Service upstream</a></li>
 <li><a href="#ssl-ciphers">SSL ciphers</a></li>
 <li><a href="#ssl-dh">SSL DH</a></li>
 <li><a href="#ssl-engine">SSL engine</a></li>
@@ -1159,6 +1160,13 @@ will be used.</p>
 </tr>
 
 <tr>
+<td><a href="#service-upstream"><code>service-upstream</code></a></td>
+<td>[true|false]</td>
+<td>Backend</td>
+<td><code>false</code></td>
+</tr>
+
+<tr>
 <td><a href="#affinity"><code>session-cookie-dynamic</code></a></td>
 <td>[true|false]</td>
 <td>Backend</td>
@@ -1194,9 +1202,30 @@ will be used.</p>
 </tr>
 
 <tr>
+<td><a href="#ssl-ciphers"><code>ssl-cipher-suites</code></a></td>
+<td>colon-separated list</td>
+<td>Global</td>
+<td><a href="#ssl-ciphers">see description</a></td>
+</tr>
+
+<tr>
+<td><a href="#ssl-ciphers"><code>ssl-cipher-suites-backend</code></a></td>
+<td>colon-separated list</td>
+<td>Backend</td>
+<td><a href="#ssl-ciphers">see description</a></td>
+</tr>
+
+<tr>
 <td><a href="#ssl-ciphers"><code>ssl-ciphers</code></a></td>
 <td>colon-separated list</td>
 <td>Global</td>
+<td><a href="#ssl-ciphers">see description</a></td>
+</tr>
+
+<tr>
+<td><a href="#ssl-ciphers"><code>ssl-ciphers-backend</code></a></td>
+<td>colon-separated list</td>
+<td>Backend</td>
 <td><a href="#ssl-ciphers">see description</a></td>
 </tr>
 
@@ -1310,6 +1339,13 @@ will be used.</p>
 <td>rfc5424|rfc3164</td>
 <td>Global</td>
 <td><code>rfc5424</code></td>
+</tr>
+
+<tr>
+<td><a href="#syslog"><code>syslog-length</code></a></td>
+<td>maximum length</td>
+<td>Global</td>
+<td><code>1024</code></td>
 </tr>
 
 <tr>
@@ -3293,6 +3329,35 @@ attribute in the same ACL, and any of them might be used to match SNI extensions
 
 <hr />
 
+<h2 id="service-upstream">Service upstream</h2>
+
+<table>
+<thead>
+<tr>
+<th>Configuration key</th>
+<th>Scope</th>
+<th>Default</th>
+<th>Since</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>service-upstream</code></td>
+<td><code>Backend</code></td>
+<td><code>false</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<p>Defines if the HAProxy backend/server endpoints should be configured with the
+service VIP/IPVS. If <code>false</code>, the default value, the endpoints will be used and
+HAProxy will load balance the requests between them. If defined as <code>true</code> the
+service&rsquo;s ClusterIP is used instead.</p>
+
+<hr />
+
 <h2 id="ssl-ciphers">SSL ciphers</h2>
 
 <table>
@@ -3314,6 +3379,13 @@ attribute in the same ACL, and any of them might be used to match SNI extensions
 </tr>
 
 <tr>
+<td><code>ssl-cipher-suites-backend</code></td>
+<td><code>Backend</code></td>
+<td></td>
+<td>v0.9</td>
+</tr>
+
+<tr>
 <td><code>ssl-ciphers</code></td>
 <td><code>Global</code></td>
 <td></td>
@@ -3321,15 +3393,8 @@ attribute in the same ACL, and any of them might be used to match SNI extensions
 </tr>
 
 <tr>
-<td><code>ssl-cipher-suites-backend</code></td>
-<td><code>Global</code></td>
-<td></td>
-<td>v0.9</td>
-</tr>
-
-<tr>
 <td><code>ssl-ciphers-backend</code></td>
-<td><code>Global</code></td>
+<td><code>Backend</code></td>
 <td></td>
 <td>v0.9</td>
 </tr>
@@ -3338,20 +3403,11 @@ attribute in the same ACL, and any of them might be used to match SNI extensions
 
 <p>Set the list of cipher algorithms used during the SSL/TLS handshake.</p>
 
-<p>Configmap options:</p>
-
 <ul>
-<li><code>ssl-cipher-suites</code>: Cipher suites on TLS v1.3 handshake</li>
-<li><code>ssl-ciphers</code>: Cipher suites on TLS up to v1.2 handshake</li>
-<li><code>ssl-cipher-suites-backend</code>: Default cipher suites on TLS v1.3 handshake to backend servers</li>
-<li><code>ssl-ciphers-backend</code>: Default cipher suites on TLS up to v1.2 handshake to backend servers</li>
-</ul>
-
-<p>Annotations:</p>
-
-<ul>
-<li><code>ssl-cipher-suites-backend</code>: Per backend configuration of cipher suites on TLS v1.3 handshake, defaults to the configmap configuration</li>
-<li><code>ssl-ciphers-backend</code>: Per backend configuration of cipher suites on TLS up to v1.2 handshake, defaults to the configmap configuration</li>
+<li><code>ssl-cipher-suites</code>: Cipher suites on TLS v1.3 handshake of incoming requests. HAProxy being the TLS server.</li>
+<li><code>ssl-cipher-suites-backend</code>: Cipher suites on TLS v1.3 handshake to backend/servers. HAProxy being the TLS client.</li>
+<li><code>ssl-ciphers</code>: Cipher suites on TLS up to v1.2 handshake of incoming requests. HAProxy being the TLS server.</li>
+<li><code>ssl-ciphers-backend</code>: Cipher suites on TLS up to v1.2 handshake to backend/servers. HAProxy being the TLS client.</li>
 </ul>
 
 <p>Default values on HAProxy Ingress up to v0.8:</p>
@@ -3725,6 +3781,13 @@ try to match the path.</p>
 </tr>
 
 <tr>
+<td><code>syslog-length</code></td>
+<td><code>Global</code></td>
+<td><code>1024</code></td>
+<td>v0.9</td>
+</tr>
+
+<tr>
 <td><code>syslog-tag</code></td>
 <td><code>Global</code></td>
 <td><code>ingress</code></td>
@@ -3738,6 +3801,7 @@ try to match the path.</p>
 <ul>
 <li><code>syslog-endpoint</code>: Configures the UDP syslog endpoint where HAProxy should send access logs.</li>
 <li><code>syslog-format</code>: Configures the log format to be either <code>rfc5424</code> (default) or <code>rfc3164</code>.</li>
+<li><code>syslog-length</code>: The maximum line length, log lines larger than this value will be truncated. Defaults to <code>1024</code>.</li>
 <li><code>syslog-tag</code>: Configure the tag field in the syslog header to the supplied string.</li>
 </ul>
 
@@ -4051,7 +4115,7 @@ to validate requests. Currently the only supported value is <code>modsecurity</c
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified October 26, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/38965cdbb1ca6372f824dd7d1103efbd90cff775">Tuning default thread number and reload strategy (38965cd)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified October 27, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/53fa8ef72a9cfdfae28e828016d85a1930fcc316">[docs] add some missing config keys (53fa8ef)</a>
 </div>
 </div>
 

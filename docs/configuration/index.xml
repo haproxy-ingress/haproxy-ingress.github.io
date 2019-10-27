@@ -1092,6 +1092,13 @@ will be used.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#service-upstream&#34;&gt;&lt;code&gt;service-upstream&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#affinity&#34;&gt;&lt;code&gt;session-cookie-dynamic&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
@@ -1127,9 +1134,30 @@ will be used.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#ssl-ciphers&#34;&gt;&lt;code&gt;ssl-cipher-suites&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;colon-separated list&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#ssl-ciphers&#34;&gt;see description&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#ssl-ciphers&#34;&gt;&lt;code&gt;ssl-cipher-suites-backend&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;colon-separated list&lt;/td&gt;
+&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#ssl-ciphers&#34;&gt;see description&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#ssl-ciphers&#34;&gt;&lt;code&gt;ssl-ciphers&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;colon-separated list&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#ssl-ciphers&#34;&gt;see description&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#ssl-ciphers&#34;&gt;&lt;code&gt;ssl-ciphers-backend&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;colon-separated list&lt;/td&gt;
+&lt;td&gt;Backend&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;#ssl-ciphers&#34;&gt;see description&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -1243,6 +1271,13 @@ will be used.&lt;/p&gt;
 &lt;td&gt;rfc5424|rfc3164&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;rfc5424&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#syslog&#34;&gt;&lt;code&gt;syslog-length&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;maximum length&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;1024&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -3226,6 +3261,35 @@ attribute in the same ACL, and any of them might be used to match SNI extensions
 
 &lt;hr /&gt;
 
+&lt;h2 id=&#34;service-upstream&#34;&gt;Service upstream&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;service-upstream&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Defines if the HAProxy backend/server endpoints should be configured with the
+service VIP/IPVS. If &lt;code&gt;false&lt;/code&gt;, the default value, the endpoints will be used and
+HAProxy will load balance the requests between them. If defined as &lt;code&gt;true&lt;/code&gt; the
+service&amp;rsquo;s ClusterIP is used instead.&lt;/p&gt;
+
+&lt;hr /&gt;
+
 &lt;h2 id=&#34;ssl-ciphers&#34;&gt;SSL ciphers&lt;/h2&gt;
 
 &lt;table&gt;
@@ -3247,6 +3311,13 @@ attribute in the same ACL, and any of them might be used to match SNI extensions
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;code&gt;ssl-cipher-suites-backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;code&gt;ssl-ciphers&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
@@ -3254,15 +3325,8 @@ attribute in the same ACL, and any of them might be used to match SNI extensions
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;ssl-cipher-suites-backend&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;v0.9&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
 &lt;td&gt;&lt;code&gt;ssl-ciphers-backend&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;v0.9&lt;/td&gt;
 &lt;/tr&gt;
@@ -3271,20 +3335,11 @@ attribute in the same ACL, and any of them might be used to match SNI extensions
 
 &lt;p&gt;Set the list of cipher algorithms used during the SSL/TLS handshake.&lt;/p&gt;
 
-&lt;p&gt;Configmap options:&lt;/p&gt;
-
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;ssl-cipher-suites&lt;/code&gt;: Cipher suites on TLS v1.3 handshake&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;ssl-ciphers&lt;/code&gt;: Cipher suites on TLS up to v1.2 handshake&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;ssl-cipher-suites-backend&lt;/code&gt;: Default cipher suites on TLS v1.3 handshake to backend servers&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;ssl-ciphers-backend&lt;/code&gt;: Default cipher suites on TLS up to v1.2 handshake to backend servers&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Annotations:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;ssl-cipher-suites-backend&lt;/code&gt;: Per backend configuration of cipher suites on TLS v1.3 handshake, defaults to the configmap configuration&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;ssl-ciphers-backend&lt;/code&gt;: Per backend configuration of cipher suites on TLS up to v1.2 handshake, defaults to the configmap configuration&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ssl-cipher-suites&lt;/code&gt;: Cipher suites on TLS v1.3 handshake of incoming requests. HAProxy being the TLS server.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ssl-cipher-suites-backend&lt;/code&gt;: Cipher suites on TLS v1.3 handshake to backend/servers. HAProxy being the TLS client.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ssl-ciphers&lt;/code&gt;: Cipher suites on TLS up to v1.2 handshake of incoming requests. HAProxy being the TLS server.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ssl-ciphers-backend&lt;/code&gt;: Cipher suites on TLS up to v1.2 handshake to backend/servers. HAProxy being the TLS client.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Default values on HAProxy Ingress up to v0.8:&lt;/p&gt;
@@ -3658,6 +3713,13 @@ try to match the path.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;code&gt;syslog-length&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;1024&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;code&gt;syslog-tag&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;ingress&lt;/code&gt;&lt;/td&gt;
@@ -3671,6 +3733,7 @@ try to match the path.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;syslog-endpoint&lt;/code&gt;: Configures the UDP syslog endpoint where HAProxy should send access logs.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;syslog-format&lt;/code&gt;: Configures the log format to be either &lt;code&gt;rfc5424&lt;/code&gt; (default) or &lt;code&gt;rfc3164&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;syslog-length&lt;/code&gt;: The maximum line length, log lines larger than this value will be truncated. Defaults to &lt;code&gt;1024&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;syslog-tag&lt;/code&gt;: Configure the tag field in the syslog header to the supplied string.&lt;/li&gt;
 &lt;/ul&gt;
 
