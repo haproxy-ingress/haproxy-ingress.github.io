@@ -137,7 +137,7 @@ lists, math etc.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#reload-strategy&#34;&gt;&lt;code&gt;--reload-strategy&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[native|reusesocket]&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;native&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;reusesocket&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -279,8 +279,8 @@ times per second.&lt;/p&gt;
 HAProxy should use. The following options are available:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;native&lt;/code&gt;: Uses native HAProxy reload option &lt;code&gt;-sf&lt;/code&gt;. This is the default option.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;reusesocket&lt;/code&gt;: (starting on v0.6) Uses HAProxy &lt;code&gt;-x&lt;/code&gt; command-line option to pass the listening sockets between old and new HAProxy process, allowing hitless reloads.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;native&lt;/code&gt;: Uses native HAProxy reload option &lt;code&gt;-sf&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;reusesocket&lt;/code&gt;: (starting on v0.6) Uses HAProxy &lt;code&gt;-x&lt;/code&gt; command-line option to pass the listening sockets between old and new HAProxy process, allowing hitless reloads. This is the default option since v0.8.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;multibinder&lt;/code&gt;: (deprecated on v0.6) Uses GitHub&amp;rsquo;s &lt;a href=&#34;https://github.com/github/multibinder&#34;&gt;multibinder&lt;/a&gt;. This &lt;a href=&#34;https://githubengineering.com/glb-part-2-haproxy-zero-downtime-zero-delay-reloads-with-multibinder/&#34;&gt;link&lt;/a&gt;
 describes how it works.&lt;/li&gt;
 &lt;/ul&gt;
@@ -1004,7 +1004,7 @@ will be used.&lt;/p&gt;
 &lt;td&gt;&lt;a href=&#34;#nbthread&#34;&gt;&lt;code&gt;nbthread&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;number of threads&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;1&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;2&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -2860,7 +2860,7 @@ process. Leave one core dedicated to header inspection and load balancing.&lt;/p
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;nbthread&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;1&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;2&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;

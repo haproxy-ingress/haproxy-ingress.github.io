@@ -25,13 +25,13 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2019-10-24T19:27:08-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2019-10-26T16:19:17-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="Global configmap and per ingress/service configuration keys.
 ">
 
 
-<meta itemprop="dateModified" content="2019-10-24T19:27:08-03:00" />
+<meta itemprop="dateModified" content="2019-10-26T16:19:17-03:00" />
 <meta itemprop="wordCount" content="6917">
 
 
@@ -1071,7 +1071,7 @@ will be used.</p>
 <td><a href="#nbthread"><code>nbthread</code></a></td>
 <td>number of threads</td>
 <td>Global</td>
-<td><code>1</code></td>
+<td><code>2</code></td>
 </tr>
 
 <tr>
@@ -2927,7 +2927,7 @@ process. Leave one core dedicated to header inspection and load balancing.</p>
 <tr>
 <td><code>nbthread</code></td>
 <td><code>Global</code></td>
-<td><code>1</code></td>
+<td><code>2</code></td>
 <td></td>
 </tr>
 </tbody>
@@ -4051,7 +4051,7 @@ to validate requests. Currently the only supported value is <code>modsecurity</c
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified October 24, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/a1b8dea13cb9876916fc7ce23ce4945feac8017f">Add session-cookie-shared (a1b8dea)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified October 26, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/38965cdbb1ca6372f824dd7d1103efbd90cff775">Tuning default thread number and reload strategy (38965cd)</a>
 </div>
 </div>
 
