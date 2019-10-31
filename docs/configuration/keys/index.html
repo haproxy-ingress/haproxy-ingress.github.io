@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2019-10-27T18:16:37-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2019-10-30T22:27:20-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="Global configmap and per ingress/service configuration keys.
 ">
 
 
-<meta itemprop="dateModified" content="2019-10-27T18:16:37-03:00" />
-<meta itemprop="wordCount" content="7002">
+<meta itemprop="dateModified" content="2019-10-30T22:27:20-03:00" />
+<meta itemprop="wordCount" content="7023">
 
 
 
@@ -1528,7 +1528,7 @@ will be used.</p>
 <td><code>session-cookie-shared</code></td>
 <td><code>Backend</code></td>
 <td><code>false</code></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 
 <tr>
@@ -1585,28 +1585,28 @@ limitation was removed on v0.6.</p>
 <td><code>agent-check-addr</code></td>
 <td><code>Backend</code></td>
 <td></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 
 <tr>
 <td><code>agent-check-interval</code></td>
 <td><code>Backend</code></td>
 <td></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 
 <tr>
 <td><code>agent-check-port</code></td>
 <td><code>Backend</code></td>
 <td></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 
 <tr>
 <td><code>agent-check-send</code></td>
 <td><code>Backend</code></td>
 <td></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 </tbody>
 </table>
@@ -2060,7 +2060,7 @@ uses the chosen load balance algorithm.</p>
 <td><code>config-defaults</code></td>
 <td><code>Global</code></td>
 <td></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 
 <tr>
@@ -2209,7 +2209,7 @@ to add more than one line of configuration.</p>
 <td><code>cors-expose-headers</code></td>
 <td><code>Backend</code></td>
 <td></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 
 <tr>
@@ -2366,7 +2366,7 @@ to add more than one line of configuration.</p>
 <td><code>drain-support-redispatch</code></td>
 <td><code>Global</code></td>
 <td><code>true</code></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 </tbody>
 </table>
@@ -2412,7 +2412,7 @@ You can control this behavior by setting <code>drain-support-redispatch</code> f
 <td><code>slots-min-free</code></td>
 <td><code>Backend</code></td>
 <td><code>6</code></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 </tbody>
 </table>
@@ -2511,42 +2511,42 @@ Only use <code>ignore</code> or <code>ifmissing</code> on trusted networks.</p>
 <td><code>health-check-addr</code></td>
 <td><code>Backend</code></td>
 <td></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 
 <tr>
 <td><code>health-check-fall-count</code></td>
 <td><code>Backend</code></td>
 <td></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 
 <tr>
 <td><code>health-check-interval</code></td>
 <td><code>Backend</code></td>
 <td></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 
 <tr>
 <td><code>health-check-port</code></td>
 <td><code>Backend</code></td>
 <td></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 
 <tr>
 <td><code>health-check-rise-count</code></td>
 <td><code>Backend</code></td>
 <td></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 
 <tr>
 <td><code>health-check-uri</code></td>
 <td><code>Backend</code></td>
 <td></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 </tbody>
 </table>
@@ -3497,14 +3497,14 @@ service&rsquo;s ClusterIP is used instead.</p>
 <td><code>ssl-engine</code></td>
 <td><code>Global</code></td>
 <td></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 
 <tr>
 <td><code>ssl-mode-async</code></td>
 <td><code>Global</code></td>
 <td><code>false</code></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 </tbody>
 </table>
@@ -3777,7 +3777,7 @@ try to match the path.</p>
 <td><code>syslog-format</code></td>
 <td><code>Global</code></td>
 <td><code>rfc5424</code></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 
 <tr>
@@ -3791,7 +3791,7 @@ try to match the path.</p>
 <td><code>syslog-tag</code></td>
 <td><code>Global</code></td>
 <td><code>ingress</code></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 </tbody>
 </table>
@@ -3942,7 +3942,7 @@ try to match the path.</p>
 <td><code>tls-alpm</code></td>
 <td><code>Global</code></td>
 <td><code>h2,http/1.1</code></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 </tbody>
 </table>
@@ -4008,7 +4008,7 @@ is <code>false</code>. HTX should be used to enable HTTP/2 protocol to backends.
 <td><code>var-namespace</code></td>
 <td><code>Host</code></td>
 <td><code>false</code></td>
-<td></td>
+<td>v0.8</td>
 </tr>
 </tbody>
 </table>
@@ -4115,7 +4115,7 @@ to validate requests. Currently the only supported value is <code>modsecurity</c
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified October 27, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/53fa8ef72a9cfdfae28e828016d85a1930fcc316">[docs] add some missing config keys (53fa8ef)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified October 30, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/28d174a62ce04e536d0a04f352f755777619b357">[docs] add refs since v0.8 (28d174a)</a>
 </div>
 </div>
 

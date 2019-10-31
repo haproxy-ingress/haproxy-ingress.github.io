@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2019-10-26T16:19:17-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2019-10-30T22:27:20-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Command line">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2019-10-26T16:19:17-03:00" />
-<meta itemprop="wordCount" content="1218">
+<meta itemprop="dateModified" content="2019-10-30T22:27:20-03:00" />
+<meta itemprop="wordCount" content="1221">
 
 
 
@@ -419,6 +419,7 @@ if (!doNotTrack) {
 <th>Name</th>
 <th>Type</th>
 <th>Default</th>
+<th>Since</th>
 </tr>
 </thead>
 
@@ -427,47 +428,55 @@ if (!doNotTrack) {
 <td><a href="#allow-cross-namespace"><code>--allow-cross-namespace</code></a></td>
 <td>[true|false]</td>
 <td><code>false</code></td>
+<td></td>
 </tr>
 
 <tr>
 <td><a href="#annotation-prefix"><code>--annotation-prefix</code></a></td>
 <td>prefix without <code>/</code></td>
 <td><code>ingress.kubernetes.io</code></td>
+<td>v0.8</td>
 </tr>
 
 <tr>
 <td><a href="#default-backend-service"><code>--default-backend-service</code></a></td>
 <td>namespace/servicename</td>
 <td>(mandatory)</td>
+<td></td>
 </tr>
 
 <tr>
 <td><a href="#default-ssl-certificate"><code>--default-ssl-certificate</code></a></td>
 <td>namespace/secretname</td>
 <td>(mandatory)</td>
+<td></td>
 </tr>
 
 <tr>
 <td><a href="#ingress-class"><code>--ingress-class</code></a></td>
 <td>name</td>
 <td><code>haproxy</code></td>
+<td></td>
 </tr>
 
 <tr>
 <td><a href="#kubeconfig"><code>--kubeconfig</code></a></td>
 <td>/path/to/kubeconfig</td>
 <td>in cluster config</td>
+<td></td>
 </tr>
 
 <tr>
 <td><a href="#max-old-config-files"><code>--max-old-config-files</code></a></td>
 <td>num of files</td>
 <td><code>0</code></td>
+<td></td>
 </tr>
 
 <tr>
 <td><a href="#publish-service"><code>--publish-service</code></a></td>
 <td>namespace/servicename</td>
+<td></td>
 <td></td>
 </tr>
 
@@ -475,42 +484,49 @@ if (!doNotTrack) {
 <td><a href="#rate-limit-update"><code>--rate-limit-update</code></a></td>
 <td>uploads per second (float)</td>
 <td><code>0.5</code></td>
+<td></td>
 </tr>
 
 <tr>
 <td><a href="#reload-strategy"><code>--reload-strategy</code></a></td>
 <td>[native|reusesocket]</td>
 <td><code>reusesocket</code></td>
+<td></td>
 </tr>
 
 <tr>
 <td><a href="#sort-backends"><code>--sort-backends</code></a></td>
 <td>[true|false]</td>
 <td><code>false</code></td>
+<td></td>
 </tr>
 
 <tr>
 <td><a href="#tcp-services-configmap"><code>--tcp-services-configmap</code></a></td>
 <td>namespace/configmapname</td>
 <td>no tcp svc</td>
+<td></td>
 </tr>
 
 <tr>
 <td><a href="#verify-hostname"><code>--verify-hostname</code></a></td>
 <td>[true|false]</td>
 <td><code>true</code></td>
+<td></td>
 </tr>
 
 <tr>
 <td><a href="#wait-before-shutdown"><code>--wait-before-shutdown</code></a></td>
 <td>seconds as integer</td>
 <td><code>0</code></td>
+<td>v0.8</td>
 </tr>
 
 <tr>
 <td><a href="#watch-namespace"><code>--watch-namespace</code></a></td>
 <td>namespace</td>
 <td>all namespaces</td>
+<td></td>
 </tr>
 </tbody>
 </table>
@@ -767,7 +783,7 @@ single namespace.</p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified October 26, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/38965cdbb1ca6372f824dd7d1103efbd90cff775">Tuning default thread number and reload strategy (38965cd)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified October 30, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/28d174a62ce04e536d0a04f352f755777619b357">[docs] add refs since v0.8 (28d174a)</a>
 </div>
 </div>
 
