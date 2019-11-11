@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2019-11-03T14:12:11-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2019-11-11T16:57:56-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all ingress/service annotations and global configmap options.
 ">
 
 
-<meta itemprop="dateModified" content="2019-11-03T14:12:11-03:00" />
-<meta itemprop="wordCount" content="7023">
+<meta itemprop="dateModified" content="2019-11-11T16:57:56-03:00" />
+<meta itemprop="wordCount" content="7117">
 
 
 
@@ -1475,6 +1475,13 @@ will be used.</p>
 </tr>
 
 <tr>
+<td><a href="#waf"><code>waf-mode</code></a></td>
+<td>[deny|detect]</td>
+<td>Backend</td>
+<td><code>deny</code> (if waf is set)</td>
+</tr>
+
+<tr>
 <td><code>whitelist-source-range</code></td>
 <td>CIDR</td>
 <td>Backend</td>
@@ -2226,8 +2233,8 @@ to add more than one line of configuration.</p>
 <ul>
 <li><code>cors-enable</code>: Enable CORS if defined as <code>true</code>.</li>
 <li><code>cors-allow-origin</code>: Optional, configures <code>Access-Control-Allow-Origin</code> header which defines the URL that may access the resource. Defaults to <code>*</code>.</li>
-<li><code>cors-allow-methods</code>: Optional, configures <code>Access-Control-Allow-Methods</code> header which defines the allowed methods. Default value is <code>DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization</code>.</li>
-<li><code>cors-allow-headers</code>: Optional, configures <code>Access-Control-Allow-Headers</code> header which defines the allowed headers. Default value is <code>GET, PUT, POST, DELETE, PATCH, OPTIONS</code>.</li>
+<li><code>cors-allow-methods</code>: Optional, configures <code>Access-Control-Allow-Methods</code> header which defines the allowed methods. Default value is <code>GET, PUT, POST, DELETE, PATCH, OPTIONS</code>.</li>
+<li><code>cors-allow-headers</code>: Optional, configures <code>Access-Control-Allow-Headers</code> header which defines the allowed headers. Default value is <code>DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization</code>.</li>
 <li><code>cors-allow-credentials</code>: Optional, configures <code>Access-Control-Allow-Credentials</code> header which defines whether or not credentials (cookies, authorization headers or client certificates) should be exposed. Defaults to <code>true</code>.</li>
 <li><code>cors-max-age</code>: Optional, configures <code>Access-Control-Max-Age</code> header which defines the time in seconds the result should be cached. Defaults to <code>86400</code> (1 day).</li>
 <li><code>cors-expose-headers</code>: Optional, configures <code>Access-Control-Expose-Headers</code> header which defines what headers are allowed to be passed through to the CORS application. Defaults to not add the header.</li>
@@ -2477,19 +2484,29 @@ also happen when the number of servers could be reduced.</p>
 </tbody>
 </table>
 
-<p>Define if <code>X-Forwarded-For</code> header should be added always, added if missing or
-ignored from incoming requests. Default is <code>add</code> which means HAProxy will itself
-generate a <code>X-Forwarded-For</code> header with client&rsquo;s IP address and remove this same
-header from incoming requests.</p>
+<p>Define how the <code>X-Forwarded-For</code> header should be handled by haproxy.</p>
 
-<p>Use <code>ignore</code> to skip any check. <code>ifmissing</code> should be used to add
-<code>X-Forwarded-For</code> with client&rsquo;s IP address only if this header is not defined.
-Only use <code>ignore</code> or <code>ifmissing</code> on trusted networks.</p>
+<p>Options:</p>
+
+<ul>
+<li><code>add</code>: haproxy should generate a <code>X-Forwarded-For</code> header with the source IP
+address. This is the default option and should be used on untrusted networks.
+If the request has a <code>XFF</code> header, its value is copied to
+<code>X-Original-Forwarded-For</code>.</li>
+<li><code>update</code>: Only on <code>v0.9</code> and above. haproxy should preserve any <code>X-Forwarded-For</code>
+header, if provided, updating with the source IP address, which should be a
+fronting TCP or HTTP proxy/load balancer.</li>
+<li><code>ignore</code>: do nothing - only send the <code>X-Forwarded-For</code> header if the client
+provided one, without updating its content.</li>
+<li><code>ifmissing</code>: add <code>X-Forwarded-For</code> header only if the incoming request
+doesn&rsquo;t provide one.</li>
+</ul>
 
 <p>See also:</p>
 
 <ul>
 <li><a href="http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-option%20forwardfor">http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-option%20forwardfor</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For">https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For</a></li>
 </ul>
 
 <hr />
@@ -4039,6 +4056,13 @@ See also <a href="#log-format">http-log</a>.</p>
 <td></td>
 <td></td>
 </tr>
+
+<tr>
+<td><code>waf-mode</code></td>
+<td><code>Backend</code></td>
+<td><code>deny</code></td>
+<td>v0.9</td>
+</tr>
 </tbody>
 </table>
 
@@ -4046,6 +4070,11 @@ See also <a href="#log-format">http-log</a>.</p>
 to validate requests. Currently the only supported value is <code>modsecurity</code>.</p>
 
 <p>This configuration has no effect if the ModSecurity endpoints are not configured.</p>
+
+<p>The <code>waf-mode</code> key defines wether the WAF should be <code>deny</code> or <code>detect</code> for that Backend.
+If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity and logged, but not denied.</p>
+
+<p>The default behavior here is <code>deny</code> if <code>waf</code> is set to <code>modsecurity</code>.</p>
 
 <p>See also:</p>
 
@@ -4115,7 +4144,7 @@ to validate requests. Currently the only supported value is <code>modsecurity</c
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified November 3, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/a7922ff0d39cecdf3e03f2082f58c1fd9377138b">[docs] improve getting started hints and links (a7922ff)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified November 11, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/d3a0bfa653782cb915acf108495d27d772d6e8d4">Add support for Mod Security Detection Only (d3a0bfa)</a>
 </div>
 </div>
 
