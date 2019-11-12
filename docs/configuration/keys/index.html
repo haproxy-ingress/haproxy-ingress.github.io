@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2019-11-11T16:57:56-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2019-11-03T21:16:11-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all ingress/service annotations and global configmap options.
 ">
 
 
-<meta itemprop="dateModified" content="2019-11-11T16:57:56-03:00" />
-<meta itemprop="wordCount" content="7117">
+<meta itemprop="dateModified" content="2019-11-03T21:16:11-03:00" />
+<meta itemprop="wordCount" content="7373">
 
 
 
@@ -366,9 +366,10 @@ if (!doNotTrack) {
 <li><a href="#drain-support">Drain support</a></li>
 <li><a href="#dynamic-scaling">Dynamic scaling</a></li>
 <li><a href="#forwardfor">Forwardfor</a></li>
+<li><a href="#fronting-proxy-port">Fronting proxy port</a></li>
 <li><a href="#health-check">Health check</a></li>
 <li><a href="#hsts">HSTS</a></li>
-<li><a href="#https-to-http-port">HTTPS to HTTP port</a></li>
+<li><a href="#initial-weight">Initial weight</a></li>
 <li><a href="#limit">Limit</a></li>
 <li><a href="#load-server-state">Load server state</a></li>
 <li><a href="#log-format">Log format</a></li>
@@ -873,6 +874,13 @@ will be used.</p>
 </tr>
 
 <tr>
+<td><a href="#fronting-proxy-port"><code>fronting-proxy-port</code></a></td>
+<td>port number</td>
+<td>Global</td>
+<td>0 (do not listen)</td>
+</tr>
+
+<tr>
 <td><a href="#health-check"><code>health-check-addr</code></a></td>
 <td>address for health checks</td>
 <td>Backend</td>
@@ -978,10 +986,17 @@ will be used.</p>
 </tr>
 
 <tr>
-<td><a href="#https-to-http-port"><code>https-to-http-port</code></a></td>
+<td><a href="#fronting-proxy-port"><code>https-to-http-port</code></a></td>
 <td>port number</td>
 <td>Global</td>
 <td>0 (do not listen)</td>
+</tr>
+
+<tr>
+<td><a href="#initial-weight"><code>initial-weight</code></a></td>
+<td>weight value</td>
+<td>Backend</td>
+<td><code>1</code></td>
 </tr>
 
 <tr>
@@ -1623,8 +1638,16 @@ check that is run independently of a regular health check and can be used to
 control the reported status of a server as well as the weight to be used for
 load balancing.</p>
 
-<p><strong>NOTE:</strong> <code>agent-check-port</code> must be provided for any of the agent check
-options to be applied.</p>
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">Note</h4>
+<ul>
+<li><code>agent-check-port</code> must be provided for any of the agent check options to be applied</li>
+<li>define <a href="#initial-weight"><code>initial-weight</code></a> if using <code>agent-check</code> to change the server weight</li>
+</ul>
+</div>
+
 
 <ul>
 <li><code>agent-check-port</code>: Defines the port on which the agent is listening. This
@@ -1636,11 +1659,22 @@ the default of 2 seconds will be used.</li>
 <li><code>agent-check-send</code>: Defines a string to be sent to the agent upon connection.</li>
 </ul>
 
+<p>The following limitations are known when using <code>agent-check</code> to change the weight
+of a backend server:</p>
+
+<ul>
+<li>If using <a href="#drain-support"><code>drain-support</code></a>, the backend server will have its
+initial weight defined as <code>0</code> (zero) if the server is terminating when haproxy
+is restarted, making the weight update useless</li>
+<li>Blue/green annotation might be dynamically applied, which will temporarily
+overwrite the weight defined from the agent</li>
+</ul>
+
 <p>See also:</p>
 
 <ul>
-<li><a href="http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-port">http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-port</a></li>
 <li><a href="http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-check">http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-check</a></li>
+<li><a href="http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-port">http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-port</a></li>
 <li><a href="http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-inter">http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-inter</a></li>
 <li><a href="http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-send">http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-send</a></li>
 </ul>
@@ -2511,6 +2545,68 @@ doesn&rsquo;t provide one.</li>
 
 <hr />
 
+<h2 id="fronting-proxy-port">Fronting proxy port</h2>
+
+<table>
+<thead>
+<tr>
+<th>Configuration key</th>
+<th>Scope</th>
+<th>Default</th>
+<th>Since</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>fronting-proxy-port</code></td>
+<td><code>Global</code></td>
+<td></td>
+<td><code>v0.8</code></td>
+</tr>
+
+<tr>
+<td><code>https-to-http-port</code></td>
+<td><code>Global</code></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<p>A port number to listen to http requests from a fronting proxy that does the ssl
+offload. <code>https-to-http-port</code> is an alias to <code>fronting-proxy-port</code>.</p>
+
+<p>Requests made to <code>fronting-proxy-port</code> port number evaluate the <code>X-Forwarded-Proto</code>
+header to decide how to handle the request:</p>
+
+<ul>
+<li>If <code>X-Forwarded-Proto</code> is <code>https</code>: HAProxy will handle the request just like the
+ssl-offload was made by HAProxy itself - HSTS header is provided if configured and
+<code>X-SSL-*</code> headers won&rsquo;t be changed or removed if provided.</li>
+<li>If <code>X-Forwarded-Proto</code> is <code>http</code> or the header is missing:
+
+<ul>
+<li>If <code>fronting-proxy-port</code> has its own port: HAProxy will redirect scheme to https</li>
+<li>If <code>fronting-proxy-port</code> uses the same HTTP port (defaults to 80): the redirect scheme is done only if the header is provided, otherwise the request will be handled as if <code>fronting-proxy-port</code> wasn&rsquo;t configured.</li>
+</ul></li>
+</ul>
+
+
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Warning</h4>
+On v0.7 and older, and only if the <code>X-Forwarded-Proto</code> is missing: the
+connecting port number was used to define which socket received the request, so
+the fronting proxy should connect to the same port number defined in
+<code>https-to-http-port</code>, eg cannot have any proxy like Kubernetes&rsquo; <code>NodePort</code>
+between the load balancer and HAProxy which changes the connecting port number.
+This limitation doesn&rsquo;t exist on v0.8 or above.
+</div>
+
+
+<hr />
+
 <h2 id="health-check">Health check</h2>
 
 <table>
@@ -2653,7 +2749,7 @@ doesn&rsquo;t provide one.</li>
 
 <hr />
 
-<h2 id="https-to-http-port">HTTPS to HTTP port</h2>
+<h2 id="initial-weight">Initial weight</h2>
 
 <table>
 <thead>
@@ -2667,29 +2763,30 @@ doesn&rsquo;t provide one.</li>
 
 <tbody>
 <tr>
-<td><code>https-to-http-port</code></td>
-<td><code>Global</code></td>
-<td></td>
-<td></td>
+<td><code>initial-weight</code></td>
+<td><code>Backend</code></td>
+<td><code>1</code></td>
+<td><code>v0.8</code></td>
 </tr>
 </tbody>
 </table>
 
-<p>A port number to listen http requests from another load balancer that does the ssl offload.</p>
+<p>Configures the weight value of each backend server - either the enabled and also the
+disabled servers. The default value is <code>1</code>. Changing this value has no effect on the
+proportional value between each server of a single backend, thus this doesn&rsquo;t change
+the balance between the servers.</p>
 
-<p>How it works: HAProxy will define if the request came from a HTTPS connection reading the
-<code>X-Forwarded-Proto</code> HTTP header or the port number the client used to connect. If the
-header is <code>https</code> or the port number matches <code>https-to-http-port</code>, HAProxy will behave
-just like itself did the ssl offload: HSTS header will be provided if configured and no
-https redirect will be done. There is only one exception: if <code>https-to-http-port</code> is <code>80</code>,
-only the header will be checked.</p>
+<p>Change the default value to a higher number, eg <code>100</code>, if using with
+<a href="#agent-check"><code>agent-check</code></a> and the agent is used to change the weight of the server.</p>
 
-<p>The <code>X-Forwarded-Proto</code> header is optional in the following condition:</p>
+<p>Blue/green on <code>deploy</code> mode also uses <code>initial-weight</code> as its minimum weight value,
+provided that the maximum is lesser than or equal <code>256</code>.</p>
+
+<p>See also:</p>
 
 <ul>
-<li>The <code>https-to-http-port</code> should not match HTTP port <code>80</code>; and</li>
-<li>The load balancer should connect to the same <code>https-to-http-port</code> number, eg cannot
-have any proxy like Kubernetes&rsquo; <code>NodePort</code> between the load balancer and HAProxy</li>
+<li><a href="#agent-check"><code>agent-check</code></a></li>
+<li><a href="http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-weight">http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-weight</a></li>
 </ul>
 
 <hr />
@@ -4144,7 +4241,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified November 11, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/d3a0bfa653782cb915acf108495d27d772d6e8d4">Add support for Mod Security Detection Only (d3a0bfa)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified November 3, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/6c4339142abda40dfac38ef9b3ea8a74735cd0f7">Improve fronting proxy config (6c43391)</a>
 </div>
 </div>
 

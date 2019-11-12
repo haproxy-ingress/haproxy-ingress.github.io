@@ -821,6 +821,13 @@ will be used.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#fronting-proxy-port&#34;&gt;&lt;code&gt;fronting-proxy-port&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;port number&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;0 (do not listen)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#health-check&#34;&gt;&lt;code&gt;health-check-addr&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;address for health checks&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
@@ -926,10 +933,17 @@ will be used.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#https-to-http-port&#34;&gt;&lt;code&gt;https-to-http-port&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#fronting-proxy-port&#34;&gt;&lt;code&gt;https-to-http-port&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;port number&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
 &lt;td&gt;0 (do not listen)&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#initial-weight&#34;&gt;&lt;code&gt;initial-weight&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;weight value&lt;/td&gt;
+&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;1&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -1571,8 +1585,16 @@ check that is run independently of a regular health check and can be used to
 control the reported status of a server as well as the weight to be used for
 load balancing.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;NOTE:&lt;/strong&gt; &lt;code&gt;agent-check-port&lt;/code&gt; must be provided for any of the agent check
-options to be applied.&lt;/p&gt;
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;agent-check-port&lt;/code&gt; must be provided for any of the agent check options to be applied&lt;/li&gt;
+&lt;li&gt;define &lt;a href=&#34;#initial-weight&#34;&gt;&lt;code&gt;initial-weight&lt;/code&gt;&lt;/a&gt; if using &lt;code&gt;agent-check&lt;/code&gt; to change the server weight&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;agent-check-port&lt;/code&gt;: Defines the port on which the agent is listening. This
@@ -1584,11 +1606,22 @@ the default of 2 seconds will be used.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;agent-check-send&lt;/code&gt;: Defines a string to be sent to the agent upon connection.&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;p&gt;The following limitations are known when using &lt;code&gt;agent-check&lt;/code&gt; to change the weight
+of a backend server:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If using &lt;a href=&#34;#drain-support&#34;&gt;&lt;code&gt;drain-support&lt;/code&gt;&lt;/a&gt;, the backend server will have its
+initial weight defined as &lt;code&gt;0&lt;/code&gt; (zero) if the server is terminating when haproxy
+is restarted, making the weight update useless&lt;/li&gt;
+&lt;li&gt;Blue/green annotation might be dynamically applied, which will temporarily
+overwrite the weight defined from the agent&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-port&#34;&gt;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-port&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-check&#34;&gt;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-check&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-port&#34;&gt;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-port&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-inter&#34;&gt;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-inter&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-send&#34;&gt;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-agent-send&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -2459,6 +2492,68 @@ doesn&amp;rsquo;t provide one.&lt;/li&gt;
 
 &lt;hr /&gt;
 
+&lt;h2 id=&#34;fronting-proxy-port&#34;&gt;Fronting proxy port&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;fronting-proxy-port&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;v0.8&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;https-to-http-port&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;A port number to listen to http requests from a fronting proxy that does the ssl
+offload. &lt;code&gt;https-to-http-port&lt;/code&gt; is an alias to &lt;code&gt;fronting-proxy-port&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Requests made to &lt;code&gt;fronting-proxy-port&lt;/code&gt; port number evaluate the &lt;code&gt;X-Forwarded-Proto&lt;/code&gt;
+header to decide how to handle the request:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If &lt;code&gt;X-Forwarded-Proto&lt;/code&gt; is &lt;code&gt;https&lt;/code&gt;: HAProxy will handle the request just like the
+ssl-offload was made by HAProxy itself - HSTS header is provided if configured and
+&lt;code&gt;X-SSL-*&lt;/code&gt; headers won&amp;rsquo;t be changed or removed if provided.&lt;/li&gt;
+&lt;li&gt;If &lt;code&gt;X-Forwarded-Proto&lt;/code&gt; is &lt;code&gt;http&lt;/code&gt; or the header is missing:
+
+&lt;ul&gt;
+&lt;li&gt;If &lt;code&gt;fronting-proxy-port&lt;/code&gt; has its own port: HAProxy will redirect scheme to https&lt;/li&gt;
+&lt;li&gt;If &lt;code&gt;fronting-proxy-port&lt;/code&gt; uses the same HTTP port (defaults to 80): the redirect scheme is done only if the header is provided, otherwise the request will be handled as if &lt;code&gt;fronting-proxy-port&lt;/code&gt; wasn&amp;rsquo;t configured.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Warning&lt;/h4&gt;
+On v0.7 and older, and only if the &lt;code&gt;X-Forwarded-Proto&lt;/code&gt; is missing: the
+connecting port number was used to define which socket received the request, so
+the fronting proxy should connect to the same port number defined in
+&lt;code&gt;https-to-http-port&lt;/code&gt;, eg cannot have any proxy like Kubernetes&amp;rsquo; &lt;code&gt;NodePort&lt;/code&gt;
+between the load balancer and HAProxy which changes the connecting port number.
+This limitation doesn&amp;rsquo;t exist on v0.8 or above.
+&lt;/div&gt;
+
+
+&lt;hr /&gt;
+
 &lt;h2 id=&#34;health-check&#34;&gt;Health check&lt;/h2&gt;
 
 &lt;table&gt;
@@ -2601,7 +2696,7 @@ doesn&amp;rsquo;t provide one.&lt;/li&gt;
 
 &lt;hr /&gt;
 
-&lt;h2 id=&#34;https-to-http-port&#34;&gt;HTTPS to HTTP port&lt;/h2&gt;
+&lt;h2 id=&#34;initial-weight&#34;&gt;Initial weight&lt;/h2&gt;
 
 &lt;table&gt;
 &lt;thead&gt;
@@ -2615,29 +2710,30 @@ doesn&amp;rsquo;t provide one.&lt;/li&gt;
 
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;https-to-http-port&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;initial-weight&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;1&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;v0.8&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;p&gt;A port number to listen http requests from another load balancer that does the ssl offload.&lt;/p&gt;
+&lt;p&gt;Configures the weight value of each backend server - either the enabled and also the
+disabled servers. The default value is &lt;code&gt;1&lt;/code&gt;. Changing this value has no effect on the
+proportional value between each server of a single backend, thus this doesn&amp;rsquo;t change
+the balance between the servers.&lt;/p&gt;
 
-&lt;p&gt;How it works: HAProxy will define if the request came from a HTTPS connection reading the
-&lt;code&gt;X-Forwarded-Proto&lt;/code&gt; HTTP header or the port number the client used to connect. If the
-header is &lt;code&gt;https&lt;/code&gt; or the port number matches &lt;code&gt;https-to-http-port&lt;/code&gt;, HAProxy will behave
-just like itself did the ssl offload: HSTS header will be provided if configured and no
-https redirect will be done. There is only one exception: if &lt;code&gt;https-to-http-port&lt;/code&gt; is &lt;code&gt;80&lt;/code&gt;,
-only the header will be checked.&lt;/p&gt;
+&lt;p&gt;Change the default value to a higher number, eg &lt;code&gt;100&lt;/code&gt;, if using with
+&lt;a href=&#34;#agent-check&#34;&gt;&lt;code&gt;agent-check&lt;/code&gt;&lt;/a&gt; and the agent is used to change the weight of the server.&lt;/p&gt;
 
-&lt;p&gt;The &lt;code&gt;X-Forwarded-Proto&lt;/code&gt; header is optional in the following condition:&lt;/p&gt;
+&lt;p&gt;Blue/green on &lt;code&gt;deploy&lt;/code&gt; mode also uses &lt;code&gt;initial-weight&lt;/code&gt; as its minimum weight value,
+provided that the maximum is lesser than or equal &lt;code&gt;256&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;The &lt;code&gt;https-to-http-port&lt;/code&gt; should not match HTTP port &lt;code&gt;80&lt;/code&gt;; and&lt;/li&gt;
-&lt;li&gt;The load balancer should connect to the same &lt;code&gt;https-to-http-port&lt;/code&gt; number, eg cannot
-have any proxy like Kubernetes&amp;rsquo; &lt;code&gt;NodePort&lt;/code&gt; between the load balancer and HAProxy&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#agent-check&#34;&gt;&lt;code&gt;agent-check&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-weight&#34;&gt;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-weight&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
