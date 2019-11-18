@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2019-11-03T21:16:11-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2019-11-16T11:35:12-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all ingress/service annotations and global configmap options.
 ">
 
 
-<meta itemprop="dateModified" content="2019-11-03T21:16:11-03:00" />
-<meta itemprop="wordCount" content="7373">
+<meta itemprop="dateModified" content="2019-11-16T11:35:12-03:00" />
+<meta itemprop="wordCount" content="7563">
 
 
 
@@ -356,6 +356,7 @@ if (!doNotTrack) {
 <li><a href="#auth-tls">Auth TLS</a></li>
 <li><a href="#backend-protocol">Backend protocol</a></li>
 <li><a href="#balance-algorithm">Balance algorithm</a></li>
+<li><a href="#bind">Bind</a></li>
 <li><a href="#bind-ip-addr">Bind IP addr</a></li>
 <li><a href="#bind-port">Bind port</a></li>
 <li><a href="#blue-green">Blue-green</a></li>
@@ -654,6 +655,27 @@ will be used.</p>
 <td>algorithm name</td>
 <td>Backend</td>
 <td><code>roundrobin</code></td>
+</tr>
+
+<tr>
+<td><a href="#bind"><code>bind-fronting-proxy</code></a></td>
+<td>ip + port</td>
+<td>Global</td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="#bind"><code>bind-http</code></a></td>
+<td>ip + port</td>
+<td>Global</td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="#bind"><code>bind-https</code></a></td>
+<td>ip + port</td>
+<td>Global</td>
+<td></td>
 </tr>
 
 <tr>
@@ -1840,6 +1862,89 @@ will still configures SSL/TLS.</p>
 
 <hr />
 
+<h2 id="bind">Bind</h2>
+
+<table>
+<thead>
+<tr>
+<th>Configuration key</th>
+<th>Scope</th>
+<th>Default</th>
+<th>Since</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>bind-fronting-proxy</code></td>
+<td><code>Global</code></td>
+<td></td>
+<td>v0.8</td>
+</tr>
+
+<tr>
+<td><code>bind-http</code></td>
+<td><code>Global</code></td>
+<td></td>
+<td>v0.8</td>
+</tr>
+
+<tr>
+<td><code>bind-https</code></td>
+<td><code>Global</code></td>
+<td></td>
+<td>v0.8</td>
+</tr>
+</tbody>
+</table>
+
+<p>Configures listening IP and port for HTTP/s incoming requests. These
+configuration keys have backward compatibility with <a href="#bind-ip-addr">Bind IP addr</a>,
+<a href="#bind-port">Bind port</a> and <a href="#fronting-proxy-port">Fronting proxy</a> keys.
+The bind configuration keys in this section have precedente if declared.</p>
+
+<p>Any HAProxy supported option can be used, this will be copied verbatim to the
+bind keyword. See HAProxy
+<a href="#http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-bind">bind keyword doc</a>.</p>
+
+<p>Configuration examples:</p>
+
+<ul>
+<li><code>bind-http: &quot;:::80&quot;</code> and <code>bind-https: &quot;:::443&quot;</code>: Listen all IPv6 addresses</li>
+<li><code>bind-http: &quot;:80,:::80&quot;</code> and <code>bind-https:  &quot;:443,:::443&quot;</code>: Listen all IPv4 and IPv6 addresses</li>
+<li><code>bind-https: &quot;:443,:8443&quot;</code>: accept https connections on <code>443</code> and also <code>8443</code> port numbers</li>
+</ul>
+
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">Note</h4>
+<code>bind-fronting-proxy</code> and <code>bind-http</code> can share the same port number, provided
+that the whole configuration key match, not only the port number.
+See <a href="#fronting-proxy-port">Fronting proxy</a> doc.
+</div>
+
+
+
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Warning</h4>
+Special care should be taken on port number overlap, nether haproxy itself nor
+haproxy-ingress will warn if the same port number is used in more than one
+configuration key.
+</div>
+
+
+<p>See also:</p>
+
+<ul>
+<li><a href="http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-bind">http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-bind</a></li>
+<li><a href="#bind-ip-addr">Bind IP addr</a></li>
+<li><a href="#bind-port">Bind port</a></li>
+</ul>
+
+<hr />
+
 <h2 id="bind-ip-addr">Bind IP addr</h2>
 
 <table>
@@ -1896,6 +2001,7 @@ will still configures SSL/TLS.</p>
 
 <ul>
 <li><a href="http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-bind">http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-bind</a></li>
+<li><a href="#bind">Bind</a></li>
 </ul>
 
 <hr />
@@ -1946,6 +2052,7 @@ will still configures SSL/TLS.</p>
 
 <ul>
 <li><a href="http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-monitor-uri">http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-monitor-uri</a> (<code>healthz-port</code>)</li>
+<li><a href="#bind">Bind</a></li>
 </ul>
 
 <hr />
@@ -2604,6 +2711,12 @@ between the load balancer and HAProxy which changes the connecting port number.
 This limitation doesn&rsquo;t exist on v0.8 or above.
 </div>
 
+
+<p>See also:</p>
+
+<ul>
+<li><a href="#bind">Bind</a></li>
+</ul>
 
 <hr />
 
@@ -4241,7 +4354,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified November 3, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/6c4339142abda40dfac38ef9b3ea8a74735cd0f7">Improve fronting proxy config (6c43391)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified November 16, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/ffae08f64d4d9747d5117917966dd4faf9c3b6bc">add ip&#43;port bind support for http/https/fronting-proxy (ffae08f)</a>
 </div>
 </div>
 

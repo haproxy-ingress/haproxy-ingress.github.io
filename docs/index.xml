@@ -604,6 +604,27 @@ will be used.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#bind&#34;&gt;&lt;code&gt;bind-fronting-proxy&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;ip + port&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#bind&#34;&gt;&lt;code&gt;bind-http&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;ip + port&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#bind&#34;&gt;&lt;code&gt;bind-https&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;ip + port&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#bind-ip-addr&#34;&gt;&lt;code&gt;bind-ip-addr-healthz&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;IP address&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
@@ -1787,6 +1808,89 @@ will still configures SSL/TLS.&lt;/p&gt;
 
 &lt;hr /&gt;
 
+&lt;h2 id=&#34;bind&#34;&gt;Bind&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;bind-fronting-proxy&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.8&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;bind-http&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.8&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;bind-https&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.8&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Configures listening IP and port for HTTP/s incoming requests. These
+configuration keys have backward compatibility with &lt;a href=&#34;#bind-ip-addr&#34;&gt;Bind IP addr&lt;/a&gt;,
+&lt;a href=&#34;#bind-port&#34;&gt;Bind port&lt;/a&gt; and &lt;a href=&#34;#fronting-proxy-port&#34;&gt;Fronting proxy&lt;/a&gt; keys.
+The bind configuration keys in this section have precedente if declared.&lt;/p&gt;
+
+&lt;p&gt;Any HAProxy supported option can be used, this will be copied verbatim to the
+bind keyword. See HAProxy
+&lt;a href=&#34;#http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-bind&#34;&gt;bind keyword doc&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Configuration examples:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;bind-http: &amp;quot;:::80&amp;quot;&lt;/code&gt; and &lt;code&gt;bind-https: &amp;quot;:::443&amp;quot;&lt;/code&gt;: Listen all IPv6 addresses&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;bind-http: &amp;quot;:80,:::80&amp;quot;&lt;/code&gt; and &lt;code&gt;bind-https:  &amp;quot;:443,:::443&amp;quot;&lt;/code&gt;: Listen all IPv4 and IPv6 addresses&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;bind-https: &amp;quot;:443,:8443&amp;quot;&lt;/code&gt;: accept https connections on &lt;code&gt;443&lt;/code&gt; and also &lt;code&gt;8443&lt;/code&gt; port numbers&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
+&lt;code&gt;bind-fronting-proxy&lt;/code&gt; and &lt;code&gt;bind-http&lt;/code&gt; can share the same port number, provided
+that the whole configuration key match, not only the port number.
+See &lt;a href=&#34;#fronting-proxy-port&#34;&gt;Fronting proxy&lt;/a&gt; doc.
+&lt;/div&gt;
+
+
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Warning&lt;/h4&gt;
+Special care should be taken on port number overlap, nether haproxy itself nor
+haproxy-ingress will warn if the same port number is used in more than one
+configuration key.
+&lt;/div&gt;
+
+
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-bind&#34;&gt;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-bind&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#bind-ip-addr&#34;&gt;Bind IP addr&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#bind-port&#34;&gt;Bind port&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
 &lt;h2 id=&#34;bind-ip-addr&#34;&gt;Bind IP addr&lt;/h2&gt;
 
 &lt;table&gt;
@@ -1843,6 +1947,7 @@ will still configures SSL/TLS.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-bind&#34;&gt;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-bind&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#bind&#34;&gt;Bind&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -1893,6 +1998,7 @@ will still configures SSL/TLS.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-monitor-uri&#34;&gt;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-monitor-uri&lt;/a&gt; (&lt;code&gt;healthz-port&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#bind&#34;&gt;Bind&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -2551,6 +2657,12 @@ between the load balancer and HAProxy which changes the connecting port number.
 This limitation doesn&amp;rsquo;t exist on v0.8 or above.
 &lt;/div&gt;
 
+
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#bind&#34;&gt;Bind&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;hr /&gt;
 
