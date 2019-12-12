@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2019-10-30T22:27:20-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2019-12-11T16:56:10-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Command line">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2019-10-30T22:27:20-03:00" />
-<meta itemprop="wordCount" content="1221">
+<meta itemprop="dateModified" content="2019-12-11T16:56:10-03:00" />
+<meta itemprop="wordCount" content="1491">
 
 
 
@@ -348,6 +348,7 @@ if (!doNotTrack) {
 <ul>
 <li>
 <ul>
+<li><a href="#acme">Acme</a></li>
 <li><a href="#allow-cross-namespace">&ndash;allow-cross-namespace</a></li>
 <li><a href="#annotation-prefix">&ndash;annotation-prefix</a></li>
 <li><a href="#default-backend-service">&ndash;default-backend-service</a></li>
@@ -425,6 +426,62 @@ if (!doNotTrack) {
 
 <tbody>
 <tr>
+<td><a href="#acme"><code>--acme-check-period</code></a></td>
+<td>time</td>
+<td><code>24h</code></td>
+<td>v0.9</td>
+</tr>
+
+<tr>
+<td><a href="#acme"><code>--acme-election-id</code></a></td>
+<td>[namespace]/configmap-name</td>
+<td><code>acme-leader</code></td>
+<td>v0.9</td>
+</tr>
+
+<tr>
+<td><a href="#acme"><code>--acme-fail-initial-duration</code></a></td>
+<td>time</td>
+<td><code>5m</code></td>
+<td>v0.9</td>
+</tr>
+
+<tr>
+<td><a href="#acme"><code>--acme-fail-max-duration</code></a></td>
+<td>time</td>
+<td><code>8h</code></td>
+<td>v0.9</td>
+</tr>
+
+<tr>
+<td><a href="#acme"><code>--acme-secret-key-name</code></a></td>
+<td>[namespace]/secret-name</td>
+<td><code>acme-private-key</code></td>
+<td>v0.9</td>
+</tr>
+
+<tr>
+<td><a href="#acme"><code>--acme-server</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.9</td>
+</tr>
+
+<tr>
+<td><a href="#acme"><code>--acme-token-configmap-name</code></a></td>
+<td>[namespace]/configmap-name</td>
+<td><code>acme-validation-tokens</code></td>
+<td>v0.9</td>
+</tr>
+
+<tr>
+<td><a href="#acme"><code>--acme-track-tls-annotation</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.9</td>
+</tr>
+
+<tr>
 <td><a href="#allow-cross-namespace"><code>--allow-cross-namespace</code></a></td>
 <td>[true|false]</td>
 <td><code>false</code></td>
@@ -441,14 +498,14 @@ if (!doNotTrack) {
 <tr>
 <td><a href="#default-backend-service"><code>--default-backend-service</code></a></td>
 <td>namespace/servicename</td>
-<td>(mandatory)</td>
+<td>haproxy&rsquo;s 404 page</td>
 <td></td>
 </tr>
 
 <tr>
 <td><a href="#default-ssl-certificate"><code>--default-ssl-certificate</code></a></td>
 <td>namespace/secretname</td>
-<td>(mandatory)</td>
+<td>fake, auto generated</td>
 <td></td>
 </tr>
 
@@ -530,6 +587,32 @@ if (!doNotTrack) {
 </tr>
 </tbody>
 </table>
+
+<hr />
+
+<h2 id="acme">Acme</h2>
+
+<p>Configures the acme server and other static options used to authorize and sign certificates
+against a server which implements the acme protocol, version 2.</p>
+
+<p>Supported acme command-line options:</p>
+
+<ul>
+<li><code>--acme-check-period</code>: interval between checks for expiring certificates. Defaults to <code>24h</code>.</li>
+<li><code>--acme-election-id</code>: prefix of the configmap name used to store the leader election data. Only the leader of a haproxy-ingress cluster should start the authorization and sign certificate process. Defaults to <code>acme-leader</code>.</li>
+<li><code>--acme-fail-initial-duration</code>: the starting time to wait and retry after a failed authorization and sign process. Defaults to <code>5m</code>.</li>
+<li><code>--acme-fail-max-duration</code>: the time between retries of failed authorization will exponentially grow up to the max duration time. Defaults to <code>8h</code>.</li>
+<li><code>--acme-secret-key-name</code>: secret name used to store the client private key. Defaults to <code>acme-private-key</code>. A new key, hence a new client, is created if the secret does not exist.</li>
+<li><code>--acme-server</code>: mandatory, starts a local server used to answer challenges from the acme environment. This option should be provided on all haproxy-ingress instances to the certificate signing work properly.</li>
+<li><code>--acme-token-configmap-name</code>: the configmap name used to store temporary tokens generated during the challenge. Defaults to <code>acme-validation-tokens</code>. Such tokens need to be stored in k8s because any haproxy-ingress instance might receive the request from the acme environment.</li>
+<li><code>--acme-track-tls-annotation</code>: defines if ingress objects with annotation <code>kubernetes.io/tls-acme: &quot;true&quot;</code> should also be tracked. Defaults to <code>false</code>.</li>
+</ul>
+
+<p>See also:</p>
+
+<ul>
+<li><a href="/docs/configuration/keys/#acme">acme configuration keys</a> doc, which has also an overview on how acme works on haproxy-ingress</li>
+</ul>
 
 <hr />
 
@@ -783,7 +866,7 @@ single namespace.</p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified October 30, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/28d174a62ce04e536d0a04f352f755777619b357">[docs] add refs since v0.8 (28d174a)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified December 11, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/1818fde8fae9050087181dc057680011e61ea191">add acme-track-tls-annotation command-line option (1818fde)</a>
 </div>
 </div>
 

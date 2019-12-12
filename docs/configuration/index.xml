@@ -82,6 +82,62 @@ lists, math etc.&lt;/p&gt;
 
 &lt;tbody&gt;
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-check-period&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;time&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;24h&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-election-id&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[namespace]/configmap-name&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;acme-leader&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-fail-initial-duration&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;time&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;5m&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-fail-max-duration&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;time&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;8h&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-secret-key-name&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[namespace]/secret-name&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;acme-private-key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-server&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-token-configmap-name&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[namespace]/configmap-name&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;acme-validation-tokens&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-track-tls-annotation&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#allow-cross-namespace&#34;&gt;&lt;code&gt;--allow-cross-namespace&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
@@ -98,14 +154,14 @@ lists, math etc.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#default-backend-service&#34;&gt;&lt;code&gt;--default-backend-service&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;namespace/servicename&lt;/td&gt;
-&lt;td&gt;(mandatory)&lt;/td&gt;
+&lt;td&gt;haproxy&amp;rsquo;s 404 page&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#default-ssl-certificate&#34;&gt;&lt;code&gt;--default-ssl-certificate&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;namespace/secretname&lt;/td&gt;
-&lt;td&gt;(mandatory)&lt;/td&gt;
+&lt;td&gt;fake, auto generated&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -187,6 +243,32 @@ lists, math etc.&lt;/p&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;acme&#34;&gt;Acme&lt;/h2&gt;
+
+&lt;p&gt;Configures the acme server and other static options used to authorize and sign certificates
+against a server which implements the acme protocol, version 2.&lt;/p&gt;
+
+&lt;p&gt;Supported acme command-line options:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--acme-check-period&lt;/code&gt;: interval between checks for expiring certificates. Defaults to &lt;code&gt;24h&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--acme-election-id&lt;/code&gt;: prefix of the configmap name used to store the leader election data. Only the leader of a haproxy-ingress cluster should start the authorization and sign certificate process. Defaults to &lt;code&gt;acme-leader&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--acme-fail-initial-duration&lt;/code&gt;: the starting time to wait and retry after a failed authorization and sign process. Defaults to &lt;code&gt;5m&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--acme-fail-max-duration&lt;/code&gt;: the time between retries of failed authorization will exponentially grow up to the max duration time. Defaults to &lt;code&gt;8h&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--acme-secret-key-name&lt;/code&gt;: secret name used to store the client private key. Defaults to &lt;code&gt;acme-private-key&lt;/code&gt;. A new key, hence a new client, is created if the secret does not exist.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--acme-server&lt;/code&gt;: mandatory, starts a local server used to answer challenges from the acme environment. This option should be provided on all haproxy-ingress instances to the certificate signing work properly.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--acme-token-configmap-name&lt;/code&gt;: the configmap name used to store temporary tokens generated during the challenge. Defaults to &lt;code&gt;acme-validation-tokens&lt;/code&gt;. Such tokens need to be stored in k8s because any haproxy-ingress instance might receive the request from the acme environment.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--acme-track-tls-annotation&lt;/code&gt;: defines if ingress objects with annotation &lt;code&gt;kubernetes.io/tls-acme: &amp;quot;true&amp;quot;&lt;/code&gt; should also be tracked. Defaults to &lt;code&gt;false&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/configuration/keys/#acme&#34;&gt;acme configuration keys&lt;/a&gt; doc, which has also an overview on how acme works on haproxy-ingress&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;hr /&gt;
 
@@ -485,6 +567,41 @@ will be used.&lt;/p&gt;
 
 &lt;tbody&gt;
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;acme-emails&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;email1,email2,&amp;hellip;&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;acme-endpoint&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;v2-staging&lt;/td&gt;
+&lt;td&gt;v2&lt;/td&gt;
+&lt;td&gt;endpoint&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;acme-expiring&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;number of days&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;30&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;acme-shared&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;acme-terms-agreed&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#affinity&#34;&gt;&lt;code&gt;affinity&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;affinity type&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
@@ -684,6 +801,13 @@ will be used.&lt;/p&gt;
 &lt;td&gt;&lt;a href=&#34;#blue-green&#34;&gt;&lt;code&gt;blue-green-mode&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[pod|deploy]&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;cert-signer&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&amp;ldquo;acme&amp;rdquo;&lt;/td&gt;
+&lt;td&gt;Host&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -1472,6 +1596,145 @@ will be used.&lt;/p&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;acme&#34;&gt;Acme&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;acme-emails&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;acme-endpoint&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;acme-expiring&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;30&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;acme-shared&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;acme-terms-agreed&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;cert-signer&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Host&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Configures dynamic options used to authorize and sign certificates against a server
+which implements the acme protocol, version 2.&lt;/p&gt;
+
+&lt;p&gt;The popular &lt;a href=&#34;https://letsencrypt.org&#34;&gt;Let&amp;rsquo;s Encrypt&lt;/a&gt; certificate authority implements
+acme-v2.&lt;/p&gt;
+
+&lt;p&gt;Supported acme configuration keys:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;acme-emails&lt;/code&gt;: mandatory, a comma-separated list of emails used to configure the client account. The account will be updated if this option is changed.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;acme-endpoint&lt;/code&gt;: mandatory, endpoint of the acme environment. &lt;code&gt;v2-staging&lt;/code&gt; and &lt;code&gt;v02-staging&lt;/code&gt; are alias to &lt;code&gt;https://acme-staging-v02.api.letsencrypt.org&lt;/code&gt;, while &lt;code&gt;v2&lt;/code&gt; and &lt;code&gt;v02&lt;/code&gt; are alias to &lt;code&gt;https://acme-v02.api.letsencrypt.org&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;acme-expiring&lt;/code&gt;: how many days before expiring a certificate should be considered old and should be updated. Defaults to &lt;code&gt;30&lt;/code&gt; days.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;acme-shared&lt;/code&gt;: defines if another certificate signer is running in the cluster. If &lt;code&gt;false&lt;/code&gt;, the default value, any request to &lt;code&gt;/.well-known/acme-challenge/&lt;/code&gt; is sent to the local acme server despite any ingress object configuration. Otherwise, if &lt;code&gt;true&lt;/code&gt;, a configured ingress object would take precedence.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;acme-terms-agreed&lt;/code&gt;: mandatory, it should be defined as &lt;code&gt;true&lt;/code&gt;, otherwise certificates won&amp;rsquo;t be issued.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cert-signer&lt;/code&gt;: defines the certificate signer that should be used to authorize and sign new certificates. The only supported value is &lt;code&gt;&amp;quot;acme&amp;quot;&lt;/code&gt;. Add this config as an annotation in the ingress object that should have its certificate managed by haproxy-ingress and signed by the configured acme environment. The annotation &lt;code&gt;kubernetes.io/tls-acme: &amp;quot;true&amp;quot;&lt;/code&gt; is also supported if the command-line option &lt;code&gt;--acme-track-tls-annotation&lt;/code&gt; is used.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Minimum setup&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The command-line option &lt;code&gt;--acme-server&lt;/code&gt; need to be declared to start the local
+server and the work queue used to authorize and sign new certificates. See other
+command-line options &lt;a href=&#34;/docs/configuration/command-line/#acme&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The following configuration keys are mandatory: &lt;code&gt;acme-emails&lt;/code&gt;, &lt;code&gt;acme-endpoint&lt;/code&gt;,
+&lt;code&gt;acme-terms-agreed&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;A cluster-wide permission to &lt;code&gt;create&lt;/code&gt; and &lt;code&gt;update&lt;/code&gt; the &lt;code&gt;secrets&lt;/code&gt; resources should
+also be made.&lt;/p&gt;
+
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
+haproxy-ingress need cluster-wide permissions &lt;code&gt;create&lt;/code&gt; and &lt;code&gt;update&lt;/code&gt; on resource
+&lt;code&gt;secrets&lt;/code&gt; to store the client private key (new account) and the generated certificate
+and its private key. The default clusterrole configuration doesn&amp;rsquo;t provide these
+permissions.
+&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;How it works&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;All haproxy-ingress instances should declare &lt;code&gt;--acme-server&lt;/code&gt;
+&lt;a href=&#34;/docs/configuration/command-line/#acme&#34;&gt;command-line option&lt;/a&gt;, which will start a local
+server to answer acme challenges, a work queue to enqueue the domain authorization
+and certificate signing, and will also start a leader election to define which
+haproxy-ingress instance should perform authorizations and certificate signing.&lt;/p&gt;
+
+&lt;p&gt;The haproxy-ingress leader tracks ingress objects that declares the annotation
+&lt;code&gt;ingress.kubernetes.io/cert-signer&lt;/code&gt; with value &lt;code&gt;acme&lt;/code&gt; and a configured secret name for
+TLS certificate. The annotation &lt;code&gt;kubernetes.io/tls-acme&lt;/code&gt; with value &lt;code&gt;&amp;quot;true&amp;quot;&lt;/code&gt; will also
+be used if the command-line option &lt;code&gt;--acme-track-tls-annotation&lt;/code&gt; is declared. The
+secret does not need to exist. A new certificate will be issued if the certificate is
+old, the secret does not exist or has an invalid certificate, or the domains of the
+certificate doesn&amp;rsquo;t cover all the domains configured in the ingress.&lt;/p&gt;
+
+&lt;p&gt;Every &lt;code&gt;24h&lt;/code&gt; or the duration configured in the &lt;code&gt;--acme-check-period&lt;/code&gt;, and also when the
+leader changes, all the certificates from all the tracked ingress will be verified. The
+certificate is also verified whenever the list of the domains or the secret name changes,
+so the periodic check will, in fact, only issue new certificates when there is &lt;code&gt;30&lt;/code&gt; days
+or less to the certificate expires. This duration can be changed with &lt;code&gt;acme-expiring&lt;/code&gt;
+configuration key.&lt;/p&gt;
+
+&lt;p&gt;If an authorization fails, the certificate request is re-enqueued to be tried again after
+&lt;code&gt;5m&lt;/code&gt;. This duration can be changed with &lt;code&gt;--acme-fail-initial-duration&lt;/code&gt; command-line
+option. If the request fails again, it will be re-enqueued after the double of the time,
+in this case, after &lt;code&gt;10m&lt;/code&gt;. The duration will exponentially increase up to &lt;code&gt;8h&lt;/code&gt; or the
+duration defined by the command-line option &lt;code&gt;--acme-fail-max-duration&lt;/code&gt;. The request will
+continue in the work queue until it is successfully processed and stored, or when the
+ingress object is untracked, either removing the annotation, removing the secret name or
+removing the ingress object itself.&lt;/p&gt;
+
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/configuration/command-line/#acme&#34;&gt;acme command-line options&lt;/a&gt; doc.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
 
 &lt;h2 id=&#34;affinity&#34;&gt;Affinity&lt;/h2&gt;
 
