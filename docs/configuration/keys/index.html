@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2019-12-11T16:56:10-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2019-12-22T16:38:04-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all ingress/service annotations and global configmap options.
 ">
 
 
-<meta itemprop="dateModified" content="2019-12-11T16:56:10-03:00" />
-<meta itemprop="wordCount" content="8222">
+<meta itemprop="dateModified" content="2019-12-22T16:38:04-03:00" />
+<meta itemprop="wordCount" content="8542">
 
 
 
@@ -383,6 +383,7 @@ if (!doNotTrack) {
 <li><a href="#proxy-protocol">Proxy protocol</a></li>
 <li><a href="#rewrite-target">Rewrite target</a></li>
 <li><a href="#secure-backend">Secure backend</a></li>
+<li><a href="#security">Security</a></li>
 <li><a href="#server-alias">Server alias</a></li>
 <li><a href="#service-upstream">Service upstream</a></li>
 <li><a href="#ssl-ciphers">SSL ciphers</a></li>
@@ -676,7 +677,7 @@ will be used.</p>
 <td><a href="#backend-protocol"><code>backend-protocol</code></a></td>
 <td>[h1|h2|h1-ssl|h2-ssl]</td>
 <td>Backend</td>
-<td></td>
+<td><code>h1</code></td>
 </tr>
 
 <tr>
@@ -1348,7 +1349,14 @@ will be used.</p>
 <td><a href="#ssl-options"><code>ssl-options</code></a></td>
 <td>space-separated list</td>
 <td>Global</td>
-<td><code>no-sslv3</code> <code>no-tls-tickets</code></td>
+<td><a href="#ssl-options">see description</a></td>
+</tr>
+
+<tr>
+<td><a href="#ssl-options"><code>ssl-options-backend</code></a></td>
+<td>space-separated list</td>
+<td>Global</td>
+<td><a href="#ssl-options">see description</a></td>
 </tr>
 
 <tr>
@@ -1517,6 +1525,20 @@ will be used.</p>
 <td>TLS ALPN advertisement</td>
 <td>Global</td>
 <td><code>h2,http/1.1</code></td>
+</tr>
+
+<tr>
+<td><a href="#security"><code>use-chroot</code></a></td>
+<td>[true|false]</td>
+<td>Global</td>
+<td><code>false</code></td>
+</tr>
+
+<tr>
+<td><a href="#security"><code>use-haproxy-user</code></a></td>
+<td>[true|false]</td>
+<td>Global</td>
+<td><code>false</code></td>
 </tr>
 
 <tr>
@@ -1953,7 +1975,7 @@ the DN of the certificate.</p>
 <ul>
 <li><code>auth-tls-cert-header</code>: If <code>true</code> HAProxy will add <code>X-SSL-Client-Cert</code> http header with a base64 encoding of the X509 certificate provided by the client. Default is to not provide the client certificate.</li>
 <li><code>auth-tls-error-page</code>: Optional URL of the page to redirect the user if he doesn&rsquo;t provide a certificate or the certificate is invalid.</li>
-<li><code>auth-tls-secret</code>: Mandatory secret name with <code>ca.crt</code> key providing all certificate authority bundles used to validate client certificates.</li>
+<li><code>auth-tls-secret</code>: Mandatory secret name with <code>ca.crt</code> key providing all certificate authority bundles used to validate client certificates. Since v0.9, an optional <code>ca.crl</code> key can also provide a CRL in PEM format for the server to verify against.</li>
 <li><code>auth-tls-verify-client</code>: Optional configuration of Client Verification behavior. Supported values are <code>off</code>, <code>on</code>, <code>optional</code> and <code>optional_no_ca</code>. The default value is <code>on</code> if a valid secret is provided, <code>off</code> otherwise.</li>
 <li><code>ssl-headers-prefix</code>: Configures which prefix should be used on HTTP headers. Since <a href="http://tools.ietf.org/html/rfc6648">RFC 6648</a> <code>X-</code> prefix on unstandardized headers changed from a convention to deprecation. This configuration allows to select which pattern should be used on header names.</li>
 </ul>
@@ -1983,7 +2005,7 @@ the DN of the certificate.</p>
 <td><code>backend-protocol</code></td>
 <td><code>Backend</code></td>
 <td><code>h1</code></td>
-<td></td>
+<td>v0.9</td>
 </tr>
 </tbody>
 </table>
@@ -3687,13 +3709,68 @@ The following table shows some examples:</p>
 <ul>
 <li><code>secure-backends</code>: Define as true if the backend provide a TLS connection.</li>
 <li><code>secure-crt-secret</code>: Optional secret name of client certificate and key. This cert/key pair must be provided if the backend requests a client certificate. Expected secret keys are <code>tls.crt</code> and <code>tls.key</code>, the same used if secret is built with <code>kubectl create secret tls &lt;name&gt;</code>.</li>
-<li><code>secure-verify-ca-secret</code>: Optional secret name with certificate authority bundle used to validate server certificate, preventing man-in-the-middle attacks. Expected secret key is <code>ca.crt</code>.</li>
+<li><code>secure-verify-ca-secret</code>: Optional secret name with certificate authority bundle used to validate server certificate, preventing man-in-the-middle attacks. Expected secret key is <code>ca.crt</code>. Since v0.9, an optional <code>ca.crl</code> key can also provide a CRL in PEM format for the server to verify against.</li>
 </ul>
 
 <p>See also:</p>
 
 <ul>
 <li><a href="#backend-protocol">Backend protocol</a> configuration key.</li>
+</ul>
+
+<hr />
+
+<h2 id="security">Security</h2>
+
+<table>
+<thead>
+<tr>
+<th>Configuration key</th>
+<th>Scope</th>
+<th>Default</th>
+<th>Since</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>use-chroot</code></td>
+<td><code>Global</code></td>
+<td><code>false</code></td>
+<td>v0.9</td>
+</tr>
+
+<tr>
+<td><code>use-haproxy-user</code></td>
+<td><code>Global</code></td>
+<td><code>false</code></td>
+<td>v0.9</td>
+</tr>
+</tbody>
+</table>
+
+<p>Change security options.</p>
+
+<ul>
+<li><code>use-chroot</code>: If <code>true</code>, configures haproxy to perform a <code>chroot()</code> in the empty and non-writable directory <code>/var/empty</code> during the startup process, just before it drops its own privileges. Only root can perform a <code>chroot()</code>, so HAProxy Ingress container should start as UID <code>0</code> if this option is configured as <code>true</code>.</li>
+<li><code>use-haproxy-user</code>: Defines if the haproxy&rsquo;s process should be changed to <code>haproxy</code>, UID <code>1001</code>. The default value <code>false</code> leaves haproxy running as root. Note that even running as root, haproxy always drops its own privileges before start its event loop.</li>
+</ul>
+
+<p>In the default configuration, HAProxy Ingress container starts as root. It is also possible to configure the container to start as <code>haproxy</code> user, UID <code>1001</code>. Read the <a href="http://cbonte.github.io/haproxy-dconv/1.9/management.html#13">Security considerations</a> from HAProxy doc before change the starting user. The starting user can be changed in the deployment or daemonset&rsquo;s pod template using the following configuration:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">...<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>template<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>spec<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>securityContext<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span>runAsUser<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">1001</span></code></pre></div>
+<p>Note that ports below 1024 cannot be bound if the container starts as non-root.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><a href="http://cbonte.github.io/haproxy-dconv/1.9/management.html#13">http://cbonte.github.io/haproxy-dconv/1.9/management.html#13</a></li>
+<li><a href="http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#3.1-chroot">http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#3.1-chroot</a></li>
+<li><a href="http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#3.1-uid">http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#3.1-uid</a></li>
+<li><a href="http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#3.1-gid">http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#3.1-gid</a></li>
 </ul>
 
 <hr />
@@ -3952,10 +4029,31 @@ the ssl-engine used supports it.</p>
 <td></td>
 <td></td>
 </tr>
+
+<tr>
+<td><code>ssl-options-backend</code></td>
+<td><code>Backend</code></td>
+<td></td>
+<td>v0.9</td>
+</tr>
 </tbody>
 </table>
 
-<p>Define a space-separated list of options on SSL/TLS connections:</p>
+<p>Define a space-separated list of options on SSL/TLS connections.</p>
+
+<ul>
+<li><code>ssl-options</code>: Options for frontend connections - HAProxy being the server</li>
+<li><code>ssl-options-backend</code>: Default options for backend server connections - HAProxy being the client</li>
+</ul>
+
+<p>Default values:</p>
+
+<ul>
+<li>v0.9 and newer: <code>no-sslv3 no-tlsv10 no-tlsv11 no-tls-tickets</code></li>
+<li>up to v0.8: <code>no-sslv3 no-tls-tickets</code></li>
+</ul>
+
+<p>Supported options:</p>
 
 <ul>
 <li><code>force-sslv3</code>: Enforces use of SSLv3 only</li>
@@ -3967,6 +4065,15 @@ the ssl-engine used supports it.</p>
 <li><code>no-tlsv10</code>: Disables support for TLSv1.0</li>
 <li><code>no-tlsv11</code>: Disables support for TLSv1.1</li>
 <li><code>no-tlsv12</code>: Disables support for TLSv1.2</li>
+</ul>
+
+<p>New supported options since v0.9:</p>
+
+<ul>
+<li><code>force-tlsv13</code>: Enforces use of TLSv1.3 only</li>
+<li><code>no-tlsv13</code>: Disables support for TLSv1.3</li>
+<li><code>ssl-max-ver &lt;SSLv3|TLSv1.0|TLSv1.1|TLSv1.2|TLSv1.3&gt;</code>: Enforces the use of a SSL/TLS version or lower</li>
+<li><code>ssl-min-ver &lt;SSLv3|TLSv1.0|TLSv1.1|TLSv1.2|TLSv1.3&gt;</code>: Enforces the use of a SSL/TLS version or upper</li>
 </ul>
 
 <hr />
@@ -4395,6 +4502,7 @@ is <code>false</code>. HTX should be used to enable HTTP/2 protocol to backends.
 <p>See also:</p>
 
 <ul>
+<li><a href="#backend-protocol">backend-protocol</a> configuration keys</li>
 <li><a href="http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-option%20http-use-htx">http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-option%20http-use-htx</a></li>
 </ul>
 
@@ -4424,8 +4532,13 @@ is <code>false</code>. HTX should be used to enable HTTP/2 protocol to backends.
 
 <p>If <code>var-namespace</code> is configured as <code>true</code>, a HAProxy var <code>txn.namespace</code> is created with the
 kubernetes namespace owner of the service which is the target of the request. This variable is
-useful on http logs. The default value is <code>false</code>. Usage: <code>k8s-namespace: %[var(txn.namespace)]</code>.
-See also <a href="#log-format">http-log</a>.</p>
+useful on http logs. The default value is <code>false</code>. Usage: <code>k8s-namespace: %[var(txn.namespace)]</code>.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><a href="#log-format">http-log</a> configuration key</li>
+</ul>
 
 <hr />
 
@@ -4536,7 +4649,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified December 11, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/1818fde8fae9050087181dc057680011e61ea191">add acme-track-tls-annotation command-line option (1818fde)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified December 22, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/61a3c79a3c5fb3bcab7e96534c56bfb636839029">docs: minor fixes and last readme changes (61a3c79)</a>
 </div>
 </div>
 
