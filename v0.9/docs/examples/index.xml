@@ -1,11 +1,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>HAProxy Ingress – Examples</title>
-    <link>/docs/examples/</link>
+    <link>/v0.9/docs/examples/</link>
     <description>Recent content in Examples on HAProxy Ingress</description>
     <generator>Hugo -- gohugo.io</generator>
     
-	  <atom:link href="/docs/examples/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="/v0.9/docs/examples/index.xml" rel="self" type="application/rss+xml" />
     
     
       
@@ -15,10 +15,10 @@
     
     <item>
       <title>Docs: Blue/green</title>
-      <link>/docs/examples/blue-green/</link>
+      <link>/v0.9/docs/examples/blue-green/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/docs/examples/blue-green/</guid>
+      <guid>/v0.9/docs/examples/blue-green/</guid>
       <description>
         
         
@@ -292,10 +292,10 @@ Running 100 requests...
     
     <item>
       <title>Docs: ModSecurity</title>
-      <link>/docs/examples/modsecurity/</link>
+      <link>/v0.9/docs/examples/modsecurity/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/docs/examples/modsecurity/</guid>
+      <guid>/v0.9/docs/examples/modsecurity/</guid>
       <description>
         
         

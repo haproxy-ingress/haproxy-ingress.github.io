@@ -1,11 +1,11 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>HAProxy Ingress – Configuration</title>
-    <link>/docs/configuration/</link>
+    <link>/v0.9/docs/configuration/</link>
     <description>Recent content in Configuration on HAProxy Ingress</description>
     <generator>Hugo -- gohugo.io</generator>
     
-	  <atom:link href="/docs/configuration/index.xml" rel="self" type="application/rss+xml" />
+	  <atom:link href="/v0.9/docs/configuration/index.xml" rel="self" type="application/rss+xml" />
     
     
       
@@ -15,10 +15,10 @@
     
     <item>
       <title>Docs: Template</title>
-      <link>/docs/configuration/template/</link>
+      <link>/v0.9/docs/configuration/template/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/docs/configuration/template/</guid>
+      <guid>/v0.9/docs/configuration/template/</guid>
       <description>
         
         
@@ -59,10 +59,10 @@ lists, math etc.&lt;/p&gt;
     
     <item>
       <title>Docs: Command line</title>
-      <link>/docs/configuration/command-line/</link>
+      <link>/v0.9/docs/configuration/command-line/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/docs/configuration/command-line/</guid>
+      <guid>/v0.9/docs/configuration/command-line/</guid>
       <description>
         
         
@@ -267,7 +267,7 @@ against a server which implements the acme protocol, version 2.&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/configuration/keys/#acme&#34;&gt;acme configuration keys&lt;/a&gt; doc, which has also an overview on how acme works on haproxy-ingress&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/v0.9/v0.9/docs/configuration/keys/#acme&#34;&gt;acme configuration keys&lt;/a&gt; doc, which has also an overview on how acme works on haproxy-ingress&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -465,10 +465,10 @@ single namespace.&lt;/p&gt;
     
     <item>
       <title>Docs: Configuration keys</title>
-      <link>/docs/configuration/keys/</link>
+      <link>/v0.9/docs/configuration/keys/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/docs/configuration/keys/</guid>
+      <guid>/v0.9/docs/configuration/keys/</guid>
       <description>
         
         
@@ -1698,7 +1698,7 @@ acme-v2.&lt;/p&gt;
 
 &lt;p&gt;The command-line option &lt;code&gt;--acme-server&lt;/code&gt; need to be declared to start the local
 server and the work queue used to authorize and sign new certificates. See other
-command-line options &lt;a href=&#34;/docs/configuration/command-line/#acme&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+command-line options &lt;a href=&#34;/v0.9/v0.9/docs/configuration/command-line/#acme&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;The following configuration keys are mandatory: &lt;code&gt;acme-emails&lt;/code&gt;, &lt;code&gt;acme-endpoint&lt;/code&gt;,
 &lt;code&gt;acme-terms-agreed&lt;/code&gt;.&lt;/p&gt;
@@ -1720,7 +1720,7 @@ permissions.
 &lt;p&gt;&lt;strong&gt;How it works&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;All haproxy-ingress instances should declare &lt;code&gt;--acme-server&lt;/code&gt;
-&lt;a href=&#34;/docs/configuration/command-line/#acme&#34;&gt;command-line option&lt;/a&gt;, which will start a local
+&lt;a href=&#34;/v0.9/v0.9/docs/configuration/command-line/#acme&#34;&gt;command-line option&lt;/a&gt;, which will start a local
 server to answer acme challenges, a work queue to enqueue the domain authorization
 and certificate signing, and will also start a leader election to define which
 haproxy-ingress instance should perform authorizations and certificate signing.&lt;/p&gt;
@@ -1752,7 +1752,7 @@ removing the ingress object itself.&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/configuration/command-line/#acme&#34;&gt;acme command-line options&lt;/a&gt; doc.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/v0.9/v0.9/docs/configuration/command-line/#acme&#34;&gt;acme command-line options&lt;/a&gt; doc.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -2407,7 +2407,7 @@ uses the chosen load balance algorithm.&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/examples/blue-green/&#34;&gt;example&lt;/a&gt; page.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/v0.9/v0.9/docs/examples/blue-green/&#34;&gt;example&lt;/a&gt; page.&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-weight&#34;&gt;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-weight&lt;/a&gt; (&lt;code&gt;weight&lt;/code&gt; based balance)&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-use-server&#34;&gt;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#4-use-server&lt;/a&gt; (&lt;code&gt;use-server&lt;/code&gt; based selector)&lt;/li&gt;
 &lt;/ul&gt;
@@ -3340,7 +3340,7 @@ Since v0.8 the spoe filter is configured on a per-backend basis.&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/docs/examples/modsecurity/&#34;&gt;example&lt;/a&gt; page.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/v0.9/v0.9/docs/examples/modsecurity/&#34;&gt;example&lt;/a&gt; page.&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#waf&#34;&gt;&lt;code&gt;waf&lt;/code&gt;&lt;/a&gt; configuration key.&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.haproxy.org/download/1.9/doc/SPOE.txt&#34;&gt;https://www.haproxy.org/download/1.9/doc/SPOE.txt&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#9.3&#34;&gt;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#9.3&lt;/a&gt;&lt;/li&gt;
