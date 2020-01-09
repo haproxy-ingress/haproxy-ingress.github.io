@@ -2363,7 +2363,10 @@ about 5x slower and 20x more verbose than the CSV exporter. See the haproxy&amp;
 &lt;a href=&#34;https://github.com/haproxy/haproxy/blob/v2.0.0/contrib/prometheus-exporter/README#L44&#34;&gt;doc&lt;/a&gt;.
 Consider use Prometheus&amp;rsquo; &lt;a href=&#34;https://github.com/prometheus/haproxy_exporter&#34;&gt;haproxy_exporter&lt;/a&gt;
 on very large clusters - Prometheus&amp;rsquo; implementation reads the CSV from the stats page and
-converts to the Prometheus syntax outside the haproxy process.
+converts to the Prometheus syntax outside the haproxy process. On the other side the internal
+exporter supports scope filtering, which should make at least the processing time between csv
+and prometheus exporter very close if servers are filtered out. Make your own tests before
+choosing between one or the other.
 &lt;/div&gt;
 
 
