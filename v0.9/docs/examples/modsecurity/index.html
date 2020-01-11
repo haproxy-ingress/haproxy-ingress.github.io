@@ -25,13 +25,13 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.9/docs/examples/modsecurity/" />
-<meta property="article:modified_time" content="2019-10-20T17:06:54-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2020-01-10T18:24:42+01:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="ModSecurity">
 <meta itemprop="description" content="Demonstrate how to configure ModSecurity web application firewall.
 ">
 
 
-<meta itemprop="dateModified" content="2019-10-20T17:06:54-03:00" />
+<meta itemprop="dateModified" content="2020-01-10T18:24:42&#43;01:00" />
 <meta itemprop="wordCount" content="484">
 
 
@@ -450,11 +450,11 @@ modsecurity-spoa-pp6jz   1/1       Running   0          7s        192.168.100.99
 
 <h2 id="configuring-haproxy-ingress">Configuring HAProxy Ingress</h2>
 
-<p>Add the configmap key <code>modsecurity-endpoints</code> with a comma-separated list of <code>IP:port</code>
+<p>Add the ConfigMap key <code>modsecurity-endpoints</code> with a comma-separated list of <code>IP:port</code>
 of the ModSecurity agent server(s). The default port number of the agent is <code>12345</code>.
 A <code>kubectl -n ingress-controller edit configmap haproxy-ingress</code> should work.</p>
 
-<p>Example of a configmap content if ModSecurity agents has IPs <code>192.168.100.99</code> and
+<p>Example of a ConfigMap content if ModSecurity agents has IPs <code>192.168.100.99</code> and
 <code>192.168.100.100</code>:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>v1<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span>data<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
@@ -595,7 +595,7 @@ unique_id &quot;&quot;]
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified October 20, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/38209e8b89ae0534ea871792c4ab4880542855ec">[docs] starting version (38209e8)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified January 10, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/24112d19a4111c60e890798c7e8aa0c962520ec0">docs: rename configmap to ConfigMap (24112d1)</a>
 </div>
 </div>
 

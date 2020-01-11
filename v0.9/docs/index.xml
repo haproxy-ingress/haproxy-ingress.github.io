@@ -22,8 +22,8 @@
       <description>
         
         
-        &lt;p&gt;Change the default templates mounting a new template file using a configmap.
-Note that in the current version, updates to the configmap will not update the
+        &lt;p&gt;Change the default templates mounting a new template file using a ConfigMap.
+Note that in the current version, updates to the ConfigMap will not update the
 in-memory parsed template.&lt;/p&gt;
 
 &lt;p&gt;All templates support &lt;a href=&#34;https://masterminds.github.io/sprig/&#34;&gt;Sprig&lt;/a&gt; template library.
@@ -34,7 +34,7 @@ lists, math etc.&lt;/p&gt;
 &lt;thead&gt;
 &lt;tr&gt;
 &lt;th&gt;Mounting directory&lt;/th&gt;
-&lt;th&gt;Configmap keys (filenames)&lt;/th&gt;
+&lt;th&gt;ConfigMap keys (filenames)&lt;/th&gt;
 &lt;th&gt;Source (choose a proper tag)&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
@@ -255,12 +255,12 @@ against a server which implements the acme protocol, version 2.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;--acme-check-period&lt;/code&gt;: interval between checks for expiring certificates. Defaults to &lt;code&gt;24h&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;--acme-election-id&lt;/code&gt;: prefix of the configmap name used to store the leader election data. Only the leader of a haproxy-ingress cluster should start the authorization and sign certificate process. Defaults to &lt;code&gt;acme-leader&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--acme-election-id&lt;/code&gt;: prefix of the ConfigMap name used to store the leader election data. Only the leader of a haproxy-ingress cluster should start the authorization and sign certificate process. Defaults to &lt;code&gt;acme-leader&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;--acme-fail-initial-duration&lt;/code&gt;: the starting time to wait and retry after a failed authorization and sign process. Defaults to &lt;code&gt;5m&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;--acme-fail-max-duration&lt;/code&gt;: the time between retries of failed authorization will exponentially grow up to the max duration time. Defaults to &lt;code&gt;8h&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;--acme-secret-key-name&lt;/code&gt;: secret name used to store the client private key. Defaults to &lt;code&gt;acme-private-key&lt;/code&gt;. A new key, hence a new client, is created if the secret does not exist.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;--acme-server&lt;/code&gt;: mandatory, starts a local server used to answer challenges from the acme environment. This option should be provided on all haproxy-ingress instances to the certificate signing work properly.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;--acme-token-configmap-name&lt;/code&gt;: the configmap name used to store temporary tokens generated during the challenge. Defaults to &lt;code&gt;acme-validation-tokens&lt;/code&gt;. Such tokens need to be stored in k8s because any haproxy-ingress instance might receive the request from the acme environment.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--acme-token-configmap-name&lt;/code&gt;: the ConfigMap name used to store temporary tokens generated during the challenge. Defaults to &lt;code&gt;acme-validation-tokens&lt;/code&gt;. Such tokens need to be stored in k8s because any haproxy-ingress instance might receive the request from the acme environment.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;--acme-track-tls-annotation&lt;/code&gt;: defines if ingress objects with annotation &lt;code&gt;kubernetes.io/tls-acme: &amp;quot;true&amp;quot;&lt;/code&gt; should also be tracked. Defaults to &lt;code&gt;false&lt;/code&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -398,9 +398,9 @@ in the same order.&lt;/p&gt;
 
 &lt;p&gt;Configure &lt;code&gt;--tcp-services-configmap&lt;/code&gt; argument with &lt;code&gt;namespace/configmapname&lt;/code&gt; resource with TCP
 services and ports that HAProxy should listen to. Use the HAProxy&amp;rsquo;s port number as the key of the
-configmap.&lt;/p&gt;
+ConfigMap.&lt;/p&gt;
 
-&lt;p&gt;The value of the configmap entry is a colon separated list of the following items:&lt;/p&gt;
+&lt;p&gt;The value of the ConfigMap entry is a colon separated list of the following items:&lt;/p&gt;
 
 &lt;ol&gt;
 &lt;li&gt;&lt;code&gt;&amp;lt;namespace&amp;gt;/&amp;lt;service-name&amp;gt;&lt;/code&gt;, mandatory, is the well known notation of the service that will receive incoming connections.&lt;/li&gt;
@@ -474,26 +474,26 @@ single namespace.&lt;/p&gt;
         
         
 
-&lt;p&gt;Most of HAProxy Ingress configurations are made using a configmap object or annotating
+&lt;p&gt;Most of HAProxy Ingress configurations are made using a ConfigMap object or annotating
 the ingress or service object. Ingress or service annotations are used to make local
-configurations, and the configmap is used to make global configurations or change
+configurations, and the ConfigMap is used to make global configurations or change
 default configuration values.&lt;/p&gt;
 
-&lt;h1 id=&#34;configmap&#34;&gt;Configmap&lt;/h1&gt;
+&lt;h1 id=&#34;configmap&#34;&gt;ConfigMap&lt;/h1&gt;
 
-&lt;p&gt;Global configurations and changing default values are made via a configmap object.
-Configmap declaration is optional but highly recommended. Create an empty configmap
+&lt;p&gt;Global configurations and changing default values are made via a ConfigMap object.
+ConfigMap declaration is optional but highly recommended. Create an empty ConfigMap
 using &lt;code&gt;kubectl create configmap&lt;/code&gt; and configures in the haproxy-ingress deployment using
 the command-line option &lt;code&gt;--configmap=&amp;lt;namespace&amp;gt;/&amp;lt;configmap-name&amp;gt;&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;Changes to any key in the configmap object is applied on the fly, the haproxy instance
+&lt;p&gt;Changes to any key in the ConfigMap object is applied on the fly, the haproxy instance
 is restarted or dynamically updated if needed.&lt;/p&gt;
 
-&lt;p&gt;All configuration key names are supported as a configmap keys. When declared, its value
+&lt;p&gt;All configuration key names are supported as a ConfigMap keys. When declared, its value
 is used as the default value if not overwritten elsewhere.&lt;/p&gt;
 
-&lt;p&gt;A configuration key is used verbatim as the configmap key name, without any prefix.
-The configmap spec expects a string as the key value, so declare numbers and booleans
+&lt;p&gt;A configuration key is used verbatim as the ConfigMap key name, without any prefix.
+The ConfigMap spec expects a string as the key value, so declare numbers and booleans
 as strings, HAProxy Ingress will convert it when needed.&lt;/p&gt;
 
 &lt;h1 id=&#34;ingress-and-services&#34;&gt;Ingress and services&lt;/h1&gt;
@@ -519,8 +519,8 @@ service object accepts configuration keys of scope &lt;code&gt;Backend&lt;/code&
 &lt;a href=&#34;#scope&#34;&gt;Scope&lt;/a&gt; below.&lt;/p&gt;
 
 &lt;p&gt;Configuration keys declared in services have the highest precedence, overwriting
-configuration keys declared in the configmap and ingress objects. Ingress object
-overwrite the default value and the configmap configuration.&lt;/p&gt;
+configuration keys declared in the ConfigMap and ingress objects. Ingress object
+overwrite the default value and the ConfigMap configuration.&lt;/p&gt;
 
 &lt;h1 id=&#34;scope&#34;&gt;Scope&lt;/h1&gt;
 
@@ -530,17 +530,17 @@ and service objects.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Scope &lt;code&gt;Global&lt;/code&gt;: Defines configuration keys that should be declared only in the
-configmap object. Configuration keys of the global scope declared as ingress or
+ConfigMap object. Configuration keys of the global scope declared as ingress or
 service annotations are ignored. A configuration key of the global scope never
 conflict.&lt;/li&gt;
 &lt;li&gt;Scope &lt;code&gt;Host&lt;/code&gt;: Defines configuration keys that binds to the hostname. Configuration
-keys of the host scope can be declared in the configmap as a default value, or in
+keys of the host scope can be declared in the ConfigMap as a default value, or in
 an ingress object. A conflict warning will be logged if the same host configuration
 key with distinct values are declared in distict ingress objects but to the same
 hostname.&lt;/li&gt;
 &lt;li&gt;Scope &lt;code&gt;Backend&lt;/code&gt;: Defines configuration keys that binds to the service object, which
 is converted to a HAProxy backend after the configuration parsing. Configuration keys
-of the backend scope can be declared in the configmap as a default value, in an ingress
+of the backend scope can be declared in the ConfigMap as a default value, in an ingress
 object, or in a service object. A conflict warning will be logged if the same backend
 configuration key with distinct values are declared in distict ingress objects but
 to the same service or HAProxy backend. A backend configuration key declared in a
@@ -2460,7 +2460,7 @@ uses the chosen load balance algorithm.&lt;/p&gt;
 &lt;p&gt;Add HAProxy configuration snippet to the configuration file. Use multiline content
 to add more than one line of configuration.&lt;/p&gt;
 
-&lt;p&gt;Examples - configmap:&lt;/p&gt;
+&lt;p&gt;Examples - ConfigMap:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;config-global&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;|
 &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;      tune.bufsize 32768&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;config-defaults&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;|
 &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;      option redispatch&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;config-frontend&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;|
@@ -2808,7 +2808,7 @@ servers on each backend and update them via a Unix socket without reloading HAPr
 Unused servers will stay in a disabled state. If the change cannot be made via socket,
 a new HAProxy instance will be started.&lt;/p&gt;
 
-&lt;p&gt;Starting on v0.8, a new configmap option &lt;code&gt;slots-min-free&lt;/code&gt; can be used to configure the
+&lt;p&gt;Starting on v0.8, a new ConfigMap option &lt;code&gt;slots-min-free&lt;/code&gt; can be used to configure the
 minimum number of free/empty servers per backend. If HAProxy need to be restarted and
 an backend has less than &lt;code&gt;slots-min-free&lt;/code&gt; available servers, another
 &lt;code&gt;backend-server-slots-increment&lt;/code&gt; new empty servers would be created.&lt;/p&gt;
@@ -4952,11 +4952,11 @@ modsecurity-spoa-pp6jz   1/1       Running   0          7s        192.168.100.99
 
 &lt;h2 id=&#34;configuring-haproxy-ingress&#34;&gt;Configuring HAProxy Ingress&lt;/h2&gt;
 
-&lt;p&gt;Add the configmap key &lt;code&gt;modsecurity-endpoints&lt;/code&gt; with a comma-separated list of &lt;code&gt;IP:port&lt;/code&gt;
+&lt;p&gt;Add the ConfigMap key &lt;code&gt;modsecurity-endpoints&lt;/code&gt; with a comma-separated list of &lt;code&gt;IP:port&lt;/code&gt;
 of the ModSecurity agent server(s). The default port number of the agent is &lt;code&gt;12345&lt;/code&gt;.
 A &lt;code&gt;kubectl -n ingress-controller edit configmap haproxy-ingress&lt;/code&gt; should work.&lt;/p&gt;
 
-&lt;p&gt;Example of a configmap content if ModSecurity agents has IPs &lt;code&gt;192.168.100.99&lt;/code&gt; and
+&lt;p&gt;Example of a ConfigMap content if ModSecurity agents has IPs &lt;code&gt;192.168.100.99&lt;/code&gt; and
 &lt;code&gt;192.168.100.100&lt;/code&gt;:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;apiVersion&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;v1&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;data&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;

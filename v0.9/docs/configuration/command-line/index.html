@@ -25,13 +25,13 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.9/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2019-12-11T16:56:10-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2020-01-10T18:24:42+01:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Command line">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2019-12-11T16:56:10-03:00" />
+<meta itemprop="dateModified" content="2020-01-10T18:24:42&#43;01:00" />
 <meta itemprop="wordCount" content="1491">
 
 
@@ -601,12 +601,12 @@ against a server which implements the acme protocol, version 2.</p>
 
 <ul>
 <li><code>--acme-check-period</code>: interval between checks for expiring certificates. Defaults to <code>24h</code>.</li>
-<li><code>--acme-election-id</code>: prefix of the configmap name used to store the leader election data. Only the leader of a haproxy-ingress cluster should start the authorization and sign certificate process. Defaults to <code>acme-leader</code>.</li>
+<li><code>--acme-election-id</code>: prefix of the ConfigMap name used to store the leader election data. Only the leader of a haproxy-ingress cluster should start the authorization and sign certificate process. Defaults to <code>acme-leader</code>.</li>
 <li><code>--acme-fail-initial-duration</code>: the starting time to wait and retry after a failed authorization and sign process. Defaults to <code>5m</code>.</li>
 <li><code>--acme-fail-max-duration</code>: the time between retries of failed authorization will exponentially grow up to the max duration time. Defaults to <code>8h</code>.</li>
 <li><code>--acme-secret-key-name</code>: secret name used to store the client private key. Defaults to <code>acme-private-key</code>. A new key, hence a new client, is created if the secret does not exist.</li>
 <li><code>--acme-server</code>: mandatory, starts a local server used to answer challenges from the acme environment. This option should be provided on all haproxy-ingress instances to the certificate signing work properly.</li>
-<li><code>--acme-token-configmap-name</code>: the configmap name used to store temporary tokens generated during the challenge. Defaults to <code>acme-validation-tokens</code>. Such tokens need to be stored in k8s because any haproxy-ingress instance might receive the request from the acme environment.</li>
+<li><code>--acme-token-configmap-name</code>: the ConfigMap name used to store temporary tokens generated during the challenge. Defaults to <code>acme-validation-tokens</code>. Such tokens need to be stored in k8s because any haproxy-ingress instance might receive the request from the acme environment.</li>
 <li><code>--acme-track-tls-annotation</code>: defines if ingress objects with annotation <code>kubernetes.io/tls-acme: &quot;true&quot;</code> should also be tracked. Defaults to <code>false</code>.</li>
 </ul>
 
@@ -744,9 +744,9 @@ in the same order.</p>
 
 <p>Configure <code>--tcp-services-configmap</code> argument with <code>namespace/configmapname</code> resource with TCP
 services and ports that HAProxy should listen to. Use the HAProxy&rsquo;s port number as the key of the
-configmap.</p>
+ConfigMap.</p>
 
-<p>The value of the configmap entry is a colon separated list of the following items:</p>
+<p>The value of the ConfigMap entry is a colon separated list of the following items:</p>
 
 <ol>
 <li><code>&lt;namespace&gt;/&lt;service-name&gt;</code>, mandatory, is the well known notation of the service that will receive incoming connections.</li>
@@ -868,7 +868,7 @@ single namespace.</p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified December 11, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/1818fde8fae9050087181dc057680011e61ea191">add acme-track-tls-annotation command-line option (1818fde)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified January 10, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/24112d19a4111c60e890798c7e8aa0c962520ec0">docs: rename configmap to ConfigMap (24112d1)</a>
 </div>
 </div>
 

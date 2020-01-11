@@ -21,17 +21,17 @@
 <link rel="icon" type="image/png" href="/v0.9/favicons/android-192x192.png" sizes="192x192">
 
 <title>Configuration keys | HAProxy Ingress</title><meta property="og:title" content="Configuration keys" />
-<meta property="og:description" content="List of all ingress/service annotations and global configmap options.
+<meta property="og:description" content="List of all ingress/service annotations and global ConfigMap options.
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.9/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2019-12-22T16:38:04-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2020-01-10T18:24:42+01:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
-<meta itemprop="description" content="List of all ingress/service annotations and global configmap options.
+<meta itemprop="description" content="List of all ingress/service annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2019-12-22T16:38:04-03:00" />
+<meta itemprop="dateModified" content="2020-01-10T18:24:42&#43;01:00" />
 <meta itemprop="wordCount" content="8542">
 
 
@@ -39,7 +39,7 @@
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Configuration keys"/>
-<meta name="twitter:description" content="List of all ingress/service annotations and global configmap options.
+<meta name="twitter:description" content="List of all ingress/service annotations and global ConfigMap options.
 "/>
 
 
@@ -348,7 +348,7 @@ if (!doNotTrack) {
 
 <nav id="TableOfContents">
 <ul>
-<li><a href="#configmap">Configmap</a></li>
+<li><a href="#configmap">ConfigMap</a></li>
 <li><a href="#ingress-and-services">Ingress and services</a></li>
 <li><a href="#scope">Scope</a></li>
 <li><a href="#configuration-keys">Configuration keys</a>
@@ -447,29 +447,29 @@ if (!doNotTrack) {
             
 <div class="td-content">
 	<h1>Configuration keys</h1>
-	<div class="lead">List of all ingress/service annotations and global configmap options.</div>
+	<div class="lead">List of all ingress/service annotations and global ConfigMap options.</div>
 	
 
-<p>Most of HAProxy Ingress configurations are made using a configmap object or annotating
+<p>Most of HAProxy Ingress configurations are made using a ConfigMap object or annotating
 the ingress or service object. Ingress or service annotations are used to make local
-configurations, and the configmap is used to make global configurations or change
+configurations, and the ConfigMap is used to make global configurations or change
 default configuration values.</p>
 
-<h1 id="configmap">Configmap</h1>
+<h1 id="configmap">ConfigMap</h1>
 
-<p>Global configurations and changing default values are made via a configmap object.
-Configmap declaration is optional but highly recommended. Create an empty configmap
+<p>Global configurations and changing default values are made via a ConfigMap object.
+ConfigMap declaration is optional but highly recommended. Create an empty ConfigMap
 using <code>kubectl create configmap</code> and configures in the haproxy-ingress deployment using
 the command-line option <code>--configmap=&lt;namespace&gt;/&lt;configmap-name&gt;</code>.</p>
 
-<p>Changes to any key in the configmap object is applied on the fly, the haproxy instance
+<p>Changes to any key in the ConfigMap object is applied on the fly, the haproxy instance
 is restarted or dynamically updated if needed.</p>
 
-<p>All configuration key names are supported as a configmap keys. When declared, its value
+<p>All configuration key names are supported as a ConfigMap keys. When declared, its value
 is used as the default value if not overwritten elsewhere.</p>
 
-<p>A configuration key is used verbatim as the configmap key name, without any prefix.
-The configmap spec expects a string as the key value, so declare numbers and booleans
+<p>A configuration key is used verbatim as the ConfigMap key name, without any prefix.
+The ConfigMap spec expects a string as the key value, so declare numbers and booleans
 as strings, HAProxy Ingress will convert it when needed.</p>
 
 <h1 id="ingress-and-services">Ingress and services</h1>
@@ -495,8 +495,8 @@ service object accepts configuration keys of scope <code>Backend</code> only. Se
 <a href="#scope">Scope</a> below.</p>
 
 <p>Configuration keys declared in services have the highest precedence, overwriting
-configuration keys declared in the configmap and ingress objects. Ingress object
-overwrite the default value and the configmap configuration.</p>
+configuration keys declared in the ConfigMap and ingress objects. Ingress object
+overwrite the default value and the ConfigMap configuration.</p>
 
 <h1 id="scope">Scope</h1>
 
@@ -506,17 +506,17 @@ and service objects.</p>
 
 <ul>
 <li>Scope <code>Global</code>: Defines configuration keys that should be declared only in the
-configmap object. Configuration keys of the global scope declared as ingress or
+ConfigMap object. Configuration keys of the global scope declared as ingress or
 service annotations are ignored. A configuration key of the global scope never
 conflict.</li>
 <li>Scope <code>Host</code>: Defines configuration keys that binds to the hostname. Configuration
-keys of the host scope can be declared in the configmap as a default value, or in
+keys of the host scope can be declared in the ConfigMap as a default value, or in
 an ingress object. A conflict warning will be logged if the same host configuration
 key with distinct values are declared in distict ingress objects but to the same
 hostname.</li>
 <li>Scope <code>Backend</code>: Defines configuration keys that binds to the service object, which
 is converted to a HAProxy backend after the configuration parsing. Configuration keys
-of the backend scope can be declared in the configmap as a default value, in an ingress
+of the backend scope can be declared in the ConfigMap as a default value, in an ingress
 object, or in a service object. A conflict warning will be logged if the same backend
 configuration key with distinct values are declared in distict ingress objects but
 to the same service or HAProxy backend. A backend configuration key declared in a
@@ -2436,7 +2436,7 @@ uses the chosen load balance algorithm.</p>
 <p>Add HAProxy configuration snippet to the configuration file. Use multiline content
 to add more than one line of configuration.</p>
 
-<p>Examples - configmap:</p>
+<p>Examples - ConfigMap:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f8f8f8;text-decoration:underline">    </span>config-global<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#8f5902;font-style:italic">|
 </span><span style="color:#8f5902;font-style:italic">      tune.bufsize 32768</span></code></pre></div><div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f8f8f8;text-decoration:underline">    </span>config-defaults<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#8f5902;font-style:italic">|
 </span><span style="color:#8f5902;font-style:italic">      option redispatch</span></code></pre></div><div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f8f8f8;text-decoration:underline">    </span>config-frontend<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#8f5902;font-style:italic">|
@@ -2784,7 +2784,7 @@ servers on each backend and update them via a Unix socket without reloading HAPr
 Unused servers will stay in a disabled state. If the change cannot be made via socket,
 a new HAProxy instance will be started.</p>
 
-<p>Starting on v0.8, a new configmap option <code>slots-min-free</code> can be used to configure the
+<p>Starting on v0.8, a new ConfigMap option <code>slots-min-free</code> can be used to configure the
 minimum number of free/empty servers per backend. If HAProxy need to be restarted and
 an backend has less than <code>slots-min-free</code> available servers, another
 <code>backend-server-slots-increment</code> new empty servers would be created.</p>
@@ -4651,7 +4651,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified December 22, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/61a3c79a3c5fb3bcab7e96534c56bfb636839029">docs: minor fixes and last readme changes (61a3c79)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified January 10, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/24112d19a4111c60e890798c7e8aa0c962520ec0">docs: rename configmap to ConfigMap (24112d1)</a>
 </div>
 </div>
 

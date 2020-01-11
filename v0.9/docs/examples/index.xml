@@ -349,11 +349,11 @@ modsecurity-spoa-pp6jz   1/1       Running   0          7s        192.168.100.99
 
 &lt;h2 id=&#34;configuring-haproxy-ingress&#34;&gt;Configuring HAProxy Ingress&lt;/h2&gt;
 
-&lt;p&gt;Add the configmap key &lt;code&gt;modsecurity-endpoints&lt;/code&gt; with a comma-separated list of &lt;code&gt;IP:port&lt;/code&gt;
+&lt;p&gt;Add the ConfigMap key &lt;code&gt;modsecurity-endpoints&lt;/code&gt; with a comma-separated list of &lt;code&gt;IP:port&lt;/code&gt;
 of the ModSecurity agent server(s). The default port number of the agent is &lt;code&gt;12345&lt;/code&gt;.
 A &lt;code&gt;kubectl -n ingress-controller edit configmap haproxy-ingress&lt;/code&gt; should work.&lt;/p&gt;
 
-&lt;p&gt;Example of a configmap content if ModSecurity agents has IPs &lt;code&gt;192.168.100.99&lt;/code&gt; and
+&lt;p&gt;Example of a ConfigMap content if ModSecurity agents has IPs &lt;code&gt;192.168.100.99&lt;/code&gt; and
 &lt;code&gt;192.168.100.100&lt;/code&gt;:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;apiVersion&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;v1&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;data&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
