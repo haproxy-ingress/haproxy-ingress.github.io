@@ -1005,7 +1005,7 @@ will be used.&lt;/p&gt;
 &lt;td&gt;&lt;a href=&#34;#dynamic-scaling&#34;&gt;&lt;code&gt;dynamic-scaling&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
