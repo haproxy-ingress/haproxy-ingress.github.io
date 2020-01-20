@@ -291,6 +291,234 @@ Running 100 requests...
     </item>
     
     <item>
+      <title>Docs: Metrics</title>
+      <link>/docs/examples/metrics/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/examples/metrics/</guid>
+      <description>
+        
+        
+        
+
+
+
+&lt;div class=&#34;pageinfo pageinfo-primary&#34;&gt;
+&lt;p&gt;This is a &lt;code&gt;v0.10&lt;/code&gt; example and need HAProxy Ingress &lt;code&gt;v0.10-snapshot.2&lt;/code&gt; or above&lt;/p&gt;
+
+&lt;/div&gt;
+
+
+&lt;p&gt;This example demonstrates how to configure &lt;a href=&#34;https://prometheus.io&#34;&gt;Prometheus&lt;/a&gt; to collect ingress controller and haproxy metrics, and also to configure a &lt;a href=&#34;https://grafana.com&#34;&gt;Grafana&lt;/a&gt; dashboard to expose these metrics.&lt;/p&gt;
+
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+
+&lt;p&gt;This document has the following prerequisite:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;A Kubernetes cluster with a running HAProxy Ingress controller v0.10 or above. See the &lt;a href=&#34;/docs/getting-started/&#34;&gt;getting started&lt;/a&gt; guide.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;configure-the-controller&#34;&gt;Configure the controller&lt;/h2&gt;
+
+&lt;p&gt;HAProxy Ingress by default does not configure the haproxy&amp;rsquo;s prometheus exporter. The patch below configures the haproxy&amp;rsquo;s internal prometheus exporter in the port &lt;code&gt;9105&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kubectl --namespace ingress-controller patch configmap haproxy-ingress -p &#39;{&amp;quot;data&amp;quot;:{&amp;quot;prometheus-port&amp;quot;:&amp;quot;9105&amp;quot;}}&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The following patch adds ports &lt;code&gt;9105&lt;/code&gt; and &lt;code&gt;10254&lt;/code&gt; to the HAProxy Ingress container. The port declaration is used by the Prometheus&amp;rsquo; service discovery:&lt;/p&gt;
+
+&lt;p&gt;Note: this patch will restart the controller!&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kubectl --namespace ingress-controller patch daemonset haproxy-ingress -p &#39;{&amp;quot;spec&amp;quot;:{&amp;quot;template&amp;quot;:{&amp;quot;spec&amp;quot;:{&amp;quot;containers&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;haproxy-ingress&amp;quot;,&amp;quot;ports&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;exporter&amp;quot;,&amp;quot;containerPort&amp;quot;:9105},{&amp;quot;name&amp;quot;:&amp;quot;ingress-stats&amp;quot;,&amp;quot;containerPort&amp;quot;:10254}]}]}}}}&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;deploy-prometheus&#34;&gt;Deploy Prometheus&lt;/h2&gt;
+
+&lt;p&gt;This will create a Prometheus deployment with no resource limits, a configuration file which will scrape haproxy and also HAProxy Ingress metrics every &lt;code&gt;10s&lt;/code&gt;, and also a role and rolebinding which allows Prometheus to discover haproxy and controller endpoints using k8s:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kubectl create -f https://haproxy-ingress.github.io/docs/examples/metrics/prometheus.yaml
+&lt;/code&gt;&lt;/pre&gt;
+
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
+This deployment has no persistent volume, so all the collected metrics will be lost if the pod is recreated.
+&lt;/div&gt;
+
+
+&lt;p&gt;Check if Prometheus is up and running:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kubectl --namespace ingress-controller get pod -lrun=prometheus -w
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Check also if Prometheus found the haproxy and the controller endpoints:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kubectl --namespace ingress-controller port-forward svc/prometheus 9090:9090
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Open &lt;a href=&#34;http://127.0.0.1:9090/targets&#34;&gt;localhost:9090/targets&lt;/a&gt; in your browser, all haproxy and controller instances should be listed, up, and green.&lt;/p&gt;
+
+&lt;h2 id=&#34;deploy-grafana&#34;&gt;Deploy Grafana&lt;/h2&gt;
+
+&lt;p&gt;The following instruction will create a Grafana deployment with no resource limit, and also its service:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kubectl create -f https://haproxy-ingress.github.io/docs/examples/metrics/grafana.yaml
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Check if Grafana is up and running:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kubectl --namespace ingress-controller get pod -lrun=grafana -w
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Create the ingress which will expose Grafana. Change &lt;code&gt;HOST&lt;/code&gt; below to a domain of the cluster, or just change the inner IP number to the IP of the HAProxy Ingress node:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;HOST=grafana.192.168.1.1.nip.io
+kubectl create -f - &amp;lt;&amp;lt;EOF
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: ingress-controller
+spec:
+  rules:
+  - host: $HOST
+    http:
+      paths:
+      - backend:
+          serviceName: grafana
+          servicePort: 3000
+        path: /
+  tls:
+  - hosts:
+    - $HOST
+EOF
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;configure-dashboard&#34;&gt;Configure dashboard&lt;/h2&gt;
+
+&lt;p&gt;Now its time to see what Prometheus is collecting. Grafana can be acessed in the &lt;code&gt;HOST&lt;/code&gt; used to configure the ingress object.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Log in to Grafana, user is &lt;code&gt;admin&lt;/code&gt; and the first password is &lt;code&gt;admin&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Create a Prometheus data source, the endpoint is &lt;code&gt;http://prometheus:9090&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Click the big &lt;code&gt;+&lt;/code&gt; plus sign in the left side, and Import &lt;a href=&#34;https://haproxy-ingress.github.io/docs/examples/metrics/haproxy-ingress-dashboard.json&#34;&gt;this&lt;/a&gt; dashboard&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
+This deployment has no persistent volume, so all customizations will be lost if the pod is recreated.
+&lt;/div&gt;
+
+
+&lt;p&gt;If everything worked as expected, you should see a dashboard like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;/docs/examples/metrics/dashboard-1.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;compatibility&#34;&gt;Compatibility&lt;/h2&gt;
+
+&lt;p&gt;Check if you have any of these scenarios and adjust Prometheus or Grafana accordingly.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Grafana &amp;lt; 6.5&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Use Grafana 6.5 or higher. Although an older Grafana won&amp;rsquo;t refuse to install this dashboard, some widgets will not render as expected on older versions.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;The &lt;code&gt;hostname&lt;/code&gt; label&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;All the metrics of this dashboard are grouped by the &lt;code&gt;hostname&lt;/code&gt; label. If you already have Prometheus and HAProxy Exporter, ensure that the &lt;code&gt;hostname&lt;/code&gt; label uniquely identifies all HAProxy Ingress instances, just like the proposed Prometheus configuration does.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;The &lt;code&gt;_front__tls&lt;/code&gt; proxy&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;This dashboard is designed to work without the &lt;code&gt;_front__tls&lt;/code&gt; proxy, such proxy is created whenever ssl-passthrough is used or timeout client is configured in the ingress object. Just to be sure, check if &lt;code&gt;grep _front__tls /etc/haproxy/haproxy.cfg&lt;/code&gt; find a proxy declaration. If the &lt;code&gt;_front__tls&lt;/code&gt; proxy exists, edit the dashboard and change the variable &lt;code&gt;$public_frontend&lt;/code&gt; to the following new value: &lt;code&gt;(_tcp_.*|_front_http|_front__tls)&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Using the Prometheus&amp;rsquo; HAProxy Exporter&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;This dashboard works with haproxy&amp;rsquo;s internal Prometheus exporter. Follow these steps to adjust the scrape config and the dashboard if using &lt;a href=&#34;https://github.com/prometheus/haproxy_exporter&#34;&gt;Prometheus&amp;rsquo; HAProxy Exporter&lt;/a&gt;:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Change the metric name of &amp;ldquo;Backend status / Top 5 max/avg connection time&amp;rdquo; to &lt;code&gt;haproxy_backend_http_connect_time_average_seconds&lt;/code&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Add this &lt;code&gt;metric_relabel_config&lt;/code&gt; in the Prometheus configuration:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;metric_relabel_configs&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;-&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;source_labels&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;frontend&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;]&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;regex&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;(.+)&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;target_label&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;proxy&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;-&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;source_labels&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;backend&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;]&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;regex&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;(.+)&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;target_label&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;proxy&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;test&#34;&gt;Test&lt;/h2&gt;
+
+&lt;p&gt;Lets make some noise and see what the dashboard tell us about our HAProxy Ingress cluster.&lt;/p&gt;
+
+&lt;p&gt;Deploy a demo application and a custom (self-signed) certificate:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;openssl req -x509 -subj &amp;quot;/CN=whoami.localdomain&amp;quot; -nodes -days 30 -newkey rsa:2048 -keyout /tmp/w.key -out /tmp/w.crt
+kubectl --namespace default create secret tls whoami --cert /tmp/w.crt --key /tmp/w.key
+rm -fv /tmp/w.crt /tmp/w.key
+kubectl --namespace default create deploy whoami --image jcmoraisjr/whoami
+kubectl --namespace default scale deploy whoami --replicas=4
+kubectl --namespace default expose deploy whoami --port 8000
+kubectl create -f https://haproxy-ingress.github.io/docs/examples/metrics/whoami-ingress.yaml
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Check if the app is up and running:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kubectl --namespace default get pod -lapp=whoami -w
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Download &lt;a href=&#34;https://github.com/tsenart/vegeta/releases&#34;&gt;vegeta&lt;/a&gt; and place it in the path.&lt;/p&gt;
+
+&lt;p&gt;Make a test and check if everything is working as expected. Change IP below to the IP of a HAProxy Ingress node:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IP=192.168.1.1
+echo &amp;quot;GET http://${IP}&amp;quot; |\
+  vegeta attack -duration=1s -rate=1 -header &amp;quot;Host: whoami.localdomain&amp;quot; -keepalive=true |\
+  vegeta report
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You should see something like this. The most important part is Success ratio=100% and an Error Set empty:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;...
+Success       [ratio]                    100.00%
+Status Codes  [code:count]               200:1
+Error Set:
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now the real test. Adjust the duration and rate (number of requests per second) if needed. A dual core VM dedicated to HAProxy Ingress should accept a few thousands requests per second. Lets configure &lt;code&gt;200&lt;/code&gt; which should move some lines in the dashoard:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IP=192.168.1.1
+echo &amp;quot;GET http://${IP}&amp;quot; |\
+  vegeta attack -duration=5m -rate=200 -header &amp;quot;Host: whoami.localdomain&amp;quot; -keepalive=true |\
+  vegeta report
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Follow the dashboard while the test is running. Most metrics have its resolution in &lt;code&gt;1m&lt;/code&gt; (one minute) so you should wait this time to see the correct conn/s, rps, proc use and so on.&lt;/p&gt;
+
+&lt;p&gt;What&amp;rsquo;s the impact of not use keepalive? Try the same test, changing only &lt;code&gt;-keepalive&lt;/code&gt; to  &lt;code&gt;false&lt;/code&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IP=192.168.1.1
+echo &amp;quot;GET http://${IP}&amp;quot; |\
+  vegeta attack -duration=5m -rate=200 -header &amp;quot;Host: whoami.localdomain&amp;quot; -keepalive=false |\
+  vegeta report
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Last test: what about TLS connections without keepalive? Change &lt;code&gt;http&lt;/code&gt; to &lt;code&gt;https&lt;/code&gt; and add &lt;code&gt;-insecure&lt;/code&gt; command-line option to Vegeta:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;IP=192.168.1.1
+echo &amp;quot;GET https://${IP}&amp;quot; |\
+  vegeta attack -insecure -duration=5m -rate=200 -header &amp;quot;Host: whoami.localdomain&amp;quot; -keepalive=false |\
+  vegeta report
+&lt;/code&gt;&lt;/pre&gt;
+
+      </description>
+    </item>
+    
+    <item>
       <title>Docs: ModSecurity</title>
       <link>/docs/examples/modsecurity/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
