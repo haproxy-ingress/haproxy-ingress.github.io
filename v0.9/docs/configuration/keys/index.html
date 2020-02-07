@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.9/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2020-01-18T11:11:51-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2020-01-31T11:00:24-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all ingress/service annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2020-01-18T11:11:51-03:00" />
-<meta itemprop="wordCount" content="8658">
+<meta itemprop="dateModified" content="2020-01-31T11:00:24-03:00" />
+<meta itemprop="wordCount" content="8902">
 
 
 
@@ -358,6 +358,7 @@ if (!doNotTrack) {
 <li><a href="#agent-check">Agent check</a></li>
 <li><a href="#auth-tls">Auth TLS</a></li>
 <li><a href="#backend-protocol">Backend protocol</a></li>
+<li><a href="#backend-server-naming">Backend server naming</a></li>
 <li><a href="#balance-algorithm">Balance algorithm</a></li>
 <li><a href="#bind">Bind</a></li>
 <li><a href="#bind-ip-addr">Bind IP addr</a></li>
@@ -655,6 +656,13 @@ will be used.</p>
 </tr>
 
 <tr>
+<td><a href="#auth-tls"><code>auth-tls-strict</code></a></td>
+<td>[true|false]</td>
+<td>Host</td>
+<td></td>
+</tr>
+
+<tr>
 <td><a href="#auth-tls"><code>auth-tls-verify-client</code></a></td>
 <td>[off|optional|on|optional_no_ca]</td>
 <td>Host</td>
@@ -680,6 +688,13 @@ will be used.</p>
 <td>[h1|h2|h1-ssl|h2-ssl]</td>
 <td>Backend</td>
 <td><code>h1</code></td>
+</tr>
+
+<tr>
+<td><a href="#backend-server-naming"><code>backend-server-naming</code></a></td>
+<td>[sequence|ip|pod]</td>
+<td>Backend</td>
+<td><code>sequence</code></td>
 </tr>
 
 <tr>
@@ -1944,6 +1959,13 @@ overwrite the weight defined from the agent</li>
 </tr>
 
 <tr>
+<td><code>auth-tls-strict</code></td>
+<td><code>Host</code></td>
+<td><code>false</code></td>
+<td>v0.8.1</td>
+</tr>
+
+<tr>
 <td><code>auth-tls-verify-client</code></td>
 <td><code>Host</code></td>
 <td></td>
@@ -1978,6 +2000,7 @@ the DN of the certificate.</p>
 <li><code>auth-tls-cert-header</code>: If <code>true</code> HAProxy will add <code>X-SSL-Client-Cert</code> http header with a base64 encoding of the X509 certificate provided by the client. Default is to not provide the client certificate.</li>
 <li><code>auth-tls-error-page</code>: Optional URL of the page to redirect the user if he doesn&rsquo;t provide a certificate or the certificate is invalid.</li>
 <li><code>auth-tls-secret</code>: Mandatory secret name with <code>ca.crt</code> key providing all certificate authority bundles used to validate client certificates. Since v0.9, an optional <code>ca.crl</code> key can also provide a CRL in PEM format for the server to verify against.</li>
+<li><code>auth-tls-strict</code>: Defines if a wrong or incomplete configuration, eg missing secret with <code>ca.crt</code>, should forbid connection attempts. If <code>false</code>, the default value, a wrong or incomplete configuration will ignore the authentication config, allowing anonymous connection. If <code>true</code>, a strict configuration is used: all requests will be rejected with HTTP 495 or 496, or redirected to the error page if configured, until a proper <code>ca.crt</code> is provided. Strict configuration will only be used if <code>auth-tls-secret</code> has a secret name and <code>auth-tls-verify-client</code> is missing or is not configured as <code>off</code>.</li>
 <li><code>auth-tls-verify-client</code>: Optional configuration of Client Verification behavior. Supported values are <code>off</code>, <code>on</code>, <code>optional</code> and <code>optional_no_ca</code>. The default value is <code>on</code> if a valid secret is provided, <code>off</code> otherwise.</li>
 <li><code>ssl-headers-prefix</code>: Configures which prefix should be used on HTTP headers. Since <a href="http://tools.ietf.org/html/rfc6648">RFC 6648</a> <code>X-</code> prefix on unstandardized headers changed from a convention to deprecation. This configuration allows to select which pattern should be used on header names.</li>
 </ul>
@@ -2033,6 +2056,46 @@ will still configures SSL/TLS.</p>
 <li><a href="#secure-backend">secure-backend</a> configuration keys to configure optional client certificate and certificate authority bundle of SSL/TLS connections.</li>
 <li><a href="http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-proto">http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-proto</a></li>
 </ul>
+
+<hr />
+
+<h2 id="backend-server-naming">Backend server naming</h2>
+
+<table>
+<thead>
+<tr>
+<th>Configuration key</th>
+<th>Scope</th>
+<th>Default</th>
+<th>Since</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>backend-server-naming</code></td>
+<td><code>Backend</code></td>
+<td><code>sequence</code></td>
+<td><code>v0.8.1</code></td>
+</tr>
+</tbody>
+</table>
+
+<p>Configures how to name backend servers.</p>
+
+<ul>
+<li><code>sequence</code>: Names backend servers with a prefixed number sequence: <code>srv001</code>, <code>srv002</code>, and so on. This is the default configuration and the preferred option if dynamic udpate is used. <code>seq</code> is an alias to <code>sequence</code>.</li>
+<li><code>pod</code>: Uses the k8s pod name as the backend server name. This option doesn&rsquo;t work on backends whose <a href="#service-upstream"><code>service-upstream</code></a> is <code>true</code>, falling back to <code>sequence</code>.</li>
+<li><code>ip</code>: Uses target&rsquo;s <code>&lt;ip&gt;:&lt;port&gt;</code> as the server name.</li>
+</ul>
+
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">Note</h4>
+HAProxy Ingress won&rsquo;t refuse to change the default naming if dynamic update is <code>true</code>, this would however lead to undesired behaviour: empty slots would still be named as sequences, old-named backend servers will dynamically receive new workloads with new pod names or IP numbers which does not relates with the name anymore, making the naming useless, if not wrong.
+</div>
+
 
 <hr />
 
@@ -4668,7 +4731,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified January 18, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/66e31233b4acd40122acc61515395c93f8a6b063">Change unix sockets user to haproxy (66e3123)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified January 31, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/9c14750e057ab70bcebd4b9e166878d0bd31f552">add auth-tls-strict configuration key (9c14750)</a>
 </div>
 </div>
 

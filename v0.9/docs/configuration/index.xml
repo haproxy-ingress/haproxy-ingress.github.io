@@ -679,6 +679,13 @@ will be used.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#auth-tls&#34;&gt;&lt;code&gt;auth-tls-strict&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;Host&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#auth-tls&#34;&gt;&lt;code&gt;auth-tls-verify-client&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[off|optional|on|optional_no_ca]&lt;/td&gt;
 &lt;td&gt;Host&lt;/td&gt;
@@ -704,6 +711,13 @@ will be used.&lt;/p&gt;
 &lt;td&gt;[h1|h2|h1-ssl|h2-ssl]&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;h1&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#backend-server-naming&#34;&gt;&lt;code&gt;backend-server-naming&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[sequence|ip|pod]&lt;/td&gt;
+&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;sequence&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -1968,6 +1982,13 @@ overwrite the weight defined from the agent&lt;/li&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;code&gt;auth-tls-strict&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Host&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.8.1&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;code&gt;auth-tls-verify-client&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Host&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
@@ -2002,6 +2023,7 @@ the DN of the certificate.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;auth-tls-cert-header&lt;/code&gt;: If &lt;code&gt;true&lt;/code&gt; HAProxy will add &lt;code&gt;X-SSL-Client-Cert&lt;/code&gt; http header with a base64 encoding of the X509 certificate provided by the client. Default is to not provide the client certificate.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;auth-tls-error-page&lt;/code&gt;: Optional URL of the page to redirect the user if he doesn&amp;rsquo;t provide a certificate or the certificate is invalid.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;auth-tls-secret&lt;/code&gt;: Mandatory secret name with &lt;code&gt;ca.crt&lt;/code&gt; key providing all certificate authority bundles used to validate client certificates. Since v0.9, an optional &lt;code&gt;ca.crl&lt;/code&gt; key can also provide a CRL in PEM format for the server to verify against.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-tls-strict&lt;/code&gt;: Defines if a wrong or incomplete configuration, eg missing secret with &lt;code&gt;ca.crt&lt;/code&gt;, should forbid connection attempts. If &lt;code&gt;false&lt;/code&gt;, the default value, a wrong or incomplete configuration will ignore the authentication config, allowing anonymous connection. If &lt;code&gt;true&lt;/code&gt;, a strict configuration is used: all requests will be rejected with HTTP 495 or 496, or redirected to the error page if configured, until a proper &lt;code&gt;ca.crt&lt;/code&gt; is provided. Strict configuration will only be used if &lt;code&gt;auth-tls-secret&lt;/code&gt; has a secret name and &lt;code&gt;auth-tls-verify-client&lt;/code&gt; is missing or is not configured as &lt;code&gt;off&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;auth-tls-verify-client&lt;/code&gt;: Optional configuration of Client Verification behavior. Supported values are &lt;code&gt;off&lt;/code&gt;, &lt;code&gt;on&lt;/code&gt;, &lt;code&gt;optional&lt;/code&gt; and &lt;code&gt;optional_no_ca&lt;/code&gt;. The default value is &lt;code&gt;on&lt;/code&gt; if a valid secret is provided, &lt;code&gt;off&lt;/code&gt; otherwise.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;ssl-headers-prefix&lt;/code&gt;: Configures which prefix should be used on HTTP headers. Since &lt;a href=&#34;http://tools.ietf.org/html/rfc6648&#34;&gt;RFC 6648&lt;/a&gt; &lt;code&gt;X-&lt;/code&gt; prefix on unstandardized headers changed from a convention to deprecation. This configuration allows to select which pattern should be used on header names.&lt;/li&gt;
 &lt;/ul&gt;
@@ -2057,6 +2079,46 @@ will still configures SSL/TLS.&lt;/p&gt;
 &lt;li&gt;&lt;a href=&#34;#secure-backend&#34;&gt;secure-backend&lt;/a&gt; configuration keys to configure optional client certificate and certificate authority bundle of SSL/TLS connections.&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-proto&#34;&gt;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#5.2-proto&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;backend-server-naming&#34;&gt;Backend server naming&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;backend-server-naming&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;sequence&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;v0.8.1&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Configures how to name backend servers.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;sequence&lt;/code&gt;: Names backend servers with a prefixed number sequence: &lt;code&gt;srv001&lt;/code&gt;, &lt;code&gt;srv002&lt;/code&gt;, and so on. This is the default configuration and the preferred option if dynamic udpate is used. &lt;code&gt;seq&lt;/code&gt; is an alias to &lt;code&gt;sequence&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;pod&lt;/code&gt;: Uses the k8s pod name as the backend server name. This option doesn&amp;rsquo;t work on backends whose &lt;a href=&#34;#service-upstream&#34;&gt;&lt;code&gt;service-upstream&lt;/code&gt;&lt;/a&gt; is &lt;code&gt;true&lt;/code&gt;, falling back to &lt;code&gt;sequence&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ip&lt;/code&gt;: Uses target&amp;rsquo;s &lt;code&gt;&amp;lt;ip&amp;gt;:&amp;lt;port&amp;gt;&lt;/code&gt; as the server name.&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
+HAProxy Ingress won&amp;rsquo;t refuse to change the default naming if dynamic update is &lt;code&gt;true&lt;/code&gt;, this would however lead to undesired behaviour: empty slots would still be named as sequences, old-named backend servers will dynamically receive new workloads with new pod names or IP numbers which does not relates with the name anymore, making the naming useless, if not wrong.
+&lt;/div&gt;
+
 
 &lt;hr /&gt;
 
