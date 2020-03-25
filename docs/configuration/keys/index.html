@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2020-01-31T11:00:24-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2020-02-21T15:02:57-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all ingress/service annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2020-01-31T11:00:24-03:00" />
-<meta itemprop="wordCount" content="9247">
+<meta itemprop="dateModified" content="2020-02-21T15:02:57-03:00" />
+<meta itemprop="wordCount" content="9302">
 
 
 
@@ -3031,28 +3031,40 @@ doesn&rsquo;t provide one.</li>
 </table>
 
 <p>A port number to listen to http requests from a fronting proxy that does the ssl
-offload. <code>https-to-http-port</code> is an alias to <code>fronting-proxy-port</code>.</p>
+offload, eg haproxy ingress behind a cloud load balancers that manages the TLS
+certificates. <code>https-to-http-port</code> is an alias to <code>fronting-proxy-port</code>.</p>
+
+<p><code>fronting-proxy-port</code> and <a href="#bind-port"><code>http-port</code></a> can share the same port number, see below
+what changes in the behaviour.</p>
 
 <p>Requests made to <code>fronting-proxy-port</code> port number evaluate the <code>X-Forwarded-Proto</code>
 header to decide how to handle the request:</p>
 
 <ul>
-<li>If <code>X-Forwarded-Proto</code> is <code>https</code>: HAProxy will handle the request just like the
-ssl-offload was made by HAProxy itself - HSTS header is provided if configured and
-<code>X-SSL-*</code> headers won&rsquo;t be changed or removed if provided.</li>
-<li>If <code>X-Forwarded-Proto</code> is <code>http</code> or the header is missing:
+<li>If <code>X-Forwarded-Proto</code> header is <code>https</code>:
 
 <ul>
-<li>If <code>fronting-proxy-port</code> has its own port: HAProxy will redirect scheme to https</li>
-<li>If <code>fronting-proxy-port</code> uses the same HTTP port (defaults to 80): the redirect scheme is done only if the header is provided, otherwise the request will be handled as if <code>fronting-proxy-port</code> wasn&rsquo;t configured.</li>
+<li>HAProxy will handle the request just like the ssl-offload was made by HAProxy itself - HSTS header is provided if configured and
+<code>X-SSL-*</code> headers won&rsquo;t be changed or removed if provided.</li>
+</ul></li>
+<li>If <code>X-Forwarded-Proto</code> header is <code>http</code> or any other value except <code>https</code>:
+
+<ul>
+<li>HAProxy will redirect scheme to https</li>
+</ul></li>
+<li>If <code>X-Forwarded-Proto</code> header is missing:
+
+<ul>
+<li>If <code>fronting-proxy-port</code> has its own port &mdash; HAProxy will redirect scheme to https</li>
+<li>If <code>fronting-proxy-port</code> shares the HTTP port &mdash; the request will be handled as plain http, being redirected to https only if <code>ssl-redirect</code> is <code>true</code>, just like if <code>fronting-proxy-port</code> wasn&rsquo;t configured.</li>
 </ul></li>
 </ul>
 
 
 
 <div class="alert alert-warning" role="alert">
-<h4 class="alert-heading">Warning</h4>
-On v0.7 and older, and only if the <code>X-Forwarded-Proto</code> is missing: the
+<h4 class="alert-heading">Warning on v0.7 and older</h4>
+On v0.7 and older and only if the <code>X-Forwarded-Proto</code> is missing: the
 connecting port number was used to define which socket received the request, so
 the fronting proxy should connect to the same port number defined in
 <code>https-to-http-port</code>, eg cannot have any proxy like Kubernetes&rsquo; <code>NodePort</code>
@@ -3065,6 +3077,7 @@ This limitation doesn&rsquo;t exist on v0.8 or above.
 
 <ul>
 <li><a href="#bind">Bind</a></li>
+<li><a href="#bind-port">Bind port</a></li>
 </ul>
 
 <hr />
@@ -4682,14 +4695,14 @@ HTTP/2 on the client side.</p>
 <tr>
 <td><code>use-htx</code></td>
 <td><code>Global</code></td>
-<td><code>false</code></td>
+<td><code>true</code></td>
 <td>v0.9</td>
 </tr>
 </tbody>
 </table>
 
 <p>Defines if the new HTX internal representation for HTTP elements should be used. The default value
-is <code>false</code>. HTX should be used to enable HTTP/2 protocol to backends.</p>
+is <code>true</code> since v0.10, it was <code>false</code> on v0.9. HTX should be used to enable HTTP/2 protocol to backends.</p>
 
 <p>See also:</p>
 
@@ -4841,7 +4854,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified January 31, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/919246ded3e4dac033c5532d777d50cc054fb738">add auth-tls-strict configuration key (919246d)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified February 21, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/392ed6205395e4cf79cae46a0af32a09738deff6">docs: clarifications on fronting-proxy-port config (392ed62)</a>
 </div>
 </div>
 

@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2020-01-10T18:24:42+01:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2020-03-23T21:35:32-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Command line">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2020-01-10T18:24:42&#43;01:00" />
-<meta itemprop="wordCount" content="1627">
+<meta itemprop="dateModified" content="2020-03-23T21:35:32-03:00" />
+<meta itemprop="wordCount" content="1724">
 
 
 
@@ -361,8 +361,10 @@ if (!doNotTrack) {
 <li><a href="#acme">Acme</a></li>
 <li><a href="#allow-cross-namespace">&ndash;allow-cross-namespace</a></li>
 <li><a href="#annotation-prefix">&ndash;annotation-prefix</a></li>
+<li><a href="#buckets-response-time">&ndash;buckets-response-time</a></li>
 <li><a href="#default-backend-service">&ndash;default-backend-service</a></li>
 <li><a href="#default-ssl-certificate">&ndash;default-ssl-certificate</a></li>
+<li><a href="#ignore-ingress-without-class">&ndash;ignore-ingress-without-class</a></li>
 <li><a href="#ingress-class">&ndash;ingress-class</a></li>
 <li><a href="#kubeconfig">&ndash;kubeconfig</a></li>
 <li><a href="#max-old-config-files">&ndash;max-old-config-files</a></li>
@@ -507,6 +509,13 @@ if (!doNotTrack) {
 </tr>
 
 <tr>
+<td><a href="#buckets-response-time"><code>--buckets-response-time</code></a></td>
+<td>float64 slice</td>
+<td><code>.0005,.001,.002,.005,.01</code></td>
+<td>v0.10</td>
+</tr>
+
+<tr>
 <td><a href="#default-backend-service"><code>--default-backend-service</code></a></td>
 <td>namespace/servicename</td>
 <td>haproxy&rsquo;s 404 page</td>
@@ -525,6 +534,13 @@ if (!doNotTrack) {
 <td>port number</td>
 <td><code>10254</code></td>
 <td></td>
+</tr>
+
+<tr>
+<td><a href="#ignore-ingress-without-class"><code>--ignore-ingress-without-class</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.10</td>
 </tr>
 
 <tr>
@@ -667,6 +683,12 @@ that shares ingress and service objects without conflicting each other.</p>
 
 <hr />
 
+<h2 id="buckets-response-time">&ndash;buckets-response-time</h2>
+
+<p>Configures the buckets of the histogram <code>haproxyingress_haproxy_response_time_seconds</code>, used to compute the response time of the haproxy&rsquo;s admin socket. The response time unit is in seconds.</p>
+
+<hr />
+
 <h2 id="default-backend-service">&ndash;default-backend-service</h2>
 
 <p>Defines the <code>namespace/servicename</code> that should be used if the incoming request doesn&rsquo;t match any
@@ -683,6 +705,12 @@ resources using TLS configuration doesn&rsquo;t provide it&rsquo;s own certifica
 
 <p>This is a mandatory argument used in the <a href="https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment">deployment</a> and
 <a href="https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/tls-termination">TLS termination</a> example pages.</p>
+
+<hr />
+
+<h2 id="ignore-ingress-without-class">&ndash;ignore-ingress-without-class</h2>
+
+<p>Defines if the ingress without the ingress.class annotation will be considered or not. If <code>--ignore-ingress-without-class=true</code> then only the ingresses with the matching ingress.class annotation will be considered, ingresses with missing or different ingress.class annotation will not be considered. Default is false.</p>
 
 <hr />
 
@@ -777,6 +805,7 @@ in the same order.</p>
 <ul>
 <li><code>/healthz</code>: a healthz URI for the haproxy-ingress</li>
 <li><code>/metrics</code>: Prometheus compatible metrics exporter</li>
+<li><code>/acme/check</code> (<code>POST</code>): starts check for missing, expiring or outdated certificates controlled by acme client. Should be issued in the leader.</li>
 <li><code>/debug/pprof</code>: profiling tools</li>
 <li><code>/build</code>: build information - controller name, version, git commit hash and repository</li>
 <li><code>/stop</code>: stops haproxy-ingress controller</li>
@@ -920,7 +949,7 @@ single namespace.</p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified January 10, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/8874e6a1d0d63dc0a4a4a54273a1f0fea4ab0ba2">[DOCS] Rename configmap to ConfigMap (8874e6a)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified March 23, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/3405e0df858431db04b57850be2ae062338db9b3">add external call to certificate check (3405e0d)</a>
 </div>
 </div>
 

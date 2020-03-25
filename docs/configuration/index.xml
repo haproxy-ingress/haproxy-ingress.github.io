@@ -152,6 +152,13 @@ lists, math etc.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#buckets-response-time&#34;&gt;&lt;code&gt;--buckets-response-time&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;float64 slice&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;.0005,.001,.002,.005,.01&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.10&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#default-backend-service&#34;&gt;&lt;code&gt;--default-backend-service&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;namespace/servicename&lt;/td&gt;
 &lt;td&gt;haproxy&amp;rsquo;s 404 page&lt;/td&gt;
@@ -170,6 +177,13 @@ lists, math etc.&lt;/p&gt;
 &lt;td&gt;port number&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;10254&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#ignore-ingress-without-class&#34;&gt;&lt;code&gt;--ignore-ingress-without-class&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.10&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -312,6 +326,12 @@ that shares ingress and service objects without conflicting each other.&lt;/p&gt
 
 &lt;hr /&gt;
 
+&lt;h2 id=&#34;buckets-response-time&#34;&gt;&amp;ndash;buckets-response-time&lt;/h2&gt;
+
+&lt;p&gt;Configures the buckets of the histogram &lt;code&gt;haproxyingress_haproxy_response_time_seconds&lt;/code&gt;, used to compute the response time of the haproxy&amp;rsquo;s admin socket. The response time unit is in seconds.&lt;/p&gt;
+
+&lt;hr /&gt;
+
 &lt;h2 id=&#34;default-backend-service&#34;&gt;&amp;ndash;default-backend-service&lt;/h2&gt;
 
 &lt;p&gt;Defines the &lt;code&gt;namespace/servicename&lt;/code&gt; that should be used if the incoming request doesn&amp;rsquo;t match any
@@ -328,6 +348,12 @@ resources using TLS configuration doesn&amp;rsquo;t provide it&amp;rsquo;s own c
 
 &lt;p&gt;This is a mandatory argument used in the &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment&#34;&gt;deployment&lt;/a&gt; and
 &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/tls-termination&#34;&gt;TLS termination&lt;/a&gt; example pages.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;ignore-ingress-without-class&#34;&gt;&amp;ndash;ignore-ingress-without-class&lt;/h2&gt;
+
+&lt;p&gt;Defines if the ingress without the ingress.class annotation will be considered or not. If &lt;code&gt;--ignore-ingress-without-class=true&lt;/code&gt; then only the ingresses with the matching ingress.class annotation will be considered, ingresses with missing or different ingress.class annotation will not be considered. Default is false.&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -422,6 +448,7 @@ in the same order.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;/healthz&lt;/code&gt;: a healthz URI for the haproxy-ingress&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;/metrics&lt;/code&gt;: Prometheus compatible metrics exporter&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/acme/check&lt;/code&gt; (&lt;code&gt;POST&lt;/code&gt;): starts check for missing, expiring or outdated certificates controlled by acme client. Should be issued in the leader.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;/debug/pprof&lt;/code&gt;: profiling tools&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;/build&lt;/code&gt;: build information - controller name, version, git commit hash and repository&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;/stop&lt;/code&gt;: stops haproxy-ingress controller&lt;/li&gt;
@@ -3089,28 +3116,40 @@ doesn&amp;rsquo;t provide one.&lt;/li&gt;
 &lt;/table&gt;
 
 &lt;p&gt;A port number to listen to http requests from a fronting proxy that does the ssl
-offload. &lt;code&gt;https-to-http-port&lt;/code&gt; is an alias to &lt;code&gt;fronting-proxy-port&lt;/code&gt;.&lt;/p&gt;
+offload, eg haproxy ingress behind a cloud load balancers that manages the TLS
+certificates. &lt;code&gt;https-to-http-port&lt;/code&gt; is an alias to &lt;code&gt;fronting-proxy-port&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;fronting-proxy-port&lt;/code&gt; and &lt;a href=&#34;#bind-port&#34;&gt;&lt;code&gt;http-port&lt;/code&gt;&lt;/a&gt; can share the same port number, see below
+what changes in the behaviour.&lt;/p&gt;
 
 &lt;p&gt;Requests made to &lt;code&gt;fronting-proxy-port&lt;/code&gt; port number evaluate the &lt;code&gt;X-Forwarded-Proto&lt;/code&gt;
 header to decide how to handle the request:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;If &lt;code&gt;X-Forwarded-Proto&lt;/code&gt; is &lt;code&gt;https&lt;/code&gt;: HAProxy will handle the request just like the
-ssl-offload was made by HAProxy itself - HSTS header is provided if configured and
-&lt;code&gt;X-SSL-*&lt;/code&gt; headers won&amp;rsquo;t be changed or removed if provided.&lt;/li&gt;
-&lt;li&gt;If &lt;code&gt;X-Forwarded-Proto&lt;/code&gt; is &lt;code&gt;http&lt;/code&gt; or the header is missing:
+&lt;li&gt;If &lt;code&gt;X-Forwarded-Proto&lt;/code&gt; header is &lt;code&gt;https&lt;/code&gt;:
 
 &lt;ul&gt;
-&lt;li&gt;If &lt;code&gt;fronting-proxy-port&lt;/code&gt; has its own port: HAProxy will redirect scheme to https&lt;/li&gt;
-&lt;li&gt;If &lt;code&gt;fronting-proxy-port&lt;/code&gt; uses the same HTTP port (defaults to 80): the redirect scheme is done only if the header is provided, otherwise the request will be handled as if &lt;code&gt;fronting-proxy-port&lt;/code&gt; wasn&amp;rsquo;t configured.&lt;/li&gt;
+&lt;li&gt;HAProxy will handle the request just like the ssl-offload was made by HAProxy itself - HSTS header is provided if configured and
+&lt;code&gt;X-SSL-*&lt;/code&gt; headers won&amp;rsquo;t be changed or removed if provided.&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;If &lt;code&gt;X-Forwarded-Proto&lt;/code&gt; header is &lt;code&gt;http&lt;/code&gt; or any other value except &lt;code&gt;https&lt;/code&gt;:
+
+&lt;ul&gt;
+&lt;li&gt;HAProxy will redirect scheme to https&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;If &lt;code&gt;X-Forwarded-Proto&lt;/code&gt; header is missing:
+
+&lt;ul&gt;
+&lt;li&gt;If &lt;code&gt;fronting-proxy-port&lt;/code&gt; has its own port &amp;mdash; HAProxy will redirect scheme to https&lt;/li&gt;
+&lt;li&gt;If &lt;code&gt;fronting-proxy-port&lt;/code&gt; shares the HTTP port &amp;mdash; the request will be handled as plain http, being redirected to https only if &lt;code&gt;ssl-redirect&lt;/code&gt; is &lt;code&gt;true&lt;/code&gt;, just like if &lt;code&gt;fronting-proxy-port&lt;/code&gt; wasn&amp;rsquo;t configured.&lt;/li&gt;
 &lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 
 
 &lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
-&lt;h4 class=&#34;alert-heading&#34;&gt;Warning&lt;/h4&gt;
-On v0.7 and older, and only if the &lt;code&gt;X-Forwarded-Proto&lt;/code&gt; is missing: the
+&lt;h4 class=&#34;alert-heading&#34;&gt;Warning on v0.7 and older&lt;/h4&gt;
+On v0.7 and older and only if the &lt;code&gt;X-Forwarded-Proto&lt;/code&gt; is missing: the
 connecting port number was used to define which socket received the request, so
 the fronting proxy should connect to the same port number defined in
 &lt;code&gt;https-to-http-port&lt;/code&gt;, eg cannot have any proxy like Kubernetes&amp;rsquo; &lt;code&gt;NodePort&lt;/code&gt;
@@ -3123,6 +3162,7 @@ This limitation doesn&amp;rsquo;t exist on v0.8 or above.
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;#bind&#34;&gt;Bind&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#bind-port&#34;&gt;Bind port&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -4740,14 +4780,14 @@ HTTP/2 on the client side.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;use-htx&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;v0.9&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
 &lt;p&gt;Defines if the new HTX internal representation for HTTP elements should be used. The default value
-is &lt;code&gt;false&lt;/code&gt;. HTX should be used to enable HTTP/2 protocol to backends.&lt;/p&gt;
+is &lt;code&gt;true&lt;/code&gt; since v0.10, it was &lt;code&gt;false&lt;/code&gt; on v0.9. HTX should be used to enable HTTP/2 protocol to backends.&lt;/p&gt;
 
 &lt;p&gt;See also:&lt;/p&gt;
 
