@@ -304,7 +304,7 @@ Running 100 requests...
 
 
 &lt;div class=&#34;pageinfo pageinfo-primary&#34;&gt;
-&lt;p&gt;This is a &lt;code&gt;v0.10&lt;/code&gt; example and need HAProxy Ingress &lt;code&gt;v0.10-snapshot.4&lt;/code&gt; or above&lt;/p&gt;
+&lt;p&gt;This is a &lt;code&gt;v0.10&lt;/code&gt; example and need HAProxy Ingress &lt;code&gt;v0.10-snapshot.5&lt;/code&gt; or above&lt;/p&gt;
 
 &lt;/div&gt;
 
@@ -403,7 +403,7 @@ EOF
 &lt;ul&gt;
 &lt;li&gt;Log in to Grafana, user is &lt;code&gt;admin&lt;/code&gt; and the first password is &lt;code&gt;admin&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;Create a Prometheus data source, the endpoint is &lt;code&gt;http://prometheus:9090&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;Click the big &lt;code&gt;+&lt;/code&gt; plus sign in the left side, and Import &lt;a href=&#34;https://haproxy-ingress.github.io/docs/examples/metrics/haproxy-ingress-dashboard.json&#34;&gt;this&lt;/a&gt; dashboard&lt;/li&gt;
+&lt;li&gt;Click the big &lt;code&gt;+&lt;/code&gt; plus sign in the left side, and Import &lt;a href=&#34;https://grafana.com/grafana/dashboards/12056&#34;&gt;this&lt;/a&gt; dashboard&lt;/li&gt;
 &lt;/ul&gt;
 
 
