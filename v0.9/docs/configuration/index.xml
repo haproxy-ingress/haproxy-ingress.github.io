@@ -4560,7 +4560,7 @@ try to match the path.&lt;/p&gt;
 
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;tls-alpm&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;tls-alpn&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;h2,http/1.1&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;v0.8&lt;/td&gt;

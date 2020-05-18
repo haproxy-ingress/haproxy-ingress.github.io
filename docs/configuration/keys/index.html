@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2020-02-21T15:02:57-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2020-05-18T15:47:49-04:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all ingress/service annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2020-02-21T15:02:57-03:00" />
-<meta itemprop="wordCount" content="9302">
+<meta itemprop="dateModified" content="2020-05-18T15:47:49-04:00" />
+<meta itemprop="wordCount" content="9372">
 
 
 
@@ -1588,6 +1588,13 @@ will be used.</p>
 </tr>
 
 <tr>
+<td><a href="#fronting-proxy-port"><code>use-forwarded-proto</code></a></td>
+<td>[true|false]</td>
+<td>Global</td>
+<td><code>true</code></td>
+</tr>
+
+<tr>
 <td><a href="#security"><code>use-haproxy-user</code></a></td>
 <td>[true|false]</td>
 <td>Global</td>
@@ -3027,6 +3034,13 @@ doesn&rsquo;t provide one.</li>
 <td></td>
 <td></td>
 </tr>
+
+<tr>
+<td><code>use-forwarded-proto</code></td>
+<td><code>Global</code></td>
+<td><code>true</code></td>
+<td><code>v0.10</code></td>
+</tr>
 </tbody>
 </table>
 
@@ -3037,8 +3051,15 @@ certificates. <code>https-to-http-port</code> is an alias to <code>fronting-prox
 <p><code>fronting-proxy-port</code> and <a href="#bind-port"><code>http-port</code></a> can share the same port number, see below
 what changes in the behaviour.</p>
 
-<p>Requests made to <code>fronting-proxy-port</code> port number evaluate the <code>X-Forwarded-Proto</code>
-header to decide how to handle the request:</p>
+<p><code>use-forwarded-proto</code> defines if haproxy should use <code>X-Forwarded-Proto</code> header to decide
+how to handle requests made to <code>fronting-proxy-port</code> port number.</p>
+
+<p>If <code>use-forwarded-proto</code> is <code>false</code>, the request takes the <code>https</code> route and is handled as if
+<code>X-Forwarded-Proto</code> header is <code>https</code>, see below. The actual header content is ignored by
+haproxy and forwarded to the backend if provided.</p>
+
+<p>If <code>use-forwarded-proto</code> is <code>true</code>, the default value, requests made to <code>fronting-proxy-port</code>
+port number evaluate the <code>X-Forwarded-Proto</code> header to decide how to handle the request:</p>
 
 <ul>
 <li>If <code>X-Forwarded-Proto</code> header is <code>https</code>:
@@ -4660,7 +4681,7 @@ try to match the path.</p>
 
 <tbody>
 <tr>
-<td><code>tls-alpm</code></td>
+<td><code>tls-alpn</code></td>
 <td><code>Global</code></td>
 <td><code>h2,http/1.1</code></td>
 <td>v0.8</td>
@@ -4854,7 +4875,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified February 21, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/392ed6205395e4cf79cae46a0af32a09738deff6">docs: clarifications on fronting-proxy-port config (392ed62)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified May 18, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/4fd755c407512c19d693530eb0654e46029d36c6">docs: typo on configuration keys docs (#585) (4fd755c)</a>
 </div>
 </div>
 
