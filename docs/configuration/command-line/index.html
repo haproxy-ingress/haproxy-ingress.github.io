@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2020-05-09T17:23:05-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2020-05-22T22:43:44+02:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Command line">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2020-05-09T17:23:05-03:00" />
-<meta itemprop="wordCount" content="1812">
+<meta itemprop="dateModified" content="2020-05-22T22:43:44&#43;02:00" />
+<meta itemprop="wordCount" content="1895">
 
 
 
@@ -836,6 +836,7 @@ ConfigMap.</p>
 <li><code>&lt;out-proxy&gt;</code>, optional, should be defined as <code>PROXY</code> or <code>PROXY-V2</code> if the upstream service expect connections using the PROXY protocol v2. Use <code>PROXY-V1</code> instead if the upstream service only support v1 protocol. Leave empty to connect without using the PROXY protocol.</li>
 <li><code>&lt;namespace/secret-name&gt;</code>, optional, used to configure SSL/TLS over the TCP connection. Secret should have <code>tls.crt</code> and <code>tls.key</code> pair used on TLS handshake. Leave empty to not use ssl-offload.</li>
 <li><code>&lt;check-interval&gt;</code>, added in v0.10, optional and defaults to <code>2s</code>, configures a TCP check interval. Declare <code>-</code> (one single dash) as the time to disable it. Valid time is a number and a mandatory suffix: <code>us</code>, <code>ms</code>, <code>s</code>, <code>m</code>, <code>h</code> or <code>d</code>.</li>
+<li><code>&lt;namespace/secret-name&gt;</code>, added in v0.10, optional, used to configure SSL/TLS client verification over the TCP connection. Secret should have <code>ca.crt</code> and optional <code>ca.crl</code>. Leave empty to not use ssl client verification.</li>
 </ol>
 
 <p>Optional fields can be skipped using consecutive colons.</p>
@@ -849,10 +850,11 @@ data:
   &quot;8000&quot;: &quot;system-prod/http:8000::PROXY-V1&quot;
   &quot;9900&quot;: &quot;system-prod/admin:9900:PROXY::system-prod/tcp-9900&quot;
   &quot;9990&quot;: &quot;system-prod/admin:9999::PROXY-V2&quot;
+  &quot;9995&quot;: &quot;system-prod/admin:9900:::system-prod/tcp-9995::system-prod/tcp-9995-ca&quot;
   &quot;9999&quot;: &quot;system-prod/admin:9999:PROXY:PROXY&quot;
 </code></pre>
 
-<p>HAProxy will listen 6 new ports:</p>
+<p>HAProxy will listen 7 new ports:</p>
 
 <ul>
 <li><code>3306</code> will proxy to a <code>mysql</code> service on <code>default</code> namespace. Check interval is disabled.</li>
@@ -860,6 +862,7 @@ data:
 <li><code>8000</code> will proxy to <code>http</code> service, port <code>8000</code>, on the <code>system-prod</code> namespace. The upstream service will expect connections using the PROXY protocol but it only supports v1.</li>
 <li><code>9900</code> will proxy to <code>admin</code> service, port <code>9900</code>, on the <code>system-prod</code> namespace. Clients should connect using the PROXY protocol v1 or v2. Upcoming connections should be encrypted, HAProxy will ssl-offload data using crt/key provided by <code>system-prod/tcp-9900</code> secret.</li>
 <li><code>9990</code> and <code>9999</code> will proxy to the same <code>admin</code> service and <code>9999</code> port and the upstream service will expect connections using the PROXY protocol v2. The HAProxy frontend, however, will only expect PROXY protocol v1 or v2 on it&rsquo;s port <code>9999</code>.</li>
+<li><code>9995</code> will proxy to <code>admin</code> service, port <code>9900</code>, on the <code>system-prod</code> namespace. Upcoming connections should be encrypted, HAProxy will ssl-offload data using crt/key provided by <code>system-prod/tcp-9995</code> secret. Furthermore, clients must present a certificate that will be valid under the certificate authority (and optional certificate revocation list) provded in the <code>system-prod/tcp-9995-ca</code> secret.</li>
 </ul>
 
 <p>Note: Check interval was added in v0.10 and defaults to <code>2s</code>. All declared services has check interval enabled, except <code>3306</code> which disabled it.</p>
@@ -954,7 +957,7 @@ single namespace.</p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified May 9, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/04a15fad1f7fcf5692bfc8c116c4d4fc29bba72c">add check interval on tcp service (04a15fa)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified May 22, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/3bc055d083f80d1645cf269393067f6be826abc8">support ssl client validation on tcp services (3bc055d)</a>
 </div>
 </div>
 

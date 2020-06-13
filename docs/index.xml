@@ -479,6 +479,7 @@ ConfigMap.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;&amp;lt;out-proxy&amp;gt;&lt;/code&gt;, optional, should be defined as &lt;code&gt;PROXY&lt;/code&gt; or &lt;code&gt;PROXY-V2&lt;/code&gt; if the upstream service expect connections using the PROXY protocol v2. Use &lt;code&gt;PROXY-V1&lt;/code&gt; instead if the upstream service only support v1 protocol. Leave empty to connect without using the PROXY protocol.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;&amp;lt;namespace/secret-name&amp;gt;&lt;/code&gt;, optional, used to configure SSL/TLS over the TCP connection. Secret should have &lt;code&gt;tls.crt&lt;/code&gt; and &lt;code&gt;tls.key&lt;/code&gt; pair used on TLS handshake. Leave empty to not use ssl-offload.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;&amp;lt;check-interval&amp;gt;&lt;/code&gt;, added in v0.10, optional and defaults to &lt;code&gt;2s&lt;/code&gt;, configures a TCP check interval. Declare &lt;code&gt;-&lt;/code&gt; (one single dash) as the time to disable it. Valid time is a number and a mandatory suffix: &lt;code&gt;us&lt;/code&gt;, &lt;code&gt;ms&lt;/code&gt;, &lt;code&gt;s&lt;/code&gt;, &lt;code&gt;m&lt;/code&gt;, &lt;code&gt;h&lt;/code&gt; or &lt;code&gt;d&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;namespace/secret-name&amp;gt;&lt;/code&gt;, added in v0.10, optional, used to configure SSL/TLS client verification over the TCP connection. Secret should have &lt;code&gt;ca.crt&lt;/code&gt; and optional &lt;code&gt;ca.crl&lt;/code&gt;. Leave empty to not use ssl client verification.&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;p&gt;Optional fields can be skipped using consecutive colons.&lt;/p&gt;
@@ -492,10 +493,11 @@ data:
   &amp;quot;8000&amp;quot;: &amp;quot;system-prod/http:8000::PROXY-V1&amp;quot;
   &amp;quot;9900&amp;quot;: &amp;quot;system-prod/admin:9900:PROXY::system-prod/tcp-9900&amp;quot;
   &amp;quot;9990&amp;quot;: &amp;quot;system-prod/admin:9999::PROXY-V2&amp;quot;
+  &amp;quot;9995&amp;quot;: &amp;quot;system-prod/admin:9900:::system-prod/tcp-9995::system-prod/tcp-9995-ca&amp;quot;
   &amp;quot;9999&amp;quot;: &amp;quot;system-prod/admin:9999:PROXY:PROXY&amp;quot;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;HAProxy will listen 6 new ports:&lt;/p&gt;
+&lt;p&gt;HAProxy will listen 7 new ports:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;3306&lt;/code&gt; will proxy to a &lt;code&gt;mysql&lt;/code&gt; service on &lt;code&gt;default&lt;/code&gt; namespace. Check interval is disabled.&lt;/li&gt;
@@ -503,6 +505,7 @@ data:
 &lt;li&gt;&lt;code&gt;8000&lt;/code&gt; will proxy to &lt;code&gt;http&lt;/code&gt; service, port &lt;code&gt;8000&lt;/code&gt;, on the &lt;code&gt;system-prod&lt;/code&gt; namespace. The upstream service will expect connections using the PROXY protocol but it only supports v1.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;9900&lt;/code&gt; will proxy to &lt;code&gt;admin&lt;/code&gt; service, port &lt;code&gt;9900&lt;/code&gt;, on the &lt;code&gt;system-prod&lt;/code&gt; namespace. Clients should connect using the PROXY protocol v1 or v2. Upcoming connections should be encrypted, HAProxy will ssl-offload data using crt/key provided by &lt;code&gt;system-prod/tcp-9900&lt;/code&gt; secret.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;9990&lt;/code&gt; and &lt;code&gt;9999&lt;/code&gt; will proxy to the same &lt;code&gt;admin&lt;/code&gt; service and &lt;code&gt;9999&lt;/code&gt; port and the upstream service will expect connections using the PROXY protocol v2. The HAProxy frontend, however, will only expect PROXY protocol v1 or v2 on it&amp;rsquo;s port &lt;code&gt;9999&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;9995&lt;/code&gt; will proxy to &lt;code&gt;admin&lt;/code&gt; service, port &lt;code&gt;9900&lt;/code&gt;, on the &lt;code&gt;system-prod&lt;/code&gt; namespace. Upcoming connections should be encrypted, HAProxy will ssl-offload data using crt/key provided by &lt;code&gt;system-prod/tcp-9995&lt;/code&gt; secret. Furthermore, clients must present a certificate that will be valid under the certificate authority (and optional certificate revocation list) provded in the &lt;code&gt;system-prod/tcp-9995-ca&lt;/code&gt; secret.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Note: Check interval was added in v0.10 and defaults to &lt;code&gt;2s&lt;/code&gt;. All declared services has check interval enabled, except &lt;code&gt;3306&lt;/code&gt; which disabled it.&lt;/p&gt;
@@ -988,6 +991,13 @@ will be used.&lt;/p&gt;
 &lt;td&gt;&lt;a href=&#34;#cors&#34;&gt;&lt;code&gt;cors-max-age&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;time (seconds)&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#cpu-map&#34;&gt;&lt;code&gt;cpu-map&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;haproxy CPU Map format&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -1675,6 +1685,13 @@ will be used.&lt;/p&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#cpu-map&#34;&gt;&lt;code&gt;use-cpu-map&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -2835,6 +2852,53 @@ to add more than one line of configuration.&lt;/p&gt;
 
 &lt;hr /&gt;
 
+&lt;h2 id=&#34;cpu-map&#34;&gt;CPU map&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;cpu-map&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;use-cpu-map&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Define how processes/threads map to CPUs. The default value is generated based
+on &lt;a href=&#34;#nbthread&#34;&gt;nbthread&lt;/a&gt; and &lt;a href=&#34;#nbproc&#34;&gt;nbproc&lt;/a&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;cpu-map&lt;/code&gt;: Custom override specifying the cpu mapping behaviour in the format described &lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map&#34;&gt;here&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;use-cpu-map&lt;/code&gt;: Set to &lt;code&gt;false&lt;/code&gt; to prevent any cpu mapping&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#nbthread&#34;&gt;nbthread&lt;/a&gt; configuration key&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#nbproc&#34;&gt;nbproc&lt;/a&gt; configuration key&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
 &lt;h2 id=&#34;dns-resolvers&#34;&gt;DNS resolvers&lt;/h2&gt;
 
 &lt;table&gt;
@@ -3656,6 +3720,7 @@ process. Leave one core dedicated to header inspection and load balancing.&lt;/p
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;#nbthread&#34;&gt;nbthread&lt;/a&gt; configuration key&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#cpu-map&#34;&gt;cpu-map&lt;/a&gt; configuration key&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-nbproc&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-nbproc&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-bind-process&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-bind-process&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map&lt;/a&gt;&lt;/li&gt;
@@ -3695,6 +3760,7 @@ bind each thread on its own CPU core.&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#cpu-map&#34;&gt;cpu-map&lt;/a&gt; configuration key&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-nbthread&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-nbthread&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
