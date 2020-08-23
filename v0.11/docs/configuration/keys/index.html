@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.11/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2020-07-12T17:46:39-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2020-08-17T19:00:10-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all ingress/service annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2020-07-12T17:46:39-03:00" />
-<meta itemprop="wordCount" content="9664">
+<meta itemprop="dateModified" content="2020-08-17T19:00:10-03:00" />
+<meta itemprop="wordCount" content="9961">
 
 
 
@@ -394,6 +394,7 @@ if (!doNotTrack) {
 <li><a href="#nbproc">Nbproc</a></li>
 <li><a href="#nbthread">Nbthread</a></li>
 <li><a href="#oauth">OAuth</a></li>
+<li><a href="#path-type">Path type</a></li>
 <li><a href="#proxy-body-size">Proxy body size</a></li>
 <li><a href="#proxy-protocol">Proxy protocol</a></li>
 <li><a href="#rewrite-target">Rewrite target</a></li>
@@ -1235,6 +1236,13 @@ will be used.</p>
 </tr>
 
 <tr>
+<td><a href="#path-type"><code>path-type</code></a></td>
+<td>path matching type</td>
+<td>Host</td>
+<td><code>begin</code></td>
+</tr>
+
+<tr>
 <td><a href="#bind-port"><code>prometheus-port</code></a></td>
 <td>port number</td>
 <td>Global</td>
@@ -1426,7 +1434,14 @@ will be used.</p>
 <tr>
 <td><a href="#ssl-options"><code>ssl-options-backend</code></a></td>
 <td>space-separated list</td>
-<td>Global</td>
+<td>Backend</td>
+<td><a href="#ssl-options">see description</a></td>
+</tr>
+
+<tr>
+<td><a href="#ssl-options"><code>ssl-options-host</code></a></td>
+<td>space-separated list</td>
+<td>Host</td>
 <td><a href="#ssl-options">see description</a></td>
 </tr>
 
@@ -1601,7 +1616,7 @@ will be used.</p>
 <tr>
 <td><a href="#tls-alpn"><code>tls-alpn</code></a></td>
 <td>TLS ALPN advertisement</td>
-<td>Global</td>
+<td>Host</td>
 <td><code>h2,http/1.1</code></td>
 </tr>
 
@@ -3809,6 +3824,102 @@ service - all paths from that domain will be protected.</p>
 
 <hr />
 
+<h2 id="path-type">Path type</h2>
+
+<table>
+<thead>
+<tr>
+<th>Configuration key</th>
+<th>Scope</th>
+<th>Default</th>
+<th>Since</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>path-type</code></td>
+<td><code>Host</code></td>
+<td><code>begin</code></td>
+<td>v0.11</td>
+</tr>
+</tbody>
+</table>
+
+<p>Defines how the path of an incoming request should match a declared path in the ingress object.</p>
+
+<ul>
+<li><code>path-type</code>: Configures the path type. Case insensitive, so <code>Begin</code> and <code>begin</code> configures the same path type option. The ingress spec has precedente, this option will only be used if the <code>pathType</code> attribute from the ingress spec is declared as <code>ImplementationSpecific</code> or is not declared.</li>
+</ul>
+
+<p>Supported <code>path-type</code> values:</p>
+
+<ul>
+<li><code>begin</code>: Case insensitive, matches the beginning of the path from the incoming request. This is the default value if not declared.</li>
+<li><code>exact</code>: Case sensitive, matches the whole path. Implements the <code>Exact</code> path type from the ingress spec.</li>
+<li><code>prefix</code>: Case sensitive, matches a whole subdirectory from the incoming path. A declared <code>/app</code> path matches <code>/app</code> and <code>/app/1</code> but does not match <code>/app1</code>. Implements the <code>Prefix</code> path type from the ingress spec.</li>
+<li><code>regex</code>: Case sensitive, matches the incoming path using POSIX extended regular expression. The regular expression is applied verbatim, so a declared <code>/app[0-9]+</code> will match <code>/app1/sub</code> and also <code>/sup/app1/sub</code>.</li>
+</ul>
+
+<p>Request and match examples:</p>
+
+<table>
+<thead>
+<tr>
+<th>Path type</th>
+<th>Request</th>
+<th>Match</th>
+<th>Do not match</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>exact</code></td>
+<td><code>/app</code></td>
+<td><code>/app</code></td>
+<td><code>/App</code> <br/> <code>/app/</code> <br/> <code>/app1</code></td>
+</tr>
+
+<tr>
+<td><code>prefix</code></td>
+<td><code>/app</code></td>
+<td><code>/app</code> <br/> <code>/app/</code> <br/> <code>/app/1</code></td>
+<td><code>/App</code> <br/> <code>/app1</code></td>
+</tr>
+
+<tr>
+<td><code>begin</code></td>
+<td><code>/app</code></td>
+<td><code>/App</code> <br/> <code>/app</code> <br/> <code>/app/1</code> <br/> <code>/app1</code></td>
+<td><code>/ap</code></td>
+</tr>
+
+<tr>
+<td><code>regex</code></td>
+<td><code>/app[0-9]+</code></td>
+<td><code>/app1</code> <br/> <code>/sup/app15</code> <br/> <code>/app25/sub</code></td>
+<td><code>/App1</code> <br/> <code>/app/15</code></td>
+</tr>
+
+<tr>
+<td><code>regex</code></td>
+<td><code>^/app[0-9]+$</code></td>
+<td><code>/app1</code> <br/> <code>/app15</code></td>
+<td><code>/App1</code> <br/> <code>/app15/</code> <br/> <code>/sup/app1</code></td>
+</tr>
+
+<tr>
+<td><code>regex</code></td>
+<td><code>^/app[0-9]+/?</code></td>
+<td><code>/app1</code> <br/> <code>/app15/</code> <br/> <code>/app25/sub</code></td>
+<td><code>/App15</code> <br/> <code>/app/25sub</code></td>
+</tr>
+</tbody>
+</table>
+
+<hr />
+
 <h2 id="proxy-body-size">Proxy body size</h2>
 
 <table>
@@ -4387,24 +4498,32 @@ the ssl-engine used supports it.</p>
 <td></td>
 <td>v0.9</td>
 </tr>
+
+<tr>
+<td><code>ssl-options-host</code></td>
+<td><code>Host</code></td>
+<td></td>
+<td>v0.11</td>
+</tr>
 </tbody>
 </table>
 
 <p>Define a space-separated list of options on SSL/TLS connections.</p>
 
 <ul>
-<li><code>ssl-options</code>: Options for frontend connections - HAProxy being the server</li>
-<li><code>ssl-options-backend</code>: Default options for backend server connections - HAProxy being the client</li>
+<li><code>ssl-options</code>: Default options for all the TLS frontend connections - HAProxy being the server</li>
+<li><code>ssl-options-backend</code>: Options for backend server connections - HAProxy being the client</li>
+<li><code>ssl-options-host</code>: Options for TLS frontend connections - HAProxy being the server. This acts as a host scoped override to options defined in <code>ssl-options</code> and supports everything that HAProxy supports in the <code>crt-list</code>.</li>
 </ul>
 
-<p>Default values:</p>
+<p>Default values for <code>ssl-options</code> and <code>ssl-options-backend</code>:</p>
 
 <ul>
 <li>v0.9 and newer: <code>no-sslv3 no-tlsv10 no-tlsv11 no-tls-tickets</code></li>
 <li>up to v0.8: <code>no-sslv3 no-tls-tickets</code></li>
 </ul>
 
-<p>Supported options:</p>
+<p>Supported options for <code>ssl-options</code> and <code>ssl-options-backend</code>:</p>
 
 <ul>
 <li><code>force-sslv3</code>: Enforces use of SSLv3 only</li>
@@ -4418,13 +4537,19 @@ the ssl-engine used supports it.</p>
 <li><code>no-tlsv12</code>: Disables support for TLSv1.2</li>
 </ul>
 
-<p>New supported options since v0.9:</p>
+<p>New supported options since v0.9 for <code>ssl-options</code> and <code>ssl-options-backend</code>:</p>
 
 <ul>
 <li><code>force-tlsv13</code>: Enforces use of TLSv1.3 only</li>
 <li><code>no-tlsv13</code>: Disables support for TLSv1.3</li>
 <li><code>ssl-max-ver &lt;SSLv3|TLSv1.0|TLSv1.1|TLSv1.2|TLSv1.3&gt;</code>: Enforces the use of a SSL/TLS version or lower</li>
 <li><code>ssl-min-ver &lt;SSLv3|TLSv1.0|TLSv1.1|TLSv1.2|TLSv1.3&gt;</code>: Enforces the use of a SSL/TLS version or upper</li>
+</ul>
+
+<p>See also:</p>
+
+<ul>
+<li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.1-crt-list">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.1-crt-list</a></li>
 </ul>
 
 <hr />
@@ -4829,7 +4954,7 @@ Since <code>v0.11</code>, <code>timeout-client</code> and <code>timeout-client-f
 <tbody>
 <tr>
 <td><code>tls-alpn</code></td>
-<td><code>Global</code></td>
+<td><code>Host</code></td>
 <td><code>h2,http/1.1</code></td>
 <td>v0.8</td>
 </tr>
@@ -4838,6 +4963,8 @@ Since <code>v0.11</code>, <code>timeout-client</code> and <code>timeout-client-f
 
 <p>Defines the TLS ALPN extension advertisement. The default value is <code>h2,http/1.1</code> which enables
 HTTP/2 on the client side.</p>
+
+<p><code>tls-alpn</code> was <code>Global</code> scope up to v0.10.</p>
 
 <p>See also:</p>
 
@@ -5022,7 +5149,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified July 12, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/2590f6bb229636241fb8e6b7ca258193d09b8907">add disable-pod-list command-line option (2590f6bb)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified August 17, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/cd4bfe021faabacebdc08f1cee0288dc097533be">remove implicit boundaries from regex match (cd4bfe02)</a>
 </div>
 </div>
 

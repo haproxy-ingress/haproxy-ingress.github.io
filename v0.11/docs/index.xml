@@ -1356,6 +1356,13 @@ will be used.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#path-type&#34;&gt;&lt;code&gt;path-type&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;path matching type&lt;/td&gt;
+&lt;td&gt;Host&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;begin&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#bind-port&#34;&gt;&lt;code&gt;prometheus-port&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;port number&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
@@ -1547,7 +1554,14 @@ will be used.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#ssl-options&#34;&gt;&lt;code&gt;ssl-options-backend&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;space-separated list&lt;/td&gt;
-&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#ssl-options&#34;&gt;see description&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#ssl-options&#34;&gt;&lt;code&gt;ssl-options-host&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;space-separated list&lt;/td&gt;
+&lt;td&gt;Host&lt;/td&gt;
 &lt;td&gt;&lt;a href=&#34;#ssl-options&#34;&gt;see description&lt;/a&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -1722,7 +1736,7 @@ will be used.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#tls-alpn&#34;&gt;&lt;code&gt;tls-alpn&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;TLS ALPN advertisement&lt;/td&gt;
-&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;Host&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;h2,http/1.1&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -3930,6 +3944,102 @@ service - all paths from that domain will be protected.&lt;/p&gt;
 
 &lt;hr /&gt;
 
+&lt;h2 id=&#34;path-type&#34;&gt;Path type&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;path-type&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Host&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;begin&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.11&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Defines how the path of an incoming request should match a declared path in the ingress object.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;path-type&lt;/code&gt;: Configures the path type. Case insensitive, so &lt;code&gt;Begin&lt;/code&gt; and &lt;code&gt;begin&lt;/code&gt; configures the same path type option. The ingress spec has precedente, this option will only be used if the &lt;code&gt;pathType&lt;/code&gt; attribute from the ingress spec is declared as &lt;code&gt;ImplementationSpecific&lt;/code&gt; or is not declared.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Supported &lt;code&gt;path-type&lt;/code&gt; values:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;begin&lt;/code&gt;: Case insensitive, matches the beginning of the path from the incoming request. This is the default value if not declared.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;exact&lt;/code&gt;: Case sensitive, matches the whole path. Implements the &lt;code&gt;Exact&lt;/code&gt; path type from the ingress spec.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;prefix&lt;/code&gt;: Case sensitive, matches a whole subdirectory from the incoming path. A declared &lt;code&gt;/app&lt;/code&gt; path matches &lt;code&gt;/app&lt;/code&gt; and &lt;code&gt;/app/1&lt;/code&gt; but does not match &lt;code&gt;/app1&lt;/code&gt;. Implements the &lt;code&gt;Prefix&lt;/code&gt; path type from the ingress spec.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;regex&lt;/code&gt;: Case sensitive, matches the incoming path using POSIX extended regular expression. The regular expression is applied verbatim, so a declared &lt;code&gt;/app[0-9]+&lt;/code&gt; will match &lt;code&gt;/app1/sub&lt;/code&gt; and also &lt;code&gt;/sup/app1/sub&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Request and match examples:&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Path type&lt;/th&gt;
+&lt;th&gt;Request&lt;/th&gt;
+&lt;th&gt;Match&lt;/th&gt;
+&lt;th&gt;Do not match&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;exact&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/app&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/app&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/App&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app/&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app1&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;prefix&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/app&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/app&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app/&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app/1&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/App&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app1&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;begin&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/app&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/App&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app/1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app1&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/ap&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;regex&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/app[0-9]+&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/app1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/sup/app15&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app25/sub&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/App1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app/15&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;regex&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;^/app[0-9]+$&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/app1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app15&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/App1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app15/&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/sup/app1&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;regex&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;^/app[0-9]+/?&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/app1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app15/&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app25/sub&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/App15&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app/25sub&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;hr /&gt;
+
 &lt;h2 id=&#34;proxy-body-size&#34;&gt;Proxy body size&lt;/h2&gt;
 
 &lt;table&gt;
@@ -4508,24 +4618,32 @@ the ssl-engine used supports it.&lt;/p&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;v0.9&lt;/td&gt;
 &lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;ssl-options-host&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Host&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.11&lt;/td&gt;
+&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
 &lt;p&gt;Define a space-separated list of options on SSL/TLS connections.&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;ssl-options&lt;/code&gt;: Options for frontend connections - HAProxy being the server&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;ssl-options-backend&lt;/code&gt;: Default options for backend server connections - HAProxy being the client&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ssl-options&lt;/code&gt;: Default options for all the TLS frontend connections - HAProxy being the server&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ssl-options-backend&lt;/code&gt;: Options for backend server connections - HAProxy being the client&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ssl-options-host&lt;/code&gt;: Options for TLS frontend connections - HAProxy being the server. This acts as a host scoped override to options defined in &lt;code&gt;ssl-options&lt;/code&gt; and supports everything that HAProxy supports in the &lt;code&gt;crt-list&lt;/code&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Default values:&lt;/p&gt;
+&lt;p&gt;Default values for &lt;code&gt;ssl-options&lt;/code&gt; and &lt;code&gt;ssl-options-backend&lt;/code&gt;:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;v0.9 and newer: &lt;code&gt;no-sslv3 no-tlsv10 no-tlsv11 no-tls-tickets&lt;/code&gt;&lt;/li&gt;
 &lt;li&gt;up to v0.8: &lt;code&gt;no-sslv3 no-tls-tickets&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Supported options:&lt;/p&gt;
+&lt;p&gt;Supported options for &lt;code&gt;ssl-options&lt;/code&gt; and &lt;code&gt;ssl-options-backend&lt;/code&gt;:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;force-sslv3&lt;/code&gt;: Enforces use of SSLv3 only&lt;/li&gt;
@@ -4539,13 +4657,19 @@ the ssl-engine used supports it.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;no-tlsv12&lt;/code&gt;: Disables support for TLSv1.2&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;New supported options since v0.9:&lt;/p&gt;
+&lt;p&gt;New supported options since v0.9 for &lt;code&gt;ssl-options&lt;/code&gt; and &lt;code&gt;ssl-options-backend&lt;/code&gt;:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;force-tlsv13&lt;/code&gt;: Enforces use of TLSv1.3 only&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;no-tlsv13&lt;/code&gt;: Disables support for TLSv1.3&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;ssl-max-ver &amp;lt;SSLv3|TLSv1.0|TLSv1.1|TLSv1.2|TLSv1.3&amp;gt;&lt;/code&gt;: Enforces the use of a SSL/TLS version or lower&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;ssl-min-ver &amp;lt;SSLv3|TLSv1.0|TLSv1.1|TLSv1.2|TLSv1.3&amp;gt;&lt;/code&gt;: Enforces the use of a SSL/TLS version or upper&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.1-crt-list&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.1-crt-list&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -4950,7 +5074,7 @@ Since &lt;code&gt;v0.11&lt;/code&gt;, &lt;code&gt;timeout-client&lt;/code&gt; an
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;tls-alpn&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Host&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;h2,http/1.1&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;v0.8&lt;/td&gt;
 &lt;/tr&gt;
@@ -4959,6 +5083,8 @@ Since &lt;code&gt;v0.11&lt;/code&gt;, &lt;code&gt;timeout-client&lt;/code&gt; an
 
 &lt;p&gt;Defines the TLS ALPN extension advertisement. The default value is &lt;code&gt;h2,http/1.1&lt;/code&gt; which enables
 HTTP/2 on the client side.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;tls-alpn&lt;/code&gt; was &lt;code&gt;Global&lt;/code&gt; scope up to v0.10.&lt;/p&gt;
 
 &lt;p&gt;See also:&lt;/p&gt;
 
