@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.11/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2020-07-12T17:46:39-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2020-09-07T16:37:47-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Command line">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2020-07-12T17:46:39-03:00" />
-<meta itemprop="wordCount" content="2031">
+<meta itemprop="dateModified" content="2020-09-07T16:37:47-03:00" />
+<meta itemprop="wordCount" content="2081">
 
 
 
@@ -278,7 +278,7 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-11-docs-configuration-template" href="/v0.11/docs/configuration/template/">Template</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-11-docs-configuration-keys" href="/v0.11/docs/configuration/keys/">Configuration keys</a>
       
       
       
@@ -290,7 +290,7 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-11-docs-configuration-keys" href="/v0.11/docs/configuration/keys/">Configuration keys</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-11-docs-configuration-template" href="/v0.11/docs/configuration/template/">Template</a>
       
       
     </li>
@@ -380,6 +380,7 @@ if (!doNotTrack) {
 <li><a href="#tcp-services-configmap">&ndash;tcp-services-configmap</a></li>
 <li><a href="#verify-hostname">&ndash;verify-hostname</a></li>
 <li><a href="#wait-before-shutdown">&ndash;wait-before-shutdown</a></li>
+<li><a href="#wait-before-update">&ndash;wait-before-update</a></li>
 <li><a href="#watch-namespace">&ndash;watch-namespace</a></li>
 </ul></li>
 </ul>
@@ -643,6 +644,13 @@ if (!doNotTrack) {
 <td>seconds as integer</td>
 <td><code>0</code></td>
 <td>v0.8</td>
+</tr>
+
+<tr>
+<td><a href="#wait-before-update"><code>--wait-before-update</code></a></td>
+<td>duration</td>
+<td><code>200ms</code></td>
+<td>v0.11</td>
 </tr>
 
 <tr>
@@ -925,6 +933,16 @@ the controller starts shutting down itself right after signal was sent.</p>
 
 <hr />
 
+<h2 id="wait-before-update">&ndash;wait-before-update</h2>
+
+<p>Since v0.11</p>
+
+<p>Defines the amount of time to wait before start a reconciliation event and update haproxy.
+The purpose of this delay is to group all the notifications of a batch update and apply pending
+changes in one single shot. The default value is <code>200ms</code>.</p>
+
+<hr />
+
 <h2 id="watch-namespace">&ndash;watch-namespace</h2>
 
 <p>By default the proxy will be configured using all namespaces from the Kubernetes cluster. Use
@@ -993,7 +1011,7 @@ single namespace.</p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified July 12, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/2590f6bb229636241fb8e6b7ca258193d09b8907">add disable-pod-list command-line option (2590f6bb)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified September 7, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/df4306a1a13d68b30e56218f443cce7acae3849c">add wait-before-update command-line option (df4306a1)</a>
 </div>
 </div>
 
@@ -1010,6 +1028,12 @@ single namespace.</p>
         
         
 <ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Slack" aria-label="Slack">
+    <a class="text-white" target="_blank" href="http://jitec.com.br/slack/">
+      <i class="fab fa-slack"></i>
+    </a>
+  </li>
   
   <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Users mailing list" aria-label="Users mailing list">
     <a class="text-white" target="_blank" href="https://groups.google.com/forum/#!forum/haproxy-ingress">

@@ -272,7 +272,7 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-11-docs-configuration-template" href="/v0.11/docs/configuration/template/">Template</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-11-docs-configuration-keys" href="/v0.11/docs/configuration/keys/">Configuration keys</a>
       
       
       
@@ -284,7 +284,7 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-11-docs-configuration-keys" href="/v0.11/docs/configuration/keys/">Configuration keys</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-11-docs-configuration-template" href="/v0.11/docs/configuration/template/">Template</a>
       
       
     </li>
@@ -403,7 +403,7 @@ if (!doNotTrack) {
 
 <h2 id="prerequisites">Prerequisites</h2>
 
-<p>HAProxy Ingress needs a running Kubernetes cluster. Although it&rsquo;s recommended to always use an up-to-date one, it will also work on clusters version as old as 1.6. HAProxy Ingress also works fine on local k8s deployments like <a href="https://minikube.sigs.k8s.io">minikube</a> or <a href="https://kind.sigs.k8s.io">kind</a>.</p>
+<p>HAProxy Ingress needs a running Kubernetes cluster. Controller version v0.11 needs Kubernetes 1.14, while version v0.10 and older work on clusters as old as 1.6. HAProxy Ingress also works fine on local k8s deployments like <a href="https://minikube.sigs.k8s.io">minikube</a> or <a href="https://kind.sigs.k8s.io">kind</a>.</p>
 
 <p>An ingress controller works exposing internal services to the external world, so another pre-requisite is that at least one cluster node is accessible externally. On cloud environments, a cloud load balancer can be configured to reach the ingress controller nodes.</p>
 
@@ -609,7 +609,7 @@ $ kubectl create -f - <span style="color:#4e9a06">&lt;&lt;EOF
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified July 10, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/2b3cc6701b27866acd9db35cbbd0c4de114aaec2">Update deprecated APIs docs (2b3cc670)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified September 1, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/297d629aa8cd2ffd0a4a4f930172f2b9463e1ddc">docs: k8s 1.14 as a pre-requisite of v0.11 (297d629a)</a>
 </div>
 </div>
 
@@ -625,6 +625,12 @@ $ kubectl create -f - <span style="color:#4e9a06">&lt;&lt;EOF
         
         
 <ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Slack" aria-label="Slack">
+    <a class="text-white" target="_blank" href="http://jitec.com.br/slack/">
+      <i class="fab fa-slack"></i>
+    </a>
+  </li>
   
   <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Users mailing list" aria-label="Users mailing list">
     <a class="text-white" target="_blank" href="https://groups.google.com/forum/#!forum/haproxy-ingress">

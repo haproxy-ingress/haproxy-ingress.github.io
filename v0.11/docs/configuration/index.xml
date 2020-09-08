@@ -14,566 +14,6 @@
     
     
     <item>
-      <title>Docs: Template</title>
-      <link>/v0.11/docs/configuration/template/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/v0.11/docs/configuration/template/</guid>
-      <description>
-        
-        
-        &lt;p&gt;Change the default templates mounting a new template file using a ConfigMap.
-Note that in the current version, updates to the ConfigMap will not update the
-in-memory parsed template.&lt;/p&gt;
-
-&lt;p&gt;All templates support &lt;a href=&#34;https://masterminds.github.io/sprig/&#34;&gt;Sprig&lt;/a&gt; template library.
-This library provides a group of commonly used template functions to work with dictionaries,
-lists, math etc.&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Mounting directory&lt;/th&gt;
-&lt;th&gt;ConfigMap keys (filenames)&lt;/th&gt;
-&lt;th&gt;Source (choose a proper tag)&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;/etc/haproxy/template&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;haproxy.tmpl&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/blob/release-0.8/rootfs/etc/haproxy/template/haproxy.tmpl&#34;&gt;haproxy.tmpl&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;/etc/haproxy/modsecurity&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;spoe-modsecurity.tmpl&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/blob/release-0.8/rootfs/etc/haproxy/modsecurity/spoe-modsecurity.tmpl&#34;&gt;spoe-modsecurity.tmpl&lt;/a&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-      </description>
-    </item>
-    
-    <item>
-      <title>Docs: Command line</title>
-      <link>/v0.11/docs/configuration/command-line/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/v0.11/docs/configuration/command-line/</guid>
-      <description>
-        
-        
-        
-
-&lt;p&gt;The following command-line options are supported:&lt;/p&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Name&lt;/th&gt;
-&lt;th&gt;Type&lt;/th&gt;
-&lt;th&gt;Default&lt;/th&gt;
-&lt;th&gt;Since&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-check-period&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;time&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;24h&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;v0.9&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-election-id&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;[namespace]/configmap-name&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;acme-leader&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;v0.9&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-fail-initial-duration&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;time&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;5m&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;v0.9&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-fail-max-duration&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;time&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;8h&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;v0.9&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-secret-key-name&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;[namespace]/secret-name&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;acme-private-key&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;v0.9&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-server&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;v0.9&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-token-configmap-name&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;[namespace]/configmap-name&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;acme-validation-tokens&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;v0.9&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-track-tls-annotation&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;v0.9&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#allow-cross-namespace&#34;&gt;&lt;code&gt;--allow-cross-namespace&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#annotation-prefix&#34;&gt;&lt;code&gt;--annotation-prefix&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;prefix without &lt;code&gt;/&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;ingress.kubernetes.io&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;v0.8&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#backend-shards&#34;&gt;&lt;code&gt;--backend-shards&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;int&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;0&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;v0.11&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#buckets-response-time&#34;&gt;&lt;code&gt;--buckets-response-time&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;float64 slice&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;.0005,.001,.002,.005,.01&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;v0.10&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#default-backend-service&#34;&gt;&lt;code&gt;--default-backend-service&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;namespace/servicename&lt;/td&gt;
-&lt;td&gt;haproxy&amp;rsquo;s 404 page&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#default-ssl-certificate&#34;&gt;&lt;code&gt;--default-ssl-certificate&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;namespace/secretname&lt;/td&gt;
-&lt;td&gt;fake, auto generated&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#disable-pod-list&#34;&gt;&lt;code&gt;--disable-pod-list&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;v0.11&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#stats&#34;&gt;&lt;code&gt;--healthz-port&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;port number&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;10254&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#ignore-ingress-without-class&#34;&gt;&lt;code&gt;--ignore-ingress-without-class&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;v0.10&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#ingress-class&#34;&gt;&lt;code&gt;--ingress-class&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;name&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;haproxy&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#kubeconfig&#34;&gt;&lt;code&gt;--kubeconfig&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;/path/to/kubeconfig&lt;/td&gt;
-&lt;td&gt;in cluster config&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#max-old-config-files&#34;&gt;&lt;code&gt;--max-old-config-files&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;num of files&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;0&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#stats&#34;&gt;&lt;code&gt;--profiling&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#publish-service&#34;&gt;&lt;code&gt;--publish-service&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;namespace/servicename&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#rate-limit-update&#34;&gt;&lt;code&gt;--rate-limit-update&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;uploads per second (float)&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;0.5&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#reload-strategy&#34;&gt;&lt;code&gt;--reload-strategy&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;[native|reusesocket]&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;reusesocket&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#sort-backends&#34;&gt;&lt;code&gt;--sort-backends&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#stats&#34;&gt;&lt;code&gt;--stats-collect-processing-period&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;time&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;500ms&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;v0.10&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#tcp-services-configmap&#34;&gt;&lt;code&gt;--tcp-services-configmap&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;namespace/configmapname&lt;/td&gt;
-&lt;td&gt;no tcp svc&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#verify-hostname&#34;&gt;&lt;code&gt;--verify-hostname&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#wait-before-shutdown&#34;&gt;&lt;code&gt;--wait-before-shutdown&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;seconds as integer&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;0&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;v0.8&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#watch-namespace&#34;&gt;&lt;code&gt;--watch-namespace&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;namespace&lt;/td&gt;
-&lt;td&gt;all namespaces&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;acme&#34;&gt;Acme&lt;/h2&gt;
-
-&lt;p&gt;Configures the acme server and other static options used to authorize and sign certificates
-against a server which implements the acme protocol, version 2.&lt;/p&gt;
-
-&lt;p&gt;Supported acme command-line options:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;--acme-check-period&lt;/code&gt;: interval between checks for expiring certificates. Defaults to &lt;code&gt;24h&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;--acme-election-id&lt;/code&gt;: prefix of the ConfigMap name used to store the leader election data. Only the leader of a haproxy-ingress cluster should start the authorization and sign certificate process. Defaults to &lt;code&gt;acme-leader&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;--acme-fail-initial-duration&lt;/code&gt;: the starting time to wait and retry after a failed authorization and sign process. Defaults to &lt;code&gt;5m&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;--acme-fail-max-duration&lt;/code&gt;: the time between retries of failed authorization will exponentially grow up to the max duration time. Defaults to &lt;code&gt;8h&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;--acme-secret-key-name&lt;/code&gt;: secret name used to store the client private key. Defaults to &lt;code&gt;acme-private-key&lt;/code&gt;. A new key, hence a new client, is created if the secret does not exist.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;--acme-server&lt;/code&gt;: mandatory, starts a local server used to answer challenges from the acme environment. This option should be provided on all haproxy-ingress instances to the certificate signing work properly.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;--acme-token-configmap-name&lt;/code&gt;: the ConfigMap name used to store temporary tokens generated during the challenge. Defaults to &lt;code&gt;acme-validation-tokens&lt;/code&gt;. Such tokens need to be stored in k8s because any haproxy-ingress instance might receive the request from the acme environment.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;--acme-track-tls-annotation&lt;/code&gt;: defines if ingress objects with annotation &lt;code&gt;kubernetes.io/tls-acme: &amp;quot;true&amp;quot;&lt;/code&gt; should also be tracked. Defaults to &lt;code&gt;false&lt;/code&gt;.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;See also:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/v0.11/v0.11/docs/configuration/keys/#acme&#34;&gt;acme configuration keys&lt;/a&gt; doc, which has also an overview on how acme works on haproxy-ingress&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;allow-cross-namespace&#34;&gt;&amp;ndash;allow-cross-namespace&lt;/h2&gt;
-
-&lt;p&gt;&lt;code&gt;--allow-cross-namespace&lt;/code&gt; argument, if added, will allow reading secrets from one namespace to an
-ingress resource of another namespace. The default behavior is to deny such cross namespace reading.
-This adds a breaking change from &lt;code&gt;v0.4&lt;/code&gt; to &lt;code&gt;v0.5&lt;/code&gt; on &lt;code&gt;ingress.kubernetes.io/auth-tls-secret&lt;/code&gt;
-annotation, where cross namespace reading were allowed without any configuration.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;annotation-prefix&#34;&gt;&amp;ndash;annotation-prefix&lt;/h2&gt;
-
-&lt;p&gt;Changes the annotation prefix the controller should look for when parsing services and ingress
-objects. The default value is &lt;code&gt;ingress.kubernetes.io&lt;/code&gt; if not declared, which means SSL Redirect
-should be configured with the annotation name &lt;code&gt;ingress.kubernetes.io/ssl-redirect&lt;/code&gt;. Annotations
-with other prefix are ignored. This allows using HAProxy Ingress with other ingress controllers
-that shares ingress and service objects without conflicting each other.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;backend-shards&#34;&gt;&amp;ndash;backend-shards&lt;/h2&gt;
-
-&lt;p&gt;Defines how much files should be used to configure the haproxy backends. The default value is
-0 (zero) which uses one single file to configure the whole haproxy process. Values greather than
-0 (zero) splits the backend configuration into separated files. Only files with changed backends
-are parsed and written to disk, reducing io and cpu usage on big clusters - about 1000 or more
-services.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;buckets-response-time&#34;&gt;&amp;ndash;buckets-response-time&lt;/h2&gt;
-
-&lt;p&gt;Configures the buckets of the histogram &lt;code&gt;haproxyingress_haproxy_response_time_seconds&lt;/code&gt;, used to compute the response time of the haproxy&amp;rsquo;s admin socket. The response time unit is in seconds.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;default-backend-service&#34;&gt;&amp;ndash;default-backend-service&lt;/h2&gt;
-
-&lt;p&gt;Defines the &lt;code&gt;namespace/servicename&lt;/code&gt; that should be used if the incoming request doesn&amp;rsquo;t match any
-hostname, or the requested path doesn&amp;rsquo;t match any location within the desired hostname.&lt;/p&gt;
-
-&lt;p&gt;This is a mandatory argument used in the &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment&#34;&gt;deployment&lt;/a&gt; example page.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;default-ssl-certificate&#34;&gt;&amp;ndash;default-ssl-certificate&lt;/h2&gt;
-
-&lt;p&gt;Defines the &lt;code&gt;namespace/secretname&lt;/code&gt; of the default certificate that should be used if ingress
-resources using TLS configuration doesn&amp;rsquo;t provide it&amp;rsquo;s own certificate.&lt;/p&gt;
-
-&lt;p&gt;This is a mandatory argument used in the &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment&#34;&gt;deployment&lt;/a&gt; and
-&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/tls-termination&#34;&gt;TLS termination&lt;/a&gt; example pages.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;disable-pod-list&#34;&gt;&amp;ndash;disable-pod-list&lt;/h2&gt;
-
-&lt;p&gt;Since v0.11&lt;/p&gt;
-
-&lt;p&gt;Disables in memory pod list and also pod watch for changes. Pod list and watch is used by &lt;code&gt;drain-support&lt;/code&gt; option, which will not work if pod list is disabled. Blue/green also uses pod list if enabled, otherwise k8s api is called if needed. The default value is &lt;code&gt;false&lt;/code&gt;, which means pods will be watched and listed in memory.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;ignore-ingress-without-class&#34;&gt;&amp;ndash;ignore-ingress-without-class&lt;/h2&gt;
-
-&lt;p&gt;Defines if the ingress without the ingress.class annotation will be considered or not. If &lt;code&gt;--ignore-ingress-without-class=true&lt;/code&gt; then only the ingresses with the matching ingress.class annotation will be considered, ingresses with missing or different ingress.class annotation will not be considered. Default is false.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;ingress-class&#34;&gt;&amp;ndash;ingress-class&lt;/h2&gt;
-
-&lt;p&gt;More than one ingress controller is supported per Kubernetes cluster. The &lt;code&gt;--ingress-class&lt;/code&gt;
-argument allow to override the class name of ingress resources that this instance of the
-controller should listen to. Class names that match will be used in the HAProxy configuration.
-Other classes will be ignored.&lt;/p&gt;
-
-&lt;p&gt;The ingress resource must use the &lt;code&gt;kubernetes.io/ingress.class&lt;/code&gt; annotation to name it&amp;rsquo;s
-ingress class.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;kubeconfig&#34;&gt;&amp;ndash;kubeconfig&lt;/h2&gt;
-
-&lt;p&gt;Ingress controller will try to connect to the Kubernetes master using environment variables and a
-service account. This behavior can be changed using &lt;code&gt;--kubeconfig&lt;/code&gt; argument that reference a
-kubeconfig file with master endpoint and credentials. This is a mandatory argument if the controller
-is deployed outside of the Kubernetes cluster.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;max-old-config-files&#34;&gt;&amp;ndash;max-old-config-files&lt;/h2&gt;
-
-&lt;p&gt;Everytime a configuration change need to update HAProxy, a configuration file is rewritten even if
-dynamic update is used. By default the same file is recreated and the old configuration is lost.
-Use &lt;code&gt;--max-old-config-files&lt;/code&gt; to configure after how much files Ingress controller should start to
-remove old configuration files. If &lt;code&gt;0&lt;/code&gt;, the default value, a single &lt;code&gt;haproxy.cfg&lt;/code&gt; is used.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;publish-service&#34;&gt;&amp;ndash;publish-service&lt;/h2&gt;
-
-&lt;p&gt;Some infrastructure tools like &lt;code&gt;external-DNS&lt;/code&gt; relay in the ingress status to created access routes to the services exposed with ingress object.&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-...
-status:
-  loadBalancer:
-    ingress:
-    - hostname: &amp;lt;ingressControllerLoadbalancerFQDN&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Use &lt;code&gt;--publish-service=namespace/servicename&lt;/code&gt; to indicate the services fronting the ingress controller. The controller mirrors the address of this service&amp;rsquo;s endpoints to the load-balancer status of all Ingress objects it satisfies.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;rate-limit-update&#34;&gt;&amp;ndash;rate-limit-update&lt;/h2&gt;
-
-&lt;p&gt;Use &lt;code&gt;--rate-limit-update&lt;/code&gt; to change how much time to wait between HAProxy reloads. Note that the first
-update is always immediate, the delay will only prevent two or more updates in the same time frame.
-Moreover reloads will only occur if the cluster configuration has changed, otherwise no reload will
-occur despite of the rate limit configuration.&lt;/p&gt;
-
-&lt;p&gt;This argument receives the allowed reloads per second. The default value is &lt;code&gt;0.5&lt;/code&gt; which means no more
-than one reload will occur within &lt;code&gt;2&lt;/code&gt; seconds. The lower limit is &lt;code&gt;0.05&lt;/code&gt; which means one reload within
-&lt;code&gt;20&lt;/code&gt; seconds. The highest one is &lt;code&gt;10&lt;/code&gt; which will allow ingress controller to reload HAProxy up to 10
-times per second.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;reload-strategy&#34;&gt;&amp;ndash;reload-strategy&lt;/h2&gt;
-
-&lt;p&gt;The &lt;code&gt;--reload-strategy&lt;/code&gt; command-line argument is used to select which reload strategy
-HAProxy should use. The following options are available:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;native&lt;/code&gt;: Uses native HAProxy reload option &lt;code&gt;-sf&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;reusesocket&lt;/code&gt;: (starting on v0.6) Uses HAProxy &lt;code&gt;-x&lt;/code&gt; command-line option to pass the listening sockets between old and new HAProxy process, allowing hitless reloads. This is the default option since v0.8.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;multibinder&lt;/code&gt;: (deprecated on v0.6) Uses GitHub&amp;rsquo;s &lt;a href=&#34;https://github.com/github/multibinder&#34;&gt;multibinder&lt;/a&gt;. This &lt;a href=&#34;https://githubengineering.com/glb-part-2-haproxy-zero-downtime-zero-delay-reloads-with-multibinder/&#34;&gt;link&lt;/a&gt;
-describes how it works.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;sort-backends&#34;&gt;&amp;ndash;sort-backends&lt;/h2&gt;
-
-&lt;p&gt;Ingress will randomly shuffle backends and server endpoints on each reload in order to avoid
-requesting always the same backends just after reloads, depending on the balancing algorithm.
-Use &lt;code&gt;--sort-backends&lt;/code&gt; to avoid this behavior and always declare backends and upstream servers
-in the same order.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;stats&#34;&gt;Stats&lt;/h2&gt;
-
-&lt;p&gt;Configures an endpoint with statistics, debugging and health checks. The following URIs are provided:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;/healthz&lt;/code&gt;: a healthz URI for the haproxy-ingress&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;/metrics&lt;/code&gt;: Prometheus compatible metrics exporter&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;/acme/check&lt;/code&gt; (&lt;code&gt;POST&lt;/code&gt;): starts check for missing, expiring or outdated certificates controlled by acme client. Should be issued in the leader.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;/debug/pprof&lt;/code&gt;: profiling tools&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;/build&lt;/code&gt;: build information - controller name, version, git commit hash and repository&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;/stop&lt;/code&gt;: stops haproxy-ingress controller&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Options:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;--healthz-port&lt;/code&gt;: Defines the port number haproxy-ingress should listen to. Defaults to &lt;code&gt;10254&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;--profiling&lt;/code&gt;: Configures if the profiling URI should be enabled. Defaults to &lt;code&gt;true&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;--stats-collect-processing-period&lt;/code&gt;: Defines the interval between two consecutive readings of haproxy&amp;rsquo;s &lt;code&gt;Idle_pct&lt;/code&gt;, used to generate &lt;code&gt;haproxy_processing_seconds_total&lt;/code&gt; metric. haproxy updates Idle_pct every &lt;code&gt;500ms&lt;/code&gt;, which makes that the best configuration value, and it&amp;rsquo;s also the default if not configured. Values higher than &lt;code&gt;500ms&lt;/code&gt; will produce a less accurate collect. Change to 0 (zero) to disable this metric.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;tcp-services-configmap&#34;&gt;&amp;ndash;tcp-services-configmap&lt;/h2&gt;
-
-&lt;p&gt;Configure &lt;code&gt;--tcp-services-configmap&lt;/code&gt; argument with &lt;code&gt;namespace/configmapname&lt;/code&gt; resource with TCP
-services and ports that HAProxy should listen to. Use the HAProxy&amp;rsquo;s port number as the key of the
-ConfigMap.&lt;/p&gt;
-
-&lt;p&gt;The value of the ConfigMap entry is a colon separated list of the following arguments:&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;code&gt;&amp;lt;namespace&amp;gt;/&amp;lt;service-name&amp;gt;&lt;/code&gt;, mandatory, is the well known notation of the service that will receive incoming connections.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;&amp;lt;portnumber&amp;gt;&lt;/code&gt;, mandatory, is the port number the upstream service is listening - this is not related to the listening port of HAProxy.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;&amp;lt;in-proxy&amp;gt;&lt;/code&gt;, optional, should be defined as &lt;code&gt;PROXY&lt;/code&gt; if HAProxy should expect requests using the &lt;a href=&#34;https://www.haproxy.org/download/2.0/doc/proxy-protocol.txt&#34;&gt;PROXY&lt;/a&gt; protocol. Leave empty to not use PROXY protocol. This is usually used only if there is another load balancer in front of HAProxy which supports the PROXY protocol. PROXY protocol v1 and v2 are supported.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;&amp;lt;out-proxy&amp;gt;&lt;/code&gt;, optional, should be defined as &lt;code&gt;PROXY&lt;/code&gt; or &lt;code&gt;PROXY-V2&lt;/code&gt; if the upstream service expect connections using the PROXY protocol v2. Use &lt;code&gt;PROXY-V1&lt;/code&gt; instead if the upstream service only support v1 protocol. Leave empty to connect without using the PROXY protocol.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;&amp;lt;namespace/secret-name&amp;gt;&lt;/code&gt;, optional, used to configure SSL/TLS over the TCP connection. Secret should have &lt;code&gt;tls.crt&lt;/code&gt; and &lt;code&gt;tls.key&lt;/code&gt; pair used on TLS handshake. Leave empty to not use ssl-offload.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;&amp;lt;check-interval&amp;gt;&lt;/code&gt;, added in v0.10, optional and defaults to &lt;code&gt;2s&lt;/code&gt;, configures a TCP check interval. Declare &lt;code&gt;-&lt;/code&gt; (one single dash) as the time to disable it. Valid time is a number and a mandatory suffix: &lt;code&gt;us&lt;/code&gt;, &lt;code&gt;ms&lt;/code&gt;, &lt;code&gt;s&lt;/code&gt;, &lt;code&gt;m&lt;/code&gt;, &lt;code&gt;h&lt;/code&gt; or &lt;code&gt;d&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;&amp;lt;namespace/secret-name&amp;gt;&lt;/code&gt;, added in v0.10, optional, used to configure SSL/TLS client verification over the TCP connection. Secret should have &lt;code&gt;ca.crt&lt;/code&gt; and optional &lt;code&gt;ca.crl&lt;/code&gt;. Leave empty to not use ssl client verification.&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Optional fields can be skipped using consecutive colons.&lt;/p&gt;
-
-&lt;p&gt;In the example below:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;...
-data:
-  &amp;quot;3306&amp;quot;: &amp;quot;default/mysql:3306::::-&amp;quot;
-  &amp;quot;5432&amp;quot;: &amp;quot;default/pgsql:5432::::1s&amp;quot;
-  &amp;quot;8000&amp;quot;: &amp;quot;system-prod/http:8000::PROXY-V1&amp;quot;
-  &amp;quot;9900&amp;quot;: &amp;quot;system-prod/admin:9900:PROXY::system-prod/tcp-9900&amp;quot;
-  &amp;quot;9990&amp;quot;: &amp;quot;system-prod/admin:9999::PROXY-V2&amp;quot;
-  &amp;quot;9995&amp;quot;: &amp;quot;system-prod/admin:9900:::system-prod/tcp-9995::system-prod/tcp-9995-ca&amp;quot;
-  &amp;quot;9999&amp;quot;: &amp;quot;system-prod/admin:9999:PROXY:PROXY&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;HAProxy will listen 7 new ports:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;3306&lt;/code&gt; will proxy to a &lt;code&gt;mysql&lt;/code&gt; service on &lt;code&gt;default&lt;/code&gt; namespace. Check interval is disabled.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;5432&lt;/code&gt; will proxy to a &lt;code&gt;pgsql&lt;/code&gt; service on &lt;code&gt;default&lt;/code&gt; namespace. Check interval is defined to run on every second.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;8000&lt;/code&gt; will proxy to &lt;code&gt;http&lt;/code&gt; service, port &lt;code&gt;8000&lt;/code&gt;, on the &lt;code&gt;system-prod&lt;/code&gt; namespace. The upstream service will expect connections using the PROXY protocol but it only supports v1.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;9900&lt;/code&gt; will proxy to &lt;code&gt;admin&lt;/code&gt; service, port &lt;code&gt;9900&lt;/code&gt;, on the &lt;code&gt;system-prod&lt;/code&gt; namespace. Clients should connect using the PROXY protocol v1 or v2. Upcoming connections should be encrypted, HAProxy will ssl-offload data using crt/key provided by &lt;code&gt;system-prod/tcp-9900&lt;/code&gt; secret.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;9990&lt;/code&gt; and &lt;code&gt;9999&lt;/code&gt; will proxy to the same &lt;code&gt;admin&lt;/code&gt; service and &lt;code&gt;9999&lt;/code&gt; port and the upstream service will expect connections using the PROXY protocol v2. The HAProxy frontend, however, will only expect PROXY protocol v1 or v2 on it&amp;rsquo;s port &lt;code&gt;9999&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;9995&lt;/code&gt; will proxy to &lt;code&gt;admin&lt;/code&gt; service, port &lt;code&gt;9900&lt;/code&gt;, on the &lt;code&gt;system-prod&lt;/code&gt; namespace. Upcoming connections should be encrypted, HAProxy will ssl-offload data using crt/key provided by &lt;code&gt;system-prod/tcp-9995&lt;/code&gt; secret. Furthermore, clients must present a certificate that will be valid under the certificate authority (and optional certificate revocation list) provded in the &lt;code&gt;system-prod/tcp-9995-ca&lt;/code&gt; secret.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Note: Check interval was added in v0.10 and defaults to &lt;code&gt;2s&lt;/code&gt;. All declared services has check interval enabled, except &lt;code&gt;3306&lt;/code&gt; which disabled it.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;verify-hostname&#34;&gt;&amp;ndash;verify-hostname&lt;/h2&gt;
-
-&lt;p&gt;Ingress resources has &lt;code&gt;spec/tls[]/secretName&lt;/code&gt; attribute to override the default X509 certificate.
-As a default behavior the certificates are validated against the hostname in order to match the
-SAN extension or CN (CN only up to &lt;code&gt;v0.4&lt;/code&gt;). Invalid certificates, ie certificates which doesn&amp;rsquo;t
-match the hostname are discarded and a warning is logged into the ingress controller logging.&lt;/p&gt;
-
-&lt;p&gt;Use &lt;code&gt;--verify-hostname=false&lt;/code&gt; argument to bypass this validation. If used, HAProxy will provide
-the certificate declared in the &lt;code&gt;secretName&lt;/code&gt; ignoring if the certificate is or is not valid.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;wait-before-shutdown&#34;&gt;&amp;ndash;wait-before-shutdown&lt;/h2&gt;
-
-&lt;p&gt;If argument &lt;code&gt;--wait-before-shutdown&lt;/code&gt; is defined, controller will wait defined time in seconds
-before it starts shutting down components when SIGTERM was received. By default, it&amp;rsquo;s 0, which means
-the controller starts shutting down itself right after signal was sent.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;watch-namespace&#34;&gt;&amp;ndash;watch-namespace&lt;/h2&gt;
-
-&lt;p&gt;By default the proxy will be configured using all namespaces from the Kubernetes cluster. Use
-&lt;code&gt;--watch-namespace&lt;/code&gt; with the name of a namespace to watch and build the configuration of a
-single namespace.&lt;/p&gt;
-
-      </description>
-    </item>
-    
-    <item>
       <title>Docs: Configuration keys</title>
       <link>/v0.11/docs/configuration/keys/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -3969,7 +3409,7 @@ service - all paths from that domain will be protected.&lt;/p&gt;
 &lt;p&gt;Defines how the path of an incoming request should match a declared path in the ingress object.&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;path-type&lt;/code&gt;: Configures the path type. Case insensitive, so &lt;code&gt;Begin&lt;/code&gt; and &lt;code&gt;begin&lt;/code&gt; configures the same path type option. The ingress spec has precedente, this option will only be used if the &lt;code&gt;pathType&lt;/code&gt; attribute from the ingress spec is declared as &lt;code&gt;ImplementationSpecific&lt;/code&gt; or is not declared.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;path-type&lt;/code&gt;: Configures the path type. Case insensitive, so &lt;code&gt;Begin&lt;/code&gt; and &lt;code&gt;begin&lt;/code&gt; configures the same path type option. The ingress spec has priority, this option will only be used if the &lt;code&gt;pathType&lt;/code&gt; attribute from the ingress spec is declared as &lt;code&gt;ImplementationSpecific&lt;/code&gt; or is not declared.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Supported &lt;code&gt;path-type&lt;/code&gt; values:&lt;/p&gt;
@@ -3978,7 +3418,7 @@ service - all paths from that domain will be protected.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;begin&lt;/code&gt;: Case insensitive, matches the beginning of the path from the incoming request. This is the default value if not declared.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;exact&lt;/code&gt;: Case sensitive, matches the whole path. Implements the &lt;code&gt;Exact&lt;/code&gt; path type from the ingress spec.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;prefix&lt;/code&gt;: Case sensitive, matches a whole subdirectory from the incoming path. A declared &lt;code&gt;/app&lt;/code&gt; path matches &lt;code&gt;/app&lt;/code&gt; and &lt;code&gt;/app/1&lt;/code&gt; but does not match &lt;code&gt;/app1&lt;/code&gt;. Implements the &lt;code&gt;Prefix&lt;/code&gt; path type from the ingress spec.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;regex&lt;/code&gt;: Case sensitive, matches the incoming path using POSIX extended regular expression. The regular expression is applied verbatim, so a declared &lt;code&gt;/app[0-9]+&lt;/code&gt; will match &lt;code&gt;/app1/sub&lt;/code&gt; and also &lt;code&gt;/sup/app1/sub&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;regex&lt;/code&gt;: Case sensitive, matches the incoming path using POSIX extended regular expression. The regular expression has an implicit start &lt;code&gt;^&lt;/code&gt; and no ending &lt;code&gt;$&lt;/code&gt; boundary, so a declared &lt;code&gt;/app[0-9]+/?&lt;/code&gt; will match paths starting with this pattern. Add a trailing &lt;code&gt;$&lt;/code&gt; if an exact match is desired.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Request and match examples:&lt;/p&gt;
@@ -3995,6 +3435,13 @@ service - all paths from that domain will be protected.&lt;/p&gt;
 
 &lt;tbody&gt;
 &lt;tr&gt;
+&lt;td&gt;&lt;code&gt;begin&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/app&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/App&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app/1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app1&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/ap&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;code&gt;exact&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;/app&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;/app&lt;/code&gt;&lt;/td&gt;
@@ -4009,29 +3456,22 @@ service - all paths from that domain will be protected.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;begin&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;/app&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;/App&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app/1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app1&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;/ap&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
 &lt;td&gt;&lt;code&gt;regex&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;/app[0-9]+&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;/app1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/sup/app15&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app25/sub&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/app1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app15/sub&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app25xx/sub&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;/App1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app/15&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;regex&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;^/app[0-9]+$&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/app[0-9]+$&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;/app1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app15&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;/App1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app15/&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/sup/app1&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/App1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app15/&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;regex&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;^/app[0-9]+/?&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/app[0-9]+/?&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;/app1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app15/&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app25/sub&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;/App15&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app/25sub&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
@@ -5206,6 +4646,612 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;#modsecurity&#34;&gt;Modsecurity&lt;/a&gt; configuration keys.&lt;/li&gt;
 &lt;/ul&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Command line</title>
+      <link>/v0.11/docs/configuration/command-line/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/v0.11/docs/configuration/command-line/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;The following command-line options are supported:&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Name&lt;/th&gt;
+&lt;th&gt;Type&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-check-period&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;time&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;24h&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-election-id&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[namespace]/configmap-name&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;acme-leader&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-fail-initial-duration&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;time&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;5m&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-fail-max-duration&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;time&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;8h&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-secret-key-name&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[namespace]/secret-name&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;acme-private-key&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-server&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-token-configmap-name&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[namespace]/configmap-name&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;acme-validation-tokens&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;--acme-track-tls-annotation&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.9&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#allow-cross-namespace&#34;&gt;&lt;code&gt;--allow-cross-namespace&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#annotation-prefix&#34;&gt;&lt;code&gt;--annotation-prefix&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;prefix without &lt;code&gt;/&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ingress.kubernetes.io&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.8&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#backend-shards&#34;&gt;&lt;code&gt;--backend-shards&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;int&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;0&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.11&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#buckets-response-time&#34;&gt;&lt;code&gt;--buckets-response-time&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;float64 slice&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;.0005,.001,.002,.005,.01&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.10&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#default-backend-service&#34;&gt;&lt;code&gt;--default-backend-service&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;namespace/servicename&lt;/td&gt;
+&lt;td&gt;haproxy&amp;rsquo;s 404 page&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#default-ssl-certificate&#34;&gt;&lt;code&gt;--default-ssl-certificate&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;namespace/secretname&lt;/td&gt;
+&lt;td&gt;fake, auto generated&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#disable-pod-list&#34;&gt;&lt;code&gt;--disable-pod-list&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.11&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#stats&#34;&gt;&lt;code&gt;--healthz-port&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;port number&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;10254&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#ignore-ingress-without-class&#34;&gt;&lt;code&gt;--ignore-ingress-without-class&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.10&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#ingress-class&#34;&gt;&lt;code&gt;--ingress-class&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;name&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;haproxy&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#kubeconfig&#34;&gt;&lt;code&gt;--kubeconfig&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;/path/to/kubeconfig&lt;/td&gt;
+&lt;td&gt;in cluster config&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#max-old-config-files&#34;&gt;&lt;code&gt;--max-old-config-files&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;num of files&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;0&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#stats&#34;&gt;&lt;code&gt;--profiling&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#publish-service&#34;&gt;&lt;code&gt;--publish-service&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;namespace/servicename&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#rate-limit-update&#34;&gt;&lt;code&gt;--rate-limit-update&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;uploads per second (float)&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;0.5&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#reload-strategy&#34;&gt;&lt;code&gt;--reload-strategy&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[native|reusesocket]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;reusesocket&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#sort-backends&#34;&gt;&lt;code&gt;--sort-backends&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#stats&#34;&gt;&lt;code&gt;--stats-collect-processing-period&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;time&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;500ms&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.10&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#tcp-services-configmap&#34;&gt;&lt;code&gt;--tcp-services-configmap&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;namespace/configmapname&lt;/td&gt;
+&lt;td&gt;no tcp svc&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#verify-hostname&#34;&gt;&lt;code&gt;--verify-hostname&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#wait-before-shutdown&#34;&gt;&lt;code&gt;--wait-before-shutdown&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;seconds as integer&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;0&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.8&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#wait-before-update&#34;&gt;&lt;code&gt;--wait-before-update&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;duration&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;200ms&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.11&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#watch-namespace&#34;&gt;&lt;code&gt;--watch-namespace&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;namespace&lt;/td&gt;
+&lt;td&gt;all namespaces&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;acme&#34;&gt;Acme&lt;/h2&gt;
+
+&lt;p&gt;Configures the acme server and other static options used to authorize and sign certificates
+against a server which implements the acme protocol, version 2.&lt;/p&gt;
+
+&lt;p&gt;Supported acme command-line options:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--acme-check-period&lt;/code&gt;: interval between checks for expiring certificates. Defaults to &lt;code&gt;24h&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--acme-election-id&lt;/code&gt;: prefix of the ConfigMap name used to store the leader election data. Only the leader of a haproxy-ingress cluster should start the authorization and sign certificate process. Defaults to &lt;code&gt;acme-leader&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--acme-fail-initial-duration&lt;/code&gt;: the starting time to wait and retry after a failed authorization and sign process. Defaults to &lt;code&gt;5m&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--acme-fail-max-duration&lt;/code&gt;: the time between retries of failed authorization will exponentially grow up to the max duration time. Defaults to &lt;code&gt;8h&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--acme-secret-key-name&lt;/code&gt;: secret name used to store the client private key. Defaults to &lt;code&gt;acme-private-key&lt;/code&gt;. A new key, hence a new client, is created if the secret does not exist.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--acme-server&lt;/code&gt;: mandatory, starts a local server used to answer challenges from the acme environment. This option should be provided on all haproxy-ingress instances to the certificate signing work properly.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--acme-token-configmap-name&lt;/code&gt;: the ConfigMap name used to store temporary tokens generated during the challenge. Defaults to &lt;code&gt;acme-validation-tokens&lt;/code&gt;. Such tokens need to be stored in k8s because any haproxy-ingress instance might receive the request from the acme environment.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--acme-track-tls-annotation&lt;/code&gt;: defines if ingress objects with annotation &lt;code&gt;kubernetes.io/tls-acme: &amp;quot;true&amp;quot;&lt;/code&gt; should also be tracked. Defaults to &lt;code&gt;false&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/v0.11/v0.11/docs/configuration/keys/#acme&#34;&gt;acme configuration keys&lt;/a&gt; doc, which has also an overview on how acme works on haproxy-ingress&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;allow-cross-namespace&#34;&gt;&amp;ndash;allow-cross-namespace&lt;/h2&gt;
+
+&lt;p&gt;&lt;code&gt;--allow-cross-namespace&lt;/code&gt; argument, if added, will allow reading secrets from one namespace to an
+ingress resource of another namespace. The default behavior is to deny such cross namespace reading.
+This adds a breaking change from &lt;code&gt;v0.4&lt;/code&gt; to &lt;code&gt;v0.5&lt;/code&gt; on &lt;code&gt;ingress.kubernetes.io/auth-tls-secret&lt;/code&gt;
+annotation, where cross namespace reading were allowed without any configuration.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;annotation-prefix&#34;&gt;&amp;ndash;annotation-prefix&lt;/h2&gt;
+
+&lt;p&gt;Changes the annotation prefix the controller should look for when parsing services and ingress
+objects. The default value is &lt;code&gt;ingress.kubernetes.io&lt;/code&gt; if not declared, which means SSL Redirect
+should be configured with the annotation name &lt;code&gt;ingress.kubernetes.io/ssl-redirect&lt;/code&gt;. Annotations
+with other prefix are ignored. This allows using HAProxy Ingress with other ingress controllers
+that shares ingress and service objects without conflicting each other.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;backend-shards&#34;&gt;&amp;ndash;backend-shards&lt;/h2&gt;
+
+&lt;p&gt;Defines how much files should be used to configure the haproxy backends. The default value is
+0 (zero) which uses one single file to configure the whole haproxy process. Values greather than
+0 (zero) splits the backend configuration into separated files. Only files with changed backends
+are parsed and written to disk, reducing io and cpu usage on big clusters - about 1000 or more
+services.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;buckets-response-time&#34;&gt;&amp;ndash;buckets-response-time&lt;/h2&gt;
+
+&lt;p&gt;Configures the buckets of the histogram &lt;code&gt;haproxyingress_haproxy_response_time_seconds&lt;/code&gt;, used to compute the response time of the haproxy&amp;rsquo;s admin socket. The response time unit is in seconds.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;default-backend-service&#34;&gt;&amp;ndash;default-backend-service&lt;/h2&gt;
+
+&lt;p&gt;Defines the &lt;code&gt;namespace/servicename&lt;/code&gt; that should be used if the incoming request doesn&amp;rsquo;t match any
+hostname, or the requested path doesn&amp;rsquo;t match any location within the desired hostname.&lt;/p&gt;
+
+&lt;p&gt;This is a mandatory argument used in the &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment&#34;&gt;deployment&lt;/a&gt; example page.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;default-ssl-certificate&#34;&gt;&amp;ndash;default-ssl-certificate&lt;/h2&gt;
+
+&lt;p&gt;Defines the &lt;code&gt;namespace/secretname&lt;/code&gt; of the default certificate that should be used if ingress
+resources using TLS configuration doesn&amp;rsquo;t provide it&amp;rsquo;s own certificate.&lt;/p&gt;
+
+&lt;p&gt;This is a mandatory argument used in the &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment&#34;&gt;deployment&lt;/a&gt; and
+&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/tls-termination&#34;&gt;TLS termination&lt;/a&gt; example pages.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;disable-pod-list&#34;&gt;&amp;ndash;disable-pod-list&lt;/h2&gt;
+
+&lt;p&gt;Since v0.11&lt;/p&gt;
+
+&lt;p&gt;Disables in memory pod list and also pod watch for changes. Pod list and watch is used by &lt;code&gt;drain-support&lt;/code&gt; option, which will not work if pod list is disabled. Blue/green also uses pod list if enabled, otherwise k8s api is called if needed. The default value is &lt;code&gt;false&lt;/code&gt;, which means pods will be watched and listed in memory.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;ignore-ingress-without-class&#34;&gt;&amp;ndash;ignore-ingress-without-class&lt;/h2&gt;
+
+&lt;p&gt;Defines if the ingress without the ingress.class annotation will be considered or not. If &lt;code&gt;--ignore-ingress-without-class=true&lt;/code&gt; then only the ingresses with the matching ingress.class annotation will be considered, ingresses with missing or different ingress.class annotation will not be considered. Default is false.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;ingress-class&#34;&gt;&amp;ndash;ingress-class&lt;/h2&gt;
+
+&lt;p&gt;More than one ingress controller is supported per Kubernetes cluster. The &lt;code&gt;--ingress-class&lt;/code&gt;
+argument allow to override the class name of ingress resources that this instance of the
+controller should listen to. Class names that match will be used in the HAProxy configuration.
+Other classes will be ignored.&lt;/p&gt;
+
+&lt;p&gt;The ingress resource must use the &lt;code&gt;kubernetes.io/ingress.class&lt;/code&gt; annotation to name it&amp;rsquo;s
+ingress class.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;kubeconfig&#34;&gt;&amp;ndash;kubeconfig&lt;/h2&gt;
+
+&lt;p&gt;Ingress controller will try to connect to the Kubernetes master using environment variables and a
+service account. This behavior can be changed using &lt;code&gt;--kubeconfig&lt;/code&gt; argument that reference a
+kubeconfig file with master endpoint and credentials. This is a mandatory argument if the controller
+is deployed outside of the Kubernetes cluster.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;max-old-config-files&#34;&gt;&amp;ndash;max-old-config-files&lt;/h2&gt;
+
+&lt;p&gt;Everytime a configuration change need to update HAProxy, a configuration file is rewritten even if
+dynamic update is used. By default the same file is recreated and the old configuration is lost.
+Use &lt;code&gt;--max-old-config-files&lt;/code&gt; to configure after how much files Ingress controller should start to
+remove old configuration files. If &lt;code&gt;0&lt;/code&gt;, the default value, a single &lt;code&gt;haproxy.cfg&lt;/code&gt; is used.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;publish-service&#34;&gt;&amp;ndash;publish-service&lt;/h2&gt;
+
+&lt;p&gt;Some infrastructure tools like &lt;code&gt;external-DNS&lt;/code&gt; relay in the ingress status to created access routes to the services exposed with ingress object.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+...
+status:
+  loadBalancer:
+    ingress:
+    - hostname: &amp;lt;ingressControllerLoadbalancerFQDN&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Use &lt;code&gt;--publish-service=namespace/servicename&lt;/code&gt; to indicate the services fronting the ingress controller. The controller mirrors the address of this service&amp;rsquo;s endpoints to the load-balancer status of all Ingress objects it satisfies.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;rate-limit-update&#34;&gt;&amp;ndash;rate-limit-update&lt;/h2&gt;
+
+&lt;p&gt;Use &lt;code&gt;--rate-limit-update&lt;/code&gt; to change how much time to wait between HAProxy reloads. Note that the first
+update is always immediate, the delay will only prevent two or more updates in the same time frame.
+Moreover reloads will only occur if the cluster configuration has changed, otherwise no reload will
+occur despite of the rate limit configuration.&lt;/p&gt;
+
+&lt;p&gt;This argument receives the allowed reloads per second. The default value is &lt;code&gt;0.5&lt;/code&gt; which means no more
+than one reload will occur within &lt;code&gt;2&lt;/code&gt; seconds. The lower limit is &lt;code&gt;0.05&lt;/code&gt; which means one reload within
+&lt;code&gt;20&lt;/code&gt; seconds. The highest one is &lt;code&gt;10&lt;/code&gt; which will allow ingress controller to reload HAProxy up to 10
+times per second.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;reload-strategy&#34;&gt;&amp;ndash;reload-strategy&lt;/h2&gt;
+
+&lt;p&gt;The &lt;code&gt;--reload-strategy&lt;/code&gt; command-line argument is used to select which reload strategy
+HAProxy should use. The following options are available:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;native&lt;/code&gt;: Uses native HAProxy reload option &lt;code&gt;-sf&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;reusesocket&lt;/code&gt;: (starting on v0.6) Uses HAProxy &lt;code&gt;-x&lt;/code&gt; command-line option to pass the listening sockets between old and new HAProxy process, allowing hitless reloads. This is the default option since v0.8.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;multibinder&lt;/code&gt;: (deprecated on v0.6) Uses GitHub&amp;rsquo;s &lt;a href=&#34;https://github.com/github/multibinder&#34;&gt;multibinder&lt;/a&gt;. This &lt;a href=&#34;https://githubengineering.com/glb-part-2-haproxy-zero-downtime-zero-delay-reloads-with-multibinder/&#34;&gt;link&lt;/a&gt;
+describes how it works.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;sort-backends&#34;&gt;&amp;ndash;sort-backends&lt;/h2&gt;
+
+&lt;p&gt;Ingress will randomly shuffle backends and server endpoints on each reload in order to avoid
+requesting always the same backends just after reloads, depending on the balancing algorithm.
+Use &lt;code&gt;--sort-backends&lt;/code&gt; to avoid this behavior and always declare backends and upstream servers
+in the same order.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;stats&#34;&gt;Stats&lt;/h2&gt;
+
+&lt;p&gt;Configures an endpoint with statistics, debugging and health checks. The following URIs are provided:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;/healthz&lt;/code&gt;: a healthz URI for the haproxy-ingress&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/metrics&lt;/code&gt;: Prometheus compatible metrics exporter&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/acme/check&lt;/code&gt; (&lt;code&gt;POST&lt;/code&gt;): starts check for missing, expiring or outdated certificates controlled by acme client. Should be issued in the leader.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/debug/pprof&lt;/code&gt;: profiling tools&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/build&lt;/code&gt;: build information - controller name, version, git commit hash and repository&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/stop&lt;/code&gt;: stops haproxy-ingress controller&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Options:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--healthz-port&lt;/code&gt;: Defines the port number haproxy-ingress should listen to. Defaults to &lt;code&gt;10254&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--profiling&lt;/code&gt;: Configures if the profiling URI should be enabled. Defaults to &lt;code&gt;true&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--stats-collect-processing-period&lt;/code&gt;: Defines the interval between two consecutive readings of haproxy&amp;rsquo;s &lt;code&gt;Idle_pct&lt;/code&gt;, used to generate &lt;code&gt;haproxy_processing_seconds_total&lt;/code&gt; metric. haproxy updates Idle_pct every &lt;code&gt;500ms&lt;/code&gt;, which makes that the best configuration value, and it&amp;rsquo;s also the default if not configured. Values higher than &lt;code&gt;500ms&lt;/code&gt; will produce a less accurate collect. Change to 0 (zero) to disable this metric.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;tcp-services-configmap&#34;&gt;&amp;ndash;tcp-services-configmap&lt;/h2&gt;
+
+&lt;p&gt;Configure &lt;code&gt;--tcp-services-configmap&lt;/code&gt; argument with &lt;code&gt;namespace/configmapname&lt;/code&gt; resource with TCP
+services and ports that HAProxy should listen to. Use the HAProxy&amp;rsquo;s port number as the key of the
+ConfigMap.&lt;/p&gt;
+
+&lt;p&gt;The value of the ConfigMap entry is a colon separated list of the following arguments:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;namespace&amp;gt;/&amp;lt;service-name&amp;gt;&lt;/code&gt;, mandatory, is the well known notation of the service that will receive incoming connections.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;portnumber&amp;gt;&lt;/code&gt;, mandatory, is the port number the upstream service is listening - this is not related to the listening port of HAProxy.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;in-proxy&amp;gt;&lt;/code&gt;, optional, should be defined as &lt;code&gt;PROXY&lt;/code&gt; if HAProxy should expect requests using the &lt;a href=&#34;https://www.haproxy.org/download/2.0/doc/proxy-protocol.txt&#34;&gt;PROXY&lt;/a&gt; protocol. Leave empty to not use PROXY protocol. This is usually used only if there is another load balancer in front of HAProxy which supports the PROXY protocol. PROXY protocol v1 and v2 are supported.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;out-proxy&amp;gt;&lt;/code&gt;, optional, should be defined as &lt;code&gt;PROXY&lt;/code&gt; or &lt;code&gt;PROXY-V2&lt;/code&gt; if the upstream service expect connections using the PROXY protocol v2. Use &lt;code&gt;PROXY-V1&lt;/code&gt; instead if the upstream service only support v1 protocol. Leave empty to connect without using the PROXY protocol.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;namespace/secret-name&amp;gt;&lt;/code&gt;, optional, used to configure SSL/TLS over the TCP connection. Secret should have &lt;code&gt;tls.crt&lt;/code&gt; and &lt;code&gt;tls.key&lt;/code&gt; pair used on TLS handshake. Leave empty to not use ssl-offload.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;check-interval&amp;gt;&lt;/code&gt;, added in v0.10, optional and defaults to &lt;code&gt;2s&lt;/code&gt;, configures a TCP check interval. Declare &lt;code&gt;-&lt;/code&gt; (one single dash) as the time to disable it. Valid time is a number and a mandatory suffix: &lt;code&gt;us&lt;/code&gt;, &lt;code&gt;ms&lt;/code&gt;, &lt;code&gt;s&lt;/code&gt;, &lt;code&gt;m&lt;/code&gt;, &lt;code&gt;h&lt;/code&gt; or &lt;code&gt;d&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;namespace/secret-name&amp;gt;&lt;/code&gt;, added in v0.10, optional, used to configure SSL/TLS client verification over the TCP connection. Secret should have &lt;code&gt;ca.crt&lt;/code&gt; and optional &lt;code&gt;ca.crl&lt;/code&gt;. Leave empty to not use ssl client verification.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Optional fields can be skipped using consecutive colons.&lt;/p&gt;
+
+&lt;p&gt;In the example below:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;...
+data:
+  &amp;quot;3306&amp;quot;: &amp;quot;default/mysql:3306::::-&amp;quot;
+  &amp;quot;5432&amp;quot;: &amp;quot;default/pgsql:5432::::1s&amp;quot;
+  &amp;quot;8000&amp;quot;: &amp;quot;system-prod/http:8000::PROXY-V1&amp;quot;
+  &amp;quot;9900&amp;quot;: &amp;quot;system-prod/admin:9900:PROXY::system-prod/tcp-9900&amp;quot;
+  &amp;quot;9990&amp;quot;: &amp;quot;system-prod/admin:9999::PROXY-V2&amp;quot;
+  &amp;quot;9995&amp;quot;: &amp;quot;system-prod/admin:9900:::system-prod/tcp-9995::system-prod/tcp-9995-ca&amp;quot;
+  &amp;quot;9999&amp;quot;: &amp;quot;system-prod/admin:9999:PROXY:PROXY&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;HAProxy will listen 7 new ports:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;3306&lt;/code&gt; will proxy to a &lt;code&gt;mysql&lt;/code&gt; service on &lt;code&gt;default&lt;/code&gt; namespace. Check interval is disabled.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;5432&lt;/code&gt; will proxy to a &lt;code&gt;pgsql&lt;/code&gt; service on &lt;code&gt;default&lt;/code&gt; namespace. Check interval is defined to run on every second.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;8000&lt;/code&gt; will proxy to &lt;code&gt;http&lt;/code&gt; service, port &lt;code&gt;8000&lt;/code&gt;, on the &lt;code&gt;system-prod&lt;/code&gt; namespace. The upstream service will expect connections using the PROXY protocol but it only supports v1.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;9900&lt;/code&gt; will proxy to &lt;code&gt;admin&lt;/code&gt; service, port &lt;code&gt;9900&lt;/code&gt;, on the &lt;code&gt;system-prod&lt;/code&gt; namespace. Clients should connect using the PROXY protocol v1 or v2. Upcoming connections should be encrypted, HAProxy will ssl-offload data using crt/key provided by &lt;code&gt;system-prod/tcp-9900&lt;/code&gt; secret.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;9990&lt;/code&gt; and &lt;code&gt;9999&lt;/code&gt; will proxy to the same &lt;code&gt;admin&lt;/code&gt; service and &lt;code&gt;9999&lt;/code&gt; port and the upstream service will expect connections using the PROXY protocol v2. The HAProxy frontend, however, will only expect PROXY protocol v1 or v2 on it&amp;rsquo;s port &lt;code&gt;9999&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;9995&lt;/code&gt; will proxy to &lt;code&gt;admin&lt;/code&gt; service, port &lt;code&gt;9900&lt;/code&gt;, on the &lt;code&gt;system-prod&lt;/code&gt; namespace. Upcoming connections should be encrypted, HAProxy will ssl-offload data using crt/key provided by &lt;code&gt;system-prod/tcp-9995&lt;/code&gt; secret. Furthermore, clients must present a certificate that will be valid under the certificate authority (and optional certificate revocation list) provded in the &lt;code&gt;system-prod/tcp-9995-ca&lt;/code&gt; secret.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Note: Check interval was added in v0.10 and defaults to &lt;code&gt;2s&lt;/code&gt;. All declared services has check interval enabled, except &lt;code&gt;3306&lt;/code&gt; which disabled it.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;verify-hostname&#34;&gt;&amp;ndash;verify-hostname&lt;/h2&gt;
+
+&lt;p&gt;Ingress resources has &lt;code&gt;spec/tls[]/secretName&lt;/code&gt; attribute to override the default X509 certificate.
+As a default behavior the certificates are validated against the hostname in order to match the
+SAN extension or CN (CN only up to &lt;code&gt;v0.4&lt;/code&gt;). Invalid certificates, ie certificates which doesn&amp;rsquo;t
+match the hostname are discarded and a warning is logged into the ingress controller logging.&lt;/p&gt;
+
+&lt;p&gt;Use &lt;code&gt;--verify-hostname=false&lt;/code&gt; argument to bypass this validation. If used, HAProxy will provide
+the certificate declared in the &lt;code&gt;secretName&lt;/code&gt; ignoring if the certificate is or is not valid.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;wait-before-shutdown&#34;&gt;&amp;ndash;wait-before-shutdown&lt;/h2&gt;
+
+&lt;p&gt;If argument &lt;code&gt;--wait-before-shutdown&lt;/code&gt; is defined, controller will wait defined time in seconds
+before it starts shutting down components when SIGTERM was received. By default, it&amp;rsquo;s 0, which means
+the controller starts shutting down itself right after signal was sent.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;wait-before-update&#34;&gt;&amp;ndash;wait-before-update&lt;/h2&gt;
+
+&lt;p&gt;Since v0.11&lt;/p&gt;
+
+&lt;p&gt;Defines the amount of time to wait before start a reconciliation event and update haproxy.
+The purpose of this delay is to group all the notifications of a batch update and apply pending
+changes in one single shot. The default value is &lt;code&gt;200ms&lt;/code&gt;.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;watch-namespace&#34;&gt;&amp;ndash;watch-namespace&lt;/h2&gt;
+
+&lt;p&gt;By default the proxy will be configured using all namespaces from the Kubernetes cluster. Use
+&lt;code&gt;--watch-namespace&lt;/code&gt; with the name of a namespace to watch and build the configuration of a
+single namespace.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
+      <title>Docs: Template</title>
+      <link>/v0.11/docs/configuration/template/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/v0.11/docs/configuration/template/</guid>
+      <description>
+        
+        
+        &lt;p&gt;Change the default templates mounting a new template file using a ConfigMap.
+Note that in the current version, updates to the ConfigMap will not update the
+in-memory parsed template.&lt;/p&gt;
+
+&lt;p&gt;All templates support &lt;a href=&#34;https://masterminds.github.io/sprig/&#34;&gt;Sprig&lt;/a&gt; template library.
+This library provides a group of commonly used template functions to work with dictionaries,
+lists, math etc.&lt;/p&gt;
+
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
+Starting from v0.11, all template files were moved from &lt;code&gt;/etc/haproxy&lt;/code&gt; to &lt;code&gt;/etc/templates&lt;/code&gt;. Change to an older doc version if using HAProxy Ingress up to v0.10.
+&lt;/div&gt;
+
+
+&lt;p&gt;Overwriting a template file:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The links below reference the &lt;code&gt;master&lt;/code&gt; branch, change to the same tag of your HAProxy Ingress version.&lt;/li&gt;
+&lt;li&gt;Change to the &lt;code&gt;Raw&lt;/code&gt; view&lt;/li&gt;
+&lt;li&gt;Copy the whole file and edit it to fit your needs&lt;/li&gt;
+&lt;li&gt;Paste the content to a ConfigMap, use the file name as the content key&lt;/li&gt;
+&lt;li&gt;Mount the ConfigMap into the Mounting directory (see below) of the HAProxy Ingress pod&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Warning&lt;/h4&gt;
+Consider overwriting the template files as a last resort. Templates change a lot between HAProxy Ingress versions and the overwrite should be updated on every controller update. Try to use a &lt;a href=&#34;/v0.11/v0.11/docs/configuration/keys/#configuration-snippet&#34;&gt;configuration snippet&lt;/a&gt; instead or file a new &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/issues/new&#34;&gt;feature request&lt;/a&gt;.
+&lt;/div&gt;
+
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Mounting directory (v0.11+)&lt;/th&gt;
+&lt;th&gt;ConfigMap keys&lt;/th&gt;
+&lt;th&gt;Source (v0.11+)&lt;/th&gt;
+&lt;th&gt;Source (up to v0.10)&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;/etc/templates/haproxy&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;haproxy.tmpl&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/blob/master/rootfs/etc/templates/haproxy/haproxy.tmpl&#34;&gt;haproxy.tmpl&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/blob/release-0.10/rootfs/etc/haproxy/template/haproxy.tmpl&#34;&gt;haproxy.tmpl&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;/etc/templates/modsecurity&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;modsecurity.tmpl&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/blob/master/rootfs/etc/templates/modsecurity/modsecurity.tmpl&#34;&gt;modsecurity.tmpl&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/blob/release-0.10/rootfs/etc/haproxy/modsecurity/spoe-modsecurity.tmpl&#34;&gt;spoe-modsecurity.tmpl&lt;/a&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 
       </description>
     </item>

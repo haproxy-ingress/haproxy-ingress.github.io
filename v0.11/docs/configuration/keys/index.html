@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.11/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2020-08-17T19:00:10-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2020-09-01T18:21:09-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all ingress/service annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2020-08-17T19:00:10-03:00" />
-<meta itemprop="wordCount" content="9961">
+<meta itemprop="dateModified" content="2020-09-01T18:21:09-03:00" />
+<meta itemprop="wordCount" content="9978">
 
 
 
@@ -278,7 +278,7 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-11-docs-configuration-template" href="/v0.11/docs/configuration/template/">Template</a>
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-v0-11-docs-configuration-keys" href="/v0.11/docs/configuration/keys/">Configuration keys</a>
       
       
       
@@ -290,7 +290,7 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-v0-11-docs-configuration-keys" href="/v0.11/docs/configuration/keys/">Configuration keys</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-11-docs-configuration-template" href="/v0.11/docs/configuration/template/">Template</a>
       
       
     </li>
@@ -3849,7 +3849,7 @@ service - all paths from that domain will be protected.</p>
 <p>Defines how the path of an incoming request should match a declared path in the ingress object.</p>
 
 <ul>
-<li><code>path-type</code>: Configures the path type. Case insensitive, so <code>Begin</code> and <code>begin</code> configures the same path type option. The ingress spec has precedente, this option will only be used if the <code>pathType</code> attribute from the ingress spec is declared as <code>ImplementationSpecific</code> or is not declared.</li>
+<li><code>path-type</code>: Configures the path type. Case insensitive, so <code>Begin</code> and <code>begin</code> configures the same path type option. The ingress spec has priority, this option will only be used if the <code>pathType</code> attribute from the ingress spec is declared as <code>ImplementationSpecific</code> or is not declared.</li>
 </ul>
 
 <p>Supported <code>path-type</code> values:</p>
@@ -3858,7 +3858,7 @@ service - all paths from that domain will be protected.</p>
 <li><code>begin</code>: Case insensitive, matches the beginning of the path from the incoming request. This is the default value if not declared.</li>
 <li><code>exact</code>: Case sensitive, matches the whole path. Implements the <code>Exact</code> path type from the ingress spec.</li>
 <li><code>prefix</code>: Case sensitive, matches a whole subdirectory from the incoming path. A declared <code>/app</code> path matches <code>/app</code> and <code>/app/1</code> but does not match <code>/app1</code>. Implements the <code>Prefix</code> path type from the ingress spec.</li>
-<li><code>regex</code>: Case sensitive, matches the incoming path using POSIX extended regular expression. The regular expression is applied verbatim, so a declared <code>/app[0-9]+</code> will match <code>/app1/sub</code> and also <code>/sup/app1/sub</code>.</li>
+<li><code>regex</code>: Case sensitive, matches the incoming path using POSIX extended regular expression. The regular expression has an implicit start <code>^</code> and no ending <code>$</code> boundary, so a declared <code>/app[0-9]+/?</code> will match paths starting with this pattern. Add a trailing <code>$</code> if an exact match is desired.</li>
 </ul>
 
 <p>Request and match examples:</p>
@@ -3875,6 +3875,13 @@ service - all paths from that domain will be protected.</p>
 
 <tbody>
 <tr>
+<td><code>begin</code></td>
+<td><code>/app</code></td>
+<td><code>/App</code> <br/> <code>/app</code> <br/> <code>/app/1</code> <br/> <code>/app1</code></td>
+<td><code>/ap</code></td>
+</tr>
+
+<tr>
 <td><code>exact</code></td>
 <td><code>/app</code></td>
 <td><code>/app</code></td>
@@ -3889,29 +3896,22 @@ service - all paths from that domain will be protected.</p>
 </tr>
 
 <tr>
-<td><code>begin</code></td>
-<td><code>/app</code></td>
-<td><code>/App</code> <br/> <code>/app</code> <br/> <code>/app/1</code> <br/> <code>/app1</code></td>
-<td><code>/ap</code></td>
-</tr>
-
-<tr>
 <td><code>regex</code></td>
 <td><code>/app[0-9]+</code></td>
-<td><code>/app1</code> <br/> <code>/sup/app15</code> <br/> <code>/app25/sub</code></td>
+<td><code>/app1</code> <br/> <code>/app15/sub</code> <br/> <code>/app25xx/sub</code></td>
 <td><code>/App1</code> <br/> <code>/app/15</code></td>
 </tr>
 
 <tr>
 <td><code>regex</code></td>
-<td><code>^/app[0-9]+$</code></td>
+<td><code>/app[0-9]+$</code></td>
 <td><code>/app1</code> <br/> <code>/app15</code></td>
-<td><code>/App1</code> <br/> <code>/app15/</code> <br/> <code>/sup/app1</code></td>
+<td><code>/App1</code> <br/> <code>/app15/</code></td>
 </tr>
 
 <tr>
 <td><code>regex</code></td>
-<td><code>^/app[0-9]+/?</code></td>
+<td><code>/app[0-9]+/?</code></td>
 <td><code>/app1</code> <br/> <code>/app15/</code> <br/> <code>/app25/sub</code></td>
 <td><code>/App15</code> <br/> <code>/app/25sub</code></td>
 </tr>
@@ -5149,7 +5149,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified August 17, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/cd4bfe021faabacebdc08f1cee0288dc097533be">remove implicit boundaries from regex match (cd4bfe02)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified September 1, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/436003b4607e22efcd13fa336695f29a9b8856fe">docs: reorder submenu within configuration (436003b4)</a>
 </div>
 </div>
 
@@ -5166,6 +5166,12 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
         
         
 <ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Slack" aria-label="Slack">
+    <a class="text-white" target="_blank" href="http://jitec.com.br/slack/">
+      <i class="fab fa-slack"></i>
+    </a>
+  </li>
   
   <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Users mailing list" aria-label="Users mailing list">
     <a class="text-white" target="_blank" href="https://groups.google.com/forum/#!forum/haproxy-ingress">
