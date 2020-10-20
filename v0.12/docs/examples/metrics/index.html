@@ -1,0 +1,793 @@
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.58.3" />
+
+<META NAME="ROBOTS" CONTENT="INDEX, FOLLOW">
+
+
+
+<link rel="shortcut icon" href="/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/v0.12/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/v0.12/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/v0.12/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/v0.12/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/v0.12/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/v0.12/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/v0.12/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/v0.12/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/v0.12/favicons/android-192x192.png" sizes="192x192">
+
+<title>Metrics | HAProxy Ingress</title><meta property="og:title" content="Metrics" />
+<meta property="og:description" content="Demonstrate how to collect and expose ingress controller and haproxy metrics.
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/v0.12/docs/examples/metrics/" />
+<meta property="article:modified_time" content="2020-07-10T14:58:58-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta itemprop="name" content="Metrics">
+<meta itemprop="description" content="Demonstrate how to collect and expose ingress controller and haproxy metrics.
+">
+
+
+<meta itemprop="dateModified" content="2020-07-10T14:58:58-03:00" />
+<meta itemprop="wordCount" content="971">
+
+
+
+<meta itemprop="keywords" content="" />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Metrics"/>
+<meta name="twitter:description" content="Demonstrate how to collect and expose ingress controller and haproxy metrics.
+"/>
+
+
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-150719229-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+
+
+
+
+
+<link rel="preload" href="/v0.12/scss/main.min.09e7d522d5846094a77df8fe690c2672d05ec6a02218a7463cb37d7c6962580c.css" as="style">
+<link href="/v0.12/scss/main.min.09e7d522d5846094a77df8fe690c2672d05ec6a02218a7463cb37d7c6962580c.css" rel="stylesheet" integrity="">
+
+
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+
+    <title>Metrics | HAProxy Ingress</title>
+  </head>
+  <body class="td-page">
+    <header>
+      
+<nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+        <a class="navbar-brand" href="/v0.12/">
+		<span class="navbar-logo"></span><span class="text-uppercase font-weight-bold">HAProxy Ingress</span>
+	</a>
+	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+		<ul class="navbar-nav mt-2 mt-lg-0">
+			
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link" href="/v0.12/about/" ><span>About</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link active" href="/v0.12/docs/" ><span class="active">Documentation</span></a>
+			</li>
+			
+			<li class="nav-item mr-4 mb-2 mb-lg-0">
+				
+				
+				
+				
+				
+				
+				<a class="nav-link" href="/v0.12/community/" ><span>Community</span></a>
+			</li>
+			
+			
+			<li class="nav-item dropdown d-none d-lg-block">
+				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	v0.12
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+	
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">Latest</a>
+	
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.12/docs">v0.12</a>
+	
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.11/docs">v0.11</a>
+	
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.10/docs">v0.10</a>
+	
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.9/docs">v0.9</a>
+	
+</div>
+
+			</li>
+			
+			
+		</ul>
+	</div>
+	<div class="navbar-nav d-none d-lg-block"></div>
+</nav>
+
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <div class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+
+
+
+
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  
+  <form class="td-sidebar__search d-flex align-items-center">
+    
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  
+  <nav class="collapse td-sidebar-nav pt-2 pl-4" id="td-section-nav">
+    
+    
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v0.12/docs/" class="align-left pl-0 pr-2 td-sidebar-link td-sidebar-link__section">Documentation</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="v0-12-docs">
+      
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v0.12/docs/overview/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Overview</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v0-12-docs-overview">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v0.12/docs/getting-started/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Getting Started</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v0-12-docs-getting-started">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v0.12/docs/examples/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">Examples</a>
+  </li>
+  <ul>
+    <li class="collapse show" id="v0-12-docs-examples">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-12-docs-examples-blue-green" href="/v0.12/docs/examples/blue-green/">Blue/green</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-12-docs-examples-external-haproxy" href="/v0.12/docs/examples/external-haproxy/">External haproxy</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-v0-12-docs-examples-metrics" href="/v0.12/docs/examples/metrics/">Metrics</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-12-docs-examples-modsecurity" href="/v0.12/docs/examples/modsecurity/">ModSecurity</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v0.12/docs/configuration/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Configuration</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v0-12-docs-configuration">
+      
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-12-docs-configuration-keys" href="/v0.12/docs/configuration/keys/">Configuration keys</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-12-docs-configuration-command-line" href="/v0.12/docs/configuration/command-line/">Command line</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-12-docs-configuration-template" href="/v0.12/docs/configuration/template/">Template</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v0.12/docs/contribution-guidelines/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Contribution Guidelines</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v0-12-docs-contribution-guidelines">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+    </li>
+  </ul>
+</ul>
+
+  </nav>
+</div>
+
+
+
+
+          </div>
+          <div class="d-none d-xl-block col-xl-2 td-toc d-print-none">
+            
+
+
+
+
+
+<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
+
+
+
+
+
+<a href="https://github.com/jcmoraisjr/haproxy-ingress/edit/master/docs/content/en/docs/examples/metrics.md" target="_blank"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
+<a href="https://github.com/jcmoraisjr/haproxy-ingress/issues/new?title=Metrics" target="_blank"><i class="fab fa-github fa-fw"></i> Create doc issue</a>
+
+</div>
+
+
+
+
+
+
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#configure-the-controller">Configure the controller</a></li>
+<li><a href="#deploy-prometheus">Deploy Prometheus</a></li>
+<li><a href="#deploy-grafana">Deploy Grafana</a></li>
+<li><a href="#configure-dashboard">Configure dashboard</a></li>
+<li><a href="#compatibility">Compatibility</a></li>
+<li><a href="#test">Test</a></li>
+</ul></li>
+</ul>
+</nav>
+
+
+
+          </div>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            <nav aria-label="breadcrumb" class="d-none d-md-block d-print-none">
+	<ol class="breadcrumb spb-1">
+		
+
+
+
+
+
+
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="/v0.12/docs/">Documentation</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item" >
+	<a href="/v0.12/docs/examples/">Examples</a>
+</li>
+
+
+
+
+<li class="breadcrumb-item active" aria-current="page">
+	<a href="/v0.12/docs/examples/metrics/">Metrics</a>
+</li>
+
+	</ol>
+</nav	>
+
+            
+<div class="td-content">
+	<h1>Metrics</h1>
+	<div class="lead">Demonstrate how to collect and expose ingress controller and haproxy metrics.</div>
+	
+
+
+
+<div class="pageinfo pageinfo-primary">
+<p>This is a <code>v0.10</code> example and need HAProxy Ingress <code>v0.10-snapshot.5</code> or above</p>
+
+</div>
+
+
+<p>This example demonstrates how to configure <a href="https://prometheus.io">Prometheus</a> to collect ingress controller and haproxy metrics, and also to configure a <a href="https://grafana.com">Grafana</a> dashboard to expose these metrics.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>This document has the following prerequisite:</p>
+
+<ul>
+<li>A Kubernetes cluster with a running HAProxy Ingress controller v0.10 or above. See the <a href="/v0.12/docs/getting-started/">getting started</a> guide.</li>
+</ul>
+
+<h2 id="configure-the-controller">Configure the controller</h2>
+
+<p>HAProxy Ingress by default does not configure the haproxy&rsquo;s prometheus exporter. The patch below configures the haproxy&rsquo;s internal prometheus exporter in the port <code>9105</code>:</p>
+
+<pre><code>kubectl --namespace ingress-controller patch configmap haproxy-ingress -p '{&quot;data&quot;:{&quot;prometheus-port&quot;:&quot;9105&quot;}}'
+</code></pre>
+
+<p>The following patch adds ports <code>9105</code> and <code>10254</code> to the HAProxy Ingress container. The port declaration is used by the Prometheus&rsquo; service discovery:</p>
+
+<p>Note: this patch will restart the controller!</p>
+
+<pre><code>kubectl --namespace ingress-controller patch daemonset haproxy-ingress -p '{&quot;spec&quot;:{&quot;template&quot;:{&quot;spec&quot;:{&quot;containers&quot;:[{&quot;name&quot;:&quot;haproxy-ingress&quot;,&quot;ports&quot;:[{&quot;name&quot;:&quot;exporter&quot;,&quot;containerPort&quot;:9105},{&quot;name&quot;:&quot;ingress-stats&quot;,&quot;containerPort&quot;:10254}]}]}}}}'
+</code></pre>
+
+<h2 id="deploy-prometheus">Deploy Prometheus</h2>
+
+<p>This will create a Prometheus deployment with no resource limits, a configuration file which will scrape haproxy and also HAProxy Ingress metrics every <code>10s</code>, and also a role and rolebinding which allows Prometheus to discover haproxy and controller endpoints using k8s:</p>
+
+<pre><code>kubectl create -f https://haproxy-ingress.github.io/docs/examples/metrics/prometheus.yaml
+</code></pre>
+
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">Note</h4>
+This deployment has no persistent volume, so all the collected metrics will be lost if the pod is recreated.
+</div>
+
+
+<p>Check if Prometheus is up and running:</p>
+
+<pre><code>kubectl --namespace ingress-controller get pod -lrun=prometheus -w
+</code></pre>
+
+<p>Check also if Prometheus found the haproxy and the controller endpoints:</p>
+
+<pre><code>kubectl --namespace ingress-controller port-forward svc/prometheus 9090:9090
+</code></pre>
+
+<p>Open <a href="http://127.0.0.1:9090/targets">localhost:9090/targets</a> in your browser, all haproxy and controller instances should be listed, up, and green.</p>
+
+<h2 id="deploy-grafana">Deploy Grafana</h2>
+
+<p>The following instruction will create a Grafana deployment with no resource limit, and also its service:</p>
+
+<pre><code>kubectl create -f https://haproxy-ingress.github.io/docs/examples/metrics/grafana.yaml
+</code></pre>
+
+<p>Check if Grafana is up and running:</p>
+
+<pre><code>kubectl --namespace ingress-controller get pod -lrun=grafana -w
+</code></pre>
+
+<p>Create the ingress which will expose Grafana. Change <code>HOST</code> below to a domain of the cluster, or just change the inner IP number to the IP of the HAProxy Ingress node:</p>
+
+<pre><code>HOST=grafana.192.168.1.1.nip.io
+kubectl create -f - &lt;&lt;EOF
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: ingress-controller
+spec:
+  rules:
+  - host: $HOST
+    http:
+      paths:
+      - backend:
+          serviceName: grafana
+          servicePort: 3000
+        path: /
+  tls:
+  - hosts:
+    - $HOST
+EOF
+</code></pre>
+
+<h2 id="configure-dashboard">Configure dashboard</h2>
+
+<p>Now its time to see what Prometheus is collecting. Grafana can be acessed in the <code>HOST</code> used to configure the ingress object.</p>
+
+<ul>
+<li>Log in to Grafana, user is <code>admin</code> and the first password is <code>admin</code></li>
+<li>Create a Prometheus data source, the endpoint is <code>http://prometheus:9090</code></li>
+<li>Click the big <code>+</code> plus sign in the left side, and Import <a href="https://grafana.com/grafana/dashboards/12056">this</a> dashboard</li>
+</ul>
+
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">Note</h4>
+This deployment has no persistent volume, so all customizations will be lost if the pod is recreated.
+</div>
+
+
+<p>If everything worked as expected, you should see a dashboard like this:</p>
+
+<p><img src="/docs/examples/metrics/dashboard-1.png" alt="" /></p>
+
+<h2 id="compatibility">Compatibility</h2>
+
+<p>Check if you have any of these scenarios and adjust Prometheus or Grafana accordingly.</p>
+
+<p><strong>Grafana &lt; 6.5</strong></p>
+
+<p>Use Grafana 6.5 or higher. Although an older Grafana won&rsquo;t refuse to install this dashboard, some widgets will not render as expected on older versions.</p>
+
+<p><strong>The <code>hostname</code> label</strong></p>
+
+<p>All the metrics of this dashboard are grouped by the <code>hostname</code> label. If you already have Prometheus and HAProxy Exporter, ensure that the <code>hostname</code> label uniquely identifies all HAProxy Ingress instances, just like the proposed Prometheus configuration does.</p>
+
+<p><strong>The <code>_front__tls</code> proxy</strong></p>
+
+<p>This dashboard is designed to work without the <code>_front__tls</code> proxy, such proxy is created whenever ssl-passthrough is used or timeout client is configured in the ingress object. Just to be sure, check if <code>grep _front__tls /etc/haproxy/haproxy.cfg</code> find a proxy declaration. If the <code>_front__tls</code> proxy exists, edit the dashboard and change the variable <code>$public_frontend</code> to the following new value: <code>(_tcp_.*|_front_http|_front__tls)</code></p>
+
+<p><strong>Using the Prometheus&rsquo; HAProxy Exporter</strong></p>
+
+<p>This dashboard works with haproxy&rsquo;s internal Prometheus exporter. Follow these steps to adjust the scrape config and the dashboard if using <a href="https://github.com/prometheus/haproxy_exporter">Prometheus&rsquo; HAProxy Exporter</a>:</p>
+
+<ul>
+<li>Change the metric name of &ldquo;Backend status / Top 5 max/avg connection time&rdquo; to <code>haproxy_backend_http_connect_time_average_seconds</code></li>
+
+<li><p>Add this <code>metric_relabel_config</code> in the Prometheus configuration:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f8f8f8;text-decoration:underline">  </span>metric_relabel_configs<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>source_labels<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">[</span>frontend<span style="color:#000;font-weight:bold">]</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>regex<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>(.+)<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>target_label<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>proxy<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>source_labels<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">[</span>backend<span style="color:#000;font-weight:bold">]</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>regex<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>(.+)<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>target_label<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>proxy</code></pre></div></li>
+</ul>
+
+<h2 id="test">Test</h2>
+
+<p>Lets make some noise and see what the dashboard tell us about our HAProxy Ingress cluster.</p>
+
+<p>Deploy a demo application and a custom (self-signed) certificate:</p>
+
+<pre><code>openssl req -x509 -subj &quot;/CN=whoami.localdomain&quot; -nodes -days 30 -newkey rsa:2048 -keyout /tmp/w.key -out /tmp/w.crt
+kubectl --namespace default create secret tls whoami --cert /tmp/w.crt --key /tmp/w.key
+rm -fv /tmp/w.crt /tmp/w.key
+kubectl --namespace default create deploy whoami --image jcmoraisjr/whoami
+kubectl --namespace default scale deploy whoami --replicas=4
+kubectl --namespace default expose deploy whoami --port 8000
+kubectl create -f https://haproxy-ingress.github.io/docs/examples/metrics/whoami-ingress.yaml
+</code></pre>
+
+<p>Check if the app is up and running:</p>
+
+<pre><code>kubectl --namespace default get pod -lapp=whoami -w
+</code></pre>
+
+<p>Download <a href="https://github.com/tsenart/vegeta/releases">vegeta</a> and place it in the path.</p>
+
+<p>Make a test and check if everything is working as expected. Change IP below to the IP of a HAProxy Ingress node:</p>
+
+<pre><code>IP=192.168.1.1
+echo &quot;GET http://${IP}&quot; |\
+  vegeta attack -duration=1s -rate=1 -header &quot;Host: whoami.localdomain&quot; -keepalive=true |\
+  vegeta report
+</code></pre>
+
+<p>You should see something like this. The most important part is Success ratio=100% and an Error Set empty:</p>
+
+<pre><code>...
+Success       [ratio]                    100.00%
+Status Codes  [code:count]               200:1
+Error Set:
+</code></pre>
+
+<p>Now the real test. Adjust the duration and rate (number of requests per second) if needed. A dual core VM dedicated to HAProxy Ingress should accept a few thousands requests per second. Lets configure <code>200</code> which should move some lines in the dashoard:</p>
+
+<pre><code>IP=192.168.1.1
+echo &quot;GET http://${IP}&quot; |\
+  vegeta attack -duration=5m -rate=200 -header &quot;Host: whoami.localdomain&quot; -keepalive=true |\
+  vegeta report
+</code></pre>
+
+<p>Follow the dashboard while the test is running. Most metrics have its resolution in <code>1m</code> (one minute) so you should wait this time to see the correct conn/s, rps, proc use and so on.</p>
+
+<p>What&rsquo;s the impact of not use keepalive? Try the same test, changing only <code>-keepalive</code> to  <code>false</code>:</p>
+
+<pre><code>IP=192.168.1.1
+echo &quot;GET http://${IP}&quot; |\
+  vegeta attack -duration=5m -rate=200 -header &quot;Host: whoami.localdomain&quot; -keepalive=false |\
+  vegeta report
+</code></pre>
+
+<p>Last test: what about TLS connections without keepalive? Change <code>http</code> to <code>https</code> and add <code>-insecure</code> command-line option to Vegeta:</p>
+
+<pre><code>IP=192.168.1.1
+echo &quot;GET https://${IP}&quot; |\
+  vegeta attack -insecure -duration=5m -rate=200 -header &quot;Host: whoami.localdomain&quot; -keepalive=false |\
+  vegeta report
+</code></pre>
+
+	
+		<style>
+  .feedback--answer {
+    display: inline-block;
+  }
+  .feedback--answer-no {
+    margin-left: 1em;
+  }
+  .feedback--response {
+    display: none;
+    margin-top: 1em;
+  }
+  .feedback--response__visible {
+    display: block;
+  }
+</style>
+<h2 class="feedback--title">Feedback</h2>
+<p class="feedback--question">Was this page helpful?</p>
+<button class="feedback--answer feedback--answer-yes">Yes</button>
+<button class="feedback--answer feedback--answer-no">No</button>
+<p class="feedback--response feedback--response-yes">
+  Glad to hear it! Please <a href="https://github.com/jcmoraisjr/haproxy-ingress/issues/new">tell us how we can improve</a>.
+</p>
+<p class="feedback--response feedback--response-no">
+  Sorry to hear that. Please <a href="https://github.com/jcmoraisjr/haproxy-ingress/issues/new">tell us how we can improve</a>.
+</p>
+<script>
+  const yesButton = document.querySelector('.feedback--answer-yes');
+  const noButton = document.querySelector('.feedback--answer-no');
+  const yesResponse = document.querySelector('.feedback--response-yes');
+  const noResponse = document.querySelector('.feedback--response-no');
+  const disableButtons = () => {
+    yesButton.disabled = true;
+    noButton.disabled = true;
+  };
+  const sendFeedback = (value) => {
+    if (typeof ga !== 'function') return;
+    const args = {
+      command: 'send',
+      hitType: 'event',
+      category: 'Helpful',
+      action: 'click',
+      label: window.location.pathname,
+      value: value
+    };
+    ga(args.command, args.hitType, args.category, args.action, args.label, args.value);
+  };
+  yesButton.addEventListener('click', () => {
+    yesResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(1);
+  });
+  noButton.addEventListener('click', () => {
+    noResponse.classList.add('feedback--response__visible');
+    disableButtons();
+    sendFeedback(0);
+  });
+</script>
+
+		<br />
+	
+	
+	<div class="text-muted mt-5 pt-3 border-top">Last modified July 10, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/2b3cc6701b27866acd9db35cbbd0c4de114aaec2">Update deprecated APIs docs (2b3cc670)</a>
+</div>
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      
+<footer class="bg-dark py-5 row d-print-none">
+  <div class="container-fluid mx-sm-5">
+    <div class="row">
+      <div class="col-6 col-sm-2 text-xs-center order-sm-2">
+        
+        
+        
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Slack" aria-label="Slack">
+    <a class="text-white" target="_blank" href="http://jitec.com.br/slack/">
+      <i class="fab fa-slack"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Users mailing list" aria-label="Users mailing list">
+    <a class="text-white" target="_blank" href="https://groups.google.com/forum/#!forum/haproxy-ingress">
+      <i class="fa fa-envelope"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Stack Overflow" aria-label="Stack Overflow">
+    <a class="text-white" target="_blank" href="https://stackoverflow.com/questions/tagged/haproxy-ingress">
+      <i class="fab fa-stack-overflow"></i>
+    </a>
+  </li>
+  
+</ul>
+
+        
+        
+      </div>
+      <div class="col-6 col-sm-2 text-right text-xs-center order-sm-3">
+        
+        
+        
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="GitHub" aria-label="GitHub">
+    <a class="text-white" target="_blank" href="https://github.com/jcmoraisjr/haproxy-ingress">
+      <i class="fab fa-github"></i>
+    </a>
+  </li>
+  
+</ul>
+
+        
+        
+      </div>
+      <div class="col-12 col-sm-8 text-center py-2 order-sm-2">
+        
+          <small class="text-white">Made with <div class="fa fa-heart"></div> & <div class="fa fa-coffee"></div> | &copy; 2020 The HAProxy Ingress Controller Authors</small>
+        
+        <small class="text-white"> | Image by <a href="https://pixabay.com/users/TheDigitalArtist-202249/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pete Linforth</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pixabay</a></small>
+        
+	
+		<p class="mt-2"><a href="/v0.12/about/">About</a></p>
+	
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+
+
+
+
+
+
+<script src="/v0.12/js/main.min.c1c59e0479b6dfe2cb1a42216c85e2f9da5e4af4be3a8121b02ea460d3657e06.js" integrity="sha256-wcWeBHm23&#43;LLGkIhbIXi&#43;dpeSvS&#43;OoEhsC6kYNNlfgY=" crossorigin="anonymous"></script>
+
+
+
+  </body>
+</html>

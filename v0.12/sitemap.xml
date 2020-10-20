@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>/v0.12/docs/configuration/keys/</loc>
+    <lastmod>2020-10-17T16:17:12-03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/v0.12/docs/overview/</loc>
+    <lastmod>2020-01-10T18:45:57+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/v0.12/docs/configuration/command-line/</loc>
+    <lastmod>2020-10-17T15:33:52-03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/v0.12/docs/getting-started/</loc>
+    <lastmod>2020-09-01T18:32:38-03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/v0.12/docs/examples/</loc>
+    <lastmod>2020-01-19T22:16:55-03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/v0.12/docs/configuration/template/</loc>
+    <lastmod>2020-10-17T16:15:57-03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/v0.12/docs/configuration/</loc>
+    <lastmod>2020-01-10T18:24:42+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/v0.12/docs/examples/blue-green/</loc>
+    <lastmod>2020-07-10T14:58:58-03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/v0.12/docs/contribution-guidelines/</loc>
+    <lastmod>2020-01-10T16:12:55+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/v0.12/docs/</loc>
+    <lastmod>2019-10-20T17:06:54-03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/v0.12/docs/examples/external-haproxy/</loc>
+    <lastmod>2020-09-21T23:18:16-03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/v0.12/docs/examples/metrics/</loc>
+    <lastmod>2020-07-10T14:58:58-03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/v0.12/docs/examples/modsecurity/</loc>
+    <lastmod>2020-07-10T14:58:58-03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/v0.12/about/</loc>
+    <lastmod>2019-10-20T17:06:54-03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/v0.12/community/</loc>
+    <lastmod>2019-10-20T17:06:54-03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/v0.12/</loc>
+    <lastmod>2020-09-06T15:29:22-03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/v0.12/search/</loc>
+    <lastmod>2019-10-20T17:06:54-03:00</lastmod>
+  </url>
+  
+</urlset>
