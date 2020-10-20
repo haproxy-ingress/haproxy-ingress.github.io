@@ -434,10 +434,20 @@ describes how it works.&lt;/li&gt;
 
 &lt;h2 id=&#34;sort-backends&#34;&gt;&amp;ndash;sort-backends&lt;/h2&gt;
 
-&lt;p&gt;Ingress will randomly shuffle backends and server endpoints on each reload in order to avoid
-requesting always the same backends just after reloads, depending on the balancing algorithm.
-Use &lt;code&gt;--sort-backends&lt;/code&gt; to avoid this behavior and always declare backends and upstream servers
-in the same order.&lt;/p&gt;
+&lt;p&gt;Defines if backend&amp;rsquo;s endpoints should be sorted by name. Since v0.8 the endpoints will stay in the
+same order found in the Kubernetes&amp;rsquo; endpoint objects if &lt;code&gt;--sort-backends&lt;/code&gt; is missing.&lt;/p&gt;
+
+&lt;p&gt;In v0.7 and older version, if &lt;code&gt;--sort-backends&lt;/code&gt; is missing, HAProxy Ingress randomly shuffle endpoints
+on each reload in order to avoid requesting always the same backends just after haproxy reloads.&lt;/p&gt;
+
+&lt;p&gt;Sorting backends by name has a real effect only if using a distinct &lt;a href=&#34;/docs/configuration/keys/#backend-server-naming&#34;&gt;backend-server-naming&lt;/a&gt;
+option, because the default value builds the server name using a numeric sequence.&lt;/p&gt;
+
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/docs/configuration/keys/#backend-server-naming&#34;&gt;backend-server-naming&lt;/a&gt; configuration key&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;hr /&gt;
 
@@ -1565,7 +1575,7 @@ will be used.&lt;/p&gt;
 &lt;td&gt;&lt;a href=&#34;#strict-host&#34;&gt;&lt;code&gt;strict-host&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -4610,17 +4620,17 @@ configured to SSL offload on HAProxy.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;strict-host&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
 &lt;p&gt;Defines whether the path of another matching host/FQDN should be used to try
-to serve a request. The default value is &lt;code&gt;true&lt;/code&gt;, which means a strict
-configuration and the &lt;code&gt;default-backend&lt;/code&gt; should be used if a path couldn&amp;rsquo;t be
-matched. If &lt;code&gt;false&lt;/code&gt;, all matching wildcard hosts will be visited in order to
-try to match the path.&lt;/p&gt;
+to serve a request. The default value is &lt;code&gt;false&lt;/code&gt;, which means all matching
+wildcard hosts will be visited in order to try to match the path. If &lt;code&gt;true&lt;/code&gt;,
+a strict configuration is applied and the &lt;code&gt;default-backend&lt;/code&gt; should be used
+if a path couldn&amp;rsquo;t be matched.&lt;/p&gt;
 
 &lt;p&gt;Using the following configuration:&lt;/p&gt;
 
@@ -4645,8 +4655,8 @@ try to match the path.&lt;/p&gt;
 &lt;p&gt;A request to &lt;code&gt;my.domain.com/b&lt;/code&gt; would serve:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;default-backend&lt;/code&gt; if &lt;code&gt;strict-host&lt;/code&gt; is &lt;code&gt;true&lt;/code&gt;, the default value&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;svc2&lt;/code&gt; if &lt;code&gt;strict-host&lt;/code&gt; is &lt;code&gt;false&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;svc2&lt;/code&gt; if &lt;code&gt;strict-host&lt;/code&gt; is &lt;code&gt;false&lt;/code&gt;, the default value&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;default-backend&lt;/code&gt; if &lt;code&gt;strict-host&lt;/code&gt; is &lt;code&gt;true&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -4698,7 +4708,7 @@ try to match the path.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;syslog-endpoint&lt;/code&gt;: Configures the UDP syslog endpoint where HAProxy should send access logs.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;syslog-format&lt;/code&gt;: Configures the log format to be either &lt;code&gt;rfc5424&lt;/code&gt; (default) or &lt;code&gt;rfc3164&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;syslog-format&lt;/code&gt;: Configures the log format to be either &lt;code&gt;rfc5424&lt;/code&gt; (default), &lt;code&gt;rfc3164&lt;/code&gt; or &lt;code&gt;raw&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;syslog-length&lt;/code&gt;: The maximum line length, log lines larger than this value will be truncated. Defaults to &lt;code&gt;1024&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;syslog-tag&lt;/code&gt;: Configure the tag field in the syslog header to the supplied string.&lt;/li&gt;
 &lt;/ul&gt;
