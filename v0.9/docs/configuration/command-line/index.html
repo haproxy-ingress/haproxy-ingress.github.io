@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.9/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2020-01-10T18:24:42+01:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2020-10-17T14:53:06-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Command line">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2020-01-10T18:24:42&#43;01:00" />
-<meta itemprop="wordCount" content="1491">
+<meta itemprop="dateModified" content="2020-10-17T14:53:06-03:00" />
+<meta itemprop="wordCount" content="1537">
 
 
 
@@ -735,10 +735,20 @@ describes how it works.</li>
 
 <h2 id="sort-backends">&ndash;sort-backends</h2>
 
-<p>Ingress will randomly shuffle backends and server endpoints on each reload in order to avoid
-requesting always the same backends just after reloads, depending on the balancing algorithm.
-Use <code>--sort-backends</code> to avoid this behavior and always declare backends and upstream servers
-in the same order.</p>
+<p>Defines if backend&rsquo;s endpoints should be sorted by name. Since v0.8 the endpoints will stay in the
+same order found in the Kubernetes&rsquo; endpoint objects if <code>--sort-backends</code> is missing.</p>
+
+<p>In v0.7 and older version, if <code>--sort-backends</code> is missing, HAProxy Ingress randomly shuffle endpoints
+on each reload in order to avoid requesting always the same backends just after haproxy reloads.</p>
+
+<p>Sorting backends by name has a real effect only if using a distinct <a href="/v0.9/docs/configuration/keys/#backend-server-naming">backend-server-naming</a>
+option, because the default value builds the server name using a numeric sequence.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><a href="/v0.9/docs/configuration/keys/#backend-server-naming">backend-server-naming</a> configuration key</li>
+</ul>
 
 <hr />
 
@@ -870,7 +880,7 @@ single namespace.</p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified January 10, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/24112d19a4111c60e890798c7e8aa0c962520ec0">docs: rename configmap to ConfigMap (24112d1)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified October 17, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/b2feeb2f9d66a504e5953190bff72a9e099ab908">implement sort-backends (b2feeb2f)</a>
 </div>
 </div>
 
