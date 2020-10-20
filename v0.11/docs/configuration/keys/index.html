@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.11/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2020-09-01T18:21:09-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2020-10-17T16:17:12-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all ingress/service annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2020-09-01T18:21:09-03:00" />
-<meta itemprop="wordCount" content="9978">
+<meta itemprop="dateModified" content="2020-10-17T16:17:12-03:00" />
+<meta itemprop="wordCount" content="9981">
 
 
 
@@ -1505,7 +1505,7 @@ will be used.</p>
 <td><a href="#strict-host"><code>strict-host</code></a></td>
 <td>[true|false]</td>
 <td>Global</td>
-<td><code>true</code></td>
+<td><code>false</code></td>
 </tr>
 
 <tr>
@@ -4718,17 +4718,17 @@ configured to SSL offload on HAProxy.</p>
 <tr>
 <td><code>strict-host</code></td>
 <td><code>Global</code></td>
-<td><code>true</code></td>
+<td><code>false</code></td>
 <td></td>
 </tr>
 </tbody>
 </table>
 
 <p>Defines whether the path of another matching host/FQDN should be used to try
-to serve a request. The default value is <code>true</code>, which means a strict
-configuration and the <code>default-backend</code> should be used if a path couldn&rsquo;t be
-matched. If <code>false</code>, all matching wildcard hosts will be visited in order to
-try to match the path.</p>
+to serve a request. The default value is <code>false</code>, which means all matching
+wildcard hosts will be visited in order to try to match the path. If <code>true</code>,
+a strict configuration is applied and the <code>default-backend</code> should be used
+if a path couldn&rsquo;t be matched.</p>
 
 <p>Using the following configuration:</p>
 
@@ -4753,8 +4753,8 @@ try to match the path.</p>
 <p>A request to <code>my.domain.com/b</code> would serve:</p>
 
 <ul>
-<li><code>default-backend</code> if <code>strict-host</code> is <code>true</code>, the default value</li>
-<li><code>svc2</code> if <code>strict-host</code> is <code>false</code></li>
+<li><code>svc2</code> if <code>strict-host</code> is <code>false</code>, the default value</li>
+<li><code>default-backend</code> if <code>strict-host</code> is <code>true</code></li>
 </ul>
 
 <hr />
@@ -4806,7 +4806,7 @@ try to match the path.</p>
 
 <ul>
 <li><code>syslog-endpoint</code>: Configures the UDP syslog endpoint where HAProxy should send access logs.</li>
-<li><code>syslog-format</code>: Configures the log format to be either <code>rfc5424</code> (default) or <code>rfc3164</code>.</li>
+<li><code>syslog-format</code>: Configures the log format to be either <code>rfc5424</code> (default), <code>rfc3164</code> or <code>raw</code>.</li>
 <li><code>syslog-length</code>: The maximum line length, log lines larger than this value will be truncated. Defaults to <code>1024</code>.</li>
 <li><code>syslog-tag</code>: Configure the tag field in the syslog header to the supplied string.</li>
 </ul>
@@ -5149,7 +5149,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified September 1, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/436003b4607e22efcd13fa336695f29a9b8856fe">docs: reorder submenu within configuration (436003b4)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified October 17, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/0ca176022ffe7219bd4142b19de79ece6305081d">docs: add raw syslog format (0ca17602)</a>
 </div>
 </div>
 
