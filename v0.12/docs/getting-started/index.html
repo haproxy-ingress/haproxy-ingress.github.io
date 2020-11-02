@@ -365,12 +365,7 @@ if (!doNotTrack) {
 <li>
 <ul>
 <li><a href="#prerequisites">Prerequisites</a></li>
-<li><a href="#installation">Installation</a>
-<ul>
-<li><a href="#helm-chart">Helm chart</a></li>
-<li><a href="#the-five-minutes-deployment">The five minutes deployment</a></li>
-<li><a href="#deployment-from-examples">Deployment from examples</a></li>
-</ul></li>
+<li><a href="#installation">Installation</a></li>
 <li><a href="#try-it-out">Try it out!</a></li>
 <li><a href="#what-s-next">What&rsquo;s next?</a></li>
 </ul></li>
@@ -421,92 +416,64 @@ if (!doNotTrack) {
 
 <h2 id="installation">Installation</h2>
 
-<p>Following some installation options.</p>
+<p>HAProxy Ingress uses <a href="https://helm.sh">Helm</a> chart to install and configure the controller. See below some deployment instructions:</p>
 
-<h3 id="helm-chart">Helm chart</h3>
+<p>1) Install <code>helm</code>, HAProxy Ingress requires version 3. See the installation instructions <a href="https://helm.sh/docs/intro/install/">here</a>.</p>
 
-<p>See the HAProxy Ingress chart <a href="https://github.com/helm/charts/tree/master/incubator/haproxy-ingress">documentation</a>.</p>
+<p>2) Add the HAProxy Ingress&rsquo; Helm repository. This will instruct Helm to find all available packages:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ helm repo add haproxy-ingress https://haproxy-ingress.github.io/charts</code></pre></div>
+<p>3) Check if kubeconfig points to the right cluster:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl cluster-info</code></pre></div>
+<p>The default cluster can be changed either via <code>kubectl config set-context &lt;cluster-context&gt;</code> or adding <code>--kube-context &lt;cluster-context&gt;</code> in the helm command-line options.</p>
 
-<h3 id="the-five-minutes-deployment">The five minutes deployment</h3>
+<p>Note that the user needs administrative privileges in the cluster to properly installs the controller.</p>
 
-<p>The following steps will deploy HAProxy Ingress with this configurations:</p>
-
-<ul>
-<li>Create and use <code>ingress-controller</code> namespace</li>
-<li>Create <code>ingress-controller</code> service account and rbac permissions</li>
-<li>Access Kubernetes API using the in-cluster configuration</li>
-<li>Default TLS certificate is self signed and created on the fly</li>
-<li>Deployed on every node labeled with <code>role=ingress-controller</code> via DaemonSet</li>
-<li>Use <code>hostNetwork</code>, so the node should not be using the following ports: <code>80</code>, <code>443</code>, <code>1936</code>, <code>10253</code> and <code>10254</code></li>
-</ul>
-
-<p>Create the resources:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl create -f https://haproxy-ingress.github.io/resources/haproxy-ingress.yaml</code></pre></div>
-<p>The controller is not running yet. Time to edit any default value, eg the controller image version:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl -n ingress-controller edit configmap haproxy-ingress
-$ kubectl -n ingress-controller edit daemonset haproxy-ingress</code></pre></div>
-<p>Label at least one node:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl get node
-NAME                STATUS   ROLES    AGE   VERSION
-cl1-control-plane   Ready    master   21m   v1.16.3
-cl1-worker          Ready    &lt;none&gt;   21m   v1.16.3
-
-$ kubectl label node cl1-control-plane <span style="color:#000">role</span><span style="color:#ce5c00;font-weight:bold">=</span>ingress-controller</code></pre></div>
-<p>Now HAProxy Ingress should be up and running:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl -n ingress-controller get daemonset
-NAME              DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR             AGE
-haproxy-ingress   <span style="color:#0000cf;font-weight:bold">1</span>         <span style="color:#0000cf;font-weight:bold">1</span>         <span style="color:#0000cf;font-weight:bold">1</span>       <span style="color:#0000cf;font-weight:bold">1</span>            <span style="color:#0000cf;font-weight:bold">1</span>           <span style="color:#000">role</span><span style="color:#ce5c00;font-weight:bold">=</span>ingress-controller   3m
-
-$ kubectl -n ingress-controller get pod
-NAME                    READY   STATUS    RESTARTS   AGE
-haproxy-ingress-kwwnk   <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          3m</code></pre></div>
-<h3 id="deployment-from-examples">Deployment from examples</h3>
-
-
-
-<div class="alert alert-primary" role="alert">
-<h4 class="alert-heading">TODO</h4>
-Copy and revise doc from the links below
-</div>
-
+<p>4) Install HAProxy Ingress using <code>haproxy-ingress</code> as the release name:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ helm install haproxy-ingress haproxy-ingress/haproxy-ingress <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  --create-namespace --namespace<span style="color:#ce5c00;font-weight:bold">=</span>ingress-controller <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  --set controller.hostNetwork<span style="color:#ce5c00;font-weight:bold">=</span>true</code></pre></div>
+<p>The controller should be running in a few seconds. There are two important changes made in the example above:</p>
 
 <ul>
-<li>Start with <a href="https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment">deployment</a> instructions</li>
-<li>See <a href="https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/tls-termination">TLS termination</a> on how to enable <code>https</code></li>
+<li>namespace: we&rsquo;re instructing helm to install HAProxy Ingress in the <code>ingress-controller</code> namespace. This namespace will be created if it does not exist yet. The default behavior, if namespace is not provided, is to deploy the controller in the current namespace.</li>
+<li>hostNetwork: we&rsquo;re configuring the deployment to expose haproxy in the host network, which means bind all haproxy ports, including but not limited to 80 and 443, in the node&rsquo;s IPs. Maybe this isn&rsquo;t a proper configuration for your production - it depends on the options you have to expose a Kubernetes&rsquo; service, but doing so we&rsquo;ll be able to send http/s requests on local development environments, or even baremetal and on premise deployments that doesn&rsquo;t have a fronting router or load balancer to expose the controller. In any case a service is also configured in the <code>ingress-controller</code> namespace which properly exposes haproxy.</li>
 </ul>
+
+<p>HAProxy Ingress&rsquo; Helm chart has a few more configuration options, see all of them in the chart <a href="https://github.com/haproxy-ingress/charts/tree/master/haproxy-ingress">documentation</a>.</p>
 
 <h2 id="try-it-out">Try it out!</h2>
 
-<p>The following steps deploy a <code>nginx:alpine</code> image and exposes it in the current namespace</p>
+<p>The following steps deploy an echoserver image and exposes it in the current namespace.</p>
 
-<p>1) Create the nginx&rsquo;s deployment and service:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl create deployment nginx --image nginx:alpine
-$ kubectl expose deployment nginx --port<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">80</span></code></pre></div>
-<p>2) Check if nginx is up and running:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl get pod
-NAME                     READY   STATUS    RESTARTS   AGE
-nginx-5b6fb6dd96-68jwp   <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          27s</code></pre></div>
-<p>3) Make HAProxy Ingress exposes the nginx service. Change <code>HOST</code> value in the example below to a hostname that resolves to the ingress controller nodes.</p>
+<p>1) Create the echoserver&rsquo;s deployment and service:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl create deployment echoserver --image k8s.gcr.io/echoserver:1.3
+$ kubectl expose deployment echoserver --port<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">8080</span></code></pre></div>
+<p>2) Check if echoserver is up and running:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl get pod -w
+NAME                          READY   STATUS    RESTARTS   AGE
+echoserver-5b6fb6dd96-68jwp   <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          27s</code></pre></div>
+<p>3) Make HAProxy Ingress exposes the echoserver service. Change <code>HOST</code> value in the example below to a hostname that resolves to an ingress controller node.</p>
 
 <p>Obs.: <code>nip.io</code> is a convenient service which converts a valid domain name to any IP, either public or local. See <a href="https://nip.io">here</a> how it works.</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ <span style="color:#000">HOST</span><span style="color:#ce5c00;font-weight:bold">=</span>nginx.192.168.1.1.nip.io
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ <span style="color:#000">HOST</span><span style="color:#ce5c00;font-weight:bold">=</span>echoserver.192.168.1.11.nip.io
 $ kubectl create -f - <span style="color:#4e9a06">&lt;&lt;EOF
 </span><span style="color:#4e9a06">apiVersion: networking.k8s.io/v1beta1
 </span><span style="color:#4e9a06">kind: Ingress
 </span><span style="color:#4e9a06">metadata:
-</span><span style="color:#4e9a06">  name: nginx
+</span><span style="color:#4e9a06">  name: echoserver
 </span><span style="color:#4e9a06">spec:
 </span><span style="color:#4e9a06">  rules:
 </span><span style="color:#4e9a06">  - host: $HOST
 </span><span style="color:#4e9a06">    http:
 </span><span style="color:#4e9a06">      paths:
 </span><span style="color:#4e9a06">      - backend:
-</span><span style="color:#4e9a06">          serviceName: nginx
-</span><span style="color:#4e9a06">          servicePort: 80
+</span><span style="color:#4e9a06">          serviceName: echoserver
+</span><span style="color:#4e9a06">          servicePort: 8080
 </span><span style="color:#4e9a06">        path: /
 </span><span style="color:#4e9a06">EOF</span></code></pre></div>
-<p>4) Browse to the configured <code>HOST</code>. The nginx default page should be there.</p>
-
+<p>4) Send a request to our echoserver.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ curl -k https://echoserver.192.168.1.11.nip.io
+$ wget -qO- --no-check-certificate https://echoserver.192.168.1.11.nip.io</code></pre></div>
 <h2 id="what-s-next">What&rsquo;s next?</h2>
 
 <p>Learn more about ingress from the Kubernetes docs:</p>
@@ -621,7 +588,7 @@ $ kubectl create -f - <span style="color:#4e9a06">&lt;&lt;EOF
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified September 1, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/297d629aa8cd2ffd0a4a4f930172f2b9463e1ddc">docs: k8s 1.14 as a pre-requisite of v0.11 (297d629a)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified November 1, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/8eb8f3e845e0875a450e27f67dd1faf6b46facb2">docs: update getting started to only use the helm chart (8eb8f3e8)</a>
 </div>
 </div>
 
