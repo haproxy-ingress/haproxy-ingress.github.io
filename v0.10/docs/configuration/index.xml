@@ -58,7 +58,7 @@ lists, math etc.&lt;/p&gt;
     </item>
     
     <item>
-      <title>Docs: Command line</title>
+      <title>Docs: Command-line options</title>
       <link>/v0.10/docs/configuration/command-line/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
@@ -335,19 +335,16 @@ that shares ingress and service objects without conflicting each other.&lt;/p&gt
 &lt;h2 id=&#34;default-backend-service&#34;&gt;&amp;ndash;default-backend-service&lt;/h2&gt;
 
 &lt;p&gt;Defines the &lt;code&gt;namespace/servicename&lt;/code&gt; that should be used if the incoming request doesn&amp;rsquo;t match any
-hostname, or the requested path doesn&amp;rsquo;t match any location within the desired hostname.&lt;/p&gt;
-
-&lt;p&gt;This is a mandatory argument used in the &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment&#34;&gt;deployment&lt;/a&gt; example page.&lt;/p&gt;
+hostname, or the requested path doesn&amp;rsquo;t match any location within the desired hostname. An internal
+404 error page is used if not declared.&lt;/p&gt;
 
 &lt;hr /&gt;
 
 &lt;h2 id=&#34;default-ssl-certificate&#34;&gt;&amp;ndash;default-ssl-certificate&lt;/h2&gt;
 
 &lt;p&gt;Defines the &lt;code&gt;namespace/secretname&lt;/code&gt; of the default certificate that should be used if ingress
-resources using TLS configuration doesn&amp;rsquo;t provide it&amp;rsquo;s own certificate.&lt;/p&gt;
-
-&lt;p&gt;This is a mandatory argument used in the &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment&#34;&gt;deployment&lt;/a&gt; and
-&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/tls-termination&#34;&gt;TLS termination&lt;/a&gt; example pages.&lt;/p&gt;
+resources using TLS configuration doesn&amp;rsquo;t provide it&amp;rsquo;s own certificate. A self-signed fake
+certificate is used if not declared.&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -663,9 +660,9 @@ will be used.&lt;/p&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;acme-endpoint&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;v2-staging&lt;/td&gt;
-&lt;td&gt;v2&lt;/td&gt;
-&lt;td&gt;endpoint&lt;/td&gt;
+&lt;td&gt;[&lt;code&gt;v2-staging&lt;/code&gt;|&lt;code&gt;v2&lt;/code&gt;|&lt;code&gt;endpoint&lt;/code&gt;]&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -3575,7 +3572,7 @@ an old state with disabled servers will disable them in the new configuration.&l
 &lt;/table&gt;
 
 &lt;p&gt;Customize the tcp, http or https log format using log format variables. Only used if
-&lt;a href=&#34;#syslog-endpoint&#34;&gt;syslog-endpoint&lt;/a&gt; is also configured.&lt;/p&gt;
+&lt;a href=&#34;#syslog&#34;&gt;&lt;code&gt;syslog-endpoint&lt;/code&gt;&lt;/a&gt; is also configured.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;http-log-format&lt;/code&gt;: log format of all HTTP proxies, defaults to HAProxy default HTTP log format.&lt;/li&gt;
@@ -3587,6 +3584,7 @@ an old state with disabled servers will disable them in the new configuration.&l
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.4&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.4&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#syslog&#34;&gt;&lt;code&gt;syslog&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;

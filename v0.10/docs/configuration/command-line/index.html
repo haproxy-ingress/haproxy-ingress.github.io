@@ -20,25 +20,25 @@
 <link rel="icon" type="image/png" href="/v0.10/favicons/android-144x144.png" sizes="144x144">
 <link rel="icon" type="image/png" href="/v0.10/favicons/android-192x192.png" sizes="192x192">
 
-<title>Command line | HAProxy Ingress</title><meta property="og:title" content="Command line" />
+<title>Command-line options | HAProxy Ingress</title><meta property="og:title" content="Command-line options" />
 <meta property="og:description" content="Static command-line configuration options.
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.10/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2020-10-17T14:53:06-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
-<meta itemprop="name" content="Command line">
+<meta property="article:modified_time" content="2020-11-15T20:34:41-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta itemprop="name" content="Command-line options">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2020-10-17T14:53:06-03:00" />
-<meta itemprop="wordCount" content="1941">
+<meta itemprop="dateModified" content="2020-11-15T20:34:41-03:00" />
+<meta itemprop="wordCount" content="1935">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Command line"/>
+<meta name="twitter:title" content="Command-line options"/>
 <meta name="twitter:description" content="Static command-line configuration options.
 "/>
 
@@ -69,7 +69,7 @@ if (!doNotTrack) {
   crossorigin="anonymous"></script>
 
 
-    <title>Command line | HAProxy Ingress</title>
+    <title>Command-line options | HAProxy Ingress</title>
   </head>
   <body class="td-page">
     <header>
@@ -284,13 +284,13 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-v0-10-docs-configuration-command-line" href="/v0.10/docs/configuration/command-line/">Command line</a>
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-v0-10-docs-configuration-command-line" href="/v0.10/docs/configuration/command-line/">Command-line</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-10-docs-configuration-keys" href="/v0.10/docs/configuration/keys/">Configuration keys</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-10-docs-configuration-keys" href="/v0.10/docs/configuration/keys/">Keys</a>
       
       
     </li>
@@ -347,7 +347,7 @@ if (!doNotTrack) {
 
 
 <a href="https://github.com/jcmoraisjr/haproxy-ingress/edit/master/docs/content/en/docs/configuration/command-line.md" target="_blank"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
-<a href="https://github.com/jcmoraisjr/haproxy-ingress/issues/new?title=Command%20line" target="_blank"><i class="fab fa-github fa-fw"></i> Create doc issue</a>
+<a href="https://github.com/jcmoraisjr/haproxy-ingress/issues/new?title=Command-line%20options" target="_blank"><i class="fab fa-github fa-fw"></i> Create doc issue</a>
 
 </div>
 
@@ -415,7 +415,7 @@ if (!doNotTrack) {
 
 
 <li class="breadcrumb-item active" aria-current="page">
-	<a href="/v0.10/docs/configuration/command-line/">Command line</a>
+	<a href="/v0.10/docs/configuration/command-line/">Command-line</a>
 </li>
 
 	</ol>
@@ -423,7 +423,7 @@ if (!doNotTrack) {
 
             
 <div class="td-content">
-	<h1>Command line</h1>
+	<h1>Command-line options</h1>
 	<div class="lead">Static command-line configuration options.</div>
 	
 
@@ -694,19 +694,16 @@ that shares ingress and service objects without conflicting each other.</p>
 <h2 id="default-backend-service">&ndash;default-backend-service</h2>
 
 <p>Defines the <code>namespace/servicename</code> that should be used if the incoming request doesn&rsquo;t match any
-hostname, or the requested path doesn&rsquo;t match any location within the desired hostname.</p>
-
-<p>This is a mandatory argument used in the <a href="https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment">deployment</a> example page.</p>
+hostname, or the requested path doesn&rsquo;t match any location within the desired hostname. An internal
+404 error page is used if not declared.</p>
 
 <hr />
 
 <h2 id="default-ssl-certificate">&ndash;default-ssl-certificate</h2>
 
 <p>Defines the <code>namespace/secretname</code> of the default certificate that should be used if ingress
-resources using TLS configuration doesn&rsquo;t provide it&rsquo;s own certificate.</p>
-
-<p>This is a mandatory argument used in the <a href="https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment">deployment</a> and
-<a href="https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/tls-termination">TLS termination</a> example pages.</p>
+resources using TLS configuration doesn&rsquo;t provide it&rsquo;s own certificate. A self-signed fake
+certificate is used if not declared.</p>
 
 <hr />
 
@@ -969,7 +966,7 @@ single namespace.</p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified October 17, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/fb974e5d749fa0064ed945a2ccc981886145dab7">implement sort-backends (fb974e5d)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified November 15, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/54243bc47c30f2a24e5cc4bd391965fffae94238">docs: small lay out and description fixes and improvements (54243bc4)</a>
 </div>
 </div>
 
