@@ -21,17 +21,17 @@
 <link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
 
 <title>Configuration keys | HAProxy Ingress</title><meta property="og:title" content="Configuration keys" />
-<meta property="og:description" content="List of all ingress/service annotations and global ConfigMap options.
+<meta property="og:description" content="List of all annotations and global ConfigMap options.
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2020-10-17T16:17:12-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2020-11-15T20:34:41-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
-<meta itemprop="description" content="List of all ingress/service annotations and global ConfigMap options.
+<meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2020-10-17T16:17:12-03:00" />
+<meta itemprop="dateModified" content="2020-11-15T20:34:41-03:00" />
 <meta itemprop="wordCount" content="9450">
 
 
@@ -39,7 +39,7 @@
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Configuration keys"/>
-<meta name="twitter:description" content="List of all ingress/service annotations and global ConfigMap options.
+<meta name="twitter:description" content="List of all annotations and global ConfigMap options.
 "/>
 
 
@@ -286,13 +286,13 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-command-line" href="/docs/configuration/command-line/">Command line</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-command-line" href="/docs/configuration/command-line/">Command-line</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docs-configuration-keys" href="/docs/configuration/keys/">Configuration keys</a>
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docs-configuration-keys" href="/docs/configuration/keys/">Keys</a>
       
       
     </li>
@@ -452,7 +452,7 @@ if (!doNotTrack) {
 
 
 <li class="breadcrumb-item active" aria-current="page">
-	<a href="/docs/configuration/keys/">Configuration keys</a>
+	<a href="/docs/configuration/keys/">Keys</a>
 </li>
 
 	</ol>
@@ -461,7 +461,7 @@ if (!doNotTrack) {
             
 <div class="td-content">
 	<h1>Configuration keys</h1>
-	<div class="lead">List of all ingress/service annotations and global ConfigMap options.</div>
+	<div class="lead">List of all annotations and global ConfigMap options.</div>
 	
 
 <p>Most of HAProxy Ingress configurations are made using a ConfigMap object or annotating
@@ -565,9 +565,9 @@ will be used.</p>
 
 <tr>
 <td><a href="#acme"><code>acme-endpoint</code></a></td>
-<td>v2-staging</td>
-<td>v2</td>
-<td>endpoint</td>
+<td>[<code>v2-staging</code>|<code>v2</code>|<code>endpoint</code>]</td>
+<td>Global</td>
+<td></td>
 </tr>
 
 <tr>
@@ -3477,7 +3477,7 @@ an old state with disabled servers will disable them in the new configuration.</
 </table>
 
 <p>Customize the tcp, http or https log format using log format variables. Only used if
-<a href="#syslog-endpoint">syslog-endpoint</a> is also configured.</p>
+<a href="#syslog"><code>syslog-endpoint</code></a> is also configured.</p>
 
 <ul>
 <li><code>http-log-format</code>: log format of all HTTP proxies, defaults to HAProxy default HTTP log format.</li>
@@ -3489,6 +3489,7 @@ an old state with disabled servers will disable them in the new configuration.</
 
 <ul>
 <li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.4">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.4</a></li>
+<li><a href="#syslog"><code>syslog</code></a></li>
 </ul>
 
 <hr />
@@ -4943,7 +4944,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified October 17, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/66c5fd1bf2d93e7043ef59290a9640f686aa3a25">docs: add raw syslog format (66c5fd1b)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified November 15, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/54243bc47c30f2a24e5cc4bd391965fffae94238">docs: small lay out and description fixes and improvements (54243bc4)</a>
 </div>
 </div>
 
