@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/template/" />
-<meta property="article:modified_time" content="2020-01-10T18:24:42+01:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2020-10-17T16:15:57-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Template">
 <meta itemprop="description" content="Overwrite the default template files.
 ">
 
 
-<meta itemprop="dateModified" content="2020-01-10T18:24:42&#43;01:00" />
-<meta itemprop="wordCount" content="68">
+<meta itemprop="dateModified" content="2020-10-17T16:15:57-03:00" />
+<meta itemprop="wordCount" content="203">
 
 
 
@@ -115,15 +115,15 @@ if (!doNotTrack) {
 			
 			<li class="nav-item dropdown d-none d-lg-block">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	v0.10 (latest)
+	v0.11 (latest)
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 	
 	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.12/docs">v0.12 (snapshot)</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.11/docs">v0.11 (beta)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.11 (latest)</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.10 (latest)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.10/docs">v0.10</a>
 	
 	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.9/docs">v0.9</a>
 	
@@ -280,7 +280,7 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docs-configuration-template" href="/docs/configuration/template/">Template</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-keys" href="/docs/configuration/keys/">Keys</a>
       
       
       
@@ -292,7 +292,7 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-keys" href="/docs/configuration/keys/">Keys</a>
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docs-configuration-template" href="/docs/configuration/template/">Template</a>
       
       
     </li>
@@ -406,26 +406,55 @@ in-memory parsed template.</p>
 This library provides a group of commonly used template functions to work with dictionaries,
 lists, math etc.</p>
 
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">Note</h4>
+Starting from v0.11, all template files were moved from <code>/etc/haproxy</code> to <code>/etc/templates</code>. Change to an older doc version if using HAProxy Ingress up to v0.10.
+</div>
+
+
+<p>Overwriting a template file:</p>
+
+<ul>
+<li>The links below reference the <code>master</code> branch, change to the same tag of your HAProxy Ingress version.</li>
+<li>Change to the <code>Raw</code> view</li>
+<li>Copy the whole file and edit it to fit your needs</li>
+<li>Paste the content to a ConfigMap, use the file name as the content key</li>
+<li>Mount the ConfigMap into the Mounting directory (see below) of the HAProxy Ingress pod</li>
+</ul>
+
+
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Warning</h4>
+Consider overwriting the template files as a last resort. Templates change a lot between HAProxy Ingress versions and the overwrite should be updated on every controller update. Try to use a <a href="/docs/configuration/keys/#configuration-snippet">configuration snippet</a> instead or file a new <a href="https://github.com/jcmoraisjr/haproxy-ingress/issues/new?template=fr.md">feature request</a>.
+</div>
+
+
 <table>
 <thead>
 <tr>
-<th>Mounting directory</th>
-<th>ConfigMap keys (filenames)</th>
-<th>Source (choose a proper tag)</th>
+<th>Mounting directory (v0.11+)</th>
+<th>ConfigMap keys</th>
+<th>Source (v0.11+)</th>
+<th>Source (up to v0.10)</th>
 </tr>
 </thead>
 
 <tbody>
 <tr>
-<td><code>/etc/haproxy/template</code></td>
+<td><code>/etc/templates/haproxy</code></td>
 <td><code>haproxy.tmpl</code></td>
-<td><a href="https://github.com/jcmoraisjr/haproxy-ingress/blob/release-0.8/rootfs/etc/haproxy/template/haproxy.tmpl">haproxy.tmpl</a></td>
+<td><a href="https://github.com/jcmoraisjr/haproxy-ingress/blob/master/rootfs/etc/templates/haproxy/haproxy.tmpl">haproxy.tmpl</a></td>
+<td><a href="https://github.com/jcmoraisjr/haproxy-ingress/blob/release-0.10/rootfs/etc/haproxy/template/haproxy.tmpl">haproxy.tmpl</a></td>
 </tr>
 
 <tr>
-<td><code>/etc/haproxy/modsecurity</code></td>
-<td><code>spoe-modsecurity.tmpl</code></td>
-<td><a href="https://github.com/jcmoraisjr/haproxy-ingress/blob/release-0.8/rootfs/etc/haproxy/modsecurity/spoe-modsecurity.tmpl">spoe-modsecurity.tmpl</a></td>
+<td><code>/etc/templates/modsecurity</code></td>
+<td><code>modsecurity.tmpl</code></td>
+<td><a href="https://github.com/jcmoraisjr/haproxy-ingress/blob/master/rootfs/etc/templates/modsecurity/modsecurity.tmpl">modsecurity.tmpl</a></td>
+<td><a href="https://github.com/jcmoraisjr/haproxy-ingress/blob/release-0.10/rootfs/etc/haproxy/modsecurity/spoe-modsecurity.tmpl">spoe-modsecurity.tmpl</a></td>
 </tr>
 </tbody>
 </table>
@@ -492,7 +521,7 @@ lists, math etc.</p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified January 10, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/8874e6a1d0d63dc0a4a4a54273a1f0fea4ab0ba2">[DOCS] Rename configmap to ConfigMap (8874e6a1)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified October 17, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/575f50a2070dee7be632889becd5762a5c1e9e07">docs: link to the feature request template issue (575f50a2)</a>
 </div>
 </div>
 

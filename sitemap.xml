@@ -3,23 +3,23 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/docs/configuration/keys/</loc>
+    <lastmod>2020-11-16T18:11:21-03:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/docs/overview/</loc>
     <lastmod>2020-01-10T18:45:57+01:00</lastmod>
   </url>
   
   <url>
-    <loc>/docs/configuration/template/</loc>
-    <lastmod>2020-01-10T18:24:42+01:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/docs/configuration/command-line/</loc>
-    <lastmod>2020-11-15T20:34:41-03:00</lastmod>
+    <lastmod>2020-11-15T20:15:16-03:00</lastmod>
   </url>
   
   <url>
     <loc>/docs/getting-started/</loc>
-    <lastmod>2020-11-15T20:34:41-03:00</lastmod>
+    <lastmod>2020-11-15T20:15:16-03:00</lastmod>
   </url>
   
   <url>
@@ -28,8 +28,8 @@
   </url>
   
   <url>
-    <loc>/docs/configuration/keys/</loc>
-    <lastmod>2020-11-15T20:34:41-03:00</lastmod>
+    <loc>/docs/configuration/template/</loc>
+    <lastmod>2020-10-17T16:15:57-03:00</lastmod>
   </url>
   
   <url>
@@ -39,7 +39,7 @@
   
   <url>
     <loc>/docs/examples/blue-green/</loc>
-    <lastmod>2019-10-20T17:06:54-03:00</lastmod>
+    <lastmod>2020-07-10T14:58:58-03:00</lastmod>
   </url>
   
   <url>
@@ -54,12 +54,12 @@
   
   <url>
     <loc>/docs/examples/metrics/</loc>
-    <lastmod>2020-04-09T22:21:44-03:00</lastmod>
+    <lastmod>2020-07-10T14:58:58-03:00</lastmod>
   </url>
   
   <url>
     <loc>/docs/examples/modsecurity/</loc>
-    <lastmod>2020-01-10T18:24:42+01:00</lastmod>
+    <lastmod>2020-07-10T14:58:58-03:00</lastmod>
   </url>
   
   <url>

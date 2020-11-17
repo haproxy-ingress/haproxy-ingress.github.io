@@ -94,7 +94,7 @@ green-7546d648c4-p7pmz   1/1       Running   0          2m        172.17.0.19   
 &lt;p&gt;Configure the ingress resource. No need to change the host below, &lt;code&gt;bluegreen.example.com&lt;/code&gt; is fine:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ kubectl create -f - &amp;lt;&amp;lt;EOF
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   annotations:
@@ -376,7 +376,7 @@ This deployment has no persistent volume, so all the collected metrics will be l
 
 &lt;pre&gt;&lt;code&gt;HOST=grafana.192.168.1.1.nip.io
 kubectl create -f - &amp;lt;&amp;lt;EOF
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: grafana
@@ -601,7 +601,7 @@ A &lt;code&gt;kubectl -n ingress-controller edit configmap haproxy-ingress&lt;/c
 &lt;p&gt;&amp;hellip; and create its ingress resource. Remember to annotate waf as &lt;code&gt;modsecurity&lt;/code&gt;.
 No need to use a valid domain, &lt;code&gt;echo.domain&lt;/code&gt; below is fine:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-console&#34; data-lang=&#34;console&#34;&gt;$ kubectl create -f - &amp;lt;&amp;lt;EOF
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   annotations:

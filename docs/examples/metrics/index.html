@@ -25,13 +25,13 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/examples/metrics/" />
-<meta property="article:modified_time" content="2020-04-09T22:21:44-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2020-07-10T14:58:58-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Metrics">
 <meta itemprop="description" content="Demonstrate how to collect and expose ingress controller and haproxy metrics.
 ">
 
 
-<meta itemprop="dateModified" content="2020-04-09T22:21:44-03:00" />
+<meta itemprop="dateModified" content="2020-07-10T14:58:58-03:00" />
 <meta itemprop="wordCount" content="971">
 
 
@@ -115,15 +115,15 @@ if (!doNotTrack) {
 			
 			<li class="nav-item dropdown d-none d-lg-block">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	v0.10 (latest)
+	v0.11 (latest)
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 	
 	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.12/docs">v0.12 (snapshot)</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.11/docs">v0.11 (beta)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.11 (latest)</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.10 (latest)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.10/docs">v0.10</a>
 	
 	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.9/docs">v0.9</a>
 	
@@ -280,7 +280,7 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-template" href="/docs/configuration/template/">Template</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-keys" href="/docs/configuration/keys/">Keys</a>
       
       
       
@@ -292,7 +292,7 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-keys" href="/docs/configuration/keys/">Keys</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-template" href="/docs/configuration/template/">Template</a>
       
       
     </li>
@@ -492,7 +492,7 @@ This deployment has no persistent volume, so all the collected metrics will be l
 
 <pre><code>HOST=grafana.192.168.1.1.nip.io
 kubectl create -f - &lt;&lt;EOF
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: grafana
@@ -693,7 +693,7 @@ echo &quot;GET https://${IP}&quot; |\
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified April 9, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/efa3c93f7101da3bbebb259e24fcfed94fe31581">docs: update dashboard link (efa3c93f)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified July 10, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/2b3cc6701b27866acd9db35cbbd0c4de114aaec2">Update deprecated APIs docs (2b3cc670)</a>
 </div>
 </div>
 

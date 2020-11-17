@@ -109,15 +109,15 @@ if (!doNotTrack) {
 			
 			<li class="nav-item dropdown d-none d-lg-block">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	v0.10 (latest)
+	v0.11 (latest)
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 	
 	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.12/docs">v0.12 (snapshot)</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.11/docs">v0.11 (beta)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.11 (latest)</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.10 (latest)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.10/docs">v0.10</a>
 	
 	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.9/docs">v0.9</a>
 	
@@ -274,7 +274,7 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-template" href="/docs/configuration/template/">Template</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-keys" href="/docs/configuration/keys/">Keys</a>
       
       
       
@@ -286,7 +286,7 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-keys" href="/docs/configuration/keys/">Keys</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-template" href="/docs/configuration/template/">Template</a>
       
       
     </li>
@@ -402,7 +402,7 @@ if (!doNotTrack) {
 
 <h2 id="prerequisites">Prerequisites</h2>
 
-<p>HAProxy Ingress needs a running Kubernetes cluster. Although it&rsquo;s recommended to always use an up-to-date one, it will also work on clusters version as old as 1.6. HAProxy Ingress also works fine on local k8s deployments like <a href="https://minikube.sigs.k8s.io">minikube</a> or <a href="https://kind.sigs.k8s.io">kind</a>.</p>
+<p>HAProxy Ingress needs a running Kubernetes cluster. Controller version v0.11 needs Kubernetes 1.14, while version v0.10 and older work on clusters as old as 1.6. HAProxy Ingress also works fine on local k8s deployments like <a href="https://minikube.sigs.k8s.io">minikube</a> or <a href="https://kind.sigs.k8s.io">kind</a>.</p>
 
 <p>An ingress controller works exposing internal services to the external world, so another pre-requisite is that at least one cluster node is accessible externally. On cloud environments, a cloud load balancer can be configured to reach the ingress controller nodes.</p>
 
@@ -459,7 +459,7 @@ echoserver-5b6fb6dd96-68jwp   <span style="color:#0000cf;font-weight:bold">1</sp
 <p>Obs.: <code>nip.io</code> is a convenient service which converts a valid domain name to any IP, either public or local. See <a href="https://nip.io">here</a> how it works.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ <span style="color:#000">HOST</span><span style="color:#ce5c00;font-weight:bold">=</span>echoserver.192.168.1.11.nip.io
 $ kubectl create -f - <span style="color:#4e9a06">&lt;&lt;EOF
-</span><span style="color:#4e9a06">apiVersion: extensions/v1beta1
+</span><span style="color:#4e9a06">apiVersion: networking.k8s.io/v1beta1
 </span><span style="color:#4e9a06">kind: Ingress
 </span><span style="color:#4e9a06">metadata:
 </span><span style="color:#4e9a06">  annotations:
@@ -590,7 +590,7 @@ $ wget -qO- --no-check-certificate https://echoserver.192.168.1.11.nip.io</code>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified November 15, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/54243bc47c30f2a24e5cc4bd391965fffae94238">docs: small lay out and description fixes and improvements (54243bc4)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified November 15, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/c63ff18d1cc22f06b7609778deae5535a2b0506a">docs: small lay out and description fixes and improvements (c63ff18d)</a>
 </div>
 </div>
 

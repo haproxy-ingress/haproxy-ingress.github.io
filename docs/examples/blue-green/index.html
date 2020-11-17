@@ -25,13 +25,13 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/examples/blue-green/" />
-<meta property="article:modified_time" content="2019-10-20T17:06:54-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2020-07-10T14:58:58-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Blue/green">
 <meta itemprop="description" content="Demonstrate how to configure blue/green deployment, with and without header or cookie selection.
 ">
 
 
-<meta itemprop="dateModified" content="2019-10-20T17:06:54-03:00" />
+<meta itemprop="dateModified" content="2020-07-10T14:58:58-03:00" />
 <meta itemprop="wordCount" content="774">
 
 
@@ -115,15 +115,15 @@ if (!doNotTrack) {
 			
 			<li class="nav-item dropdown d-none d-lg-block">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	v0.10 (latest)
+	v0.11 (latest)
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 	
 	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.12/docs">v0.12 (snapshot)</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.11/docs">v0.11 (beta)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.11 (latest)</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.10 (latest)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.10/docs">v0.10</a>
 	
 	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.9/docs">v0.9</a>
 	
@@ -280,7 +280,7 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-template" href="/docs/configuration/template/">Template</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-keys" href="/docs/configuration/keys/">Keys</a>
       
       
       
@@ -292,7 +292,7 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-keys" href="/docs/configuration/keys/">Keys</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-template" href="/docs/configuration/template/">Template</a>
       
       
     </li>
@@ -485,7 +485,7 @@ green-7546d648c4-p7pmz   1/1       Running   0          2m        172.17.0.19   
 <p>Configure the ingress resource. No need to change the host below, <code>bluegreen.example.com</code> is fine:</p>
 
 <pre><code>$ kubectl create -f - &lt;&lt;EOF
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   annotations:
@@ -740,7 +740,7 @@ Running 100 requests...
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified October 20, 2019: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/38209e8b89ae0534ea871792c4ab4880542855ec">[docs] starting version (38209e8b)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified July 10, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/2b3cc6701b27866acd9db35cbbd0c4de114aaec2">Update deprecated APIs docs (2b3cc670)</a>
 </div>
 </div>
 
