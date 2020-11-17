@@ -125,9 +125,9 @@ will be used.&lt;/p&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;acme-endpoint&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;v2-staging&lt;/td&gt;
-&lt;td&gt;v2&lt;/td&gt;
-&lt;td&gt;endpoint&lt;/td&gt;
+&lt;td&gt;[&lt;code&gt;v2-staging&lt;/code&gt;|&lt;code&gt;v2&lt;/code&gt;|&lt;code&gt;endpoint&lt;/code&gt;]&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -187,21 +187,21 @@ will be used.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;app-root&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#app-root&#34;&gt;&lt;code&gt;app-root&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;/url&lt;/td&gt;
 &lt;td&gt;Host&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;auth-realm&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#auth&#34;&gt;&lt;code&gt;auth-realm&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;realm string&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;auth-secret&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#auth&#34;&gt;&lt;code&gt;auth-secret&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;secret name&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
@@ -243,7 +243,7 @@ will be used.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;auth-type&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#auth&#34;&gt;&lt;code&gt;auth-type&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;&amp;ldquo;basic&amp;rdquo;&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
@@ -1251,8 +1251,8 @@ will be used.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;whitelist-source-range&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;CIDR&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#whitelist&#34;&gt;&lt;code&gt;whitelist-source-range&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Comma-separated IPs or CIDRs&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
@@ -1578,6 +1578,97 @@ overwrite the weight defined from the agent&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-port&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-port&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-inter&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-inter&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-send&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-send&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;app-root&#34;&gt;App root&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;app-root&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Host&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Defines a distinct application root path. HAProxy will redirect requests to the
+configured path, using &lt;code&gt;302&lt;/code&gt; status code, when the HTTP client sends a request
+to the root context of the configured domain. &lt;code&gt;app-root&lt;/code&gt; key binds to the root
+context path, so it needs to be declared in the same Ingress that configures it.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;auth&#34;&gt;Auth&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;auth-realm&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;localhost&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;auth-secret&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;auth-type&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Configures authentication options.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;auth-type&lt;/code&gt;: Defines the authentication type. Currently the only supported option is &lt;code&gt;basic&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-realm&lt;/code&gt;: Optional, configures the authentication realm string. &lt;code&gt;localhost&lt;/code&gt; will be used if not provided.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-secret&lt;/code&gt;: A secret name with users and passwords used to configure basic authentication. The secret can be in the same namespace of the Ingress resource, or any other namespace if cross namespace is enabled. Secret in the same namespace does not need to be prepended with &lt;code&gt;namespace/&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The secret referenced by &lt;code&gt;auth-secret&lt;/code&gt; should have a key named &lt;code&gt;auth&lt;/code&gt; with users and passwords, one per line. The following two formats are supported and both are supported in the same secret:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;user&amp;gt;::&amp;lt;password&amp;gt;&lt;/code&gt;: User and password are separated by 2 (two) colons. The password will be copied verbatim, stored in the configuration file in an insecure way.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;user&amp;gt;:&amp;lt;password-hash&amp;gt;&lt;/code&gt;: User and password are separated by 1 (one) colon. This syntax needs a password hash that can be generated with &lt;code&gt;mkpasswd&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/v0.11/v0.11/docs/configuration/command-line/#allow-cross-namespace&#34;&gt;&amp;ndash;allow-cross-namespace&lt;/a&gt; command-line option&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#auth-tls&#34;&gt;Auth TLS&lt;/a&gt; configuration keys&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#oauth&#34;&gt;OAuth&lt;/a&gt; configuration keys&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/auth/basic&#34;&gt;Auth Basic example&lt;/a&gt; page&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -3121,7 +3212,7 @@ an old state with disabled servers will disable them in the new configuration.&l
 &lt;/table&gt;
 
 &lt;p&gt;Customize the tcp, http or https log format using log format variables. Only used if
-&lt;a href=&#34;#syslog-endpoint&#34;&gt;syslog-endpoint&lt;/a&gt; is also configured.&lt;/p&gt;
+&lt;a href=&#34;#syslog&#34;&gt;&lt;code&gt;syslog-endpoint&lt;/code&gt;&lt;/a&gt; is also configured.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;http-log-format&lt;/code&gt;: log format of all HTTP proxies, defaults to HAProxy default HTTP log format.&lt;/li&gt;
@@ -3133,6 +3224,7 @@ an old state with disabled servers will disable them in the new configuration.&l
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.4&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.4&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#syslog&#34;&gt;&lt;code&gt;syslog&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -4647,11 +4739,43 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;li&gt;&lt;a href=&#34;#modsecurity&#34;&gt;Modsecurity&lt;/a&gt; configuration keys.&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;h2 id=&#34;whitelist&#34;&gt;Whitelist&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;whitelist-source-range&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Defines a comma-separated list of source IPs or CIDRs allowed to connect. If not
+declared, any source IP is allowed. If declared, requests with source IP not
+included in the list are denied, and clients receive the HAProxy&amp;rsquo;s 403 error page.&lt;/p&gt;
+
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
       </description>
     </item>
     
     <item>
-      <title>Docs: Command line</title>
+      <title>Docs: Command-line options</title>
       <link>/v0.11/docs/configuration/command-line/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
@@ -4949,7 +5073,7 @@ that shares ingress and service objects without conflicting each other.&lt;/p&gt
 
 &lt;h2 id=&#34;backend-shards&#34;&gt;&amp;ndash;backend-shards&lt;/h2&gt;
 
-&lt;p&gt;Defines how much files should be used to configure the haproxy backends. The default value is
+&lt;p&gt;Defines how many files should be used to configure the haproxy backends. The default value is
 0 (zero) which uses one single file to configure the whole haproxy process. Values greather than
 0 (zero) splits the backend configuration into separated files. Only files with changed backends
 are parsed and written to disk, reducing io and cpu usage on big clusters - about 1000 or more
@@ -4966,19 +5090,16 @@ services.&lt;/p&gt;
 &lt;h2 id=&#34;default-backend-service&#34;&gt;&amp;ndash;default-backend-service&lt;/h2&gt;
 
 &lt;p&gt;Defines the &lt;code&gt;namespace/servicename&lt;/code&gt; that should be used if the incoming request doesn&amp;rsquo;t match any
-hostname, or the requested path doesn&amp;rsquo;t match any location within the desired hostname.&lt;/p&gt;
-
-&lt;p&gt;This is a mandatory argument used in the &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment&#34;&gt;deployment&lt;/a&gt; example page.&lt;/p&gt;
+hostname, or the requested path doesn&amp;rsquo;t match any location within the desired hostname. An internal
+404 error page is used if not declared.&lt;/p&gt;
 
 &lt;hr /&gt;
 
 &lt;h2 id=&#34;default-ssl-certificate&#34;&gt;&amp;ndash;default-ssl-certificate&lt;/h2&gt;
 
 &lt;p&gt;Defines the &lt;code&gt;namespace/secretname&lt;/code&gt; of the default certificate that should be used if ingress
-resources using TLS configuration doesn&amp;rsquo;t provide it&amp;rsquo;s own certificate.&lt;/p&gt;
-
-&lt;p&gt;This is a mandatory argument used in the &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment&#34;&gt;deployment&lt;/a&gt; and
-&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/tls-termination&#34;&gt;TLS termination&lt;/a&gt; example pages.&lt;/p&gt;
+resources using TLS configuration doesn&amp;rsquo;t provide it&amp;rsquo;s own certificate. A self-signed fake
+certificate is used if not declared.&lt;/p&gt;
 
 &lt;hr /&gt;
 
