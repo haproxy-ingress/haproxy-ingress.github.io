@@ -24,84 +24,248 @@
         
         
 
-&lt;p&gt;Most of HAProxy Ingress configurations are made using a ConfigMap object or annotating
-the ingress or service object. Ingress or service annotations are used to make local
-configurations, and the ConfigMap is used to make global configurations or change
-default configuration values.&lt;/p&gt;
+&lt;p&gt;Configuration keys are entry point configurations that allow users and admins to
+dynamically fine-tune HAProxy status. HAProxy Ingress reads configuration keys
+from Kubernetes resources, and this can be done in a couple of ways:&lt;/p&gt;
 
-&lt;h1 id=&#34;configmap&#34;&gt;ConfigMap&lt;/h1&gt;
+&lt;ul&gt;
+&lt;li&gt;Globally, from a ConfigMap&lt;/li&gt;
+&lt;li&gt;Per IngressClass, from a ConfigMap linked in the IngressClass&amp;rsquo; &lt;code&gt;parameters&lt;/code&gt; field&lt;/li&gt;
+&lt;li&gt;Per Ingress, configuring or annotating Ingress resources&lt;/li&gt;
+&lt;li&gt;Per backend, annotating Service resources&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;Global configurations and changing default values are made via a ConfigMap object.
-ConfigMap declaration is optional but highly recommended. Create an empty ConfigMap
-using &lt;code&gt;kubectl create configmap&lt;/code&gt; and configures in the haproxy-ingress deployment using
-the command-line option &lt;code&gt;--configmap=&amp;lt;namespace&amp;gt;/&amp;lt;configmap-name&amp;gt;&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The list above also describes the precedence if the same configuration key is used
+in more than one resource: Global configurations can be overridden by IngressClass
+configurations, that can be overriden by Ingress resource configurations and so on.
+This hierarchy creates a flexible model, where commonly used configurations can be
+made in a higher level and overriden by local changes.&lt;/p&gt;
 
-&lt;p&gt;Changes to any key in the ConfigMap object is applied on the fly, the haproxy instance
-is restarted or dynamically updated if needed.&lt;/p&gt;
+&lt;p&gt;The following sections describe in a few more details how HAProxy Ingress classifies
+an Ingress to be part of the final configuration, and how it reads the configuration
+from Kubernetes resources.&lt;/p&gt;
 
-&lt;p&gt;All configuration key names are supported as a ConfigMap keys. When declared, its value
-is used as the default value if not overwritten elsewhere.&lt;/p&gt;
+&lt;h1 id=&#34;class-matter&#34;&gt;Class matter&lt;/h1&gt;
+
+&lt;p&gt;HAProxy Ingress by default does not listen to Ingress resources, until one or more of
+the following conditions are met:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Ingress resources have the annotation &lt;code&gt;kubernetes.io/ingress.class&lt;/code&gt; with the value &lt;code&gt;haproxy&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Ingress resources have its &lt;code&gt;ingressClassName&lt;/code&gt; field assigning an IngressClass resource whose &lt;code&gt;controller&lt;/code&gt; name is &lt;code&gt;haproxy-ingress.github.io/controller&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;HAProxy Ingress was started with &lt;code&gt;--watch-ingress-without-class&lt;/code&gt; command-line option&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;See &lt;a href=&#34;/v0.12/v0.12/docs/configuration/command-line/#ingress-class&#34;&gt;Ingress Class&lt;/a&gt; command-line doc for
+customization options.&lt;/p&gt;
+
+&lt;p&gt;The first two options give more control on which Ingress resources should be part of the
+final configuration. Class annotation and the IngressClass name can be changed on a running
+controller, the configuration will be adjusted on the fly to reflect the new status. If
+both options are configured in an Ingress resource, and they conflict - i.e. one of them
+says the controller belongs to HAProxy Ingress and the other says that it does not belong -
+the annotation value wins and a warning is logged.&lt;/p&gt;
+
+&lt;p&gt;Adding a class annotation or defining an IngressClass name means &amp;ldquo;classify&amp;rdquo; an Ingress
+resource. The third and latest option asks HAProxy Ingress to also add &amp;ldquo;unclassified&amp;rdquo;
+Ingress to the final configuration - i.e. add Ingress resources that does not have the
+&lt;code&gt;kubernetes.io/ingress.class&lt;/code&gt; annotation and also does not have the &lt;code&gt;ingressClassName&lt;/code&gt;
+field. Note that this is a new behavior since v0.12. Up to v0.11 HAProxy Ingress listen
+to &amp;ldquo;unclassified&amp;rdquo; Ingress by default.&lt;/p&gt;
+
+&lt;h1 id=&#34;strategies&#34;&gt;Strategies&lt;/h1&gt;
+
+&lt;p&gt;HAProxy Ingress reads configuration on three distinct ways:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;ConfigMap&lt;/code&gt; key/value data. ConfigMaps are assigned either via &lt;code&gt;--configmap&lt;/code&gt; command-line option (used by Global options), or via parameters field of an &lt;code&gt;IngressClass&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Annotations from classified &lt;code&gt;Ingress&lt;/code&gt; resources and also from &lt;code&gt;Services&lt;/code&gt; that these Ingress are linking to&lt;/li&gt;
+&lt;li&gt;Spec configurations from classified &lt;code&gt;Ingress&lt;/code&gt; resources&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;HAProxy Ingress follows &lt;a href=&#34;https://v1-18.docs.kubernetes.io/docs/concepts/services-networking/ingress/&#34;&gt;Ingress v1 spec&lt;/a&gt;,
+so any Ingress spec configuration should work as stated by the Kubernetes documentation.&lt;/p&gt;
+
+&lt;p&gt;Annotations and ConfigMap customizations extend the Ingress spec via the configuration
+keys, and this is what the rest of this documentation page is all about.&lt;/p&gt;
+
+&lt;p&gt;The following sections describe in a few more details aboud configuration strategies.&lt;/p&gt;
+
+&lt;h2 id=&#34;configmap&#34;&gt;ConfigMap&lt;/h2&gt;
+
+&lt;p&gt;ConfigMap key/value options are read in the following conditions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Global config, using &lt;code&gt;--configmap&lt;/code&gt; command-line option. The installation process configures a Global config ConfigMap named &lt;code&gt;haproxy-ingress&lt;/code&gt; in the controller namespace. This is the only way to configure keys from the &lt;code&gt;Global&lt;/code&gt; scope. See about scopes &lt;a href=&#34;#scope&#34;&gt;later&lt;/a&gt; in this page.&lt;/li&gt;
+&lt;li&gt;IngressClass config, using its &lt;code&gt;parameters&lt;/code&gt; field linked to a ConfigMap declared in the same namespace of the controller. See about IngressClass &lt;a href=&#34;#ingressclass&#34;&gt;later&lt;/a&gt; in this same section.&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;A configuration key is used verbatim as the ConfigMap key name, without any prefix.
 The ConfigMap spec expects a string as the key value, so declare numbers and booleans
 as strings, HAProxy Ingress will convert it when needed.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;apiVersion&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;v1&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;data&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;balance-algorithm&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;leastconn&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;max-connections&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;10000&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;ssl-redirect&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;kind&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;ConfigMap&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;metadata&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;name&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;haproxy-ingress&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;namespace&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;ingress-controller&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;annotation&#34;&gt;Annotation&lt;/h2&gt;
 
-&lt;h1 id=&#34;ingress-and-services&#34;&gt;Ingress and services&lt;/h1&gt;
+&lt;p&gt;Annotations are read in the following conditions:&lt;/p&gt;
 
-&lt;p&gt;Local configurations are made using ingress v1 spec, eg hostname, path, backend, port,
-secret name of the server certificate and key, and so on. Any other configuration
-which is not supported by the v1 spec should be made in the ingress or service object
-using annotations.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;From classified &lt;code&gt;Ingress&lt;/code&gt; resources, see about classification in the &lt;a href=&#34;#class-matter&#34;&gt;Class matter&lt;/a&gt; section. &lt;code&gt;Ingresses&lt;/code&gt; accept keys from the &lt;code&gt;Host&lt;/code&gt; and &lt;code&gt;Backend&lt;/code&gt; scopes. See about scopes &lt;a href=&#34;#scope&#34;&gt;later&lt;/a&gt; in this page.&lt;/li&gt;
+&lt;li&gt;From &lt;code&gt;Services&lt;/code&gt; that classified Ingress resources are linking to. &lt;code&gt;Services&lt;/code&gt; only accept keys from the &lt;code&gt;Backend&lt;/code&gt; scope.&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;Changes to annotations in any ingress or service object is applied on the fly, the
-haproxy instance is restarted or dynamically updated if needed.&lt;/p&gt;
+&lt;p&gt;A configuration key needs a prefix in front of its name to use as an annotation key.
+The default prefix is &lt;code&gt;ingress.kubernetes.io&lt;/code&gt;, change with the &lt;code&gt;--annotation-prefix&lt;/code&gt;
+command-line option. The annotation value spec expects a string as the key value, so
+declare numbers and booleans as strings, HAProxy Ingress will convert them when needed.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;apiVersion&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;networking.k8s.io/v1beta1&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;kind&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;Ingress&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;metadata&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;annotations&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;ingress.kubernetes.io/balance-algorithm&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;roundrobin&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;ingress.kubernetes.io/maxconn-server&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;500&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;ingress.kubernetes.io/ssl-redirect&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;false&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;name&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;app&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;namespace&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;default&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;spec&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;...&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;ingressclass&#34;&gt;IngressClass&lt;/h2&gt;
 
-&lt;p&gt;Annotation key names need a prefix in front of the configuration key. The default
-prefix is &lt;code&gt;ingress.kubernetes.io&lt;/code&gt;, so eg the &lt;code&gt;ssl-redirect&lt;/code&gt; configuration key should
-be declared as &lt;code&gt;ingress.kubernetes.io/ssl-redirect&lt;/code&gt; with value &lt;code&gt;&amp;quot;true&amp;quot;&lt;/code&gt; or &lt;code&gt;&amp;quot;false&amp;quot;&lt;/code&gt;.
-The annotation value spec expects a string as the key, so declare numbers and
-booleans as strings, HAProxy Ingress will convert it when needed. The default
-annotation prefix can be changed using the &lt;code&gt;--annotation-prefix&lt;/code&gt; command-line
-option.&lt;/p&gt;
+&lt;p&gt;IngressClass configurations are read when the &lt;code&gt;ingressClassName&lt;/code&gt; field of an Ingress
+resource links to an IngressClass that configures its &lt;code&gt;parameters&lt;/code&gt; field.&lt;/p&gt;
 
-&lt;p&gt;An ingress object accepts configuration keys of scope &lt;code&gt;Host&lt;/code&gt; or &lt;code&gt;Backend&lt;/code&gt;. A
-service object accepts configuration keys of scope &lt;code&gt;Backend&lt;/code&gt; only. See
-&lt;a href=&#34;#scope&#34;&gt;Scope&lt;/a&gt; below.&lt;/p&gt;
+&lt;p&gt;The IngressClass&amp;rsquo; &lt;code&gt;parameters&lt;/code&gt; field currently only accepts ConfigMap resources, and
+the ConfigMap must be declared in the same namespace of the controller.&lt;/p&gt;
 
-&lt;p&gt;Configuration keys declared in services have the highest precedence, overwriting
-configuration keys declared in the ConfigMap and ingress objects. Ingress object
-overwrite the default value and the ConfigMap configuration.&lt;/p&gt;
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
+Even though a ConfigMap is used, configuration keys of the Global scope cannot be
+used and will be ignored.
+&lt;/div&gt;
+
+
+&lt;p&gt;The following resources create the same final configuration of the Annotation
+section &lt;a href=&#34;#annotation&#34;&gt;above&lt;/a&gt;, with the benefit of allowing the reuse of the
+IngressClass+ConfigMap configuration.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;apiVersion&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;networking.k8s.io/v1beta1&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;kind&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;IngressClass&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;metadata&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;name&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;my-class&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;spec&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;controller&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;haproxy-ingress.github.io/controller&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;parameters&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;kind&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;ConfigMap&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;name&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;my-options&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;apiVersion&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;v1&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;data&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;balance-algorithm&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;roundrobin&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;maxconn-server&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;500&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;ssl-redirect&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;false&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;kind&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;ConfigMap&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;metadata&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;name&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;my-options&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;namespace&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;ingress-controller&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;apiVersion&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;networking.k8s.io/v1beta1&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;kind&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;Ingress&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;metadata&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;name&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;app&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;namespace&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;default&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;spec&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;ingressClassName&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;my-class&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;...&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h2 id=&#34;updates&#34;&gt;Updates&lt;/h2&gt;
+
+&lt;p&gt;Changes to any configuration in any classified &lt;code&gt;Ingress&lt;/code&gt; resources (annotations
+or spec), &lt;code&gt;Service&lt;/code&gt; resources (annotations) or any referenced &lt;code&gt;ConfigMap&lt;/code&gt; will
+reflect in the update of the final HAProxy configuration.&lt;/p&gt;
+
+&lt;p&gt;If the new state cannot be dynamically applied and requires HAProxy to be reloaded,
+this will happen preserving the in progress requests and the long running connections.&lt;/p&gt;
+
+&lt;h2 id=&#34;fragmentation&#34;&gt;Fragmentation&lt;/h2&gt;
+
+&lt;p&gt;Ingress resources can be fragmented in order to add distinct configurations
+to distinct routes. For example:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;apiVersion&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;networking.k8s.io/v1beta1&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;kind&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;Ingress&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;metadata&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;name&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;app-front&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;spec&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;rules&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;-&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;host&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;app.local&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;http&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;paths&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;-&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;path&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;/&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;backend&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;          &lt;/span&gt;serviceName&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;frontend&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;          &lt;/span&gt;servicePort&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;8080&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;apiVersion&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;networking.k8s.io/v1beta1&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;kind&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;Ingress&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;metadata&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;annotations&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;ingress.kubernetes.io/rewrite-target&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;/&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;name&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;app-back&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;spec&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;rules&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;-&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;host&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;app.local&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;http&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;paths&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;-&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;path&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;/api&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;backend&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;          &lt;/span&gt;serviceName&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;backend&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;          &lt;/span&gt;servicePort&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;8080&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;HAProxy Ingress will merge all the resources, so there is no difference if the
+configuration is in the same or in distinct Ingress. Distinct Ingress however
+might lead to conflicting configuration, more about conflict in the
+&lt;a href=&#34;#scope&#34;&gt;scope&lt;/a&gt; section below.&lt;/p&gt;
+
+&lt;p&gt;There is no hard limit to the number of Ingresses or Services - clusters with
+tens of thousands of Ingress and Service resources report to work smoothly and
+fast with HAProxy Ingress.&lt;/p&gt;
 
 &lt;h1 id=&#34;scope&#34;&gt;Scope&lt;/h1&gt;
 
-&lt;p&gt;HAProxy Ingress configuration keys may be in one of three distinct scopes. A scope
-defines where a configuration key can be declared and how it interacts with ingress
-and service objects.&lt;/p&gt;
+&lt;p&gt;HAProxy Ingress configuration keys may be in one of three distinct scopes:
+&lt;code&gt;Global&lt;/code&gt;, &lt;code&gt;Host&lt;/code&gt;, &lt;code&gt;Backend&lt;/code&gt;. A scope defines where a configuration key can
+be declared and how it interacts with Ingress and Service resources.&lt;/p&gt;
 
-&lt;ul&gt;
-&lt;li&gt;Scope &lt;code&gt;Global&lt;/code&gt;: Defines configuration keys that should be declared only in the
-ConfigMap object. Configuration keys of the global scope declared as ingress or
-service annotations are ignored. A configuration key of the global scope never
-conflict.&lt;/li&gt;
-&lt;li&gt;Scope &lt;code&gt;Host&lt;/code&gt;: Defines configuration keys that binds to the hostname. Configuration
-keys of the host scope can be declared in the ConfigMap as a default value, or in
-an ingress object. A conflict warning will be logged if the same host configuration
-key with distinct values are declared in distict ingress objects but to the same
-hostname.&lt;/li&gt;
-&lt;li&gt;Scope &lt;code&gt;Backend&lt;/code&gt;: Defines configuration keys that binds to the service object, which
-is converted to a HAProxy backend after the configuration parsing. Configuration keys
-of the backend scope can be declared in the ConfigMap as a default value, in an ingress
-object, or in a service object. A conflict warning will be logged if the same backend
-configuration key with distinct values are declared in distict ingress objects but
-to the same service or HAProxy backend. A backend configuration key declared in a
-service object overwrites the same configuration in an ingress object without
-conflicting.&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;Configuration keys declared in &lt;code&gt;Ingress&lt;/code&gt; resources might conflict. More about
+the scenarios in the Host and Backend scopes below. A warning will be logged
+in the case of a conflict, and the used value will be of the Ingress resource
+that was created first.&lt;/p&gt;
 
-&lt;p&gt;In the case of a conflict, the value of the ingress object which was created first
-will be used.&lt;/p&gt;
+&lt;h2 id=&#34;global&#34;&gt;Global&lt;/h2&gt;
 
-&lt;h1 id=&#34;configuration-keys&#34;&gt;Configuration keys&lt;/h1&gt;
+&lt;p&gt;Defines configuration keys that applies for all hostnames and backend
+services, and should be declared only in the Global config ConfigMap
+resource. Configuration keys of the Global scope declared as Ingress
+or Service annotations, and also in the IngressClass ConfigMap are
+ignored. Configuration keys of the Global scope never conflict.&lt;/p&gt;
+
+&lt;h2 id=&#34;host&#34;&gt;Host&lt;/h2&gt;
+
+&lt;p&gt;Defines configuration keys that binds to the hostname. Configuration
+keys of the host scope can be declared in any ConfigMap, or in any Ingress
+resource. A conflict happens when the same host configuration key with
+distinct values are declared in distinct Ingress resources but to the same
+hostname.&lt;/p&gt;
+
+&lt;h2 id=&#34;backend&#34;&gt;Backend&lt;/h2&gt;
+
+&lt;p&gt;Defines configuration keys that binds to the Service resource, which
+is converted to a HAProxy backend after the configuration parsing. Configuration
+keys of the backend scope can be declared in any ConfigMap or as Ingress or Service
+annotation. A conflict happens when the same backend configuration key with distinct
+values are declared in distinct Ingress resources but to the same Service or HAProxy
+backend.&lt;/p&gt;
+
+&lt;h1 id=&#34;keys&#34;&gt;Keys&lt;/h1&gt;
 
 &lt;p&gt;The table below describes all supported configuration keys.&lt;/p&gt;
 
@@ -125,9 +289,9 @@ will be used.&lt;/p&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;acme-endpoint&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;v2-staging&lt;/td&gt;
-&lt;td&gt;v2&lt;/td&gt;
-&lt;td&gt;endpoint&lt;/td&gt;
+&lt;td&gt;[&lt;code&gt;v2-staging&lt;/code&gt;|&lt;code&gt;v2&lt;/code&gt;|&lt;code&gt;endpoint&lt;/code&gt;]&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -187,21 +351,21 @@ will be used.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;app-root&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#app-root&#34;&gt;&lt;code&gt;app-root&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;/url&lt;/td&gt;
 &lt;td&gt;Host&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;auth-realm&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#auth&#34;&gt;&lt;code&gt;auth-realm&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;realm string&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;auth-secret&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#auth&#34;&gt;&lt;code&gt;auth-secret&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;secret name&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
@@ -243,7 +407,7 @@ will be used.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;auth-type&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#auth&#34;&gt;&lt;code&gt;auth-type&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;&amp;ldquo;basic&amp;rdquo;&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
@@ -1300,10 +1464,17 @@ will be used.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;whitelist-source-range&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;CIDR&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#whitelist&#34;&gt;&lt;code&gt;whitelist-source-range&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Comma-separated IPs or CIDRs&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#master-worker&#34;&gt;&lt;code&gt;worker-max-reloads&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;number of reloads&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;0&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -1643,6 +1814,97 @@ overwrite the weight defined from the agent&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-port&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-port&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-inter&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-inter&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-send&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-send&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;app-root&#34;&gt;App root&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;app-root&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Host&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Defines a distinct application root path. HAProxy will redirect requests to the
+configured path, using &lt;code&gt;302&lt;/code&gt; status code, when the HTTP client sends a request
+to the root context of the configured domain. &lt;code&gt;app-root&lt;/code&gt; key binds to the root
+context path, so it needs to be declared in the same Ingress that configures it.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;auth&#34;&gt;Auth&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;auth-realm&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;localhost&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;auth-secret&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;auth-type&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Configures authentication options.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;auth-type&lt;/code&gt;: Defines the authentication type. Currently the only supported option is &lt;code&gt;basic&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-realm&lt;/code&gt;: Optional, configures the authentication realm string. &lt;code&gt;localhost&lt;/code&gt; will be used if not provided.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-secret&lt;/code&gt;: A secret name with users and passwords used to configure basic authentication. The secret can be in the same namespace of the Ingress resource, or any other namespace if cross namespace is enabled. Secret in the same namespace does not need to be prepended with &lt;code&gt;namespace/&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The secret referenced by &lt;code&gt;auth-secret&lt;/code&gt; should have a key named &lt;code&gt;auth&lt;/code&gt; with users and passwords, one per line. The following two formats are supported and both are supported in the same secret:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;user&amp;gt;::&amp;lt;password&amp;gt;&lt;/code&gt;: User and password are separated by 2 (two) colons. The password will be copied verbatim, stored in the configuration file in an insecure way.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;user&amp;gt;:&amp;lt;password-hash&amp;gt;&lt;/code&gt;: User and password are separated by 1 (one) colon. This syntax needs a password hash that can be generated with &lt;code&gt;mkpasswd&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/v0.12/v0.12/docs/configuration/command-line/#allow-cross-namespace&#34;&gt;&amp;ndash;allow-cross-namespace&lt;/a&gt; command-line option&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#auth-tls&#34;&gt;Auth TLS&lt;/a&gt; configuration keys&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#oauth&#34;&gt;OAuth&lt;/a&gt; configuration keys&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/auth/basic&#34;&gt;Auth Basic example&lt;/a&gt; page&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -3227,7 +3489,7 @@ an old state with disabled servers will disable them in the new configuration.&l
 &lt;/table&gt;
 
 &lt;p&gt;Customize the tcp, http or https log format using log format variables. Only used if
-&lt;a href=&#34;#syslog-endpoint&#34;&gt;syslog-endpoint&lt;/a&gt; is also configured.&lt;/p&gt;
+&lt;a href=&#34;#syslog&#34;&gt;&lt;code&gt;syslog-endpoint&lt;/code&gt;&lt;/a&gt; is also configured.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;http-log-format&lt;/code&gt;: log format of all HTTP proxies, defaults to HAProxy default HTTP log format.&lt;/li&gt;
@@ -3239,6 +3501,7 @@ an old state with disabled servers will disable them in the new configuration.&l
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.4&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.4&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#syslog&#34;&gt;&lt;code&gt;syslog&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -3262,20 +3525,35 @@ an old state with disabled servers will disable them in the new configuration.&l
 &lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;v0.12&lt;/td&gt;
 &lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;worker-max-reloads&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;0&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.12&lt;/td&gt;
+&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;p&gt;Configures master-worker related options.&lt;/p&gt;
+&lt;p&gt;Configures master-worker related options. These options are only used when an
+external haproxy instance is configured.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;master-exit-on-failure&lt;/code&gt;: If &lt;code&gt;true&lt;/code&gt;, kill all the remaining workers and exit
 from master in the case of an unexpected failure of a worker, eg a segfault.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;worker-max-reloads&lt;/code&gt;: Defines how many reloads a haproxy worker should
+survive before receive a SIGTERM. The default value is &lt;code&gt;0&lt;/code&gt; which means
+unlimited. This option limits the number of active workers and the haproxy&amp;rsquo;s
+pod memory usage. Useful on workloads with long running connections, eg
+websockets, and clusters that frequently changes and forces haproxy to reload.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/v0.12/v0.12/docs/examples/external-haproxy/&#34;&gt;Example&lt;/a&gt; page&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-master-worker&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-master-worker&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#mworker-max-reloads&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#mworker-max-reloads&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;/v0.12/v0.12/docs/configuration/command-line/#master-socket&#34;&gt;master-socket&lt;/a&gt; command-line option&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -4843,11 +5121,43 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;li&gt;&lt;a href=&#34;#modsecurity&#34;&gt;Modsecurity&lt;/a&gt; configuration keys.&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;h2 id=&#34;whitelist&#34;&gt;Whitelist&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;whitelist-source-range&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Defines a comma-separated list of source IPs or CIDRs allowed to connect. If not
+declared, any source IP is allowed. If declared, requests with source IP not
+included in the list are denied, and clients receive the HAProxy&amp;rsquo;s 403 error page.&lt;/p&gt;
+
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
       </description>
     </item>
     
     <item>
-      <title>Docs: Command line</title>
+      <title>Docs: Command-line options</title>
       <link>/v0.12/docs/configuration/command-line/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
@@ -4955,6 +5265,13 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#ingress-class&#34;&gt;&lt;code&gt;--controller-class&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;suffix&lt;/td&gt;
+&lt;td&gt;``&lt;/td&gt;
+&lt;td&gt;v0.12&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#default-backend-service&#34;&gt;&lt;code&gt;--default-backend-service&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;namespace/servicename&lt;/td&gt;
 &lt;td&gt;haproxy&amp;rsquo;s 404 page&lt;/td&gt;
@@ -4980,13 +5297,6 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;td&gt;port number&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;10254&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#ignore-ingress-without-class&#34;&gt;&lt;code&gt;--ignore-ingress-without-class&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;v0.10&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -5095,6 +5405,13 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#ingress-class&#34;&gt;&lt;code&gt;--watch-ingress-without-class&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.12&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#watch-namespace&#34;&gt;&lt;code&gt;--watch-namespace&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;namespace&lt;/td&gt;
 &lt;td&gt;all namespaces&lt;/td&gt;
@@ -5152,7 +5469,7 @@ that shares ingress and service objects without conflicting each other.&lt;/p&gt
 
 &lt;h2 id=&#34;backend-shards&#34;&gt;&amp;ndash;backend-shards&lt;/h2&gt;
 
-&lt;p&gt;Defines how much files should be used to configure the haproxy backends. The default value is
+&lt;p&gt;Defines how many files should be used to configure the haproxy backends. The default value is
 0 (zero) which uses one single file to configure the whole haproxy process. Values greather than
 0 (zero) splits the backend configuration into separated files. Only files with changed backends
 are parsed and written to disk, reducing io and cpu usage on big clusters - about 1000 or more
@@ -5169,19 +5486,16 @@ services.&lt;/p&gt;
 &lt;h2 id=&#34;default-backend-service&#34;&gt;&amp;ndash;default-backend-service&lt;/h2&gt;
 
 &lt;p&gt;Defines the &lt;code&gt;namespace/servicename&lt;/code&gt; that should be used if the incoming request doesn&amp;rsquo;t match any
-hostname, or the requested path doesn&amp;rsquo;t match any location within the desired hostname.&lt;/p&gt;
-
-&lt;p&gt;This is a mandatory argument used in the &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment&#34;&gt;deployment&lt;/a&gt; example page.&lt;/p&gt;
+hostname, or the requested path doesn&amp;rsquo;t match any location within the desired hostname. An internal
+404 error page is used if not declared.&lt;/p&gt;
 
 &lt;hr /&gt;
 
 &lt;h2 id=&#34;default-ssl-certificate&#34;&gt;&amp;ndash;default-ssl-certificate&lt;/h2&gt;
 
 &lt;p&gt;Defines the &lt;code&gt;namespace/secretname&lt;/code&gt; of the default certificate that should be used if ingress
-resources using TLS configuration doesn&amp;rsquo;t provide it&amp;rsquo;s own certificate.&lt;/p&gt;
-
-&lt;p&gt;This is a mandatory argument used in the &lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment&#34;&gt;deployment&lt;/a&gt; and
-&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/tls-termination&#34;&gt;TLS termination&lt;/a&gt; example pages.&lt;/p&gt;
+resources using TLS configuration doesn&amp;rsquo;t provide it&amp;rsquo;s own certificate. A self-signed fake
+certificate is used if not declared.&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -5193,21 +5507,40 @@ resources using TLS configuration doesn&amp;rsquo;t provide it&amp;rsquo;s own c
 
 &lt;hr /&gt;
 
-&lt;h2 id=&#34;ignore-ingress-without-class&#34;&gt;&amp;ndash;ignore-ingress-without-class&lt;/h2&gt;
+&lt;h2 id=&#34;ingress-class&#34;&gt;Ingress Class&lt;/h2&gt;
 
-&lt;p&gt;Defines if the ingress without the ingress.class annotation will be considered or not. If &lt;code&gt;--ignore-ingress-without-class=true&lt;/code&gt; then only the ingresses with the matching ingress.class annotation will be considered, ingresses with missing or different ingress.class annotation will not be considered. Default is false.&lt;/p&gt;
+&lt;p&gt;More than one ingress controller is supported per Kubernetes cluster. These options allow to
+override the class of ingress resources that this instance of the controller should listen to.
+Classes that match will be used in the HAProxy configuration, other classes will be ignored.
+Ingress resources without class name and without class annotation is also ignored since v0.12,
+add the command-line option &lt;code&gt;--watch-ingress-without-class&lt;/code&gt; to also listen to these ingress.&lt;/p&gt;
 
-&lt;hr /&gt;
+&lt;p&gt;These options have a new behavior since v0.12, see the corresponding documentation if using an
+older controller version.&lt;/p&gt;
 
-&lt;h2 id=&#34;ingress-class&#34;&gt;&amp;ndash;ingress-class&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--ingress-class&lt;/code&gt;: defines the value of &lt;code&gt;kubernetes.io/ingress.class&lt;/code&gt; annotation this controller
+should listen to. The default value is &lt;code&gt;haproxy&lt;/code&gt; if not declared.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--controller-class&lt;/code&gt;: by default, HAProxy Ingress will watch IngressClasses whose
+&lt;code&gt;spec.controller&lt;/code&gt; name is &lt;code&gt;haproxy-ingress.github.io/controller&lt;/code&gt;. All ingress resources that
+link to these IngressClasses will be added to the configuration. The &lt;code&gt;--controller-class&lt;/code&gt;
+command-line option customizes the controller name, allowing to run more than one HAProxy Ingress
+in the same cluster. Configuring &lt;code&gt;--controller-class=staging&lt;/code&gt; would listen to IngressClasses whose
+controller name is &lt;code&gt;haproxy-ingress.github.io/controller/staging&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--watch-ingress-without-class&lt;/code&gt;: defines if this controller should also listen to ingress resources
+that doesn&amp;rsquo;t declare neither the &lt;code&gt;kubernetes.io/ingress.class&lt;/code&gt; annotation nor the
+&lt;code&gt;&amp;lt;ingress&amp;gt;.spec.ingressClassName&lt;/code&gt; field. The default since v0.12 is to ignore ingress without class
+annotation and class name.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--ignore-ingress-without-class&lt;/code&gt;: this option is ignored since v0.12. Use
+&lt;code&gt;--watch-ingress-without-class&lt;/code&gt; instead.&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;More than one ingress controller is supported per Kubernetes cluster. The &lt;code&gt;--ingress-class&lt;/code&gt;
-argument allow to override the class name of ingress resources that this instance of the
-controller should listen to. Class names that match will be used in the HAProxy configuration.
-Other classes will be ignored.&lt;/p&gt;
+&lt;p&gt;See also:&lt;/p&gt;
 
-&lt;p&gt;The ingress resource must use the &lt;code&gt;kubernetes.io/ingress.class&lt;/code&gt; annotation to name it&amp;rsquo;s
-ingress class.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/v0.12/v0.12/docs/configuration/keys/#class-matter&#34;&gt;Class matter&lt;/a&gt; in the Configuration Keys doc&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-class&#34;&gt;https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-class&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;hr /&gt;
 

@@ -282,13 +282,13 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-12-docs-configuration-keys" href="/v0.12/docs/configuration/keys/">Configuration keys</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-12-docs-configuration-keys" href="/v0.12/docs/configuration/keys/">Keys</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-12-docs-configuration-command-line" href="/v0.12/docs/configuration/command-line/">Command line</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-12-docs-configuration-command-line" href="/v0.12/docs/configuration/command-line/">Command-line</a>
       
       
       
@@ -366,8 +366,8 @@ if (!doNotTrack) {
 <ul>
 <li><a href="#prerequisites">Prerequisites</a></li>
 <li><a href="#installation">Installation</a></li>
-<li><a href="#try-it-out">Try it out!</a></li>
-<li><a href="#what-s-next">What&rsquo;s next?</a></li>
+<li><a href="#deploy-and-expose">Deploy and expose</a></li>
+<li><a href="#what-s-next">What&rsquo;s next</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -406,9 +406,11 @@ if (!doNotTrack) {
 	<div class="lead">How to install HAProxy Ingress and expose the first service.</div>
 	
 
+<p>The following sections walk through steps to have HAProxy Ingress working, watching ingress resources and exposing services.</p>
+
 <h2 id="prerequisites">Prerequisites</h2>
 
-<p>HAProxy Ingress needs a running Kubernetes cluster. Controller version v0.11 needs Kubernetes 1.14, while version v0.10 and older work on clusters as old as 1.6. HAProxy Ingress also works fine on local k8s deployments like <a href="https://minikube.sigs.k8s.io">minikube</a> or <a href="https://kind.sigs.k8s.io">kind</a>.</p>
+<p>HAProxy Ingress needs a running Kubernetes cluster. Controller version v0.12 needs Kubernetes 1.18 or newer, see other supported versions in the <a href="https://github.com/jcmoraisjr/haproxy-ingress/#use-haproxy-ingress">README</a> file. HAProxy Ingress also works fine on local k8s deployments like <a href="https://minikube.sigs.k8s.io">minikube</a> or <a href="https://kind.sigs.k8s.io">kind</a>.</p>
 
 <p>An ingress controller works exposing internal services to the external world, so another pre-requisite is that at least one cluster node is accessible externally. On cloud environments, a cloud load balancer can be configured to reach the ingress controller nodes.</p>
 
@@ -432,6 +434,14 @@ if (!doNotTrack) {
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ helm install haproxy-ingress haproxy-ingress/haproxy-ingress <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  --create-namespace --namespace<span style="color:#ce5c00;font-weight:bold">=</span>ingress-controller <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  --set controller.hostNetwork<span style="color:#ce5c00;font-weight:bold">=</span>true</code></pre></div>
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">Note</h4>
+The configuration above will deploy the latest stable HAProxy Ingress. Add <code>--version '~&lt;version&gt;.0-0'</code> command-line option to install another version, including beta and snapshot - eg <code>--version '~0.12.0-0'</code> will install the v0.12 controller version.
+</div>
+
+
 <p>The controller should be running in a few seconds. There are two important changes made in the example above:</p>
 
 <ul>
@@ -441,7 +451,7 @@ if (!doNotTrack) {
 
 <p>HAProxy Ingress&rsquo; Helm chart has a few more configuration options, see all of them in the chart <a href="https://github.com/haproxy-ingress/charts/tree/master/haproxy-ingress">documentation</a>.</p>
 
-<h2 id="try-it-out">Try it out!</h2>
+<h2 id="deploy-and-expose">Deploy and expose</h2>
 
 <p>The following steps deploy an echoserver image and exposes it in the current namespace.</p>
 
@@ -460,6 +470,8 @@ $ kubectl create -f - <span style="color:#4e9a06">&lt;&lt;EOF
 </span><span style="color:#4e9a06">apiVersion: networking.k8s.io/v1beta1
 </span><span style="color:#4e9a06">kind: Ingress
 </span><span style="color:#4e9a06">metadata:
+</span><span style="color:#4e9a06">  annotations:
+</span><span style="color:#4e9a06">    kubernetes.io/ingress.class: haproxy
 </span><span style="color:#4e9a06">  name: echoserver
 </span><span style="color:#4e9a06">spec:
 </span><span style="color:#4e9a06">  rules:
@@ -474,12 +486,12 @@ $ kubectl create -f - <span style="color:#4e9a06">&lt;&lt;EOF
 <p>4) Send a request to our echoserver.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ curl -k https://echoserver.192.168.1.11.nip.io
 $ wget -qO- --no-check-certificate https://echoserver.192.168.1.11.nip.io</code></pre></div>
-<h2 id="what-s-next">What&rsquo;s next?</h2>
+<h2 id="what-s-next">What&rsquo;s next</h2>
 
-<p>Learn more about ingress from the Kubernetes docs:</p>
+<p>Learn more about Ingress and IngressClass resources:</p>
 
 <ul>
-<li><a href="https://kubernetes.io/docs/concepts/services-networking/ingress/">Ingress</a> from Kubernetes docs</li>
+<li><a href="https://kubernetes.io/docs/concepts/services-networking/ingress/">Ingress and IngressClass resources</a> from Kubernetes docs</li>
 </ul>
 
 <p>HAProxy Ingress has lots of configuration options. See the following tips to get started faster:</p>
@@ -588,7 +600,7 @@ $ wget -qO- --no-check-certificate https://echoserver.192.168.1.11.nip.io</code>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified November 1, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/8eb8f3e845e0875a450e27f67dd1faf6b46facb2">docs: update getting started to only use the helm chart (8eb8f3e8)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified November 15, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/59660c0f6d6268e58092b7de8e0e0ab2fe0cfe2e">docs: fix links and improves sentences of IngressClass related doc (59660c0f)</a>
 </div>
 </div>
 

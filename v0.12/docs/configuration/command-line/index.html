@@ -20,25 +20,25 @@
 <link rel="icon" type="image/png" href="/v0.12/favicons/android-144x144.png" sizes="144x144">
 <link rel="icon" type="image/png" href="/v0.12/favicons/android-192x192.png" sizes="192x192">
 
-<title>Command line | HAProxy Ingress</title><meta property="og:title" content="Command line" />
+<title>Command-line options | HAProxy Ingress</title><meta property="og:title" content="Command-line options" />
 <meta property="og:description" content="Static command-line configuration options.
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.12/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2020-10-17T15:33:52-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
-<meta itemprop="name" content="Command line">
+<meta property="article:modified_time" content="2020-11-15T20:15:16-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta itemprop="name" content="Command-line options">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2020-10-17T15:33:52-03:00" />
-<meta itemprop="wordCount" content="2426">
+<meta itemprop="dateModified" content="2020-11-15T20:15:16-03:00" />
+<meta itemprop="wordCount" content="2544">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Command line"/>
+<meta name="twitter:title" content="Command-line options"/>
 <meta name="twitter:description" content="Static command-line configuration options.
 "/>
 
@@ -69,7 +69,7 @@ if (!doNotTrack) {
   crossorigin="anonymous"></script>
 
 
-    <title>Command line | HAProxy Ingress</title>
+    <title>Command-line options | HAProxy Ingress</title>
   </head>
   <body class="td-page">
     <header>
@@ -288,13 +288,13 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-12-docs-configuration-keys" href="/v0.12/docs/configuration/keys/">Configuration keys</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-12-docs-configuration-keys" href="/v0.12/docs/configuration/keys/">Keys</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-v0-12-docs-configuration-command-line" href="/v0.12/docs/configuration/command-line/">Command line</a>
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-v0-12-docs-configuration-command-line" href="/v0.12/docs/configuration/command-line/">Command-line</a>
       
       
       
@@ -357,7 +357,7 @@ if (!doNotTrack) {
 
 
 <a href="https://github.com/jcmoraisjr/haproxy-ingress/edit/master/docs/content/en/docs/configuration/command-line.md" target="_blank"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
-<a href="https://github.com/jcmoraisjr/haproxy-ingress/issues/new?title=Command%20line" target="_blank"><i class="fab fa-github fa-fw"></i> Create doc issue</a>
+<a href="https://github.com/jcmoraisjr/haproxy-ingress/issues/new?title=Command-line%20options" target="_blank"><i class="fab fa-github fa-fw"></i> Create doc issue</a>
 
 </div>
 
@@ -378,8 +378,7 @@ if (!doNotTrack) {
 <li><a href="#default-backend-service">&ndash;default-backend-service</a></li>
 <li><a href="#default-ssl-certificate">&ndash;default-ssl-certificate</a></li>
 <li><a href="#disable-pod-list">&ndash;disable-pod-list</a></li>
-<li><a href="#ignore-ingress-without-class">&ndash;ignore-ingress-without-class</a></li>
-<li><a href="#ingress-class">&ndash;ingress-class</a></li>
+<li><a href="#ingress-class">Ingress Class</a></li>
 <li><a href="#kubeconfig">&ndash;kubeconfig</a></li>
 <li><a href="#master-socket">&ndash;master-socket</a></li>
 <li><a href="#max-old-config-files">&ndash;max-old-config-files</a></li>
@@ -430,7 +429,7 @@ if (!doNotTrack) {
 
 
 <li class="breadcrumb-item active" aria-current="page">
-	<a href="/v0.12/docs/configuration/command-line/">Command line</a>
+	<a href="/v0.12/docs/configuration/command-line/">Command-line</a>
 </li>
 
 	</ol>
@@ -438,7 +437,7 @@ if (!doNotTrack) {
 
             
 <div class="td-content">
-	<h1>Command line</h1>
+	<h1>Command-line options</h1>
 	<div class="lead">Static command-line configuration options.</div>
 	
 
@@ -540,6 +539,13 @@ if (!doNotTrack) {
 </tr>
 
 <tr>
+<td><a href="#ingress-class"><code>--controller-class</code></a></td>
+<td>suffix</td>
+<td>``</td>
+<td>v0.12</td>
+</tr>
+
+<tr>
 <td><a href="#default-backend-service"><code>--default-backend-service</code></a></td>
 <td>namespace/servicename</td>
 <td>haproxy&rsquo;s 404 page</td>
@@ -565,13 +571,6 @@ if (!doNotTrack) {
 <td>port number</td>
 <td><code>10254</code></td>
 <td></td>
-</tr>
-
-<tr>
-<td><a href="#ignore-ingress-without-class"><code>--ignore-ingress-without-class</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td>v0.10</td>
 </tr>
 
 <tr>
@@ -680,6 +679,13 @@ if (!doNotTrack) {
 </tr>
 
 <tr>
+<td><a href="#ingress-class"><code>--watch-ingress-without-class</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.12</td>
+</tr>
+
+<tr>
 <td><a href="#watch-namespace"><code>--watch-namespace</code></a></td>
 <td>namespace</td>
 <td>all namespaces</td>
@@ -737,7 +743,7 @@ that shares ingress and service objects without conflicting each other.</p>
 
 <h2 id="backend-shards">&ndash;backend-shards</h2>
 
-<p>Defines how much files should be used to configure the haproxy backends. The default value is
+<p>Defines how many files should be used to configure the haproxy backends. The default value is
 0 (zero) which uses one single file to configure the whole haproxy process. Values greather than
 0 (zero) splits the backend configuration into separated files. Only files with changed backends
 are parsed and written to disk, reducing io and cpu usage on big clusters - about 1000 or more
@@ -754,19 +760,16 @@ services.</p>
 <h2 id="default-backend-service">&ndash;default-backend-service</h2>
 
 <p>Defines the <code>namespace/servicename</code> that should be used if the incoming request doesn&rsquo;t match any
-hostname, or the requested path doesn&rsquo;t match any location within the desired hostname.</p>
-
-<p>This is a mandatory argument used in the <a href="https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment">deployment</a> example page.</p>
+hostname, or the requested path doesn&rsquo;t match any location within the desired hostname. An internal
+404 error page is used if not declared.</p>
 
 <hr />
 
 <h2 id="default-ssl-certificate">&ndash;default-ssl-certificate</h2>
 
 <p>Defines the <code>namespace/secretname</code> of the default certificate that should be used if ingress
-resources using TLS configuration doesn&rsquo;t provide it&rsquo;s own certificate.</p>
-
-<p>This is a mandatory argument used in the <a href="https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment">deployment</a> and
-<a href="https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/tls-termination">TLS termination</a> example pages.</p>
+resources using TLS configuration doesn&rsquo;t provide it&rsquo;s own certificate. A self-signed fake
+certificate is used if not declared.</p>
 
 <hr />
 
@@ -778,21 +781,40 @@ resources using TLS configuration doesn&rsquo;t provide it&rsquo;s own certifica
 
 <hr />
 
-<h2 id="ignore-ingress-without-class">&ndash;ignore-ingress-without-class</h2>
+<h2 id="ingress-class">Ingress Class</h2>
 
-<p>Defines if the ingress without the ingress.class annotation will be considered or not. If <code>--ignore-ingress-without-class=true</code> then only the ingresses with the matching ingress.class annotation will be considered, ingresses with missing or different ingress.class annotation will not be considered. Default is false.</p>
+<p>More than one ingress controller is supported per Kubernetes cluster. These options allow to
+override the class of ingress resources that this instance of the controller should listen to.
+Classes that match will be used in the HAProxy configuration, other classes will be ignored.
+Ingress resources without class name and without class annotation is also ignored since v0.12,
+add the command-line option <code>--watch-ingress-without-class</code> to also listen to these ingress.</p>
 
-<hr />
+<p>These options have a new behavior since v0.12, see the corresponding documentation if using an
+older controller version.</p>
 
-<h2 id="ingress-class">&ndash;ingress-class</h2>
+<ul>
+<li><code>--ingress-class</code>: defines the value of <code>kubernetes.io/ingress.class</code> annotation this controller
+should listen to. The default value is <code>haproxy</code> if not declared.</li>
+<li><code>--controller-class</code>: by default, HAProxy Ingress will watch IngressClasses whose
+<code>spec.controller</code> name is <code>haproxy-ingress.github.io/controller</code>. All ingress resources that
+link to these IngressClasses will be added to the configuration. The <code>--controller-class</code>
+command-line option customizes the controller name, allowing to run more than one HAProxy Ingress
+in the same cluster. Configuring <code>--controller-class=staging</code> would listen to IngressClasses whose
+controller name is <code>haproxy-ingress.github.io/controller/staging</code>.</li>
+<li><code>--watch-ingress-without-class</code>: defines if this controller should also listen to ingress resources
+that doesn&rsquo;t declare neither the <code>kubernetes.io/ingress.class</code> annotation nor the
+<code>&lt;ingress&gt;.spec.ingressClassName</code> field. The default since v0.12 is to ignore ingress without class
+annotation and class name.</li>
+<li><code>--ignore-ingress-without-class</code>: this option is ignored since v0.12. Use
+<code>--watch-ingress-without-class</code> instead.</li>
+</ul>
 
-<p>More than one ingress controller is supported per Kubernetes cluster. The <code>--ingress-class</code>
-argument allow to override the class name of ingress resources that this instance of the
-controller should listen to. Class names that match will be used in the HAProxy configuration.
-Other classes will be ignored.</p>
+<p>See also:</p>
 
-<p>The ingress resource must use the <code>kubernetes.io/ingress.class</code> annotation to name it&rsquo;s
-ingress class.</p>
+<ul>
+<li><a href="/v0.12/docs/configuration/keys/#class-matter">Class matter</a> in the Configuration Keys doc</li>
+<li><a href="https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-class">https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-class</a></li>
+</ul>
 
 <hr />
 
@@ -1094,7 +1116,7 @@ single namespace.</p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified October 17, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/c69757ab888921a203f7693e0e6df0dda036a77b">add --sort-endpoints-by command-line option (c69757ab)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified November 15, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/04f956f644b7191be965e53ea294b13c2d419457">docs: small lay out and description fixes and improvements (04f956f6)</a>
 </div>
 </div>
 
