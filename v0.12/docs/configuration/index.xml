@@ -89,7 +89,7 @@ so any Ingress spec configuration should work as stated by the Kubernetes docume
 &lt;p&gt;Annotations and ConfigMap customizations extend the Ingress spec via the configuration
 keys, and this is what the rest of this documentation page is all about.&lt;/p&gt;
 
-&lt;p&gt;The following sections describe in a few more details aboud configuration strategies.&lt;/p&gt;
+&lt;p&gt;The following sections describe in a few more details about configuration strategies.&lt;/p&gt;
 
 &lt;h2 id=&#34;configmap&#34;&gt;ConfigMap&lt;/h2&gt;
 
@@ -102,7 +102,7 @@ keys, and this is what the rest of this documentation page is all about.&lt;/p&g
 
 &lt;p&gt;A configuration key is used verbatim as the ConfigMap key name, without any prefix.
 The ConfigMap spec expects a string as the key value, so declare numbers and booleans
-as strings, HAProxy Ingress will convert it when needed.&lt;/p&gt;
+as strings, HAProxy Ingress will convert them when needed.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;apiVersion&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;v1&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;data&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;balance-algorithm&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;leastconn&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
@@ -117,7 +117,7 @@ as strings, HAProxy Ingress will convert it when needed.&lt;/p&gt;
 &lt;p&gt;Annotations are read in the following conditions:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;From classified &lt;code&gt;Ingress&lt;/code&gt; resources, see about classification in the &lt;a href=&#34;#class-matter&#34;&gt;Class matter&lt;/a&gt; section. &lt;code&gt;Ingresses&lt;/code&gt; accept keys from the &lt;code&gt;Host&lt;/code&gt; and &lt;code&gt;Backend&lt;/code&gt; scopes. See about scopes &lt;a href=&#34;#scope&#34;&gt;later&lt;/a&gt; in this page.&lt;/li&gt;
+&lt;li&gt;From classified &lt;code&gt;Ingress&lt;/code&gt; resources, see about classification in the &lt;a href=&#34;#class-matter&#34;&gt;Class matter&lt;/a&gt; section. &lt;code&gt;Ingresses&lt;/code&gt; accept keys from the &lt;code&gt;Host&lt;/code&gt;, &lt;code&gt;Backend&lt;/code&gt; and &lt;code&gt;Path&lt;/code&gt; scopes. See about scopes &lt;a href=&#34;#scope&#34;&gt;later&lt;/a&gt; in this page.&lt;/li&gt;
 &lt;li&gt;From &lt;code&gt;Services&lt;/code&gt; that classified Ingress resources are linking to. &lt;code&gt;Services&lt;/code&gt; only accept keys from the &lt;code&gt;Backend&lt;/code&gt; scope.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -148,7 +148,7 @@ the ConfigMap must be declared in the same namespace of the controller.&lt;/p&gt
 
 &lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
 &lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
-Even though a ConfigMap is used, configuration keys of the Global scope cannot be
+Even though a ConfigMap is used, configuration keys of the &lt;code&gt;Global&lt;/code&gt; scope cannot be
 used and will be ignored.
 &lt;/div&gt;
 
@@ -231,18 +231,18 @@ fast with HAProxy Ingress.&lt;/p&gt;
 
 &lt;h1 id=&#34;scope&#34;&gt;Scope&lt;/h1&gt;
 
-&lt;p&gt;HAProxy Ingress configuration keys may be in one of three distinct scopes:
-&lt;code&gt;Global&lt;/code&gt;, &lt;code&gt;Host&lt;/code&gt;, &lt;code&gt;Backend&lt;/code&gt;. A scope defines where a configuration key can
-be declared and how it interacts with Ingress and Service resources.&lt;/p&gt;
+&lt;p&gt;HAProxy Ingress configuration keys may be in one of four distinct scopes:
+&lt;code&gt;Global&lt;/code&gt;, &lt;code&gt;Host&lt;/code&gt;, &lt;code&gt;Backend&lt;/code&gt;, &lt;code&gt;Path&lt;/code&gt;. A scope defines where a configuration key
+can be declared and how it interacts with Ingress and Service resources.&lt;/p&gt;
 
 &lt;p&gt;Configuration keys declared in &lt;code&gt;Ingress&lt;/code&gt; resources might conflict. More about
-the scenarios in the Host and Backend scopes below. A warning will be logged
+the scenarios in the &lt;code&gt;Host&lt;/code&gt; and &lt;code&gt;Backend&lt;/code&gt; scopes below. A warning will be logged
 in the case of a conflict, and the used value will be of the Ingress resource
 that was created first.&lt;/p&gt;
 
 &lt;h2 id=&#34;global&#34;&gt;Global&lt;/h2&gt;
 
-&lt;p&gt;Defines configuration keys that applies for all hostnames and backend
+&lt;p&gt;Defines configuration keys that apply for all hostnames and backend
 services, and should be declared only in the Global config ConfigMap
 resource. Configuration keys of the Global scope declared as Ingress
 or Service annotations, and also in the IngressClass ConfigMap are
@@ -250,7 +250,7 @@ ignored. Configuration keys of the Global scope never conflict.&lt;/p&gt;
 
 &lt;h2 id=&#34;host&#34;&gt;Host&lt;/h2&gt;
 
-&lt;p&gt;Defines configuration keys that binds to the hostname. Configuration
+&lt;p&gt;Defines configuration keys that bind to the hostname. Configuration
 keys of the host scope can be declared in any ConfigMap, or in any Ingress
 resource. A conflict happens when the same host configuration key with
 distinct values are declared in distinct Ingress resources but to the same
@@ -258,12 +258,19 @@ hostname.&lt;/p&gt;
 
 &lt;h2 id=&#34;backend&#34;&gt;Backend&lt;/h2&gt;
 
-&lt;p&gt;Defines configuration keys that binds to the Service resource, which
+&lt;p&gt;Defines configuration keys that bind to the Service resource, which
 is converted to a HAProxy backend after the configuration parsing. Configuration
 keys of the backend scope can be declared in any ConfigMap or as Ingress or Service
 annotation. A conflict happens when the same backend configuration key with distinct
 values are declared in distinct Ingress resources but to the same Service or HAProxy
 backend.&lt;/p&gt;
+
+&lt;h2 id=&#34;path&#34;&gt;Path&lt;/h2&gt;
+
+&lt;p&gt;Defines configuration keys that bind to the hostname and the HTTP path.
+Configuration keys of the Path scope can be declared in any ConfigMap as a default
+value, or as Ingress or Service annotation. Configuration keys of the Path scope
+never conflict.&lt;/p&gt;
 
 &lt;h1 id=&#34;keys&#34;&gt;Keys&lt;/h1&gt;
 
@@ -360,14 +367,14 @@ backend.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#auth&#34;&gt;&lt;code&gt;auth-realm&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;realm string&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#auth&#34;&gt;&lt;code&gt;auth-secret&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;secret name&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -409,7 +416,7 @@ backend.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#auth&#34;&gt;&lt;code&gt;auth-type&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;&amp;ldquo;basic&amp;rdquo;&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -584,49 +591,49 @@ backend.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#cors&#34;&gt;&lt;code&gt;cors-allow-credentials&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#cors&#34;&gt;&lt;code&gt;cors-allow-headers&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;headers list&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#cors&#34;&gt;&lt;code&gt;cors-allow-methods&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;methods list&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#cors&#34;&gt;&lt;code&gt;cors-allow-origin&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;URL&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#cors&#34;&gt;&lt;code&gt;cors-enable&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#cors&#34;&gt;&lt;code&gt;cors-expose-headers&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;headers&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#cors&#34;&gt;&lt;code&gt;cors-max-age&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;time (seconds)&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -787,28 +794,28 @@ backend.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#hsts&#34;&gt;&lt;code&gt;hsts&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#hsts&#34;&gt;&lt;code&gt;hsts-include-subdomains&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#hsts&#34;&gt;&lt;code&gt;hsts-max-age&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;number of seconds&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;15768000&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#hsts&#34;&gt;&lt;code&gt;hsts-preload&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -962,21 +969,21 @@ backend.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#oauth&#34;&gt;&lt;code&gt;oauth&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;&amp;ldquo;oauth2_proxy&amp;rdquo;&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#oauth&#34;&gt;&lt;code&gt;oauth-headers&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;&amp;lt;header&amp;gt;:&amp;lt;var&amp;gt;,...&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#oauth&#34;&gt;&lt;code&gt;oauth-uri-prefix&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;URI prefix&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -1004,7 +1011,7 @@ backend.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#proxy-body-size&#34;&gt;&lt;code&gt;proxy-body-size&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;size (bytes)&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;unlimited&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -1018,7 +1025,7 @@ backend.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#rewrite-target&#34;&gt;&lt;code&gt;rewrite-target&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;path string&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -1228,7 +1235,7 @@ backend.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#ssl-redirect&#34;&gt;&lt;code&gt;ssl-redirect&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -1452,21 +1459,21 @@ backend.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#waf&#34;&gt;&lt;code&gt;waf&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;&amp;ldquo;modsecurity&amp;rdquo;&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#waf&#34;&gt;&lt;code&gt;waf-mode&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[deny|detect]&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;deny&lt;/code&gt; (if waf is set)&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#whitelist&#34;&gt;&lt;code&gt;whitelist-source-range&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;Comma-separated IPs or CIDRs&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -1674,6 +1681,13 @@ removing the ingress object itself.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;code&gt;session-cookie-same-site&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.12&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;code&gt;session-cookie-shared&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
@@ -1705,6 +1719,7 @@ removing the ingress object itself.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;session-cookie-keywords&lt;/code&gt;: additional options to the &lt;code&gt;cookie&lt;/code&gt; option like &lt;code&gt;nocache&lt;/code&gt;, &lt;code&gt;httponly&lt;/code&gt;. For the sake of backwards compatibility the default is &lt;code&gt;indirect nocache httponly&lt;/code&gt; if not declared and &lt;code&gt;strategy&lt;/code&gt; is &lt;code&gt;insert&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;session-cookie-name&lt;/code&gt;: the name of the cookie. &lt;code&gt;INGRESSCOOKIE&lt;/code&gt; is the default value if not declared.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;session-cookie-preserve&lt;/code&gt;: indicates whether the session cookie will be set to &lt;code&gt;preserve&lt;/code&gt; mode. If this mode is enabled, haproxy will allow backend servers to use a &lt;code&gt;Set-Cookie&lt;/code&gt; HTTP header to emit their own persistence cookie value, meaning the backend servers have knowledge of which cookie value should route to which server. Since the cookie value is tightly coupled with a particular backend server in this scenario, this mode will cause dynamic updating to understand that it must keep the same cookie value associated with the same backend server. If this is disabled, dynamic updating is free to assign servers in a way that can make their cookie value no longer matching.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;session-cookie-same-site&lt;/code&gt;: if &lt;code&gt;true&lt;/code&gt;, adds the &lt;code&gt;SameSite=None; Secure&lt;/code&gt; attributes, which configures the browser to send the persistence cookie with both cross-site and same-site requests. The default value is &lt;code&gt;false&lt;/code&gt;, which means only same-site requests will send the persistence cookie.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;session-cookie-shared&lt;/code&gt;: defines if the persistence cookie should be shared between all domains that uses this backend. Defaults to &lt;code&gt;false&lt;/code&gt;. If &lt;code&gt;true&lt;/code&gt; the &lt;code&gt;Set-Cookie&lt;/code&gt; response will declare all the domains that shares this backend, indicating to the HTTP agent that all of them should use the same backend server.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;session-cookie-strategy&lt;/code&gt;: the cookie strategy to use (insert, rewrite, prefix). &lt;code&gt;insert&lt;/code&gt; is the default value if not declared.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;session-cookie-value-strategy&lt;/code&gt;: the strategy to use to calculate the cookie value of a server (&lt;code&gt;server-name&lt;/code&gt;, &lt;code&gt;pod-uid&lt;/code&gt;). &lt;code&gt;server-name&lt;/code&gt; is the default if not declared, and indicates that the cookie will be set based on the name defined in &lt;code&gt;backend-server-naming&lt;/code&gt;. &lt;code&gt;pod-uid&lt;/code&gt; indicates that the cookie will be set to the &lt;code&gt;UID&lt;/code&gt; of the pod running the target server.&lt;/li&gt;
@@ -1719,6 +1734,7 @@ limitation was removed on v0.6.&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie&#34;&gt;https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-cookie&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-cookie&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-cookie&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-cookie&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.haproxy.com/blog/load-balancing-affinity-persistence-sticky-sessions-what-you-need-to-know/&#34;&gt;https://www.haproxy.com/blog/load-balancing-affinity-persistence-sticky-sessions-what-you-need-to-know/&lt;/a&gt;&lt;/li&gt;
@@ -1862,21 +1878,21 @@ context path, so it needs to be declared in the same Ingress that configures it.
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;auth-realm&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;localhost&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;auth-secret&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;auth-type&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
@@ -2624,49 +2640,49 @@ to add more than one line of configuration.&lt;/p&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;cors-allow-credentials&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;cors-allow-headers&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;em&gt;see below&lt;/em&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;cors-allow-methods&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;em&gt;see below&lt;/em&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;cors-allow-origin&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;*&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;cors-enable&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;cors-expose-headers&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;v0.8&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;cors-max-age&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;86400&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
@@ -3278,28 +3294,28 @@ This limitation doesn&amp;rsquo;t exist on v0.8 or above.
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;hsts&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;hsts-include-subdomains&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;hsts-max-age&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;15768000&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;hsts-preload&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
@@ -3760,21 +3776,21 @@ bind each thread on its own CPU core.&lt;/p&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;oauth&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;oauth-headers&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;oauth-uri-prefix&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
@@ -3942,7 +3958,7 @@ Wildcard hostnames and alias-regex match incoming requests using the regex path 
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;proxy-body-size&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
@@ -4030,7 +4046,7 @@ resource.&lt;/p&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;rewrite-target&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
@@ -4652,7 +4668,7 @@ configured to SSL offload on HAProxy.&lt;/p&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;ssl-redirect&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
@@ -5091,14 +5107,14 @@ useful on http logs. The default value is &lt;code&gt;false&lt;/code&gt;. Usage:
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;waf&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;waf-mode&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;deny&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;v0.9&lt;/td&gt;
 &lt;/tr&gt;
@@ -5136,7 +5152,7 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;whitelist-source-range&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;

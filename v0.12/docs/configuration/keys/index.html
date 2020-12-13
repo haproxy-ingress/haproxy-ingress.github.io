@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.12/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2020-11-16T18:03:25-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2020-11-29T21:01:29-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2020-11-16T18:03:25-03:00" />
-<meta itemprop="wordCount" content="11578">
+<meta itemprop="dateModified" content="2020-11-29T21:01:29-03:00" />
+<meta itemprop="wordCount" content="11666">
 
 
 
@@ -382,6 +382,7 @@ if (!doNotTrack) {
 <li><a href="#global">Global</a></li>
 <li><a href="#host">Host</a></li>
 <li><a href="#backend">Backend</a></li>
+<li><a href="#path">Path</a></li>
 </ul></li>
 <li><a href="#keys">Keys</a>
 <ul>
@@ -556,7 +557,7 @@ so any Ingress spec configuration should work as stated by the Kubernetes docume
 <p>Annotations and ConfigMap customizations extend the Ingress spec via the configuration
 keys, and this is what the rest of this documentation page is all about.</p>
 
-<p>The following sections describe in a few more details aboud configuration strategies.</p>
+<p>The following sections describe in a few more details about configuration strategies.</p>
 
 <h2 id="configmap">ConfigMap</h2>
 
@@ -569,7 +570,7 @@ keys, and this is what the rest of this documentation page is all about.</p>
 
 <p>A configuration key is used verbatim as the ConfigMap key name, without any prefix.
 The ConfigMap spec expects a string as the key value, so declare numbers and booleans
-as strings, HAProxy Ingress will convert it when needed.</p>
+as strings, HAProxy Ingress will convert them when needed.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>v1<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span>data<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">  </span>balance-algorithm<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>leastconn<span style="color:#f8f8f8;text-decoration:underline">
@@ -584,7 +585,7 @@ as strings, HAProxy Ingress will convert it when needed.</p>
 <p>Annotations are read in the following conditions:</p>
 
 <ul>
-<li>From classified <code>Ingress</code> resources, see about classification in the <a href="#class-matter">Class matter</a> section. <code>Ingresses</code> accept keys from the <code>Host</code> and <code>Backend</code> scopes. See about scopes <a href="#scope">later</a> in this page.</li>
+<li>From classified <code>Ingress</code> resources, see about classification in the <a href="#class-matter">Class matter</a> section. <code>Ingresses</code> accept keys from the <code>Host</code>, <code>Backend</code> and <code>Path</code> scopes. See about scopes <a href="#scope">later</a> in this page.</li>
 <li>From <code>Services</code> that classified Ingress resources are linking to. <code>Services</code> only accept keys from the <code>Backend</code> scope.</li>
 </ul>
 
@@ -615,7 +616,7 @@ the ConfigMap must be declared in the same namespace of the controller.</p>
 
 <div class="alert alert-primary" role="alert">
 <h4 class="alert-heading">Note</h4>
-Even though a ConfigMap is used, configuration keys of the Global scope cannot be
+Even though a ConfigMap is used, configuration keys of the <code>Global</code> scope cannot be
 used and will be ignored.
 </div>
 
@@ -698,18 +699,18 @@ fast with HAProxy Ingress.</p>
 
 <h1 id="scope">Scope</h1>
 
-<p>HAProxy Ingress configuration keys may be in one of three distinct scopes:
-<code>Global</code>, <code>Host</code>, <code>Backend</code>. A scope defines where a configuration key can
-be declared and how it interacts with Ingress and Service resources.</p>
+<p>HAProxy Ingress configuration keys may be in one of four distinct scopes:
+<code>Global</code>, <code>Host</code>, <code>Backend</code>, <code>Path</code>. A scope defines where a configuration key
+can be declared and how it interacts with Ingress and Service resources.</p>
 
 <p>Configuration keys declared in <code>Ingress</code> resources might conflict. More about
-the scenarios in the Host and Backend scopes below. A warning will be logged
+the scenarios in the <code>Host</code> and <code>Backend</code> scopes below. A warning will be logged
 in the case of a conflict, and the used value will be of the Ingress resource
 that was created first.</p>
 
 <h2 id="global">Global</h2>
 
-<p>Defines configuration keys that applies for all hostnames and backend
+<p>Defines configuration keys that apply for all hostnames and backend
 services, and should be declared only in the Global config ConfigMap
 resource. Configuration keys of the Global scope declared as Ingress
 or Service annotations, and also in the IngressClass ConfigMap are
@@ -717,7 +718,7 @@ ignored. Configuration keys of the Global scope never conflict.</p>
 
 <h2 id="host">Host</h2>
 
-<p>Defines configuration keys that binds to the hostname. Configuration
+<p>Defines configuration keys that bind to the hostname. Configuration
 keys of the host scope can be declared in any ConfigMap, or in any Ingress
 resource. A conflict happens when the same host configuration key with
 distinct values are declared in distinct Ingress resources but to the same
@@ -725,12 +726,19 @@ hostname.</p>
 
 <h2 id="backend">Backend</h2>
 
-<p>Defines configuration keys that binds to the Service resource, which
+<p>Defines configuration keys that bind to the Service resource, which
 is converted to a HAProxy backend after the configuration parsing. Configuration
 keys of the backend scope can be declared in any ConfigMap or as Ingress or Service
 annotation. A conflict happens when the same backend configuration key with distinct
 values are declared in distinct Ingress resources but to the same Service or HAProxy
 backend.</p>
+
+<h2 id="path">Path</h2>
+
+<p>Defines configuration keys that bind to the hostname and the HTTP path.
+Configuration keys of the Path scope can be declared in any ConfigMap as a default
+value, or as Ingress or Service annotation. Configuration keys of the Path scope
+never conflict.</p>
 
 <h1 id="keys">Keys</h1>
 
@@ -827,14 +835,14 @@ backend.</p>
 <tr>
 <td><a href="#auth"><code>auth-realm</code></a></td>
 <td>realm string</td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
 <tr>
 <td><a href="#auth"><code>auth-secret</code></a></td>
 <td>secret name</td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
@@ -876,7 +884,7 @@ backend.</p>
 <tr>
 <td><a href="#auth"><code>auth-type</code></a></td>
 <td>&ldquo;basic&rdquo;</td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
@@ -1051,49 +1059,49 @@ backend.</p>
 <tr>
 <td><a href="#cors"><code>cors-allow-credentials</code></a></td>
 <td>[true|false]</td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
 <tr>
 <td><a href="#cors"><code>cors-allow-headers</code></a></td>
 <td>headers list</td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
 <tr>
 <td><a href="#cors"><code>cors-allow-methods</code></a></td>
 <td>methods list</td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
 <tr>
 <td><a href="#cors"><code>cors-allow-origin</code></a></td>
 <td>URL</td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
 <tr>
 <td><a href="#cors"><code>cors-enable</code></a></td>
 <td>[true|false]</td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
 <tr>
 <td><a href="#cors"><code>cors-expose-headers</code></a></td>
 <td>headers</td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
 <tr>
 <td><a href="#cors"><code>cors-max-age</code></a></td>
 <td>time (seconds)</td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
@@ -1254,28 +1262,28 @@ backend.</p>
 <tr>
 <td><a href="#hsts"><code>hsts</code></a></td>
 <td>[true|false]</td>
-<td>Backend</td>
+<td>Path</td>
 <td><code>true</code></td>
 </tr>
 
 <tr>
 <td><a href="#hsts"><code>hsts-include-subdomains</code></a></td>
 <td>[true|false]</td>
-<td>Backend</td>
+<td>Path</td>
 <td><code>false</code></td>
 </tr>
 
 <tr>
 <td><a href="#hsts"><code>hsts-max-age</code></a></td>
 <td>number of seconds</td>
-<td>Backend</td>
+<td>Path</td>
 <td><code>15768000</code></td>
 </tr>
 
 <tr>
 <td><a href="#hsts"><code>hsts-preload</code></a></td>
 <td>[true|false]</td>
-<td>Backend</td>
+<td>Path</td>
 <td><code>false</code></td>
 </tr>
 
@@ -1429,21 +1437,21 @@ backend.</p>
 <tr>
 <td><a href="#oauth"><code>oauth</code></a></td>
 <td>&ldquo;oauth2_proxy&rdquo;</td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
 <tr>
 <td><a href="#oauth"><code>oauth-headers</code></a></td>
 <td><code>&lt;header&gt;:&lt;var&gt;,...</code></td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
 <tr>
 <td><a href="#oauth"><code>oauth-uri-prefix</code></a></td>
 <td>URI prefix</td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
@@ -1471,7 +1479,7 @@ backend.</p>
 <tr>
 <td><a href="#proxy-body-size"><code>proxy-body-size</code></a></td>
 <td>size (bytes)</td>
-<td>Backend</td>
+<td>Path</td>
 <td>unlimited</td>
 </tr>
 
@@ -1485,7 +1493,7 @@ backend.</p>
 <tr>
 <td><a href="#rewrite-target"><code>rewrite-target</code></a></td>
 <td>path string</td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
@@ -1695,7 +1703,7 @@ backend.</p>
 <tr>
 <td><a href="#ssl-redirect"><code>ssl-redirect</code></a></td>
 <td>[true|false]</td>
-<td>Backend</td>
+<td>Path</td>
 <td><code>true</code></td>
 </tr>
 
@@ -1919,21 +1927,21 @@ backend.</p>
 <tr>
 <td><a href="#waf"><code>waf</code></a></td>
 <td>&ldquo;modsecurity&rdquo;</td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
 <tr>
 <td><a href="#waf"><code>waf-mode</code></a></td>
 <td>[deny|detect]</td>
-<td>Backend</td>
+<td>Path</td>
 <td><code>deny</code> (if waf is set)</td>
 </tr>
 
 <tr>
 <td><a href="#whitelist"><code>whitelist-source-range</code></a></td>
 <td>Comma-separated IPs or CIDRs</td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
@@ -2141,6 +2149,13 @@ removing the ingress object itself.</p>
 </tr>
 
 <tr>
+<td><code>session-cookie-same-site</code></td>
+<td><code>Backend</code></td>
+<td><code>false</code></td>
+<td>v0.12</td>
+</tr>
+
+<tr>
 <td><code>session-cookie-shared</code></td>
 <td><code>Backend</code></td>
 <td><code>false</code></td>
@@ -2172,6 +2187,7 @@ removing the ingress object itself.</p>
 <li><code>session-cookie-keywords</code>: additional options to the <code>cookie</code> option like <code>nocache</code>, <code>httponly</code>. For the sake of backwards compatibility the default is <code>indirect nocache httponly</code> if not declared and <code>strategy</code> is <code>insert</code>.</li>
 <li><code>session-cookie-name</code>: the name of the cookie. <code>INGRESSCOOKIE</code> is the default value if not declared.</li>
 <li><code>session-cookie-preserve</code>: indicates whether the session cookie will be set to <code>preserve</code> mode. If this mode is enabled, haproxy will allow backend servers to use a <code>Set-Cookie</code> HTTP header to emit their own persistence cookie value, meaning the backend servers have knowledge of which cookie value should route to which server. Since the cookie value is tightly coupled with a particular backend server in this scenario, this mode will cause dynamic updating to understand that it must keep the same cookie value associated with the same backend server. If this is disabled, dynamic updating is free to assign servers in a way that can make their cookie value no longer matching.</li>
+<li><code>session-cookie-same-site</code>: if <code>true</code>, adds the <code>SameSite=None; Secure</code> attributes, which configures the browser to send the persistence cookie with both cross-site and same-site requests. The default value is <code>false</code>, which means only same-site requests will send the persistence cookie.</li>
 <li><code>session-cookie-shared</code>: defines if the persistence cookie should be shared between all domains that uses this backend. Defaults to <code>false</code>. If <code>true</code> the <code>Set-Cookie</code> response will declare all the domains that shares this backend, indicating to the HTTP agent that all of them should use the same backend server.</li>
 <li><code>session-cookie-strategy</code>: the cookie strategy to use (insert, rewrite, prefix). <code>insert</code> is the default value if not declared.</li>
 <li><code>session-cookie-value-strategy</code>: the strategy to use to calculate the cookie value of a server (<code>server-name</code>, <code>pod-uid</code>). <code>server-name</code> is the default if not declared, and indicates that the cookie will be set based on the name defined in <code>backend-server-naming</code>. <code>pod-uid</code> indicates that the cookie will be set to the <code>UID</code> of the pod running the target server.</li>
@@ -2186,6 +2202,7 @@ limitation was removed on v0.6.</p>
 <p>See also:</p>
 
 <ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie">https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie</a></li>
 <li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-cookie">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-cookie</a></li>
 <li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-cookie">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-cookie</a></li>
 <li><a href="https://www.haproxy.com/blog/load-balancing-affinity-persistence-sticky-sessions-what-you-need-to-know/">https://www.haproxy.com/blog/load-balancing-affinity-persistence-sticky-sessions-what-you-need-to-know/</a></li>
@@ -2329,21 +2346,21 @@ context path, so it needs to be declared in the same Ingress that configures it.
 <tbody>
 <tr>
 <td><code>auth-realm</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td>localhost</td>
 <td></td>
 </tr>
 
 <tr>
 <td><code>auth-secret</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td></td>
 <td></td>
 </tr>
 
 <tr>
 <td><code>auth-type</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td></td>
 <td></td>
 </tr>
@@ -3091,49 +3108,49 @@ to add more than one line of configuration.</p>
 <tbody>
 <tr>
 <td><code>cors-allow-credentials</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td><code>true</code></td>
 <td></td>
 </tr>
 
 <tr>
 <td><code>cors-allow-headers</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td><em>see below</em></td>
 <td></td>
 </tr>
 
 <tr>
 <td><code>cors-allow-methods</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td><em>see below</em></td>
 <td></td>
 </tr>
 
 <tr>
 <td><code>cors-allow-origin</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td><code>*</code></td>
 <td></td>
 </tr>
 
 <tr>
 <td><code>cors-enable</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td><code>false</code></td>
 <td></td>
 </tr>
 
 <tr>
 <td><code>cors-expose-headers</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td></td>
 <td>v0.8</td>
 </tr>
 
 <tr>
 <td><code>cors-max-age</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td><code>86400</code></td>
 <td></td>
 </tr>
@@ -3745,28 +3762,28 @@ This limitation doesn&rsquo;t exist on v0.8 or above.
 <tbody>
 <tr>
 <td><code>hsts</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td><code>true</code></td>
 <td></td>
 </tr>
 
 <tr>
 <td><code>hsts-include-subdomains</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td><code>false</code></td>
 <td></td>
 </tr>
 
 <tr>
 <td><code>hsts-max-age</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td><code>15768000</code></td>
 <td></td>
 </tr>
 
 <tr>
 <td><code>hsts-preload</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td><code>false</code></td>
 <td></td>
 </tr>
@@ -4227,21 +4244,21 @@ bind each thread on its own CPU core.</p>
 <tbody>
 <tr>
 <td><code>oauth</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td></td>
 <td></td>
 </tr>
 
 <tr>
 <td><code>oauth-headers</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td></td>
 <td></td>
 </tr>
 
 <tr>
 <td><code>oauth-uri-prefix</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td></td>
 <td></td>
 </tr>
@@ -4409,7 +4426,7 @@ Wildcard hostnames and alias-regex match incoming requests using the regex path 
 <tbody>
 <tr>
 <td><code>proxy-body-size</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td></td>
 <td></td>
 </tr>
@@ -4497,7 +4514,7 @@ resource.</p>
 <tbody>
 <tr>
 <td><code>rewrite-target</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td></td>
 <td></td>
 </tr>
@@ -5119,7 +5136,7 @@ configured to SSL offload on HAProxy.</p>
 
 <tr>
 <td><code>ssl-redirect</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td><code>true</code></td>
 <td></td>
 </tr>
@@ -5558,14 +5575,14 @@ useful on http logs. The default value is <code>false</code>. Usage: <code>k8s-n
 <tbody>
 <tr>
 <td><code>waf</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td></td>
 <td></td>
 </tr>
 
 <tr>
 <td><code>waf-mode</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td><code>deny</code></td>
 <td>v0.9</td>
 </tr>
@@ -5603,7 +5620,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 <tbody>
 <tr>
 <td><code>whitelist-source-range</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td></td>
 <td></td>
 </tr>
@@ -5682,7 +5699,7 @@ included in the list are denied, and clients receive the HAProxy&rsquo;s 403 err
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified November 16, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/640d79b4e6b1eda208eaa2496105d8ff66b58d29">docs: whitelist configuration key (640d79b4)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified November 29, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/b560b45fcb0d18bdf3e837dae0f5dabcf109f114">change oauth2 to path scope (b560b45f)</a>
 </div>
 </div>
 
