@@ -358,6 +358,13 @@ never conflict.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#allowlist&#34;&gt;&lt;code&gt;allowlist-source-range&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Comma-separated IPs or CIDRs&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#app-root&#34;&gt;&lt;code&gt;app-root&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;/url&lt;/td&gt;
 &lt;td&gt;Host&lt;/td&gt;
@@ -641,6 +648,13 @@ never conflict.&lt;/p&gt;
 &lt;td&gt;&lt;a href=&#34;#cpu-map&#34;&gt;&lt;code&gt;cpu-map&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;haproxy CPU Map format&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#allowlist&#34;&gt;&lt;code&gt;denylist-source-range&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Comma-separated IPs or CIDRs&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -1471,7 +1485,7 @@ never conflict.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#whitelist&#34;&gt;&lt;code&gt;whitelist-source-range&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#allowlist&#34;&gt;&lt;code&gt;whitelist-source-range&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;Comma-separated IPs or CIDRs&lt;/td&gt;
 &lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
@@ -1830,6 +1844,76 @@ overwrite the weight defined from the agent&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-port&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-port&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-inter&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-inter&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-send&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-send&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;allowlist&#34;&gt;Allowlist&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;allowlist-source-range&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.12&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;denylist-source-range&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.12&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;whitelist-source-range&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Defines a comma-separated list of source IPs or CIDRs allowed or denied to connect.
+The default behavior is to allow all source IPs if neither the allow list nor the
+deny list are declared. The lists support IPv4 and IPv6.&lt;/p&gt;
+
+&lt;p&gt;This is a path scoped configuration: distinct paths in the same hostname can have
+distinct configurations. However this doesn&amp;rsquo;t happen if the backend has
+&lt;a href=&#34;#ssl-passthrough&#34;&gt;ssl-passthrough&lt;/a&gt;, which uses HAProxy&amp;rsquo;s TCP mode, in this case
+the allow and deny lists act as a backend scoped config.&lt;/p&gt;
+
+&lt;p&gt;Since v0.12 IPs or CIDRs can be prefixed with &lt;code&gt;!&lt;/code&gt;, which means an exception to the
+rule, so an allow list with &lt;code&gt;&amp;quot;10.0.0.0/8,!10.100.0.0/16&amp;quot;&lt;/code&gt; will allow only IPs from
+the range &lt;code&gt;10.x.x.x&lt;/code&gt;, except the range &lt;code&gt;10.100.x.x&lt;/code&gt; which will continue to be denied.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;allowlist-source-range&lt;/code&gt;: Used to deny requests by default, allowing only the IPs
+and CIDRs in the list, except IPs and CIDRs prefixed with &lt;code&gt;!&lt;/code&gt; which will continue to
+be denied. &lt;code&gt;whitelist-source-range&lt;/code&gt; is an alias to preserve backward compatibility,
+and will be ignored if &lt;code&gt;allowlist-source-range&lt;/code&gt; is declared.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;denylist-source-range&lt;/code&gt;: Used to allow requests by default, denying only the IPs
+and CIDRs in the list, except IPs and CIDRs prefixed with &lt;code&gt;!&lt;/code&gt; which will continue to
+be allowed.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Allowlist and denylist can be used together. The request will be denied if the
+configurations overlap and a source IP matches both the allowlist and denylist.&lt;/p&gt;
+
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -5137,38 +5221,6 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;li&gt;&lt;a href=&#34;#modsecurity&#34;&gt;Modsecurity&lt;/a&gt; configuration keys.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;whitelist&#34;&gt;Whitelist&lt;/h2&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Configuration key&lt;/th&gt;
-&lt;th&gt;Scope&lt;/th&gt;
-&lt;th&gt;Default&lt;/th&gt;
-&lt;th&gt;Since&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;whitelist-source-range&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;Defines a comma-separated list of source IPs or CIDRs allowed to connect. If not
-declared, any source IP is allowed. If declared, requests with source IP not
-included in the list are denied, and clients receive the HAProxy&amp;rsquo;s 403 error page.&lt;/p&gt;
-
-&lt;p&gt;See also:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
       </description>
     </item>
     
@@ -6160,14 +6212,6 @@ Running 100 requests...
         
         
 
-
-
-&lt;div class=&#34;pageinfo pageinfo-primary&#34;&gt;
-&lt;p&gt;This is a &lt;code&gt;v0.12&lt;/code&gt; example and need HAProxy Ingress &lt;code&gt;v0.12-snapshot.1&lt;/code&gt; or above&lt;/p&gt;
-
-&lt;/div&gt;
-
-
 &lt;p&gt;This example demonstrates how to configure HAProxy Ingress to manage an external
 haproxy instance deployed as a sidecar container. This approach decouple the
 controller and the running haproxy version, allowing the sysadmin to update any
@@ -6175,31 +6219,97 @@ of them independently of the other.&lt;/p&gt;
 
 &lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
 
-&lt;p&gt;This document has the following prerequisite:&lt;/p&gt;
+&lt;p&gt;This document requires only a Kubernetes cluster. HAProxy Ingress doesn&amp;rsquo;t need to be
+installed, and if so, the installation process should use the
+&lt;a href=&#34;/v0.12/v0.12/docs/getting-started/#installation&#34;&gt;Helm chart&lt;/a&gt;.&lt;/p&gt;
 
-&lt;ul&gt;
-&lt;li&gt;A Kubernetes cluster with a running HAProxy Ingress controller v0.12 or above.
-Follow The five minutes deployment in the &lt;a href=&#34;/v0.12/v0.12/docs/getting-started/&#34;&gt;getting started&lt;/a&gt; guide.&lt;/li&gt;
-&lt;li&gt;A running and exposed application in the Kubernetes cluster, this getting started
-&lt;a href=&#34;/v0.12/v0.12/docs/getting-started/#try-it-out&#34;&gt;deployment&lt;/a&gt; does the job.&lt;/li&gt;
-&lt;/ul&gt;
+&lt;h2 id=&#34;configure-the-controller&#34;&gt;Configure the controller&lt;/h2&gt;
 
-&lt;h2 id=&#34;update-the-deployment&#34;&gt;Update the deployment&lt;/h2&gt;
+&lt;p&gt;The easiest and recommended way to configure an external haproxy is using the Helm
+chart with a customized values file. Create the &lt;code&gt;haproxy-ingress-values.yaml&lt;/code&gt; file with the
+following content:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;controller&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;hostNetwork&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;false&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;config&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;syslog-endpoint&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;stdout&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;syslog-format&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;raw&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;haproxy&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;enabled&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;image&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;repository&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;haproxy&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;tag&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2.3.4&lt;/span&gt;-alpine&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Change the hostNetwork to &lt;code&gt;true&lt;/code&gt; if your cluster doesn&amp;rsquo;t provide a service loadbalancer.
+These parameters are also configuring an external haproxy, version 2.3.4, and configuring
+haproxy to log to stdout.&lt;/p&gt;
 
-&lt;p&gt;The following instruction patches the current HAProxy Ingress daemonset (this will also revert the command-line arguments to the default value):&lt;/p&gt;
+&lt;p&gt;Add the HAProxy Ingress Helm repository if using HAProxy Ingress&amp;rsquo; chart for the first time:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;$ kubectl --namespace ingress-controller patch daemonset haproxy-ingress \
--p &amp;quot;$(curl -sSL https://haproxy-ingress.github.io/v0.12/docs/examples/external-haproxy/daemonset-patch.yaml)&amp;quot;
+&lt;pre&gt;&lt;code&gt;$ helm repo add haproxy-ingress https://haproxy-ingress.github.io/charts
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Check if the controller restarts without any problem:&lt;/p&gt;
+&lt;p&gt;Install or upgrade HAProxy Ingress using the &lt;code&gt;haproxy-ingress-values.yaml&lt;/code&gt; parameters:&lt;/p&gt;
+
+&lt;p&gt;Hint: change &lt;code&gt;install&lt;/code&gt; to &lt;code&gt;upgrade&lt;/code&gt; if HAProxy Ingress is already installed with Helm.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ helm install haproxy-ingress haproxy-ingress/haproxy-ingress\
+  --create-namespace --namespace=ingress-controller\
+  --version 0.12.0-beta.1 --devel\
+  -f haproxy-ingress-values.yaml
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Check if the controller successfully starts or restarts:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ kubectl --namespace ingress-controller get pod -w
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;h2 id=&#34;test&#34;&gt;Test&lt;/h2&gt;
+
+&lt;p&gt;Open two distinct terminals to follow &lt;code&gt;haproxy-ingress&lt;/code&gt; and &lt;code&gt;haproxy&lt;/code&gt; logs:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl --namespace ingress-controller get pod
+NAME                               READY   STATUS    RESTARTS   AGE
+haproxy-ingress-6f8848d6fb-gxmrk   2/2     Running   0          13s
+
+$ kubectl --namespace ingress-controller logs -f haproxy-ingress-6f8848d6fb-gxmrk -c haproxy-ingress
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl --namespace ingress-controller logs -f haproxy-ingress-6f8848d6fb-gxmrk -c haproxy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Do some &lt;code&gt;curl&lt;/code&gt; to any exposed application, or just use the controller or service loadbalancer
+IP like the example below:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ curl 192.168.1.11
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;HAProxy Ingress and the external haproxy should be logging their own events:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;haproxy-ingress&lt;/code&gt; container:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;...
+I0117 17:30:27.282701       6 controller.go:87] HAProxy Ingress successfully initialized
+I0117 17:30:27.282743       6 leaderelection.go:243] attempting to acquire leader lease  ingress-controller/ingress-controller-leader-haproxy...
+I0117 17:30:27.335674       6 status.go:177] new leader elected: haproxy-ingress-6f8848d6fb-cxb6w
+I0117 17:30:27.392372       6 controller.go:321] starting haproxy update id=1
+I0117 17:30:27.392463       6 ingress.go:153] using auto generated fake certificate
+I0117 17:30:27.437047       6 instance.go:309] haproxy successfully reloaded (external)
+I0117 17:30:27.437217       6 controller.go:353] finish haproxy update id=1: parse_ingress=0.143483ms write_maps=0.149637ms write_config=0.971026ms reload_haproxy=43.498718ms total=44.762864ms
+I0117 17:30:58.066768       6 leaderelection.go:253] successfully acquired lease ingress-controller/ingress-controller-leader-haproxy
+I0117 17:30:58.066867       6 status.go:177] new leader elected: haproxy-ingress-6f8848d6fb-gxmrk
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;haproxy&lt;/code&gt; container:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;...
+192.168.1.10:61116 [17/Jan/2021:17:32:36.050] _front_http _error404/&amp;lt;lua.send-404&amp;gt; 0/0/0/0/0 404 190 - - LR-- 1/1/0/0/0 0/0 &amp;quot;GET / HTTP/1.1&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
 &lt;h2 id=&#34;what-was-changed&#34;&gt;What was changed?&lt;/h2&gt;
 
-&lt;p&gt;The sections below have details of what changed in the deployment.&lt;/p&gt;
+&lt;p&gt;The sections below have details of what changed in the deployment compared with a
+default installation.&lt;/p&gt;
 
 &lt;h3 id=&#34;sidecar&#34;&gt;Sidecar&lt;/h3&gt;
 
@@ -6210,9 +6320,9 @@ Follow The five minutes deployment in the &lt;a href=&#34;/v0.12/v0.12/docs/gett
 &lt;li&gt;&lt;code&gt;init&lt;/code&gt;, a Kubernetes&amp;rsquo; &lt;a href=&#34;https://kubernetes.io/docs/concepts/workloads/pods/init-containers/&#34;&gt;initContainer&lt;/a&gt; used to create an initial and valid haproxy configuration.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;The &lt;code&gt;haproxy&lt;/code&gt; container references the official Alpine based image &lt;code&gt;haproxy:alpine&lt;/code&gt;,
-but can be any other customized image. The only requisite is to be 2.0 or newer due
-to some new keywords used by HAProxy Ingress.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;haproxy&lt;/code&gt; container references the official Alpine based image &lt;code&gt;haproxy:2.3.4-alpine&lt;/code&gt;,
+but can be any other. The only requisite is to be 2.0 or newer due to some new keywords
+used by HAProxy Ingress.&lt;/p&gt;
 
 &lt;p&gt;The &lt;code&gt;init&lt;/code&gt; container just copy a minimum and valid &lt;code&gt;haproxy.cfg&lt;/code&gt;. This file is used
 to properly starts haproxy and configures its master CLI that HAProxy Ingress uses
@@ -6239,56 +6349,8 @@ works well.&lt;/p&gt;
 &lt;h3 id=&#34;liveness-probe&#34;&gt;Liveness probe&lt;/h3&gt;
 
 &lt;p&gt;Default HAProxy Ingress deployment has a liveness probe to an haproxy&amp;rsquo;s health
-check URI. The patch of this example moves the liveness probe from the HAProxy
-Ingress container to the haproxy one.&lt;/p&gt;
-
-&lt;h2 id=&#34;test&#34;&gt;Test&lt;/h2&gt;
-
-&lt;p&gt;Open two distinct terminals to follow &lt;code&gt;haproxy-ingress&lt;/code&gt; and &lt;code&gt;haproxy&lt;/code&gt; logs:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ kubectl --namespace ingress-controller get pod
-NAME                    READY   STATUS    RESTARTS   AGE
-haproxy-ingress-6bsvz   3/3     Running   0          17m
-
-$ kubectl --namespace ingress-controller logs -f haproxy-ingress-6bsvz -c haproxy-ingress
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;and&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ kubectl --namespace ingress-controller logs -f haproxy-ingress-6bsvz -c haproxy
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Update syslog configuration using another terminal, this will make haproxy use stdout:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ kubectl --namespace ingress-controller patch configmap haproxy-ingress -p &#39;{&amp;quot;data&amp;quot;:{&amp;quot;syslog-endpoint&amp;quot;:&amp;quot;stdout&amp;quot;,&amp;quot;syslog-format&amp;quot;:&amp;quot;raw&amp;quot;}}&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Do some &lt;code&gt;curl&lt;/code&gt; to an exposed application deployed in the cluster:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ kubectl get ing
-NAME    HOSTS                       ADDRESS   PORTS     AGE
-nginx   nginx.192.168.1.11.nip.io             80, 443   21m
-
-$ curl nginx.192.168.1.11.nip.io
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;During the ConfigMap update and the endpoint calls, HAProxy Ingress and the external
-haproxy should be logging its own events:&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;haproxy-ingress&lt;/code&gt; container:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;I0921 16:06:12.699201       6 controller.go:314] starting haproxy update id=8
-I0921 16:06:12.710723       6 instance.go:322] updating 1 host(s): [*.sub.t002.app.domain]
-I0921 16:06:12.710752       6 instance.go:339] updating 1 backend(s): [0_echoserver_8080]
-I0921 16:06:12.726794       6 instance.go:387] updated main cfg and 1 backend file(s): [002]
-I0921 16:06:12.788496       6 instance.go:301] haproxy successfully reloaded (external)
-I0921 16:06:12.790696       6 controller.go:346] finish haproxy update id=8: parse_ingress=1.323253ms write_maps=10.101055ms write_config=16.320063ms reload_haproxy=63.587362ms total=91.331733ms
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;haproxy&lt;/code&gt; container:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;192.168.100.1:58167 [21/Sep/2020:16:06:15.003] _front_https~ t015_echoserver_8080/srv001 0/0/2/0/2 200 485 - - ---- 1/1/0/0/0 0/0 &amp;quot;GET https://t004.app.domain/ HTTP/2.0&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
+check URI. This example changes the liveness probe from the HAProxy Ingress
+container to the haproxy one.&lt;/p&gt;
 
       </description>
     </item>
@@ -6333,7 +6395,7 @@ I0921 16:06:12.790696       6 controller.go:346] finish haproxy update id=8: par
 
 &lt;p&gt;Note: this patch will restart the controller!&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;kubectl --namespace ingress-controller patch daemonset haproxy-ingress -p &#39;{&amp;quot;spec&amp;quot;:{&amp;quot;template&amp;quot;:{&amp;quot;spec&amp;quot;:{&amp;quot;containers&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;haproxy-ingress&amp;quot;,&amp;quot;ports&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;exporter&amp;quot;,&amp;quot;containerPort&amp;quot;:9105},{&amp;quot;name&amp;quot;:&amp;quot;ingress-stats&amp;quot;,&amp;quot;containerPort&amp;quot;:10254}]}]}}}}&#39;
+&lt;pre&gt;&lt;code&gt;kubectl --namespace ingress-controller patch deployment haproxy-ingress -p &#39;{&amp;quot;spec&amp;quot;:{&amp;quot;template&amp;quot;:{&amp;quot;spec&amp;quot;:{&amp;quot;containers&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;haproxy-ingress&amp;quot;,&amp;quot;ports&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;exporter&amp;quot;,&amp;quot;containerPort&amp;quot;:9105},{&amp;quot;name&amp;quot;:&amp;quot;ingress-stats&amp;quot;,&amp;quot;containerPort&amp;quot;:10254}]}]}}}}&#39;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;deploy-prometheus&#34;&gt;Deploy Prometheus&lt;/h2&gt;
@@ -6348,6 +6410,21 @@ I0921 16:06:12.790696       6 controller.go:346] finish haproxy update id=8: par
 &lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
 &lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
 This deployment has no persistent volume, so all the collected metrics will be lost if the pod is recreated.
+&lt;/div&gt;
+
+
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Warning&lt;/h4&gt;
+&lt;p&gt;If HAProxy Ingress wasn&amp;rsquo;t deployed with Helm, change the following line in the &lt;code&gt;configmap/prometheus-cfg&lt;/code&gt; resource, jobs &lt;code&gt;haproxy-ingress&lt;/code&gt; and &lt;code&gt;haproxy-exporter&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;       relabel_configs:
+&lt;span style=&#34;color:#a40000&#34;&gt;-      - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_instance]
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+      - source_labels: [__meta_kubernetes_pod_label_run]
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;         regex: haproxy-ingress
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This will ensure that Prometheus finds the controller pods.&lt;/p&gt;
+
 &lt;/div&gt;
 
 

@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.12/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2020-11-29T21:01:29-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-01-10T20:27:00-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2020-11-29T21:01:29-03:00" />
-<meta itemprop="wordCount" content="11666">
+<meta itemprop="dateModified" content="2021-01-10T20:27:00-03:00" />
+<meta itemprop="wordCount" content="11868">
 
 
 
@@ -389,6 +389,7 @@ if (!doNotTrack) {
 <li><a href="#acme">Acme</a></li>
 <li><a href="#affinity">Affinity</a></li>
 <li><a href="#agent-check">Agent check</a></li>
+<li><a href="#allowlist">Allowlist</a></li>
 <li><a href="#app-root">App root</a></li>
 <li><a href="#auth">Auth</a></li>
 <li><a href="#auth-tls">Auth TLS</a></li>
@@ -443,7 +444,6 @@ if (!doNotTrack) {
 <li><a href="#use-htx">Use HTX</a></li>
 <li><a href="#var-namespace">Var namespace</a></li>
 <li><a href="#waf">WAF</a></li>
-<li><a href="#whitelist">Whitelist</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -826,6 +826,13 @@ never conflict.</p>
 </tr>
 
 <tr>
+<td><a href="#allowlist"><code>allowlist-source-range</code></a></td>
+<td>Comma-separated IPs or CIDRs</td>
+<td>Path</td>
+<td></td>
+</tr>
+
+<tr>
 <td><a href="#app-root"><code>app-root</code></a></td>
 <td>/url</td>
 <td>Host</td>
@@ -1109,6 +1116,13 @@ never conflict.</p>
 <td><a href="#cpu-map"><code>cpu-map</code></a></td>
 <td>haproxy CPU Map format</td>
 <td>Global</td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="#allowlist"><code>denylist-source-range</code></a></td>
+<td>Comma-separated IPs or CIDRs</td>
+<td>Path</td>
 <td></td>
 </tr>
 
@@ -1939,7 +1953,7 @@ never conflict.</p>
 </tr>
 
 <tr>
-<td><a href="#whitelist"><code>whitelist-source-range</code></a></td>
+<td><a href="#allowlist"><code>whitelist-source-range</code></a></td>
 <td>Comma-separated IPs or CIDRs</td>
 <td>Path</td>
 <td></td>
@@ -2298,6 +2312,76 @@ overwrite the weight defined from the agent</li>
 <li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-port">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-port</a></li>
 <li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-inter">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-inter</a></li>
 <li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-send">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-send</a></li>
+</ul>
+
+<hr />
+
+<h2 id="allowlist">Allowlist</h2>
+
+<table>
+<thead>
+<tr>
+<th>Configuration key</th>
+<th>Scope</th>
+<th>Default</th>
+<th>Since</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>allowlist-source-range</code></td>
+<td><code>Path</code></td>
+<td></td>
+<td>v0.12</td>
+</tr>
+
+<tr>
+<td><code>denylist-source-range</code></td>
+<td><code>Path</code></td>
+<td></td>
+<td>v0.12</td>
+</tr>
+
+<tr>
+<td><code>whitelist-source-range</code></td>
+<td><code>Path</code></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<p>Defines a comma-separated list of source IPs or CIDRs allowed or denied to connect.
+The default behavior is to allow all source IPs if neither the allow list nor the
+deny list are declared. The lists support IPv4 and IPv6.</p>
+
+<p>This is a path scoped configuration: distinct paths in the same hostname can have
+distinct configurations. However this doesn&rsquo;t happen if the backend has
+<a href="#ssl-passthrough">ssl-passthrough</a>, which uses HAProxy&rsquo;s TCP mode, in this case
+the allow and deny lists act as a backend scoped config.</p>
+
+<p>Since v0.12 IPs or CIDRs can be prefixed with <code>!</code>, which means an exception to the
+rule, so an allow list with <code>&quot;10.0.0.0/8,!10.100.0.0/16&quot;</code> will allow only IPs from
+the range <code>10.x.x.x</code>, except the range <code>10.100.x.x</code> which will continue to be denied.</p>
+
+<ul>
+<li><code>allowlist-source-range</code>: Used to deny requests by default, allowing only the IPs
+and CIDRs in the list, except IPs and CIDRs prefixed with <code>!</code> which will continue to
+be denied. <code>whitelist-source-range</code> is an alias to preserve backward compatibility,
+and will be ignored if <code>allowlist-source-range</code> is declared.</li>
+<li><code>denylist-source-range</code>: Used to allow requests by default, denying only the IPs
+and CIDRs in the list, except IPs and CIDRs prefixed with <code>!</code> which will continue to
+be allowed.</li>
+</ul>
+
+<p>Allowlist and denylist can be used together. The request will be denied if the
+configurations overlap and a source IP matches both the allowlist and denylist.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny</a></li>
 </ul>
 
 <hr />
@@ -5605,38 +5689,6 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 <li><a href="#modsecurity">Modsecurity</a> configuration keys.</li>
 </ul>
 
-<h2 id="whitelist">Whitelist</h2>
-
-<table>
-<thead>
-<tr>
-<th>Configuration key</th>
-<th>Scope</th>
-<th>Default</th>
-<th>Since</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td><code>whitelist-source-range</code></td>
-<td><code>Path</code></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-<p>Defines a comma-separated list of source IPs or CIDRs allowed to connect. If not
-declared, any source IP is allowed. If declared, requests with source IP not
-included in the list are denied, and clients receive the HAProxy&rsquo;s 403 error page.</p>
-
-<p>See also:</p>
-
-<ul>
-<li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny</a></li>
-</ul>
-
 	
 		<style>
   .feedback--answer {
@@ -5699,7 +5751,7 @@ included in the list are denied, and clients receive the HAProxy&rsquo;s 403 err
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified November 29, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/b560b45fcb0d18bdf3e837dae0f5dabcf109f114">change oauth2 to path scope (b560b45f)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified January 10, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/050ca2bd428c0f1d920fec42331102707ac17476">add deny access list and exception ip/cidr (050ca2bd)</a>
 </div>
 </div>
 
@@ -5759,7 +5811,7 @@ included in the list are denied, and clients receive the HAProxy&rsquo;s 403 err
       </div>
       <div class="col-12 col-sm-8 text-center py-2 order-sm-2">
         
-          <small class="text-white">Made with <div class="fa fa-heart"></div> & <div class="fa fa-coffee"></div> | &copy; 2020 The HAProxy Ingress Controller Authors</small>
+          <small class="text-white">Made with <div class="fa fa-heart"></div> & <div class="fa fa-coffee"></div> | &copy; 2021 The HAProxy Ingress Controller Authors</small>
         
         <small class="text-white"> | Image by <a href="https://pixabay.com/users/TheDigitalArtist-202249/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pete Linforth</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pixabay</a></small>
         

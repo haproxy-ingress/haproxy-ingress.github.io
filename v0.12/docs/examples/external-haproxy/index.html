@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.12/docs/examples/external-haproxy/" />
-<meta property="article:modified_time" content="2020-09-21T23:18:16-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-01-17T15:06:30-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="External haproxy">
 <meta itemprop="description" content="Demonstrate how to configure HAProxy Ingress to use an external haproxy deployment.
 ">
 
 
-<meta itemprop="dateModified" content="2020-09-21T23:18:16-03:00" />
-<meta itemprop="wordCount" content="597">
+<meta itemprop="dateModified" content="2021-01-17T15:06:30-03:00" />
+<meta itemprop="wordCount" content="639">
 
 
 
@@ -371,14 +371,14 @@ if (!doNotTrack) {
 <li>
 <ul>
 <li><a href="#prerequisites">Prerequisites</a></li>
-<li><a href="#update-the-deployment">Update the deployment</a></li>
+<li><a href="#configure-the-controller">Configure the controller</a></li>
+<li><a href="#test">Test</a></li>
 <li><a href="#what-was-changed">What was changed?</a>
 <ul>
 <li><a href="#sidecar">Sidecar</a></li>
 <li><a href="#shared-filesystem">Shared filesystem</a></li>
 <li><a href="#liveness-probe">Liveness probe</a></li>
 </ul></li>
-<li><a href="#test">Test</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -427,14 +427,6 @@ if (!doNotTrack) {
 	<div class="lead">Demonstrate how to configure HAProxy Ingress to use an external haproxy deployment.</div>
 	
 
-
-
-<div class="pageinfo pageinfo-primary">
-<p>This is a <code>v0.12</code> example and need HAProxy Ingress <code>v0.12-snapshot.1</code> or above</p>
-
-</div>
-
-
 <p>This example demonstrates how to configure HAProxy Ingress to manage an external
 haproxy instance deployed as a sidecar container. This approach decouple the
 controller and the running haproxy version, allowing the sysadmin to update any
@@ -442,31 +434,97 @@ of them independently of the other.</p>
 
 <h2 id="prerequisites">Prerequisites</h2>
 
-<p>This document has the following prerequisite:</p>
+<p>This document requires only a Kubernetes cluster. HAProxy Ingress doesn&rsquo;t need to be
+installed, and if so, the installation process should use the
+<a href="/v0.12/docs/getting-started/#installation">Helm chart</a>.</p>
 
-<ul>
-<li>A Kubernetes cluster with a running HAProxy Ingress controller v0.12 or above.
-Follow The five minutes deployment in the <a href="/v0.12/docs/getting-started/">getting started</a> guide.</li>
-<li>A running and exposed application in the Kubernetes cluster, this getting started
-<a href="/v0.12/docs/getting-started/#try-it-out">deployment</a> does the job.</li>
-</ul>
+<h2 id="configure-the-controller">Configure the controller</h2>
 
-<h2 id="update-the-deployment">Update the deployment</h2>
+<p>The easiest and recommended way to configure an external haproxy is using the Helm
+chart with a customized values file. Create the <code>haproxy-ingress-values.yaml</code> file with the
+following content:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">controller<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>hostNetwork<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">false</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>config<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>syslog-endpoint<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>stdout<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>syslog-format<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>raw<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>haproxy<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>enabled<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>image<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>repository<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>haproxy<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>tag<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">2.3.4</span>-alpine</code></pre></div>
+<p>Change the hostNetwork to <code>true</code> if your cluster doesn&rsquo;t provide a service loadbalancer.
+These parameters are also configuring an external haproxy, version 2.3.4, and configuring
+haproxy to log to stdout.</p>
 
-<p>The following instruction patches the current HAProxy Ingress daemonset (this will also revert the command-line arguments to the default value):</p>
+<p>Add the HAProxy Ingress Helm repository if using HAProxy Ingress&rsquo; chart for the first time:</p>
 
-<pre><code>$ kubectl --namespace ingress-controller patch daemonset haproxy-ingress \
--p &quot;$(curl -sSL https://haproxy-ingress.github.io/v0.12/docs/examples/external-haproxy/daemonset-patch.yaml)&quot;
+<pre><code>$ helm repo add haproxy-ingress https://haproxy-ingress.github.io/charts
 </code></pre>
 
-<p>Check if the controller restarts without any problem:</p>
+<p>Install or upgrade HAProxy Ingress using the <code>haproxy-ingress-values.yaml</code> parameters:</p>
+
+<p>Hint: change <code>install</code> to <code>upgrade</code> if HAProxy Ingress is already installed with Helm.</p>
+
+<pre><code>$ helm install haproxy-ingress haproxy-ingress/haproxy-ingress\
+  --create-namespace --namespace=ingress-controller\
+  --version 0.12.0-beta.1 --devel\
+  -f haproxy-ingress-values.yaml
+</code></pre>
+
+<p>Check if the controller successfully starts or restarts:</p>
 
 <pre><code>$ kubectl --namespace ingress-controller get pod -w
 </code></pre>
 
+<h2 id="test">Test</h2>
+
+<p>Open two distinct terminals to follow <code>haproxy-ingress</code> and <code>haproxy</code> logs:</p>
+
+<pre><code>$ kubectl --namespace ingress-controller get pod
+NAME                               READY   STATUS    RESTARTS   AGE
+haproxy-ingress-6f8848d6fb-gxmrk   2/2     Running   0          13s
+
+$ kubectl --namespace ingress-controller logs -f haproxy-ingress-6f8848d6fb-gxmrk -c haproxy-ingress
+</code></pre>
+
+<p>and</p>
+
+<pre><code>$ kubectl --namespace ingress-controller logs -f haproxy-ingress-6f8848d6fb-gxmrk -c haproxy
+</code></pre>
+
+<p>Do some <code>curl</code> to any exposed application, or just use the controller or service loadbalancer
+IP like the example below:</p>
+
+<pre><code>$ curl 192.168.1.11
+</code></pre>
+
+<p>HAProxy Ingress and the external haproxy should be logging their own events:</p>
+
+<p><code>haproxy-ingress</code> container:</p>
+
+<pre><code>...
+I0117 17:30:27.282701       6 controller.go:87] HAProxy Ingress successfully initialized
+I0117 17:30:27.282743       6 leaderelection.go:243] attempting to acquire leader lease  ingress-controller/ingress-controller-leader-haproxy...
+I0117 17:30:27.335674       6 status.go:177] new leader elected: haproxy-ingress-6f8848d6fb-cxb6w
+I0117 17:30:27.392372       6 controller.go:321] starting haproxy update id=1
+I0117 17:30:27.392463       6 ingress.go:153] using auto generated fake certificate
+I0117 17:30:27.437047       6 instance.go:309] haproxy successfully reloaded (external)
+I0117 17:30:27.437217       6 controller.go:353] finish haproxy update id=1: parse_ingress=0.143483ms write_maps=0.149637ms write_config=0.971026ms reload_haproxy=43.498718ms total=44.762864ms
+I0117 17:30:58.066768       6 leaderelection.go:253] successfully acquired lease ingress-controller/ingress-controller-leader-haproxy
+I0117 17:30:58.066867       6 status.go:177] new leader elected: haproxy-ingress-6f8848d6fb-gxmrk
+</code></pre>
+
+<p><code>haproxy</code> container:</p>
+
+<pre><code>...
+192.168.1.10:61116 [17/Jan/2021:17:32:36.050] _front_http _error404/&lt;lua.send-404&gt; 0/0/0/0/0 404 190 - - LR-- 1/1/0/0/0 0/0 &quot;GET / HTTP/1.1&quot;
+</code></pre>
+
 <h2 id="what-was-changed">What was changed?</h2>
 
-<p>The sections below have details of what changed in the deployment.</p>
+<p>The sections below have details of what changed in the deployment compared with a
+default installation.</p>
 
 <h3 id="sidecar">Sidecar</h3>
 
@@ -477,9 +535,9 @@ Follow The five minutes deployment in the <a href="/v0.12/docs/getting-started/"
 <li><code>init</code>, a Kubernetes&rsquo; <a href="https://kubernetes.io/docs/concepts/workloads/pods/init-containers/">initContainer</a> used to create an initial and valid haproxy configuration.</li>
 </ul>
 
-<p>The <code>haproxy</code> container references the official Alpine based image <code>haproxy:alpine</code>,
-but can be any other customized image. The only requisite is to be 2.0 or newer due
-to some new keywords used by HAProxy Ingress.</p>
+<p>The <code>haproxy</code> container references the official Alpine based image <code>haproxy:2.3.4-alpine</code>,
+but can be any other. The only requisite is to be 2.0 or newer due to some new keywords
+used by HAProxy Ingress.</p>
 
 <p>The <code>init</code> container just copy a minimum and valid <code>haproxy.cfg</code>. This file is used
 to properly starts haproxy and configures its master CLI that HAProxy Ingress uses
@@ -506,56 +564,8 @@ works well.</p>
 <h3 id="liveness-probe">Liveness probe</h3>
 
 <p>Default HAProxy Ingress deployment has a liveness probe to an haproxy&rsquo;s health
-check URI. The patch of this example moves the liveness probe from the HAProxy
-Ingress container to the haproxy one.</p>
-
-<h2 id="test">Test</h2>
-
-<p>Open two distinct terminals to follow <code>haproxy-ingress</code> and <code>haproxy</code> logs:</p>
-
-<pre><code>$ kubectl --namespace ingress-controller get pod
-NAME                    READY   STATUS    RESTARTS   AGE
-haproxy-ingress-6bsvz   3/3     Running   0          17m
-
-$ kubectl --namespace ingress-controller logs -f haproxy-ingress-6bsvz -c haproxy-ingress
-</code></pre>
-
-<p>and</p>
-
-<pre><code>$ kubectl --namespace ingress-controller logs -f haproxy-ingress-6bsvz -c haproxy
-</code></pre>
-
-<p>Update syslog configuration using another terminal, this will make haproxy use stdout:</p>
-
-<pre><code>$ kubectl --namespace ingress-controller patch configmap haproxy-ingress -p '{&quot;data&quot;:{&quot;syslog-endpoint&quot;:&quot;stdout&quot;,&quot;syslog-format&quot;:&quot;raw&quot;}}'
-</code></pre>
-
-<p>Do some <code>curl</code> to an exposed application deployed in the cluster:</p>
-
-<pre><code>$ kubectl get ing
-NAME    HOSTS                       ADDRESS   PORTS     AGE
-nginx   nginx.192.168.1.11.nip.io             80, 443   21m
-
-$ curl nginx.192.168.1.11.nip.io
-</code></pre>
-
-<p>During the ConfigMap update and the endpoint calls, HAProxy Ingress and the external
-haproxy should be logging its own events:</p>
-
-<p><code>haproxy-ingress</code> container:</p>
-
-<pre><code>I0921 16:06:12.699201       6 controller.go:314] starting haproxy update id=8
-I0921 16:06:12.710723       6 instance.go:322] updating 1 host(s): [*.sub.t002.app.domain]
-I0921 16:06:12.710752       6 instance.go:339] updating 1 backend(s): [0_echoserver_8080]
-I0921 16:06:12.726794       6 instance.go:387] updated main cfg and 1 backend file(s): [002]
-I0921 16:06:12.788496       6 instance.go:301] haproxy successfully reloaded (external)
-I0921 16:06:12.790696       6 controller.go:346] finish haproxy update id=8: parse_ingress=1.323253ms write_maps=10.101055ms write_config=16.320063ms reload_haproxy=63.587362ms total=91.331733ms
-</code></pre>
-
-<p><code>haproxy</code> container:</p>
-
-<pre><code>192.168.100.1:58167 [21/Sep/2020:16:06:15.003] _front_https~ t015_echoserver_8080/srv001 0/0/2/0/2 200 485 - - ---- 1/1/0/0/0 0/0 &quot;GET https://t004.app.domain/ HTTP/2.0&quot;
-</code></pre>
+check URI. This example changes the liveness probe from the HAProxy Ingress
+container to the haproxy one.</p>
 
 	
 		<style>
@@ -619,7 +629,7 @@ I0921 16:06:12.790696       6 controller.go:346] finish haproxy update id=8: par
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified September 21, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/ed1c79870f4b7ba379ceb37274491ea84ddb67ab">add master-socket command-line option (ed1c7987)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified January 17, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/0c306b5371853388ebd096135a01df6742bf6cc1">docs: update external haproxy example (0c306b53)</a>
 </div>
 </div>
 
@@ -679,7 +689,7 @@ I0921 16:06:12.790696       6 controller.go:346] finish haproxy update id=8: par
       </div>
       <div class="col-12 col-sm-8 text-center py-2 order-sm-2">
         
-          <small class="text-white">Made with <div class="fa fa-heart"></div> & <div class="fa fa-coffee"></div> | &copy; 2020 The HAProxy Ingress Controller Authors</small>
+          <small class="text-white">Made with <div class="fa fa-heart"></div> & <div class="fa fa-coffee"></div> | &copy; 2021 The HAProxy Ingress Controller Authors</small>
         
         <small class="text-white"> | Image by <a href="https://pixabay.com/users/TheDigitalArtist-202249/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pete Linforth</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pixabay</a></small>
         

@@ -358,6 +358,13 @@ never conflict.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#allowlist&#34;&gt;&lt;code&gt;allowlist-source-range&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Comma-separated IPs or CIDRs&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#app-root&#34;&gt;&lt;code&gt;app-root&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;/url&lt;/td&gt;
 &lt;td&gt;Host&lt;/td&gt;
@@ -641,6 +648,13 @@ never conflict.&lt;/p&gt;
 &lt;td&gt;&lt;a href=&#34;#cpu-map&#34;&gt;&lt;code&gt;cpu-map&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;haproxy CPU Map format&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#allowlist&#34;&gt;&lt;code&gt;denylist-source-range&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Comma-separated IPs or CIDRs&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -1471,7 +1485,7 @@ never conflict.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#whitelist&#34;&gt;&lt;code&gt;whitelist-source-range&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#allowlist&#34;&gt;&lt;code&gt;whitelist-source-range&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;Comma-separated IPs or CIDRs&lt;/td&gt;
 &lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
@@ -1830,6 +1844,76 @@ overwrite the weight defined from the agent&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-port&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-port&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-inter&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-inter&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-send&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-send&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;allowlist&#34;&gt;Allowlist&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;allowlist-source-range&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.12&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;denylist-source-range&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.12&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;whitelist-source-range&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Defines a comma-separated list of source IPs or CIDRs allowed or denied to connect.
+The default behavior is to allow all source IPs if neither the allow list nor the
+deny list are declared. The lists support IPv4 and IPv6.&lt;/p&gt;
+
+&lt;p&gt;This is a path scoped configuration: distinct paths in the same hostname can have
+distinct configurations. However this doesn&amp;rsquo;t happen if the backend has
+&lt;a href=&#34;#ssl-passthrough&#34;&gt;ssl-passthrough&lt;/a&gt;, which uses HAProxy&amp;rsquo;s TCP mode, in this case
+the allow and deny lists act as a backend scoped config.&lt;/p&gt;
+
+&lt;p&gt;Since v0.12 IPs or CIDRs can be prefixed with &lt;code&gt;!&lt;/code&gt;, which means an exception to the
+rule, so an allow list with &lt;code&gt;&amp;quot;10.0.0.0/8,!10.100.0.0/16&amp;quot;&lt;/code&gt; will allow only IPs from
+the range &lt;code&gt;10.x.x.x&lt;/code&gt;, except the range &lt;code&gt;10.100.x.x&lt;/code&gt; which will continue to be denied.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;allowlist-source-range&lt;/code&gt;: Used to deny requests by default, allowing only the IPs
+and CIDRs in the list, except IPs and CIDRs prefixed with &lt;code&gt;!&lt;/code&gt; which will continue to
+be denied. &lt;code&gt;whitelist-source-range&lt;/code&gt; is an alias to preserve backward compatibility,
+and will be ignored if &lt;code&gt;allowlist-source-range&lt;/code&gt; is declared.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;denylist-source-range&lt;/code&gt;: Used to allow requests by default, denying only the IPs
+and CIDRs in the list, except IPs and CIDRs prefixed with &lt;code&gt;!&lt;/code&gt; which will continue to
+be allowed.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Allowlist and denylist can be used together. The request will be denied if the
+configurations overlap and a source IP matches both the allowlist and denylist.&lt;/p&gt;
+
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -5135,38 +5219,6 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;#modsecurity&#34;&gt;Modsecurity&lt;/a&gt; configuration keys.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;whitelist&#34;&gt;Whitelist&lt;/h2&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Configuration key&lt;/th&gt;
-&lt;th&gt;Scope&lt;/th&gt;
-&lt;th&gt;Default&lt;/th&gt;
-&lt;th&gt;Since&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;whitelist-source-range&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;Defines a comma-separated list of source IPs or CIDRs allowed to connect. If not
-declared, any source IP is allowed. If declared, requests with source IP not
-included in the list are denied, and clients receive the HAProxy&amp;rsquo;s 403 error page.&lt;/p&gt;
-
-&lt;p&gt;See also:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
       </description>
