@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.12/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2021-01-10T20:27:00-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-01-31T18:15:17-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2021-01-10T20:27:00-03:00" />
-<meta itemprop="wordCount" content="11868">
+<meta itemprop="dateModified" content="2021-01-31T18:15:17-03:00" />
+<meta itemprop="wordCount" content="12081">
 
 
 
@@ -1526,8 +1526,22 @@ never conflict.</p>
 </tr>
 
 <tr>
+<td><a href="#secure-backend"><code>secure-sni</code></a></td>
+<td>[<code>sni</code>|<code>host</code>|<code>&lt;hostname&gt;</code>]</td>
+<td>Backend</td>
+<td></td>
+</tr>
+
+<tr>
 <td><a href="#secure-backend"><code>secure-verify-ca-secret</code></a></td>
 <td>secret name</td>
+<td>Backend</td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="#secure-backend"><code>secure-verify-hostname</code></a></td>
+<td>hostname</td>
 <td>Backend</td>
 <td></td>
 </tr>
@@ -4415,8 +4429,8 @@ OAuth2 needs <a href="#external"><code>external-has-lua</code></a> enabled if ru
 <p>Defines how the path of an incoming request should match a declared path in the ingress object.</p>
 
 <ul>
-<li><code>path-type</code>: Configures the path type. Case insensitive, so <code>Begin</code> and <code>begin</code> configures the same path type option. The ingress spec has priority, this option will only be used if the <code>pathType</code> attribute from the ingress spec is declared as <code>ImplementationSpecific</code> or is not declared.</li>
-<li><code>path-type-order</code>: Defines a comma-separated list of priority path types. First types has higher precedence, which means that if two distinct paths of two distinct types overlaps, the first in the list will be used to handle the request. All path types must be provided. Case insensitive, use all path types in lowercase.</li>
+<li><code>path-type</code>: Configures the path type. Case insensitive, so <code>Begin</code> and <code>begin</code> configures the same path type option. The ingress spec has priority, this option will only be used if the <code>pathType</code> attribute from the ingress spec is declared as <code>ImplementationSpecific</code>.</li>
+<li><code>path-type-order</code>: Defines a comma-separated list of the order that non overlapping paths should be matched. The default order starts with <code>exact</code> which is the fastest match, and finishes with <code>regex</code> which is the slowest one. All path types must be provided. Case insensitive, use all path types in lowercase. In the case of overlapping paths, eg <code>/dir/sub</code> and <code>/dir</code>, the one with the highest precedence, <code>/dir/sub</code> in the example, will always be checked first despite its match type.</li>
 </ul>
 
 
@@ -4714,10 +4728,24 @@ The following table shows some examples:</p>
 </tr>
 
 <tr>
+<td><code>secure-sni</code></td>
+<td><code>Backend</code></td>
+<td></td>
+<td>v0.11</td>
+</tr>
+
+<tr>
 <td><code>secure-verify-ca-secret</code></td>
 <td><code>Backend</code></td>
 <td></td>
 <td></td>
+</tr>
+
+<tr>
+<td><code>secure-verify-hostname</code></td>
+<td><code>Backend</code></td>
+<td></td>
+<td>v0.11</td>
 </tr>
 </tbody>
 </table>
@@ -4727,13 +4755,18 @@ The following table shows some examples:</p>
 <ul>
 <li><code>secure-backends</code>: Define as true if the backend provide a TLS connection.</li>
 <li><code>secure-crt-secret</code>: Optional secret name of client certificate and key. This cert/key pair must be provided if the backend requests a client certificate. Expected secret keys are <code>tls.crt</code> and <code>tls.key</code>, the same used if secret is built with <code>kubectl create secret tls &lt;name&gt;</code>.</li>
-<li><code>secure-verify-ca-secret</code>: Optional secret name with certificate authority bundle used to validate server certificate, preventing man-in-the-middle attacks. Expected secret key is <code>ca.crt</code>. Since v0.9, an optional <code>ca.crl</code> key can also provide a CRL in PEM format for the server to verify against.</li>
+<li><code>secure-sni</code>: Optional hostname that should be used as the SNI TLS extension sent to the backend server. If <code>host</code> is used as the content, the header Host from the incoming request is used as the SNI extension in the request to the backend. <code>sni</code> can also be used, which will use the same SNI from the incoming request. Note that, although the header Host is always right, the incoming SNI might be wrong if a TLS connection that&rsquo;s already opened is reused - this is a common practice on browsers connecting over http2. Any other value different of <code>host</code> or <code>sni</code> will be used verbatim and should be a valid domain. If <code>secure-verify-ca-secret</code> is also provided, this hostname is also used to validate the server certificate names.</li>
+<li><code>secure-verify-ca-secret</code>: Optional but recommended secret name with certificate authority bundle used to validate server certificate, preventing man-in-the-middle attacks. Expected secret key is <code>ca.crt</code>. Since v0.9, an optional <code>ca.crl</code> key can also provide a CRL in PEM format for the server to verify against. Configure either <code>secure-sni</code> or <code>secure-verify-hostname</code> to verify the certificate name.</li>
+<li><code>secure-verify-hostname</code>: Optional hostname used to verify the name of the server certificate, without using the SNI TLS extension. This option can only be used if <code>secure-verify-ca-secret</code> was provided, and only supports harcoded domains which is used verbatim.</li>
 </ul>
 
 <p>See also:</p>
 
 <ul>
 <li><a href="#backend-protocol">Backend protocol</a> configuration key.</li>
+<li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-verify">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-verify</a></li>
+<li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-verifyhost">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-verifyhost</a></li>
+<li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-sni">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-sni</a></li>
 </ul>
 
 <hr />
@@ -5751,7 +5784,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified January 10, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/050ca2bd428c0f1d920fec42331102707ac17476">add deny access list and exception ip/cidr (050ca2bd)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified January 31, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/1a32c385c1dfd90f8e3b65eb58ffed9c1f9736cc">fix path precedence of distinct match types (1a32c385)</a>
 </div>
 </div>
 
