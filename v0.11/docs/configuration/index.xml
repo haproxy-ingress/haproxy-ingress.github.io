@@ -849,8 +849,22 @@ will be used.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#secure-backend&#34;&gt;&lt;code&gt;secure-sni&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[&lt;code&gt;sni&lt;/code&gt;|&lt;code&gt;host&lt;/code&gt;|&lt;code&gt;&amp;lt;hostname&amp;gt;&lt;/code&gt;]&lt;/td&gt;
+&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#secure-backend&#34;&gt;&lt;code&gt;secure-verify-ca-secret&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;secret name&lt;/td&gt;
+&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#secure-backend&#34;&gt;&lt;code&gt;secure-verify-hostname&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;hostname&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
@@ -3795,10 +3809,24 @@ The following table shows some examples:&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;code&gt;secure-sni&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.11&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;code&gt;secure-verify-ca-secret&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;secure-verify-hostname&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.11&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -3808,13 +3836,18 @@ The following table shows some examples:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;secure-backends&lt;/code&gt;: Define as true if the backend provide a TLS connection.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;secure-crt-secret&lt;/code&gt;: Optional secret name of client certificate and key. This cert/key pair must be provided if the backend requests a client certificate. Expected secret keys are &lt;code&gt;tls.crt&lt;/code&gt; and &lt;code&gt;tls.key&lt;/code&gt;, the same used if secret is built with &lt;code&gt;kubectl create secret tls &amp;lt;name&amp;gt;&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;secure-verify-ca-secret&lt;/code&gt;: Optional secret name with certificate authority bundle used to validate server certificate, preventing man-in-the-middle attacks. Expected secret key is &lt;code&gt;ca.crt&lt;/code&gt;. Since v0.9, an optional &lt;code&gt;ca.crl&lt;/code&gt; key can also provide a CRL in PEM format for the server to verify against.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;secure-sni&lt;/code&gt;: Optional hostname that should be used as the SNI TLS extension sent to the backend server. If &lt;code&gt;host&lt;/code&gt; is used as the content, the header Host from the incoming request is used as the SNI extension in the request to the backend. &lt;code&gt;sni&lt;/code&gt; can also be used, which will use the same SNI from the incoming request. Note that, although the header Host is always right, the incoming SNI might be wrong if a TLS connection that&amp;rsquo;s already opened is reused - this is a common practice on browsers connecting over http2. Any other value different of &lt;code&gt;host&lt;/code&gt; or &lt;code&gt;sni&lt;/code&gt; will be used verbatim and should be a valid domain. If &lt;code&gt;secure-verify-ca-secret&lt;/code&gt; is also provided, this hostname is also used to validate the server certificate names.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;secure-verify-ca-secret&lt;/code&gt;: Optional but recommended secret name with certificate authority bundle used to validate server certificate, preventing man-in-the-middle attacks. Expected secret key is &lt;code&gt;ca.crt&lt;/code&gt;. Since v0.9, an optional &lt;code&gt;ca.crl&lt;/code&gt; key can also provide a CRL in PEM format for the server to verify against. Configure either &lt;code&gt;secure-sni&lt;/code&gt; or &lt;code&gt;secure-verify-hostname&lt;/code&gt; to verify the certificate name.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;secure-verify-hostname&lt;/code&gt;: Optional hostname used to verify the name of the server certificate, without using the SNI TLS extension. This option can only be used if &lt;code&gt;secure-verify-ca-secret&lt;/code&gt; was provided, and only supports harcoded domains which is used verbatim.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;#backend-protocol&#34;&gt;Backend protocol&lt;/a&gt; configuration key.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-verify&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-verify&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-verifyhost&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-verifyhost&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-sni&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-sni&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
