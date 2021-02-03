@@ -5301,7 +5301,7 @@ Running 100 requests...
 
 &lt;p&gt;Note: this patch will restart the controller!&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;kubectl --namespace ingress-controller patch daemonset haproxy-ingress -p &#39;{&amp;quot;spec&amp;quot;:{&amp;quot;template&amp;quot;:{&amp;quot;spec&amp;quot;:{&amp;quot;containers&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;haproxy-ingress&amp;quot;,&amp;quot;ports&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;exporter&amp;quot;,&amp;quot;containerPort&amp;quot;:9105},{&amp;quot;name&amp;quot;:&amp;quot;ingress-stats&amp;quot;,&amp;quot;containerPort&amp;quot;:10254}]}]}}}}&#39;
+&lt;pre&gt;&lt;code&gt;kubectl --namespace ingress-controller patch deployment haproxy-ingress -p &#39;{&amp;quot;spec&amp;quot;:{&amp;quot;template&amp;quot;:{&amp;quot;spec&amp;quot;:{&amp;quot;containers&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;haproxy-ingress&amp;quot;,&amp;quot;ports&amp;quot;:[{&amp;quot;name&amp;quot;:&amp;quot;exporter&amp;quot;,&amp;quot;containerPort&amp;quot;:9105},{&amp;quot;name&amp;quot;:&amp;quot;ingress-stats&amp;quot;,&amp;quot;containerPort&amp;quot;:10254}]}]}}}}&#39;
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;deploy-prometheus&#34;&gt;Deploy Prometheus&lt;/h2&gt;
@@ -5316,6 +5316,21 @@ Running 100 requests...
 &lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
 &lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
 This deployment has no persistent volume, so all the collected metrics will be lost if the pod is recreated.
+&lt;/div&gt;
+
+
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Warning&lt;/h4&gt;
+&lt;p&gt;If HAProxy Ingress wasn&amp;rsquo;t deployed with Helm, change the following line in the &lt;code&gt;configmap/prometheus-cfg&lt;/code&gt; resource, jobs &lt;code&gt;haproxy-ingress&lt;/code&gt; and &lt;code&gt;haproxy-exporter&lt;/code&gt;:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-diff&#34; data-lang=&#34;diff&#34;&gt;       relabel_configs:
+&lt;span style=&#34;color:#a40000&#34;&gt;-      - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_instance]
+&lt;/span&gt;&lt;span style=&#34;color:#a40000&#34;&gt;&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;+      - source_labels: [__meta_kubernetes_pod_label_run]
+&lt;/span&gt;&lt;span style=&#34;color:#00a000&#34;&gt;&lt;/span&gt;         regex: haproxy-ingress
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This will ensure that Prometheus finds the controller pods.&lt;/p&gt;
+
 &lt;/div&gt;
 
 
