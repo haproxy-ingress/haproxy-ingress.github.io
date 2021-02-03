@@ -108,9 +108,9 @@ entries:
     version: 0.12.0-alpha.1
   - apiVersion: v2
     appVersion: v0.11.2
-    created: "2021-02-02T21:50:41.438734-03:00"
+    created: "2021-02-03T07:28:43.622992-03:00"
     description: Ingress controller for HAProxy loadbalancer
-    digest: f7b03e488e27cf2043776ce28499b3da6a83d68d80c5eeae64c9c02a7eceab1a
+    digest: 85eb4fad20938f6365e794a2067d9af723438f28465116d733cc7ca71dba78b1
     home: https://haproxy-ingress.github.io
     icon: https://haproxy-ingress.github.io/favicons/favicon-256.png
     keywords:
@@ -337,4 +337,4 @@ entries:
     urls:
     - https://haproxy-ingress.github.io/charts/haproxy-ingress-0.0.27.tgz
     version: 0.0.27
-generated: "2021-02-03T07:19:30.690005-03:00"
+generated: "2021-02-03T07:28:43.621267-03:00"
