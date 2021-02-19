@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.12/docs/examples/external-haproxy/" />
-<meta property="article:modified_time" content="2021-01-17T15:06:30-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-02-18T20:43:52-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="External haproxy">
 <meta itemprop="description" content="Demonstrate how to configure HAProxy Ingress to use an external haproxy deployment.
 ">
 
 
-<meta itemprop="dateModified" content="2021-01-17T15:06:30-03:00" />
-<meta itemprop="wordCount" content="639">
+<meta itemprop="dateModified" content="2021-02-18T20:43:52-03:00" />
+<meta itemprop="wordCount" content="638">
 
 
 
@@ -468,7 +468,7 @@ haproxy to log to stdout.</p>
 
 <pre><code>$ helm install haproxy-ingress haproxy-ingress/haproxy-ingress\
   --create-namespace --namespace=ingress-controller\
-  --version 0.12.0-beta.1 --devel\
+  --version 0.12.0\
   -f haproxy-ingress-values.yaml
 </code></pre>
 
@@ -629,7 +629,7 @@ container to the haproxy one.</p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified January 17, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/0c306b5371853388ebd096135a01df6742bf6cc1">docs: update external haproxy example (0c306b53)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified February 18, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/90d38c07cf6ab905f296f56621420f52973961a8">docs: update controller to v0.12 (latest) (90d38c07)</a>
 </div>
 </div>
 

@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.12/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2021-01-31T18:15:17-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-02-04T17:25:35-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2021-01-31T18:15:17-03:00" />
-<meta itemprop="wordCount" content="12081">
+<meta itemprop="dateModified" content="2021-02-04T17:25:35-03:00" />
+<meta itemprop="wordCount" content="12180">
 
 
 
@@ -404,6 +404,7 @@ if (!doNotTrack) {
 <li><a href="#connection">Connection</a></li>
 <li><a href="#cors">CORS</a></li>
 <li><a href="#cpu-map">CPU map</a></li>
+<li><a href="#default-redirect">Default Redirect</a></li>
 <li><a href="#dns-resolvers">DNS resolvers</a></li>
 <li><a href="#drain-support">Drain support</a></li>
 <li><a href="#dynamic-scaling">Dynamic scaling</a></li>
@@ -1117,6 +1118,20 @@ never conflict.</p>
 <td>haproxy CPU Map format</td>
 <td>Global</td>
 <td></td>
+</tr>
+
+<tr>
+<td><a href="#default-redirect"><code>default-backend-redirect</code></a></td>
+<td>Location</td>
+<td>Global</td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="#default-redirect"><code>default-backend-redirect-code</code></a></td>
+<td>HTTP status code</td>
+<td>Global</td>
+<td><code>302</code></td>
 </tr>
 
 <tr>
@@ -3318,6 +3333,50 @@ on <a href="#nbthread">nbthread</a> and <a href="#nbproc">nbproc</a>.</p>
 <li><a href="#nbthread">nbthread</a> configuration key</li>
 <li><a href="#nbproc">nbproc</a> configuration key</li>
 <li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map</a></li>
+</ul>
+
+<hr />
+
+<h2 id="default-redirect">Default Redirect</h2>
+
+<table>
+<thead>
+<tr>
+<th>Configuration key</th>
+<th>Scope</th>
+<th>Default</th>
+<th>Since</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>default-backend-redirect</code></td>
+<td><code>Global</code></td>
+<td></td>
+<td></td>
+</tr>
+
+<tr>
+<td><code>default-backend-redirect-code</code></td>
+<td><code>Global</code></td>
+<td><code>302</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<p>Define a redirect location of the HAProxy for unknown resources.</p>
+
+<ul>
+<li><p><code>default-backend-redirect</code>: Defines a location in which Ingress should redirect
+an user if the incoming request doesn&rsquo;t match any hostname, or the requested path
+doesn&rsquo;t match any location within the desired hostname. An internal
+404 error page is used if not declared and also if <code>default-backend-service</code> was
+not configured on command line.</p></li>
+
+<li><p><code>default-backend-redirect-code</code>: Defines the return code to be used when redirecting
+a user. Defaults to 302 (Moved Temporarily)</p></li>
 </ul>
 
 <hr />
@@ -5784,7 +5843,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified January 31, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/1a32c385c1dfd90f8e3b65eb58ffed9c1f9736cc">fix path precedence of distinct match types (1a32c385)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified February 4, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/7460e7f72cdd809a225cf6ca1bfc288be3fa60c3">Add support for native redirection of default backend (7460e7f7)</a>
 </div>
 </div>
 

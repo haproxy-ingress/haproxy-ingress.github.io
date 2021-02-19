@@ -652,6 +652,20 @@ never conflict.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#default-redirect&#34;&gt;&lt;code&gt;default-backend-redirect&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Location&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#default-redirect&#34;&gt;&lt;code&gt;default-backend-redirect-code&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;HTTP status code&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;302&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#allowlist&#34;&gt;&lt;code&gt;denylist-source-range&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;Comma-separated IPs or CIDRs&lt;/td&gt;
 &lt;td&gt;Path&lt;/td&gt;
@@ -2850,6 +2864,50 @@ on &lt;a href=&#34;#nbthread&#34;&gt;nbthread&lt;/a&gt; and &lt;a href=&#34;#nbp
 &lt;li&gt;&lt;a href=&#34;#nbthread&#34;&gt;nbthread&lt;/a&gt; configuration key&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#nbproc&#34;&gt;nbproc&lt;/a&gt; configuration key&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;default-redirect&#34;&gt;Default Redirect&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;default-backend-redirect&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;default-backend-redirect-code&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;302&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Define a redirect location of the HAProxy for unknown resources.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;code&gt;default-backend-redirect&lt;/code&gt;: Defines a location in which Ingress should redirect
+an user if the incoming request doesn&amp;rsquo;t match any hostname, or the requested path
+doesn&amp;rsquo;t match any location within the desired hostname. An internal
+404 error page is used if not declared and also if &lt;code&gt;default-backend-service&lt;/code&gt; was
+not configured on command line.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;default-backend-redirect-code&lt;/code&gt;: Defines the return code to be used when redirecting
+a user. Defaults to 302 (Moved Temporarily)&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
