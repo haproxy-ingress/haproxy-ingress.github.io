@@ -291,6 +291,160 @@ Running 100 requests...
     </item>
     
     <item>
+      <title>Docs: External haproxy</title>
+      <link>/docs/examples/external-haproxy/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/docs/examples/external-haproxy/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;This example demonstrates how to configure HAProxy Ingress to manage an external
+haproxy instance deployed as a sidecar container. This approach decouple the
+controller and the running haproxy version, allowing the sysadmin to update any
+of them independently of the other.&lt;/p&gt;
+
+&lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
+
+&lt;p&gt;This document requires only a Kubernetes cluster. HAProxy Ingress doesn&amp;rsquo;t need to be
+installed, and if so, the installation process should use the
+&lt;a href=&#34;/docs/getting-started/#installation&#34;&gt;Helm chart&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;configure-the-controller&#34;&gt;Configure the controller&lt;/h2&gt;
+
+&lt;p&gt;The easiest and recommended way to configure an external haproxy is using the Helm
+chart with a customized values file. Create the &lt;code&gt;haproxy-ingress-values.yaml&lt;/code&gt; file with the
+following content:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;controller&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;hostNetwork&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;false&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;config&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;syslog-endpoint&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;stdout&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;syslog-format&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;raw&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;haproxy&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;enabled&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;image&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;repository&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;haproxy&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;tag&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2.3.4&lt;/span&gt;-alpine&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Change the hostNetwork to &lt;code&gt;true&lt;/code&gt; if your cluster doesn&amp;rsquo;t provide a service loadbalancer.
+These parameters are also configuring an external haproxy, version 2.3.4, and configuring
+haproxy to log to stdout.&lt;/p&gt;
+
+&lt;p&gt;Add the HAProxy Ingress Helm repository if using HAProxy Ingress&amp;rsquo; chart for the first time:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ helm repo add haproxy-ingress https://haproxy-ingress.github.io/charts
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Install or upgrade HAProxy Ingress using the &lt;code&gt;haproxy-ingress-values.yaml&lt;/code&gt; parameters:&lt;/p&gt;
+
+&lt;p&gt;Hint: change &lt;code&gt;install&lt;/code&gt; to &lt;code&gt;upgrade&lt;/code&gt; if HAProxy Ingress is already installed with Helm.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ helm install haproxy-ingress haproxy-ingress/haproxy-ingress\
+  --create-namespace --namespace=ingress-controller\
+  --version 0.12.0\
+  -f haproxy-ingress-values.yaml
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Check if the controller successfully starts or restarts:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl --namespace ingress-controller get pod -w
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;test&#34;&gt;Test&lt;/h2&gt;
+
+&lt;p&gt;Open two distinct terminals to follow &lt;code&gt;haproxy-ingress&lt;/code&gt; and &lt;code&gt;haproxy&lt;/code&gt; logs:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl --namespace ingress-controller get pod
+NAME                               READY   STATUS    RESTARTS   AGE
+haproxy-ingress-6f8848d6fb-gxmrk   2/2     Running   0          13s
+
+$ kubectl --namespace ingress-controller logs -f haproxy-ingress-6f8848d6fb-gxmrk -c haproxy-ingress
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl --namespace ingress-controller logs -f haproxy-ingress-6f8848d6fb-gxmrk -c haproxy
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Do some &lt;code&gt;curl&lt;/code&gt; to any exposed application, or just use the controller or service loadbalancer
+IP like the example below:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ curl 192.168.1.11
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;HAProxy Ingress and the external haproxy should be logging their own events:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;haproxy-ingress&lt;/code&gt; container:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;...
+I0117 17:30:27.282701       6 controller.go:87] HAProxy Ingress successfully initialized
+I0117 17:30:27.282743       6 leaderelection.go:243] attempting to acquire leader lease  ingress-controller/ingress-controller-leader-haproxy...
+I0117 17:30:27.335674       6 status.go:177] new leader elected: haproxy-ingress-6f8848d6fb-cxb6w
+I0117 17:30:27.392372       6 controller.go:321] starting haproxy update id=1
+I0117 17:30:27.392463       6 ingress.go:153] using auto generated fake certificate
+I0117 17:30:27.437047       6 instance.go:309] haproxy successfully reloaded (external)
+I0117 17:30:27.437217       6 controller.go:353] finish haproxy update id=1: parse_ingress=0.143483ms write_maps=0.149637ms write_config=0.971026ms reload_haproxy=43.498718ms total=44.762864ms
+I0117 17:30:58.066768       6 leaderelection.go:253] successfully acquired lease ingress-controller/ingress-controller-leader-haproxy
+I0117 17:30:58.066867       6 status.go:177] new leader elected: haproxy-ingress-6f8848d6fb-gxmrk
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;haproxy&lt;/code&gt; container:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;...
+192.168.1.10:61116 [17/Jan/2021:17:32:36.050] _front_http _error404/&amp;lt;lua.send-404&amp;gt; 0/0/0/0/0 404 190 - - LR-- 1/1/0/0/0 0/0 &amp;quot;GET / HTTP/1.1&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;what-was-changed&#34;&gt;What was changed?&lt;/h2&gt;
+
+&lt;p&gt;The sections below have details of what changed in the deployment compared with a
+default installation.&lt;/p&gt;
+
+&lt;h3 id=&#34;sidecar&#34;&gt;Sidecar&lt;/h3&gt;
+
+&lt;p&gt;This example configures 2 (two) new containers in the controllers&amp;rsquo; pod:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;haproxy&lt;/code&gt; is the external haproxy deployment with two mandatory arguments: &lt;code&gt;-S&lt;/code&gt; with the master CLI unix socket, and &lt;code&gt;-f&lt;/code&gt; with the configuration files path&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;init&lt;/code&gt;, a Kubernetes&amp;rsquo; &lt;a href=&#34;https://kubernetes.io/docs/concepts/workloads/pods/init-containers/&#34;&gt;initContainer&lt;/a&gt; used to create an initial and valid haproxy configuration.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The &lt;code&gt;haproxy&lt;/code&gt; container references the official Alpine based image &lt;code&gt;haproxy:2.3.4-alpine&lt;/code&gt;,
+but can be any other. The only requisite is to be 2.0 or newer due to some new keywords
+used by HAProxy Ingress.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;init&lt;/code&gt; container just copy a minimum and valid &lt;code&gt;haproxy.cfg&lt;/code&gt;. This file is used
+to properly starts haproxy and configures its master CLI that HAProxy Ingress uses
+to manage the instance.&lt;/p&gt;
+
+&lt;p&gt;A new command-line &lt;code&gt;--master-socket&lt;/code&gt; was also added to the HAProxy Ingress container.
+This option enables an external haproxy instance, pointing to the unix socket path
+of its master CLI.&lt;/p&gt;
+
+&lt;h3 id=&#34;shared-filesystem&#34;&gt;Shared filesystem&lt;/h3&gt;
+
+&lt;p&gt;HAProxy Ingress sends configuration files to the haproxy instance using a shared
+filesystem. A Kubernetes&amp;rsquo; &lt;a href=&#34;https://kubernetes.io/docs/concepts/storage/volumes/#emptydir&#34;&gt;&lt;code&gt;emptyDir&lt;/code&gt;&lt;/a&gt;
+works well.&lt;/p&gt;
+
+&lt;p&gt;The following directories must be shared:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;/etc/haproxy&lt;/code&gt;: configuration and map files - &lt;code&gt;init&lt;/code&gt; and &lt;code&gt;haproxy-ingress&lt;/code&gt; need write access, &lt;code&gt;haproxy&lt;/code&gt; need read access.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/var/lib/haproxy&lt;/code&gt;: mostly ssl related files - &lt;code&gt;haproxy-ingress&lt;/code&gt; need write access, &lt;code&gt;haproxy&lt;/code&gt; need read access.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/var/run/haproxy&lt;/code&gt;: unix sockets - &lt;code&gt;haproxy-ingress&lt;/code&gt; and &lt;code&gt;haproxy&lt;/code&gt; need write access.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;liveness-probe&#34;&gt;Liveness probe&lt;/h3&gt;
+
+&lt;p&gt;Default HAProxy Ingress deployment has a liveness probe to an haproxy&amp;rsquo;s health
+check URI. This example changes the liveness probe from the HAProxy Ingress
+container to the haproxy one.&lt;/p&gt;
+
+      </description>
+    </item>
+    
+    <item>
       <title>Docs: Metrics</title>
       <link>/docs/examples/metrics/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>

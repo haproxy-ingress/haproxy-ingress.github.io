@@ -32,7 +32,7 @@
 
 
 <meta itemprop="dateModified" content="2020-11-15T20:15:16-03:00" />
-<meta itemprop="wordCount" content="2230">
+<meta itemprop="wordCount" content="2544">
 
 
 
@@ -115,13 +115,11 @@ if (!doNotTrack) {
 			
 			<li class="nav-item dropdown d-none d-lg-block">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	v0.11 (latest)
+	v0.12 (latest)
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.12/docs">v0.12 (beta)</a>
-	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.11 (latest)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.11/docs">v0.11</a>
 	
 	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.10/docs">v0.10</a>
 	
@@ -240,6 +238,12 @@ if (!doNotTrack) {
       
       
       <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-examples-blue-green" href="/docs/examples/blue-green/">Blue/green</a>
+      
+      
+      
+      
+      
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-examples-external-haproxy" href="/docs/examples/external-haproxy/">External haproxy</a>
       
       
       
@@ -370,9 +374,9 @@ if (!doNotTrack) {
 <li><a href="#default-backend-service">&ndash;default-backend-service</a></li>
 <li><a href="#default-ssl-certificate">&ndash;default-ssl-certificate</a></li>
 <li><a href="#disable-pod-list">&ndash;disable-pod-list</a></li>
-<li><a href="#ignore-ingress-without-class">&ndash;ignore-ingress-without-class</a></li>
-<li><a href="#ingress-class">&ndash;ingress-class</a></li>
+<li><a href="#ingress-class">Ingress Class</a></li>
 <li><a href="#kubeconfig">&ndash;kubeconfig</a></li>
+<li><a href="#master-socket">&ndash;master-socket</a></li>
 <li><a href="#max-old-config-files">&ndash;max-old-config-files</a></li>
 <li><a href="#publish-service">&ndash;publish-service</a></li>
 <li><a href="#rate-limit-update">&ndash;rate-limit-update</a></li>
@@ -531,6 +535,13 @@ if (!doNotTrack) {
 </tr>
 
 <tr>
+<td><a href="#ingress-class"><code>--controller-class</code></a></td>
+<td>suffix</td>
+<td>``</td>
+<td>v0.12</td>
+</tr>
+
+<tr>
 <td><a href="#default-backend-service"><code>--default-backend-service</code></a></td>
 <td>namespace/servicename</td>
 <td>haproxy&rsquo;s 404 page</td>
@@ -559,13 +570,6 @@ if (!doNotTrack) {
 </tr>
 
 <tr>
-<td><a href="#ignore-ingress-without-class"><code>--ignore-ingress-without-class</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td>v0.10</td>
-</tr>
-
-<tr>
 <td><a href="#ingress-class"><code>--ingress-class</code></a></td>
 <td>name</td>
 <td><code>haproxy</code></td>
@@ -577,6 +581,13 @@ if (!doNotTrack) {
 <td>/path/to/kubeconfig</td>
 <td>in cluster config</td>
 <td></td>
+</tr>
+
+<tr>
+<td><a href="#master-socket"><code>--master-socket</code></a></td>
+<td>socket path</td>
+<td>use embedded haproxy</td>
+<td>v0.12</td>
 </tr>
 
 <tr>
@@ -661,6 +672,13 @@ if (!doNotTrack) {
 <td>duration</td>
 <td><code>200ms</code></td>
 <td>v0.11</td>
+</tr>
+
+<tr>
+<td><a href="#ingress-class"><code>--watch-ingress-without-class</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.12</td>
 </tr>
 
 <tr>
@@ -755,25 +773,44 @@ certificate is used if not declared.</p>
 
 <p>Since v0.11</p>
 
-<p>Disables in memory pod list and also pod watch for changes. Pod list and watch is used by <code>drain-support</code> option, which will not work if pod list is disabled. Blue/green also uses pod list if enabled, otherwise k8s api is called if needed. The default value is <code>false</code>, which means pods will be watched and listed in memory.</p>
+<p>Disables in memory pod list and also pod watch for changes. Pod list and watch is used by <code>drain-support</code> option, which will not work if pod list is disabled. Blue/green and <code>session-cookie-value-strategy</code> set to <code>pod-uid</code> also use pod list if enabled, otherwise k8s api is called if needed. The default value is <code>false</code>, which means pods will be watched and listed in memory.</p>
 
 <hr />
 
-<h2 id="ignore-ingress-without-class">&ndash;ignore-ingress-without-class</h2>
+<h2 id="ingress-class">Ingress Class</h2>
 
-<p>Defines if the ingress without the ingress.class annotation will be considered or not. If <code>--ignore-ingress-without-class=true</code> then only the ingresses with the matching ingress.class annotation will be considered, ingresses with missing or different ingress.class annotation will not be considered. Default is false.</p>
+<p>More than one ingress controller is supported per Kubernetes cluster. These options allow to
+override the class of ingress resources that this instance of the controller should listen to.
+Classes that match will be used in the HAProxy configuration, other classes will be ignored.
+Ingress resources without class name and without class annotation is also ignored since v0.12,
+add the command-line option <code>--watch-ingress-without-class</code> to also listen to these ingress.</p>
 
-<hr />
+<p>These options have a new behavior since v0.12, see the corresponding documentation if using an
+older controller version.</p>
 
-<h2 id="ingress-class">&ndash;ingress-class</h2>
+<ul>
+<li><code>--ingress-class</code>: defines the value of <code>kubernetes.io/ingress.class</code> annotation this controller
+should listen to. The default value is <code>haproxy</code> if not declared.</li>
+<li><code>--controller-class</code>: by default, HAProxy Ingress will watch IngressClasses whose
+<code>spec.controller</code> name is <code>haproxy-ingress.github.io/controller</code>. All ingress resources that
+link to these IngressClasses will be added to the configuration. The <code>--controller-class</code>
+command-line option customizes the controller name, allowing to run more than one HAProxy Ingress
+in the same cluster. Configuring <code>--controller-class=staging</code> would listen to IngressClasses whose
+controller name is <code>haproxy-ingress.github.io/controller/staging</code>.</li>
+<li><code>--watch-ingress-without-class</code>: defines if this controller should also listen to ingress resources
+that doesn&rsquo;t declare neither the <code>kubernetes.io/ingress.class</code> annotation nor the
+<code>&lt;ingress&gt;.spec.ingressClassName</code> field. The default since v0.12 is to ignore ingress without class
+annotation and class name.</li>
+<li><code>--ignore-ingress-without-class</code>: this option is ignored since v0.12. Use
+<code>--watch-ingress-without-class</code> instead.</li>
+</ul>
 
-<p>More than one ingress controller is supported per Kubernetes cluster. The <code>--ingress-class</code>
-argument allow to override the class name of ingress resources that this instance of the
-controller should listen to. Class names that match will be used in the HAProxy configuration.
-Other classes will be ignored.</p>
+<p>See also:</p>
 
-<p>The ingress resource must use the <code>kubernetes.io/ingress.class</code> annotation to name it&rsquo;s
-ingress class.</p>
+<ul>
+<li><a href="/docs/configuration/keys/#class-matter">Class matter</a> in the Configuration Keys doc</li>
+<li><a href="https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-class">https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-class</a></li>
+</ul>
 
 <hr />
 
@@ -783,6 +820,36 @@ ingress class.</p>
 service account. This behavior can be changed using <code>--kubeconfig</code> argument that reference a
 kubeconfig file with master endpoint and credentials. This is a mandatory argument if the controller
 is deployed outside of the Kubernetes cluster.</p>
+
+<hr />
+
+<h2 id="master-socket">&ndash;master-socket</h2>
+
+<p>Since v0.12</p>
+
+<p>Configures HAProxy Ingress to use an external haproxy deployment in master-worker mode. This option
+receives the unix socket of the master CLI. The default value is an empty string, which will
+instruct the controller to start and manage the embedded haproxy instead of an external instance.</p>
+
+<p>The following conditions should be satisfied in order to an external haproxy work properly:</p>
+
+<ol>
+<li>The following paths should be shared between HAProxy Ingress and the external haproxy: <code>/etc/haproxy</code>, <code>/var/lib/haproxy</code>, <code>/var/run/haproxy</code>. HAProxy Ingress must have write access to all of them, external haproxy should have write access to <code>/var/run/haproxy</code>. This can be made using a sidecar container and k8s&rsquo; emptyDir, or a remote file system provided that it updates synchronously and supports unix sockets</li>
+<li>Start the external haproxy with:
+
+<ul>
+<li><code>-S /var/run/haproxy/master.sock,mode,600</code>. <code>mode 600</code> isn&rsquo;t mandatory but recommended;</li>
+<li><code>-f /etc/haproxy</code></li>
+</ul></li>
+<li>HAProxy Ingress image has a <code>--init</code> command-line option which creates an initial valid configuration file, this allows the external haproxy to bootstraps successfully. This option can be used as an init container.</li>
+</ol>
+
+<p>See also:</p>
+
+<ul>
+<li><a href="/docs/examples/external-haproxy/">example</a> page.</li>
+<li><a href="/docs/configuration/keys/#external">External</a> and <a href="/docs/configuration/keys/#master-worker">Master-worker</a> configuration keys</li>
+</ul>
 
 <hr />
 
@@ -1045,7 +1112,7 @@ single namespace.</p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified November 15, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/c63ff18d1cc22f06b7609778deae5535a2b0506a">docs: small lay out and description fixes and improvements (c63ff18d)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified November 15, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/04f956f644b7191be965e53ea294b13c2d419457">docs: small lay out and description fixes and improvements (04f956f6)</a>
 </div>
 </div>
 

@@ -20,26 +20,26 @@
 <link rel="icon" type="image/png" href="/favicons/android-144x144.png" sizes="144x144">
 <link rel="icon" type="image/png" href="/favicons/android-192x192.png" sizes="192x192">
 
-<title>Blue/green | HAProxy Ingress</title><meta property="og:title" content="Blue/green" />
-<meta property="og:description" content="Demonstrate how to configure blue/green deployment, with and without header or cookie selection.
+<title>External haproxy | HAProxy Ingress</title><meta property="og:title" content="External haproxy" />
+<meta property="og:description" content="Demonstrate how to configure HAProxy Ingress to use an external haproxy deployment.
 " />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/docs/examples/blue-green/" />
-<meta property="article:modified_time" content="2020-07-10T14:58:58-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
-<meta itemprop="name" content="Blue/green">
-<meta itemprop="description" content="Demonstrate how to configure blue/green deployment, with and without header or cookie selection.
+<meta property="og:url" content="/docs/examples/external-haproxy/" />
+<meta property="article:modified_time" content="2021-02-18T20:43:52-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta itemprop="name" content="External haproxy">
+<meta itemprop="description" content="Demonstrate how to configure HAProxy Ingress to use an external haproxy deployment.
 ">
 
 
-<meta itemprop="dateModified" content="2020-07-10T14:58:58-03:00" />
-<meta itemprop="wordCount" content="774">
+<meta itemprop="dateModified" content="2021-02-18T20:43:52-03:00" />
+<meta itemprop="wordCount" content="638">
 
 
 
 <meta itemprop="keywords" content="" />
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Blue/green"/>
-<meta name="twitter:description" content="Demonstrate how to configure blue/green deployment, with and without header or cookie selection.
+<meta name="twitter:title" content="External haproxy"/>
+<meta name="twitter:description" content="Demonstrate how to configure HAProxy Ingress to use an external haproxy deployment.
 "/>
 
 
@@ -69,7 +69,7 @@ if (!doNotTrack) {
   crossorigin="anonymous"></script>
 
 
-    <title>Blue/green | HAProxy Ingress</title>
+    <title>External haproxy | HAProxy Ingress</title>
   </head>
   <body class="td-page">
     <header>
@@ -237,13 +237,13 @@ if (!doNotTrack) {
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docs-examples-blue-green" href="/docs/examples/blue-green/">Blue/green</a>
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-examples-blue-green" href="/docs/examples/blue-green/">Blue/green</a>
       
       
       
       
       
-      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-examples-external-haproxy" href="/docs/examples/external-haproxy/">External haproxy</a>
+      <a class="td-sidebar-link td-sidebar-link__page  active" id="m-docs-examples-external-haproxy" href="/docs/examples/external-haproxy/">External haproxy</a>
       
       
       
@@ -352,8 +352,8 @@ if (!doNotTrack) {
 
 
 
-<a href="https://github.com/jcmoraisjr/haproxy-ingress/edit/master/docs/content/en/docs/examples/blue-green.md" target="_blank"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
-<a href="https://github.com/jcmoraisjr/haproxy-ingress/issues/new?title=Blue/green" target="_blank"><i class="fab fa-github fa-fw"></i> Create doc issue</a>
+<a href="https://github.com/jcmoraisjr/haproxy-ingress/edit/master/docs/content/en/docs/examples/external-haproxy.md" target="_blank"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
+<a href="https://github.com/jcmoraisjr/haproxy-ingress/issues/new?title=External%20haproxy" target="_blank"><i class="fab fa-github fa-fw"></i> Create doc issue</a>
 
 </div>
 
@@ -367,10 +367,14 @@ if (!doNotTrack) {
 <li>
 <ul>
 <li><a href="#prerequisites">Prerequisites</a></li>
-<li><a href="#deploying-applications">Deploying applications</a></li>
-<li><a href="#configure">Configure</a></li>
-<li><a href="#test-blue-green-balance">Test blue/green balance</a></li>
-<li><a href="#test-blue-green-selector">Test blue/green selector</a></li>
+<li><a href="#configure-the-controller">Configure the controller</a></li>
+<li><a href="#test">Test</a></li>
+<li><a href="#what-was-changed">What was changed?</a>
+<ul>
+<li><a href="#sidecar">Sidecar</a></li>
+<li><a href="#shared-filesystem">Shared filesystem</a></li>
+<li><a href="#liveness-probe">Liveness probe</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </nav>
@@ -407,7 +411,7 @@ if (!doNotTrack) {
 
 
 <li class="breadcrumb-item active" aria-current="page">
-	<a href="/docs/examples/blue-green/">Blue/green</a>
+	<a href="/docs/examples/external-haproxy/">External haproxy</a>
 </li>
 
 	</ol>
@@ -415,272 +419,149 @@ if (!doNotTrack) {
 
             
 <div class="td-content">
-	<h1>Blue/green</h1>
-	<div class="lead">Demonstrate how to configure blue/green deployment, with and without header or cookie selection.</div>
+	<h1>External haproxy</h1>
+	<div class="lead">Demonstrate how to configure HAProxy Ingress to use an external haproxy deployment.</div>
 	
 
-<p>This example demonstrates how to configure
-<a href="https://www.martinfowler.com/bliki/BlueGreenDeployment.html">blue/green deployment</a>
-on HAProxy Ingress controller, in order to route requests based on distict weight on
-deployment groups as well as selecting a group based on http header or cookie value.</p>
+<p>This example demonstrates how to configure HAProxy Ingress to manage an external
+haproxy instance deployed as a sidecar container. This approach decouple the
+controller and the running haproxy version, allowing the sysadmin to update any
+of them independently of the other.</p>
 
 <h2 id="prerequisites">Prerequisites</h2>
 
-<p>This document has the following prerequisite:</p>
+<p>This document requires only a Kubernetes cluster. HAProxy Ingress doesn&rsquo;t need to be
+installed, and if so, the installation process should use the
+<a href="/docs/getting-started/#installation">Helm chart</a>.</p>
+
+<h2 id="configure-the-controller">Configure the controller</h2>
+
+<p>The easiest and recommended way to configure an external haproxy is using the Helm
+chart with a customized values file. Create the <code>haproxy-ingress-values.yaml</code> file with the
+following content:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">controller<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>hostNetwork<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">false</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>config<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>syslog-endpoint<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>stdout<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>syslog-format<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>raw<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>haproxy<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>enabled<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>image<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>repository<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>haproxy<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>tag<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">2.3.4</span>-alpine</code></pre></div>
+<p>Change the hostNetwork to <code>true</code> if your cluster doesn&rsquo;t provide a service loadbalancer.
+These parameters are also configuring an external haproxy, version 2.3.4, and configuring
+haproxy to log to stdout.</p>
+
+<p>Add the HAProxy Ingress Helm repository if using HAProxy Ingress&rsquo; chart for the first time:</p>
+
+<pre><code>$ helm repo add haproxy-ingress https://haproxy-ingress.github.io/charts
+</code></pre>
+
+<p>Install or upgrade HAProxy Ingress using the <code>haproxy-ingress-values.yaml</code> parameters:</p>
+
+<p>Hint: change <code>install</code> to <code>upgrade</code> if HAProxy Ingress is already installed with Helm.</p>
+
+<pre><code>$ helm install haproxy-ingress haproxy-ingress/haproxy-ingress\
+  --create-namespace --namespace=ingress-controller\
+  --version 0.12.0\
+  -f haproxy-ingress-values.yaml
+</code></pre>
+
+<p>Check if the controller successfully starts or restarts:</p>
+
+<pre><code>$ kubectl --namespace ingress-controller get pod -w
+</code></pre>
+
+<h2 id="test">Test</h2>
+
+<p>Open two distinct terminals to follow <code>haproxy-ingress</code> and <code>haproxy</code> logs:</p>
+
+<pre><code>$ kubectl --namespace ingress-controller get pod
+NAME                               READY   STATUS    RESTARTS   AGE
+haproxy-ingress-6f8848d6fb-gxmrk   2/2     Running   0          13s
+
+$ kubectl --namespace ingress-controller logs -f haproxy-ingress-6f8848d6fb-gxmrk -c haproxy-ingress
+</code></pre>
+
+<p>and</p>
+
+<pre><code>$ kubectl --namespace ingress-controller logs -f haproxy-ingress-6f8848d6fb-gxmrk -c haproxy
+</code></pre>
+
+<p>Do some <code>curl</code> to any exposed application, or just use the controller or service loadbalancer
+IP like the example below:</p>
+
+<pre><code>$ curl 192.168.1.11
+</code></pre>
+
+<p>HAProxy Ingress and the external haproxy should be logging their own events:</p>
+
+<p><code>haproxy-ingress</code> container:</p>
+
+<pre><code>...
+I0117 17:30:27.282701       6 controller.go:87] HAProxy Ingress successfully initialized
+I0117 17:30:27.282743       6 leaderelection.go:243] attempting to acquire leader lease  ingress-controller/ingress-controller-leader-haproxy...
+I0117 17:30:27.335674       6 status.go:177] new leader elected: haproxy-ingress-6f8848d6fb-cxb6w
+I0117 17:30:27.392372       6 controller.go:321] starting haproxy update id=1
+I0117 17:30:27.392463       6 ingress.go:153] using auto generated fake certificate
+I0117 17:30:27.437047       6 instance.go:309] haproxy successfully reloaded (external)
+I0117 17:30:27.437217       6 controller.go:353] finish haproxy update id=1: parse_ingress=0.143483ms write_maps=0.149637ms write_config=0.971026ms reload_haproxy=43.498718ms total=44.762864ms
+I0117 17:30:58.066768       6 leaderelection.go:253] successfully acquired lease ingress-controller/ingress-controller-leader-haproxy
+I0117 17:30:58.066867       6 status.go:177] new leader elected: haproxy-ingress-6f8848d6fb-gxmrk
+</code></pre>
+
+<p><code>haproxy</code> container:</p>
+
+<pre><code>...
+192.168.1.10:61116 [17/Jan/2021:17:32:36.050] _front_http _error404/&lt;lua.send-404&gt; 0/0/0/0/0 404 190 - - LR-- 1/1/0/0/0 0/0 &quot;GET / HTTP/1.1&quot;
+</code></pre>
+
+<h2 id="what-was-changed">What was changed?</h2>
+
+<p>The sections below have details of what changed in the deployment compared with a
+default installation.</p>
+
+<h3 id="sidecar">Sidecar</h3>
+
+<p>This example configures 2 (two) new containers in the controllers&rsquo; pod:</p>
 
 <ul>
-<li>A Kubernetes cluster with a running HAProxy Ingress controller v0.6 or above.
-See the <a href="https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/setup-cluster.md#five-minutes-deployment">five minutes deployment</a>
-or the <a href="https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/deployment">deployment example</a></li>
+<li><code>haproxy</code> is the external haproxy deployment with two mandatory arguments: <code>-S</code> with the master CLI unix socket, and <code>-f</code> with the configuration files path</li>
+<li><code>init</code>, a Kubernetes&rsquo; <a href="https://kubernetes.io/docs/concepts/workloads/pods/init-containers/">initContainer</a> used to create an initial and valid haproxy configuration.</li>
 </ul>
 
-<h2 id="deploying-applications">Deploying applications</h2>
+<p>The <code>haproxy</code> container references the official Alpine based image <code>haproxy:2.3.4-alpine</code>,
+but can be any other. The only requisite is to be 2.0 or newer due to some new keywords
+used by HAProxy Ingress.</p>
 
-<p>In order to the configuration have effect, at least two deployments, or daemon sets, or replication
-controllers should be used with at least two pairs of label name/value.</p>
+<p>The <code>init</code> container just copy a minimum and valid <code>haproxy.cfg</code>. This file is used
+to properly starts haproxy and configures its master CLI that HAProxy Ingress uses
+to manage the instance.</p>
 
-<p>The following instructions create two deployment objects using <code>run</code> label as the service selector
-and <code>group</code> label as the blue/green deployment selector:</p>
+<p>A new command-line <code>--master-socket</code> was also added to the HAProxy Ingress container.
+This option enables an external haproxy instance, pointing to the unix socket path
+of its master CLI.</p>
 
-<pre><code>$ kubectl run blue \
-  --image=jcmoraisjr/whoami \
-  --port=8000 --labels=run=bluegreen,group=blue
-deployment &quot;blue&quot; created
+<h3 id="shared-filesystem">Shared filesystem</h3>
 
-$ kubectl run green \
-  --image=jcmoraisjr/whoami \
-  --port=8000 --labels=run=bluegreen,group=green
-deployment &quot;green&quot; created
-</code></pre>
+<p>HAProxy Ingress sends configuration files to the haproxy instance using a shared
+filesystem. A Kubernetes&rsquo; <a href="https://kubernetes.io/docs/concepts/storage/volumes/#emptydir"><code>emptyDir</code></a>
+works well.</p>
 
-<p>Certify that the pods are running and have the correct labels. Note that both <code>group</code> and <code>run</code>
-labels were applied:</p>
-
-<pre><code>$ kubectl get pod -lrun=bluegreen --show-labels
-NAME                     READY     STATUS    RESTARTS   AGE       LABELS
-blue-79c9b67d5b-5hd2r    1/1       Running   0          35s       group=blue,pod-template-hash=3575623816,run=bluegreen
-green-7546d648c4-p7pmz   1/1       Running   0          28s       group=green,pod-template-hash=3102820470,run=bluegreen
-</code></pre>
-
-<h2 id="configure">Configure</h2>
-
-<p>Create a service that bind both deployments together using the <code>run</code> label. The expose command need
-a deployment object, take anyone, we will override it&rsquo;s selector:</p>
-
-<pre><code>$ kubectl expose deploy blue --name bluegreen --selector=run=bluegreen
-service &quot;bluegreen&quot; exposed
-
-$ kubectl get svc bluegreen -otemplate --template '{{.spec.selector}}'
-map[run:bluegreen]
-</code></pre>
-
-<p>Check also the endpoints, it should list both blue and green pods:</p>
-
-<pre><code>$ kubectl get ep bluegreen
-NAME         ENDPOINTS                           AGE
-bluegreen    172.17.0.11:8000,172.17.0.19:8000   2m
-
-$ kubectl get pod -lrun=bluegreen -owide
-NAME                     READY     STATUS    RESTARTS   AGE       IP            NODE
-blue-79c9b67d5b-5hd2r    1/1       Running   0          2m        172.17.0.11   192.168.100.99
-green-7546d648c4-p7pmz   1/1       Running   0          2m        172.17.0.19   192.168.100.99
-</code></pre>
-
-<p>Configure the ingress resource. No need to change the host below, <code>bluegreen.example.com</code> is fine:</p>
-
-<pre><code>$ kubectl create -f - &lt;&lt;EOF
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  annotations:
-    ingress.kubernetes.io/balance-algorithm: roundrobin
-    ingress.kubernetes.io/blue-green-deploy: group=blue=1,group=green=1
-    ingress.kubernetes.io/blue-green-mode: pod
-    ingress.kubernetes.io/ssl-redirect: &quot;false&quot;
-  name: bluegreen
-spec:
-  rules:
-  - host: bluegreen.example.com
-    http:
-      paths:
-      - backend:
-          serviceName: bluegreen
-          servicePort: 8000
-        path: /
-EOF
-</code></pre>
-
-<pre><code>$ kubectl get ing
-NAME        HOSTS                   ADDRESS   PORTS     AGE
-bluegreen   bluegreen.example.com             80        11s
-</code></pre>
-
-<h2 id="test-blue-green-balance">Test blue/green balance</h2>
-
-<p>Lets test! The following snippets use an alias <code>hareq</code> declared below.
-Change <code>IP</code> to your HAProxy Ingress controller IP address:</p>
-
-<pre><code>$ IP=192.168.100.99
-$ alias hareq='echo Running 100 requests...; for i in `seq 1 100`; do
-    curl -fsS $IP -H &quot;Host: bluegreen.example.com&quot; | cut -d- -f1
-  done | sort | uniq -c'
-</code></pre>
+<p>The following directories must be shared:</p>
 
 <ul>
-<li>BG Mode: pod</li>
-<li>BG Balance: blue=1, green=1</li>
-
-<li><p>Replicas: blue=1, green=1</p>
-
-<pre><code>$ hareq
-Running 100 requests...
-50 blue
-50 green
-</code></pre></li>
+<li><code>/etc/haproxy</code>: configuration and map files - <code>init</code> and <code>haproxy-ingress</code> need write access, <code>haproxy</code> need read access.</li>
+<li><code>/var/lib/haproxy</code>: mostly ssl related files - <code>haproxy-ingress</code> need write access, <code>haproxy</code> need read access.</li>
+<li><code>/var/run/haproxy</code>: unix sockets - <code>haproxy-ingress</code> and <code>haproxy</code> need write access.</li>
 </ul>
 
-<hr />
+<h3 id="liveness-probe">Liveness probe</h3>
 
-<p>Now changing green replicas to 3 and wait all the replicas to be running.
-BG Mode is pod, so the number of replicas will increase the load of the green deployment.</p>
-
-<pre><code>$ kubectl scale deploy green --replicas=3
-$ kubectl get pod -w
-</code></pre>
-
-<ul>
-<li>BG Mode: pod</li>
-<li>BG Balance: blue=1, green=1</li>
-
-<li><p>Replicas: blue=1, green=3</p>
-
-<pre><code>$ hareq
-Running 100 requests...
-25 blue
-75 green
-</code></pre></li>
-</ul>
-
-<hr />
-
-<p>Changing to <em>deploy</em> mode. This mode targets the balance config to the whole deployment
-instead of single pods.</p>
-
-<p><strong>Note:</strong> BG mode was added on v0.7. On v0.6, the only supported mode is <code>pod</code>.</p>
-
-<pre><code>$ kubectl annotate --overwrite ingress bluegreen \
-  ingress.kubernetes.io/blue-green-mode=deploy
-</code></pre>
-
-<ul>
-<li>BG Mode: deploy</li>
-<li>BG Balance: blue=1, green=1</li>
-
-<li><p>Replicas: blue=1, green=3</p>
-
-<pre><code>$ hareq
-Running 100 requests...
-50 blue
-50 green
-</code></pre></li>
-</ul>
-
-<hr />
-
-<p>Changing now the balance to <sup>1</sup>&frasl;<sub>3</sub> blue and <sup>2</sup>&frasl;<sub>3</sub> green:</p>
-
-<pre><code>$ kubectl annotate --overwrite ingress bluegreen \
-  ingress.kubernetes.io/blue-green-deploy=group=blue=1,group=green=2
-</code></pre>
-
-<ul>
-<li>BG Mode: deploy</li>
-<li>BG Balance: blue=1, green=2</li>
-
-<li><p>Replicas: blue=1, green=3</p>
-
-<pre><code>$ hareq
-Running 100 requests...
-33 blue
-67 green
-</code></pre></li>
-</ul>
-
-<hr />
-
-<p>The balance will be the same despite the number of replicas:</p>
-
-<pre><code>$ kubectl scale deploy green --replicas=6
-$ kubectl get pod -w
-</code></pre>
-
-<ul>
-<li>BG Mode: deploy</li>
-<li>BG Balance: blue=1, green=2</li>
-
-<li><p>Replicas: blue=1, green=6</p>
-
-<pre><code>$ hareq
-Running 100 requests...
-33 blue
-67 green
-</code></pre></li>
-</ul>
-
-<h2 id="test-blue-green-selector">Test blue/green selector</h2>
-
-<p>Blue/green selector requires HAProxy Ingress controller v0.9 or above.</p>
-
-<p>Follow the <a href="#deploying-applications">deployment</a> and <a href="#configure">configuration</a>
-instructions to deploy the sample application.</p>
-
-<p>After that, add the following annotation:</p>
-
-<pre><code>$ kubectl annotate --overwrite ingress bluegreen \
-  ingress.kubernetes.io/blue-green-header=x-server:group
-</code></pre>
-
-<p>Create (or update) the <code>hareq</code> alias. Change <code>IP</code> to your HAProxy Ingress controller
-IP address:</p>
-
-<pre><code>$ IP=192.168.100.99
-$ alias hareq='echo Running 100 requests...; for i in `seq 1 100`; do
-    curl -fsS $IP -H &quot;Host: bluegreen.example.com&quot; -H &quot;X-Server: $GROUP&quot; | cut -d- -f1
-  done | sort | uniq -c'
-</code></pre>
-
-<p>Choose <code>blue</code> group:</p>
-
-<pre><code>$ GROUP=blue
-</code></pre>
-
-<p>The envvar <code>GROUP</code> will populate the <code>X-Server</code> header with the value <code>blue</code>.</p>
-
-<p>Run the requests:</p>
-
-<pre><code>$ hareq
-Running 100 requests...
- 100 blue
-</code></pre>
-
-<p>Choose <code>green</code> group:</p>
-
-<pre><code>$ GROUP=blue
-$ hareq
-Running 100 requests...
- 100 green
-</code></pre>
-
-<p>Choose an invalid group, the configured blue/green balance will be used:</p>
-
-<pre><code>$ kubectl annotate --overwrite ingress bluegreen \
-  ingress.kubernetes.io/blue-green-deploy=group=blue=1,group=green=3
-$ GROUP=invalid
-$ hareq
-Running 100 requests...
-  25 blue
-  75 green
-</code></pre>
+<p>Default HAProxy Ingress deployment has a liveness probe to an haproxy&rsquo;s health
+check URI. This example changes the liveness probe from the HAProxy Ingress
+container to the haproxy one.</p>
 
 	
 		<style>
@@ -744,7 +625,7 @@ Running 100 requests...
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified July 10, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/2b3cc6701b27866acd9db35cbbd0c4de114aaec2">Update deprecated APIs docs (2b3cc670)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified February 18, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/90d38c07cf6ab905f296f56621420f52973961a8">docs: update controller to v0.12 (latest) (90d38c07)</a>
 </div>
 </div>
 

@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2021-01-31T22:28:15-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-02-04T17:25:35-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2021-01-31T22:28:15-03:00" />
-<meta itemprop="wordCount" content="10518">
+<meta itemprop="dateModified" content="2021-02-04T17:25:35-03:00" />
+<meta itemprop="wordCount" content="12180">
 
 
 
@@ -115,13 +115,11 @@ if (!doNotTrack) {
 			
 			<li class="nav-item dropdown d-none d-lg-block">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	v0.11 (latest)
+	v0.12 (latest)
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.12/docs">v0.12 (beta)</a>
-	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.11 (latest)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.11/docs">v0.11</a>
 	
 	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.10/docs">v0.10</a>
 	
@@ -245,6 +243,12 @@ if (!doNotTrack) {
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-examples-external-haproxy" href="/docs/examples/external-haproxy/">External haproxy</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-examples-metrics" href="/docs/examples/metrics/">Metrics</a>
       
       
@@ -360,14 +364,28 @@ if (!doNotTrack) {
 
 <nav id="TableOfContents">
 <ul>
+<li><a href="#class-matter">Class matter</a></li>
+<li><a href="#strategies">Strategies</a>
+<ul>
 <li><a href="#configmap">ConfigMap</a></li>
-<li><a href="#ingress-and-services">Ingress and services</a></li>
-<li><a href="#scope">Scope</a></li>
-<li><a href="#configuration-keys">Configuration keys</a>
+<li><a href="#annotation">Annotation</a></li>
+<li><a href="#ingressclass">IngressClass</a></li>
+<li><a href="#updates">Updates</a></li>
+<li><a href="#fragmentation">Fragmentation</a></li>
+</ul></li>
+<li><a href="#scope">Scope</a>
+<ul>
+<li><a href="#global">Global</a></li>
+<li><a href="#host">Host</a></li>
+<li><a href="#backend">Backend</a></li>
+<li><a href="#path">Path</a></li>
+</ul></li>
+<li><a href="#keys">Keys</a>
 <ul>
 <li><a href="#acme">Acme</a></li>
 <li><a href="#affinity">Affinity</a></li>
 <li><a href="#agent-check">Agent check</a></li>
+<li><a href="#allowlist">Allowlist</a></li>
 <li><a href="#app-root">App root</a></li>
 <li><a href="#auth">Auth</a></li>
 <li><a href="#auth-tls">Auth TLS</a></li>
@@ -382,9 +400,11 @@ if (!doNotTrack) {
 <li><a href="#connection">Connection</a></li>
 <li><a href="#cors">CORS</a></li>
 <li><a href="#cpu-map">CPU map</a></li>
+<li><a href="#default-redirect">Default Redirect</a></li>
 <li><a href="#dns-resolvers">DNS resolvers</a></li>
 <li><a href="#drain-support">Drain support</a></li>
 <li><a href="#dynamic-scaling">Dynamic scaling</a></li>
+<li><a href="#external">External</a></li>
 <li><a href="#forwardfor">Forwardfor</a></li>
 <li><a href="#fronting-proxy-port">Fronting proxy port</a></li>
 <li><a href="#headers">Headers</a></li>
@@ -394,6 +414,7 @@ if (!doNotTrack) {
 <li><a href="#limit">Limit</a></li>
 <li><a href="#load-server-state">Load server state</a></li>
 <li><a href="#log-format">Log format</a></li>
+<li><a href="#master-worker">Master-worker</a></li>
 <li><a href="#modsecurity">Modsecurity</a></li>
 <li><a href="#nbproc">Nbproc</a></li>
 <li><a href="#nbthread">Nbthread</a></li>
@@ -420,7 +441,6 @@ if (!doNotTrack) {
 <li><a href="#use-htx">Use HTX</a></li>
 <li><a href="#var-namespace">Var namespace</a></li>
 <li><a href="#waf">WAF</a></li>
-<li><a href="#whitelist">Whitelist</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -469,88 +489,255 @@ if (!doNotTrack) {
 	<div class="lead">List of all annotations and global ConfigMap options.</div>
 	
 
-<p>Most of HAProxy Ingress configurations are made using a ConfigMap object or annotating
-the ingress or service object. Ingress or service annotations are used to make local
-configurations, and the ConfigMap is used to make global configurations or change
-default configuration values.</p>
+<p>Configuration keys are entry point configurations that allow users and admins to
+dynamically fine-tune HAProxy status. HAProxy Ingress reads configuration keys
+from Kubernetes resources, and this can be done in a couple of ways:</p>
 
-<h1 id="configmap">ConfigMap</h1>
+<ul>
+<li>Globally, from a ConfigMap</li>
+<li>Per IngressClass, from a ConfigMap linked in the IngressClass&rsquo; <code>parameters</code> field</li>
+<li>Per Ingress, configuring or annotating Ingress resources</li>
+<li>Per backend, annotating Service resources</li>
+</ul>
 
-<p>Global configurations and changing default values are made via a ConfigMap object.
-ConfigMap declaration is optional but highly recommended. Create an empty ConfigMap
-using <code>kubectl create configmap</code> and configures in the haproxy-ingress deployment using
-the command-line option <code>--configmap=&lt;namespace&gt;/&lt;configmap-name&gt;</code>.</p>
+<p>The list above also describes the precedence if the same configuration key is used
+in more than one resource: Global configurations can be overridden by IngressClass
+configurations, that can be overriden by Ingress resource configurations and so on.
+This hierarchy creates a flexible model, where commonly used configurations can be
+made in a higher level and overriden by local changes.</p>
 
-<p>Changes to any key in the ConfigMap object is applied on the fly, the haproxy instance
-is restarted or dynamically updated if needed.</p>
+<p>The following sections describe in a few more details how HAProxy Ingress classifies
+an Ingress to be part of the final configuration, and how it reads the configuration
+from Kubernetes resources.</p>
 
-<p>All configuration key names are supported as a ConfigMap keys. When declared, its value
-is used as the default value if not overwritten elsewhere.</p>
+<h1 id="class-matter">Class matter</h1>
+
+<p>HAProxy Ingress by default does not listen to Ingress resources, until one or more of
+the following conditions are met:</p>
+
+<ul>
+<li>Ingress resources have the annotation <code>kubernetes.io/ingress.class</code> with the value <code>haproxy</code></li>
+<li>Ingress resources have its <code>ingressClassName</code> field assigning an IngressClass resource whose <code>controller</code> name is <code>haproxy-ingress.github.io/controller</code></li>
+<li>HAProxy Ingress was started with <code>--watch-ingress-without-class</code> command-line option</li>
+</ul>
+
+<p>See <a href="/docs/configuration/command-line/#ingress-class">Ingress Class</a> command-line doc for
+customization options.</p>
+
+<p>The first two options give more control on which Ingress resources should be part of the
+final configuration. Class annotation and the IngressClass name can be changed on a running
+controller, the configuration will be adjusted on the fly to reflect the new status. If
+both options are configured in an Ingress resource, and they conflict - i.e. one of them
+says the controller belongs to HAProxy Ingress and the other says that it does not belong -
+the annotation value wins and a warning is logged.</p>
+
+<p>Adding a class annotation or defining an IngressClass name means &ldquo;classify&rdquo; an Ingress
+resource. The third and latest option asks HAProxy Ingress to also add &ldquo;unclassified&rdquo;
+Ingress to the final configuration - i.e. add Ingress resources that does not have the
+<code>kubernetes.io/ingress.class</code> annotation and also does not have the <code>ingressClassName</code>
+field. Note that this is a new behavior since v0.12. Up to v0.11 HAProxy Ingress listen
+to &ldquo;unclassified&rdquo; Ingress by default.</p>
+
+<h1 id="strategies">Strategies</h1>
+
+<p>HAProxy Ingress reads configuration on three distinct ways:</p>
+
+<ul>
+<li><code>ConfigMap</code> key/value data. ConfigMaps are assigned either via <code>--configmap</code> command-line option (used by Global options), or via parameters field of an <code>IngressClass</code></li>
+<li>Annotations from classified <code>Ingress</code> resources and also from <code>Services</code> that these Ingress are linking to</li>
+<li>Spec configurations from classified <code>Ingress</code> resources</li>
+</ul>
+
+<p>HAProxy Ingress follows <a href="https://v1-18.docs.kubernetes.io/docs/concepts/services-networking/ingress/">Ingress v1 spec</a>,
+so any Ingress spec configuration should work as stated by the Kubernetes documentation.</p>
+
+<p>Annotations and ConfigMap customizations extend the Ingress spec via the configuration
+keys, and this is what the rest of this documentation page is all about.</p>
+
+<p>The following sections describe in a few more details about configuration strategies.</p>
+
+<h2 id="configmap">ConfigMap</h2>
+
+<p>ConfigMap key/value options are read in the following conditions:</p>
+
+<ul>
+<li>Global config, using <code>--configmap</code> command-line option. The installation process configures a Global config ConfigMap named <code>haproxy-ingress</code> in the controller namespace. This is the only way to configure keys from the <code>Global</code> scope. See about scopes <a href="#scope">later</a> in this page.</li>
+<li>IngressClass config, using its <code>parameters</code> field linked to a ConfigMap declared in the same namespace of the controller. See about IngressClass <a href="#ingressclass">later</a> in this same section.</li>
+</ul>
 
 <p>A configuration key is used verbatim as the ConfigMap key name, without any prefix.
 The ConfigMap spec expects a string as the key value, so declare numbers and booleans
 as strings, HAProxy Ingress will convert them when needed.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>v1<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>data<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>balance-algorithm<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>leastconn<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>max-connections<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#4e9a06">&#34;10000&#34;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>ssl-redirect<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#4e9a06">&#34;true&#34;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>kind<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>ConfigMap<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>metadata<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>name<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>haproxy-ingress<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>namespace<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>ingress-controller</code></pre></div>
+<h2 id="annotation">Annotation</h2>
 
-<h1 id="ingress-and-services">Ingress and services</h1>
+<p>Annotations are read in the following conditions:</p>
 
-<p>Local configurations are made using ingress v1 spec, eg hostname, path, backend, port,
-secret name of the server certificate and key, and so on. Any other configuration
-which is not supported by the v1 spec should be made in the ingress or service object
-using annotations.</p>
+<ul>
+<li>From classified <code>Ingress</code> resources, see about classification in the <a href="#class-matter">Class matter</a> section. <code>Ingresses</code> accept keys from the <code>Host</code>, <code>Backend</code> and <code>Path</code> scopes. See about scopes <a href="#scope">later</a> in this page.</li>
+<li>From <code>Services</code> that classified Ingress resources are linking to. <code>Services</code> only accept keys from the <code>Backend</code> scope.</li>
+</ul>
 
-<p>Changes to annotations in any ingress or service object is applied on the fly, the
-haproxy instance is restarted or dynamically updated if needed.</p>
+<p>A configuration key needs a prefix in front of its name to use as an annotation key.
+The default prefix is <code>ingress.kubernetes.io</code>, change with the <code>--annotation-prefix</code>
+command-line option. The annotation value spec expects a string as the key value, so
+declare numbers and booleans as strings, HAProxy Ingress will convert them when needed.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>networking.k8s.io/v1beta1<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>kind<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>Ingress<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>metadata<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>annotations<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>ingress.kubernetes.io/balance-algorithm<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>roundrobin<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>ingress.kubernetes.io/maxconn-server<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#4e9a06">&#34;500&#34;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>ingress.kubernetes.io/ssl-redirect<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#4e9a06">&#34;false&#34;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>name<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>app<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>namespace<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>default<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>spec<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>...</code></pre></div>
+<h2 id="ingressclass">IngressClass</h2>
 
-<p>Annotation key names need a prefix in front of the configuration key. The default
-prefix is <code>ingress.kubernetes.io</code>, so eg the <code>ssl-redirect</code> configuration key should
-be declared as <code>ingress.kubernetes.io/ssl-redirect</code> with value <code>&quot;true&quot;</code> or <code>&quot;false&quot;</code>.
-The annotation value spec expects a string as the key, so declare numbers and
-booleans as strings, HAProxy Ingress will convert it when needed. The default
-annotation prefix can be changed using the <code>--annotation-prefix</code> command-line
-option.</p>
+<p>IngressClass configurations are read when the <code>ingressClassName</code> field of an Ingress
+resource links to an IngressClass that configures its <code>parameters</code> field.</p>
 
-<p>An ingress object accepts configuration keys of scope <code>Host</code> or <code>Backend</code>. A
-service object accepts configuration keys of scope <code>Backend</code> only. See
-<a href="#scope">Scope</a> below.</p>
+<p>The IngressClass&rsquo; <code>parameters</code> field currently only accepts ConfigMap resources, and
+the ConfigMap must be declared in the same namespace of the controller.</p>
 
-<p>Configuration keys declared in services have the highest precedence, overwriting
-configuration keys declared in the ConfigMap and ingress objects. Ingress object
-overwrite the default value and the ConfigMap configuration.</p>
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">Note</h4>
+Even though a ConfigMap is used, configuration keys of the <code>Global</code> scope cannot be
+used and will be ignored.
+</div>
+
+
+<p>The following resources create the same final configuration of the Annotation
+section <a href="#annotation">above</a>, with the benefit of allowing the reuse of the
+IngressClass+ConfigMap configuration.</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>networking.k8s.io/v1beta1<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>kind<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>IngressClass<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>metadata<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>name<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>my-class<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>spec<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>controller<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>haproxy-ingress.github.io/controller<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>parameters<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>kind<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>ConfigMap<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>name<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>my-options</code></pre></div><div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>v1<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>data<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>balance-algorithm<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>roundrobin<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>maxconn-server<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#4e9a06">&#34;500&#34;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>ssl-redirect<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#4e9a06">&#34;false&#34;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>kind<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>ConfigMap<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>metadata<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>name<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>my-options<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>namespace<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>ingress-controller</code></pre></div><div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>networking.k8s.io/v1beta1<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>kind<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>Ingress<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>metadata<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>name<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>app<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>namespace<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>default<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>spec<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>ingressClassName<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>my-class<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>...</code></pre></div>
+<h2 id="updates">Updates</h2>
+
+<p>Changes to any configuration in any classified <code>Ingress</code> resources (annotations
+or spec), <code>Service</code> resources (annotations) or any referenced <code>ConfigMap</code> will
+reflect in the update of the final HAProxy configuration.</p>
+
+<p>If the new state cannot be dynamically applied and requires HAProxy to be reloaded,
+this will happen preserving the in progress requests and the long running connections.</p>
+
+<h2 id="fragmentation">Fragmentation</h2>
+
+<p>Ingress resources can be fragmented in order to add distinct configurations
+to distinct routes. For example:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>networking.k8s.io/v1beta1<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>kind<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>Ingress<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>metadata<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>name<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>app-front<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>spec<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>rules<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>host<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>app.local<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>http<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>paths<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>path<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>/<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span>backend<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">          </span>serviceName<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>frontend<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">          </span>servicePort<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">8080</span></code></pre></div><div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>networking.k8s.io/v1beta1<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>kind<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>Ingress<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>metadata<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>annotations<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>ingress.kubernetes.io/rewrite-target<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>/<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>name<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>app-back<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline"></span>spec<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>rules<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>host<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>app.local<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>http<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>paths<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>path<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>/api<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span>backend<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">          </span>serviceName<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>backend<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">          </span>servicePort<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">8080</span></code></pre></div>
+<p>HAProxy Ingress will merge all the resources, so there is no difference if the
+configuration is in the same or in distinct Ingress. Distinct Ingress however
+might lead to conflicting configuration, more about conflict in the
+<a href="#scope">scope</a> section below.</p>
+
+<p>There is no hard limit to the number of Ingresses or Services - clusters with
+tens of thousands of Ingress and Service resources report to work smoothly and
+fast with HAProxy Ingress.</p>
 
 <h1 id="scope">Scope</h1>
 
-<p>HAProxy Ingress configuration keys may be in one of four distinct scopes. A scope
-defines where a configuration key can be declared and how it interacts with ingress
-and service objects.</p>
+<p>HAProxy Ingress configuration keys may be in one of four distinct scopes:
+<code>Global</code>, <code>Host</code>, <code>Backend</code>, <code>Path</code>. A scope defines where a configuration key
+can be declared and how it interacts with Ingress and Service resources.</p>
 
-<ul>
-<li>Scope <code>Global</code>: Defines configuration keys that should be declared only in the
-ConfigMap object. Configuration keys of the global scope declared as ingress or
-service annotations are ignored. A configuration key of the global scope never
-conflict.</li>
-<li>Scope <code>Host</code>: Defines configuration keys that binds to the hostname. Configuration
-keys of the host scope can be declared in the ConfigMap as a default value, or in
-an ingress object. A conflict warning will be logged if the same host configuration
-key with distinct values are declared in distict ingress objects but to the same
-hostname.</li>
-<li>Scope <code>Backend</code>: Defines configuration keys that binds to the service object, which
-is converted to a HAProxy backend after the configuration parsing. Configuration keys
-of the backend scope can be declared in the ConfigMap as a default value, in an ingress
-object, or in a service object. A conflict warning will be logged if the same backend
-configuration key with distinct values are declared in distict ingress objects but
-to the same service or HAProxy backend. A backend configuration key declared in a
-service object overwrites the same configuration in an ingress object without
-conflicting.</li>
-<li>Scope <code>Path</code>: Defines configuration keys that bind to the hostname and the HTTP path.
+<p>Configuration keys declared in <code>Ingress</code> resources might conflict. More about
+the scenarios in the <code>Host</code> and <code>Backend</code> scopes below. A warning will be logged
+in the case of a conflict, and the used value will be of the Ingress resource
+that was created first.</p>
+
+<h2 id="global">Global</h2>
+
+<p>Defines configuration keys that apply for all hostnames and backend
+services, and should be declared only in the Global config ConfigMap
+resource. Configuration keys of the Global scope declared as Ingress
+or Service annotations, and also in the IngressClass ConfigMap are
+ignored. Configuration keys of the Global scope never conflict.</p>
+
+<h2 id="host">Host</h2>
+
+<p>Defines configuration keys that bind to the hostname. Configuration
+keys of the host scope can be declared in any ConfigMap, or in any Ingress
+resource. A conflict happens when the same host configuration key with
+distinct values are declared in distinct Ingress resources but to the same
+hostname.</p>
+
+<h2 id="backend">Backend</h2>
+
+<p>Defines configuration keys that bind to the Service resource, which
+is converted to a HAProxy backend after the configuration parsing. Configuration
+keys of the backend scope can be declared in any ConfigMap or as Ingress or Service
+annotation. A conflict happens when the same backend configuration key with distinct
+values are declared in distinct Ingress resources but to the same Service or HAProxy
+backend.</p>
+
+<h2 id="path">Path</h2>
+
+<p>Defines configuration keys that bind to the hostname and the HTTP path.
 Configuration keys of the Path scope can be declared in any ConfigMap as a default
 value, or as Ingress or Service annotation. Configuration keys of the Path scope
-never conflict.</li>
-</ul>
+never conflict.</p>
 
-<p>In the case of a conflict, the value of the ingress object which was created first
-will be used.</p>
-
-<h1 id="configuration-keys">Configuration keys</h1>
+<h1 id="keys">Keys</h1>
 
 <p>The table below describes all supported configuration keys.</p>
 
@@ -632,6 +819,13 @@ will be used.</p>
 <td><a href="#agent-check"><code>agent-check-send</code></a></td>
 <td>string to send upon agent connection</td>
 <td>Backend</td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="#allowlist"><code>allowlist-source-range</code></a></td>
+<td>Comma-separated IPs or CIDRs</td>
+<td>Path</td>
 <td></td>
 </tr>
 
@@ -923,6 +1117,27 @@ will be used.</p>
 </tr>
 
 <tr>
+<td><a href="#default-redirect"><code>default-backend-redirect</code></a></td>
+<td>Location</td>
+<td>Global</td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="#default-redirect"><code>default-backend-redirect-code</code></a></td>
+<td>HTTP status code</td>
+<td>Global</td>
+<td><code>302</code></td>
+</tr>
+
+<tr>
+<td><a href="#allowlist"><code>denylist-source-range</code></a></td>
+<td>Comma-separated IPs or CIDRs</td>
+<td>Path</td>
+<td></td>
+</tr>
+
+<tr>
 <td><a href="#dns-resolvers"><code>dns-accepted-payload-size</code></a></td>
 <td>number</td>
 <td>Global</td>
@@ -986,6 +1201,13 @@ will be used.</p>
 </tr>
 
 <tr>
+<td><a href="#external"><code>external-has-lua</code></a></td>
+<td>[true|false]</td>
+<td>Global</td>
+<td><code>false</code></td>
+</tr>
+
+<tr>
 <td><a href="#forwardfor"><code>forwardfor</code></a></td>
 <td>[add|ignore|ifmissing]</td>
 <td>Global</td>
@@ -997,6 +1219,13 @@ will be used.</p>
 <td>port number</td>
 <td>Global</td>
 <td>0 (do not listen)</td>
+</tr>
+
+<tr>
+<td><a href="#security"><code>groupname</code></a></td>
+<td>haproxy group name</td>
+<td>Global</td>
+<td><code>haproxy</code></td>
 </tr>
 
 <tr>
@@ -1154,6 +1383,13 @@ will be used.</p>
 </tr>
 
 <tr>
+<td><a href="#master-worker"><code>master-exit-on-failure</code></a></td>
+<td>[true|false]</td>
+<td>Global</td>
+<td><code>true</code></td>
+</tr>
+
+<tr>
 <td><a href="#connection"><code>max-connections</code></a></td>
 <td>number</td>
 <td>Global</td>
@@ -1226,21 +1462,21 @@ will be used.</p>
 <tr>
 <td><a href="#oauth"><code>oauth</code></a></td>
 <td>&ldquo;oauth2_proxy&rdquo;</td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
 <tr>
 <td><a href="#oauth"><code>oauth-headers</code></a></td>
 <td><code>&lt;header&gt;:&lt;var&gt;,...</code></td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
 <tr>
 <td><a href="#oauth"><code>oauth-uri-prefix</code></a></td>
 <td>URI prefix</td>
-<td>Backend</td>
+<td>Path</td>
 <td></td>
 </tr>
 
@@ -1249,6 +1485,13 @@ will be used.</p>
 <td>path matching type</td>
 <td>Host</td>
 <td><code>begin</code></td>
+</tr>
+
+<tr>
+<td><a href="#path-type"><code>path-type-order</code></a></td>
+<td>comma-separated path type list</td>
+<td>Global</td>
+<td><code>exact,prefix,begin,regex</code></td>
 </tr>
 
 <tr>
@@ -1357,6 +1600,13 @@ will be used.</p>
 </tr>
 
 <tr>
+<td><a href="#affinity"><code>session-cookie-preserve</code></a></td>
+<td>[true|false]</td>
+<td>Backend</td>
+<td><code>false</code></td>
+</tr>
+
+<tr>
 <td><a href="#affinity"><code>session-cookie-shared</code></a></td>
 <td>[true|false]</td>
 <td>Backend</td>
@@ -1368,6 +1618,13 @@ will be used.</p>
 <td>[insert|prefix|rewrite]</td>
 <td>Backend</td>
 <td></td>
+</tr>
+
+<tr>
+<td><a href="#affinity"><code>session-cookie-value-strategy</code></a></td>
+<td>[server-name|pod-uid]</td>
+<td>Backend</td>
+<td><code>server-name</code></td>
 </tr>
 
 <tr>
@@ -1693,6 +1950,13 @@ will be used.</p>
 </tr>
 
 <tr>
+<td><a href="#security"><code>username</code></a></td>
+<td>haproxy user name</td>
+<td>Global</td>
+<td><code>haproxy</code></td>
+</tr>
+
+<tr>
 <td><a href="#var-namespace"><code>var-namespace</code></a></td>
 <td>[true|false]</td>
 <td>Host</td>
@@ -1714,10 +1978,17 @@ will be used.</p>
 </tr>
 
 <tr>
-<td><a href="#whitelist"><code>whitelist-source-range</code></a></td>
+<td><a href="#allowlist"><code>whitelist-source-range</code></a></td>
 <td>Comma-separated IPs or CIDRs</td>
 <td>Path</td>
 <td></td>
+</tr>
+
+<tr>
+<td><a href="#master-worker"><code>worker-max-reloads</code></a></td>
+<td>number of reloads</td>
+<td>Global</td>
+<td><code>0</code></td>
 </tr>
 </tbody>
 </table>
@@ -1910,6 +2181,20 @@ removing the ingress object itself.</p>
 </tr>
 
 <tr>
+<td><code>session-cookie-preserve</code></td>
+<td><code>Backend</code></td>
+<td><code>false</code></td>
+<td>v0.12</td>
+</tr>
+
+<tr>
+<td><code>session-cookie-same-site</code></td>
+<td><code>Backend</code></td>
+<td><code>false</code></td>
+<td>v0.12</td>
+</tr>
+
+<tr>
 <td><code>session-cookie-shared</code></td>
 <td><code>Backend</code></td>
 <td><code>false</code></td>
@@ -1922,6 +2207,13 @@ removing the ingress object itself.</p>
 <td><code>insert</code></td>
 <td></td>
 </tr>
+
+<tr>
+<td><code>session-cookie-value-strategy</code></td>
+<td><code>Backend</code></td>
+<td><code>server-name</code></td>
+<td>v0.12</td>
+</tr>
 </tbody>
 </table>
 
@@ -1931,10 +2223,13 @@ removing the ingress object itself.</p>
 <li><code>affinity</code>: the only supported option is <code>cookie</code>. If declared, clients will receive a cookie with a hash of the server it should be fidelized to.</li>
 <li><code>cookie-key</code>: defines a secret key used with the IP address and port number of a backend server to dynamically create a cookie to that server. Defaults to <code>Ingress</code> if not provided.</li>
 <li><code>session-cookie-dynamic</code>: indicates whether or not dynamic cookie value will be used. With the default of <code>true</code>, a cookie value will be generated by HAProxy using a hash of the server IP address, TCP port, and dynamic cookie secret key. When <code>false</code>, the server name will be used as the cookie name. Note that setting this to <code>false</code> will have no impact if <a href="#dns-resolvers">use-resolver</a> is set.</li>
-<li><code>session-cookie-keywords</code>: additional options to the <code>cookie</code> option like <code>nocache</code>, <code>preserve</code>, <code>httponly</code>. For the sake of backwards compatibility the default is <code>indirect nocache httponly</code> if not declared and <code>strategy</code> is <code>insert</code>.</li>
+<li><code>session-cookie-keywords</code>: additional options to the <code>cookie</code> option like <code>nocache</code>, <code>httponly</code>. For the sake of backwards compatibility the default is <code>indirect nocache httponly</code> if not declared and <code>strategy</code> is <code>insert</code>.</li>
 <li><code>session-cookie-name</code>: the name of the cookie. <code>INGRESSCOOKIE</code> is the default value if not declared.</li>
+<li><code>session-cookie-preserve</code>: indicates whether the session cookie will be set to <code>preserve</code> mode. If this mode is enabled, haproxy will allow backend servers to use a <code>Set-Cookie</code> HTTP header to emit their own persistence cookie value, meaning the backend servers have knowledge of which cookie value should route to which server. Since the cookie value is tightly coupled with a particular backend server in this scenario, this mode will cause dynamic updating to understand that it must keep the same cookie value associated with the same backend server. If this is disabled, dynamic updating is free to assign servers in a way that can make their cookie value no longer matching.</li>
+<li><code>session-cookie-same-site</code>: if <code>true</code>, adds the <code>SameSite=None; Secure</code> attributes, which configures the browser to send the persistence cookie with both cross-site and same-site requests. The default value is <code>false</code>, which means only same-site requests will send the persistence cookie.</li>
 <li><code>session-cookie-shared</code>: defines if the persistence cookie should be shared between all domains that uses this backend. Defaults to <code>false</code>. If <code>true</code> the <code>Set-Cookie</code> response will declare all the domains that shares this backend, indicating to the HTTP agent that all of them should use the same backend server.</li>
 <li><code>session-cookie-strategy</code>: the cookie strategy to use (insert, rewrite, prefix). <code>insert</code> is the default value if not declared.</li>
+<li><code>session-cookie-value-strategy</code>: the strategy to use to calculate the cookie value of a server (<code>server-name</code>, <code>pod-uid</code>). <code>server-name</code> is the default if not declared, and indicates that the cookie will be set based on the name defined in <code>backend-server-naming</code>. <code>pod-uid</code> indicates that the cookie will be set to the <code>UID</code> of the pod running the target server.</li>
 </ul>
 
 <p>Note for <code>dynamic-scaling</code> users only, v0.5 or older: the hash of the server is built based on it&rsquo;s name.
@@ -1946,6 +2241,7 @@ limitation was removed on v0.6.</p>
 <p>See also:</p>
 
 <ul>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie">https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie</a></li>
 <li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-cookie">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-cookie</a></li>
 <li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-cookie">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-cookie</a></li>
 <li><a href="https://www.haproxy.com/blog/load-balancing-affinity-persistence-sticky-sessions-what-you-need-to-know/">https://www.haproxy.com/blog/load-balancing-affinity-persistence-sticky-sessions-what-you-need-to-know/</a></li>
@@ -2041,6 +2337,76 @@ overwrite the weight defined from the agent</li>
 <li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-port">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-port</a></li>
 <li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-inter">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-inter</a></li>
 <li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-send">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-send</a></li>
+</ul>
+
+<hr />
+
+<h2 id="allowlist">Allowlist</h2>
+
+<table>
+<thead>
+<tr>
+<th>Configuration key</th>
+<th>Scope</th>
+<th>Default</th>
+<th>Since</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>allowlist-source-range</code></td>
+<td><code>Path</code></td>
+<td></td>
+<td>v0.12</td>
+</tr>
+
+<tr>
+<td><code>denylist-source-range</code></td>
+<td><code>Path</code></td>
+<td></td>
+<td>v0.12</td>
+</tr>
+
+<tr>
+<td><code>whitelist-source-range</code></td>
+<td><code>Path</code></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<p>Defines a comma-separated list of source IPs or CIDRs allowed or denied to connect.
+The default behavior is to allow all source IPs if neither the allow list nor the
+deny list are declared. The lists support IPv4 and IPv6.</p>
+
+<p>This is a path scoped configuration: distinct paths in the same hostname can have
+distinct configurations. However this doesn&rsquo;t happen if the backend has
+<a href="#ssl-passthrough">ssl-passthrough</a>, which uses HAProxy&rsquo;s TCP mode, in this case
+the allow and deny lists act as a backend scoped config.</p>
+
+<p>Since v0.12 IPs or CIDRs can be prefixed with <code>!</code>, which means an exception to the
+rule, so an allow list with <code>&quot;10.0.0.0/8,!10.100.0.0/16&quot;</code> will allow only IPs from
+the range <code>10.x.x.x</code>, except the range <code>10.100.x.x</code> which will continue to be denied.</p>
+
+<ul>
+<li><code>allowlist-source-range</code>: Used to deny requests by default, allowing only the IPs
+and CIDRs in the list, except IPs and CIDRs prefixed with <code>!</code> which will continue to
+be denied. <code>whitelist-source-range</code> is an alias to preserve backward compatibility,
+and will be ignored if <code>allowlist-source-range</code> is declared.</li>
+<li><code>denylist-source-range</code>: Used to allow requests by default, denying only the IPs
+and CIDRs in the list, except IPs and CIDRs prefixed with <code>!</code> which will continue to
+be allowed.</li>
+</ul>
+
+<p>Allowlist and denylist can be used together. The request will be denied if the
+configurations overlap and a source IP matches both the allowlist and denylist.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny</a></li>
 </ul>
 
 <hr />
@@ -2313,7 +2679,7 @@ will still configures SSL/TLS.</p>
 
 <div class="alert alert-primary" role="alert">
 <h4 class="alert-heading">Note</h4>
-HAProxy Ingress won&rsquo;t refuse to change the default naming if dynamic update is <code>true</code>, this would however lead to undesired behaviour: empty slots would still be named as sequences, old-named backend servers will dynamically receive new workloads with new pod names or IP numbers which does not relates with the name anymore, making the naming useless, if not wrong.
+HAProxy Ingress won&rsquo;t refuse to change the default naming if dynamic update is <code>true</code>, this would however lead to undesired behaviour: empty slots would still be named as sequences, old-named backend servers will dynamically receive new workloads with new pod names or IP numbers which do not relate with the name anymore, making the naming useless, if not wrong. If you have <a href="#affinity">cookie affinity</a> enabled, dynamic updating can cause the cookie values to get out of sync with the servers. This can be avoided by using <code>session-cookie-preserve</code> with a value of <code>true</code>.
 </div>
 
 
@@ -2967,6 +3333,50 @@ on <a href="#nbthread">nbthread</a> and <a href="#nbproc">nbproc</a>.</p>
 
 <hr />
 
+<h2 id="default-redirect">Default Redirect</h2>
+
+<table>
+<thead>
+<tr>
+<th>Configuration key</th>
+<th>Scope</th>
+<th>Default</th>
+<th>Since</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>default-backend-redirect</code></td>
+<td><code>Global</code></td>
+<td></td>
+<td></td>
+</tr>
+
+<tr>
+<td><code>default-backend-redirect-code</code></td>
+<td><code>Global</code></td>
+<td><code>302</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<p>Define a redirect location of the HAProxy for unknown resources.</p>
+
+<ul>
+<li><p><code>default-backend-redirect</code>: Defines a location in which Ingress should redirect
+an user if the incoming request doesn&rsquo;t match any hostname, or the requested path
+doesn&rsquo;t match any location within the desired hostname. An internal
+404 error page is used if not declared and also if <code>default-backend-service</code> was
+not configured on command line.</p></li>
+
+<li><p><code>default-backend-redirect-code</code>: Defines the return code to be used when redirecting
+a user. Defaults to 302 (Moved Temporarily)</p></li>
+</ul>
+
+<hr />
+
 <h2 id="dns-resolvers">DNS resolvers</h2>
 
 <table>
@@ -3183,6 +3593,47 @@ also happen when the number of servers could be reduced.</p>
 
 <ul>
 <li><a href="https://cbonte.github.io/haproxy-dconv/2.0/management.html#9.3">https://cbonte.github.io/haproxy-dconv/2.0/management.html#9.3</a></li>
+</ul>
+
+<hr />
+
+<h2 id="external">External</h2>
+
+<table>
+<thead>
+<tr>
+<th>Configuration key</th>
+<th>Scope</th>
+<th>Default</th>
+<th>Since</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>external-has-lua</code></td>
+<td><code>Global</code></td>
+<td><code>false</code></td>
+<td>v0.12</td>
+</tr>
+</tbody>
+</table>
+
+<p>Defines features that can be found in the external haproxy deployment, if an
+external deployment is used. These options have no effect if using the embedded
+haproxy.</p>
+
+<ul>
+<li><code>external-has-lua</code>: Define as true if the external haproxy has Lua libraries
+installed in the operating system. Currently only <a href="#oauth">OAuth</a> needs Lua
+socket installed and will not work if <code>external-has-lua</code> is not enabled.</li>
+</ul>
+
+<p>See also:</p>
+
+<ul>
+<li><a href="#oauth">OAuth</a> configuration keys.</li>
+<li><a href="/docs/configuration/command-line/#master-socket">master-socket</a> command-line option</li>
 </ul>
 
 <hr />
@@ -3692,6 +4143,59 @@ an old state with disabled servers will disable them in the new configuration.</
 
 <hr />
 
+<h2 id="master-worker">Master-worker</h2>
+
+<table>
+<thead>
+<tr>
+<th>Configuration key</th>
+<th>Scope</th>
+<th>Default</th>
+<th>Since</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>master-exit-on-failure</code></td>
+<td><code>Global</code></td>
+<td><code>true</code></td>
+<td>v0.12</td>
+</tr>
+
+<tr>
+<td><code>worker-max-reloads</code></td>
+<td><code>Global</code></td>
+<td><code>0</code></td>
+<td>v0.12</td>
+</tr>
+</tbody>
+</table>
+
+<p>Configures master-worker related options. These options are only used when an
+external haproxy instance is configured.</p>
+
+<ul>
+<li><code>master-exit-on-failure</code>: If <code>true</code>, kill all the remaining workers and exit
+from master in the case of an unexpected failure of a worker, eg a segfault.</li>
+<li><code>worker-max-reloads</code>: Defines how many reloads a haproxy worker should
+survive before receive a SIGTERM. The default value is <code>0</code> which means
+unlimited. This option limits the number of active workers and the haproxy&rsquo;s
+pod memory usage. Useful on workloads with long running connections, eg
+websockets, and clusters that frequently changes and forces haproxy to reload.</li>
+</ul>
+
+<p>See also:</p>
+
+<ul>
+<li><a href="/docs/examples/external-haproxy/">Example</a> page</li>
+<li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-master-worker">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-master-worker</a></li>
+<li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#mworker-max-reloads">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#mworker-max-reloads</a></li>
+<li><a href="/docs/configuration/command-line/#master-socket">master-socket</a> command-line option</li>
+</ul>
+
+<hr />
+
 <h2 id="modsecurity">Modsecurity</h2>
 
 <table>
@@ -3893,21 +4397,21 @@ bind each thread on its own CPU core.</p>
 <tbody>
 <tr>
 <td><code>oauth</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td></td>
 <td></td>
 </tr>
 
 <tr>
 <td><code>oauth-headers</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td></td>
 <td></td>
 </tr>
 
 <tr>
 <td><code>oauth-uri-prefix</code></td>
-<td><code>Backend</code></td>
+<td><code>Path</code></td>
 <td></td>
 <td></td>
 </tr>
@@ -3931,9 +4435,18 @@ on an ingress resource without oauth annotations. In other words, if two ingress
 the same domain but only one has oauth annotations - the one that has at least the <code>oauth2_proxy</code>
 service - all paths from that domain will be protected.</p>
 
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">Note</h4>
+OAuth2 needs <a href="#external"><code>external-has-lua</code></a> enabled if running on an external haproxy deployment.
+</div>
+
+
 <p>See also:</p>
 
 <ul>
+<li><a href="#external"><code>external-has-lua</code></a> configuration key.</li>
 <li><a href="https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/auth/oauth">example</a> page.</li>
 </ul>
 
@@ -3958,14 +4471,30 @@ service - all paths from that domain will be protected.</p>
 <td><code>begin</code></td>
 <td>v0.11</td>
 </tr>
+
+<tr>
+<td><code>path-type-order</code></td>
+<td><code>Global</code></td>
+<td><code>exact,prefix,begin,regex</code></td>
+<td>v0.12</td>
+</tr>
 </tbody>
 </table>
 
 <p>Defines how the path of an incoming request should match a declared path in the ingress object.</p>
 
 <ul>
-<li><code>path-type</code>: Configures the path type. Case insensitive, so <code>Begin</code> and <code>begin</code> configures the same path type option. The ingress spec has priority, this option will only be used if the <code>pathType</code> attribute from the ingress spec is declared as <code>ImplementationSpecific</code> or is not declared.</li>
+<li><code>path-type</code>: Configures the path type. Case insensitive, so <code>Begin</code> and <code>begin</code> configures the same path type option. The ingress spec has priority, this option will only be used if the <code>pathType</code> attribute from the ingress spec is declared as <code>ImplementationSpecific</code>.</li>
+<li><code>path-type-order</code>: Defines a comma-separated list of the order that non overlapping paths should be matched. The default order starts with <code>exact</code> which is the fastest match, and finishes with <code>regex</code> which is the slowest one. All path types must be provided. Case insensitive, use all path types in lowercase. In the case of overlapping paths, eg <code>/dir/sub</code> and <code>/dir</code>, the one with the highest precedence, <code>/dir/sub</code> in the example, will always be checked first despite its match type.</li>
 </ul>
+
+
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Warning</h4>
+Wildcard hostnames and alias-regex match incoming requests using the regex path type, even if the path itself has a distinct one. Changing the precedence order of paths also changes the precedence order of hostnames. See also <a href="#server-alias">server-alias-regex</a> and <a href="#strict-host">strict host</a>.
+</div>
+
 
 <p>Supported <code>path-type</code> values:</p>
 
@@ -4311,6 +4840,13 @@ The following table shows some examples:</p>
 
 <tbody>
 <tr>
+<td><code>groupname</code></td>
+<td><code>Global</code></td>
+<td></td>
+<td>v0.12</td>
+</tr>
+
+<tr>
 <td><code>use-chroot</code></td>
 <td><code>Global</code></td>
 <td><code>false</code></td>
@@ -4323,23 +4859,43 @@ The following table shows some examples:</p>
 <td><code>false</code></td>
 <td>v0.9</td>
 </tr>
+
+<tr>
+<td><code>username</code></td>
+<td><code>Global</code></td>
+<td></td>
+<td>v0.12</td>
+</tr>
 </tbody>
 </table>
 
 <p>Change security options.</p>
 
 <ul>
-<li><code>use-chroot</code>: If <code>true</code>, configures haproxy to perform a <code>chroot()</code> in the empty and non-writable directory <code>/var/empty</code> during the startup process, just before it drops its own privileges. Only root can perform a <code>chroot()</code>, so HAProxy Ingress container should start as UID <code>0</code> if this option is configured as <code>true</code>. See the note below about <code>use-chroot</code> option limitations.</li>
-<li><code>use-haproxy-user</code>: Defines if the haproxy&rsquo;s process should be changed to <code>haproxy</code>, UID <code>1001</code>. The default value <code>false</code> leaves haproxy running as root. Note that even running as root, haproxy always drops its own privileges before start its event loop.</li>
+<li><code>username</code> and <code>groupname</code>: Changes the user and group names used to run haproxy as non root. The default value is an empty string, which means leave haproxy running as root. Note that even running as root, haproxy always drops its own privileges before start its event loop. Both options should be declared to the configuration take effect. Note that this configuration means &ldquo;running haproxy as non root&rdquo;, it&rsquo;s only useful when the haproxy container starts as root.</li>
+<li><code>use-chroot</code>: If <code>true</code>, configures haproxy to perform a <code>chroot()</code> in the empty and non-writable directory <code>/var/empty</code> during the startup process, just before it drops its own privileges. Only root can perform a <code>chroot()</code>, so HAProxy Ingress container should start as UID <code>0</code> if this option is configured as <code>true</code>. See <strong>Using chroot()</strong> section below.</li>
+<li><code>use-haproxy-user</code>: If <code>true</code>, configures <code>username</code> and <code>groupname</code> configuration keys as <code>haproxy</code>. See <code>username</code> and <code>groupname</code> above. Note that this user and group exists in the embedded haproxy, and should exist in the external haproxy if used. In the case of a conflict, <code>username</code> and <code>groupname</code> declaration will have priority and <code>use-haproxy-user</code> will be ignored. If <code>false</code>, the default value, user and group names will not be changed.</li>
 </ul>
 
-<p>In the default configuration, HAProxy Ingress container starts as root. Since v0.9 it&rsquo;s also possible to configure the container to start as <code>haproxy</code> user, UID <code>1001</code>. Read the <a href="http://cbonte.github.io/haproxy-dconv/1.9/management.html#13">Security considerations</a> from HAProxy doc before change the starting user. The starting user can be changed in the deployment or daemonset&rsquo;s pod template using the following configuration:</p>
+<p><strong>Starting as non root</strong></p>
+
+<p>In the default configuration HAProxy Ingress container starts as root. Since v0.9 it&rsquo;s also possible to configure the container to start as <code>haproxy</code> user, UID <code>1001</code>.</p>
+
+<p>If using the embedded haproxy, read the <a href="http://cbonte.github.io/haproxy-dconv/2.0/management.html#13">Security considerations</a> from HAProxy doc before change the starting user.</p>
+
+<p>If using an external haproxy, configures the pod&rsquo;s securityContext (instead of the container&rsquo;s one) which will make Kubernetes create the shared file system with write access, so the controller can create and update configuration, maps and certificate files.</p>
+
+<p>The starting user can be changed in the deployment or daemonset&rsquo;s pod template using the following configuration:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">...<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">  </span>template<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">    </span>spec<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">      </span>securityContext<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">        </span>runAsUser<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">1001</span></code></pre></div>
 <p>Note that ports below 1024 cannot be bound if the container starts as non-root.</p>
+
+<p><strong>Using chroot()</strong></p>
+
+<p>Beware of some chroot limitations:</p>
 
 
 
@@ -5221,38 +5777,6 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 <li><a href="#modsecurity">Modsecurity</a> configuration keys.</li>
 </ul>
 
-<h2 id="whitelist">Whitelist</h2>
-
-<table>
-<thead>
-<tr>
-<th>Configuration key</th>
-<th>Scope</th>
-<th>Default</th>
-<th>Since</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td><code>whitelist-source-range</code></td>
-<td><code>Path</code></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-<p>Defines a comma-separated list of source IPs or CIDRs allowed to connect. If not
-declared, any source IP is allowed. If declared, requests with source IP not
-included in the list are denied, and clients receive the HAProxy&rsquo;s 403 error page.</p>
-
-<p>See also:</p>
-
-<ul>
-<li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny</a></li>
-</ul>
-
 	
 		<style>
   .feedback--answer {
@@ -5315,7 +5839,7 @@ included in the list are denied, and clients receive the HAProxy&rsquo;s 403 err
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified January 31, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/e622d46efd9558c5cccc7040e4a3d21ba1ae19e6">add sni and verifyhost to secure connections (e622d46e)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified February 4, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/7460e7f72cdd809a225cf6ca1bfc288be3fa60c3">Add support for native redirection of default backend (7460e7f7)</a>
 </div>
 </div>
 
