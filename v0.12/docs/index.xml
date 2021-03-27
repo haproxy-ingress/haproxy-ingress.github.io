@@ -6328,9 +6328,9 @@ following content:&lt;/p&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;enabled&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;image&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;repository&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;haproxy&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;tag&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2.3.4&lt;/span&gt;-alpine&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;tag&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2.3.8&lt;/span&gt;-alpine&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Change the hostNetwork to &lt;code&gt;true&lt;/code&gt; if your cluster doesn&amp;rsquo;t provide a service loadbalancer.
-These parameters are also configuring an external haproxy, version 2.3.4, and configuring
+These parameters are also configuring an external haproxy, version 2.3.8, and configuring
 haproxy to log to stdout.&lt;/p&gt;
 
 &lt;p&gt;Add the HAProxy Ingress Helm repository if using HAProxy Ingress&amp;rsquo; chart for the first time:&lt;/p&gt;
@@ -6344,7 +6344,7 @@ haproxy to log to stdout.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ helm install haproxy-ingress haproxy-ingress/haproxy-ingress\
   --create-namespace --namespace=ingress-controller\
-  --version 0.12.1\
+  --version 0.12.2\
   -f haproxy-ingress-values.yaml
 &lt;/code&gt;&lt;/pre&gt;
 
