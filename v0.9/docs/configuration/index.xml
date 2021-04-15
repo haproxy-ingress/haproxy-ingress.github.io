@@ -504,7 +504,7 @@ is used as the default value if not overwritten elsewhere.&lt;/p&gt;
 
 &lt;p&gt;A configuration key is used verbatim as the ConfigMap key name, without any prefix.
 The ConfigMap spec expects a string as the key value, so declare numbers and booleans
-as strings, HAProxy Ingress will convert it when needed.&lt;/p&gt;
+as strings, HAProxy Ingress will convert them when needed.&lt;/p&gt;
 
 &lt;h1 id=&#34;ingress-and-services&#34;&gt;Ingress and services&lt;/h1&gt;
 
@@ -534,7 +534,7 @@ overwrite the default value and the ConfigMap configuration.&lt;/p&gt;
 
 &lt;h1 id=&#34;scope&#34;&gt;Scope&lt;/h1&gt;
 
-&lt;p&gt;HAProxy Ingress configuration keys may be in one of three distinct scopes. A scope
+&lt;p&gt;HAProxy Ingress configuration keys may be in one of four distinct scopes. A scope
 defines where a configuration key can be declared and how it interacts with ingress
 and service objects.&lt;/p&gt;
 
@@ -556,6 +556,10 @@ configuration key with distinct values are declared in distict ingress objects b
 to the same service or HAProxy backend. A backend configuration key declared in a
 service object overwrites the same configuration in an ingress object without
 conflicting.&lt;/li&gt;
+&lt;li&gt;Scope &lt;code&gt;Path&lt;/code&gt;: Defines configuration keys that bind to the hostname and the HTTP path.
+Configuration keys of the Path scope can be declared in any ConfigMap as a default
+value, or as Ingress or Service annotation. Configuration keys of the Path scope
+never conflict.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;In the case of a conflict, the value of the ingress object which was created first
@@ -656,14 +660,14 @@ will be used.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;auth-realm&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;realm string&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;auth-secret&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;secret name&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -705,7 +709,7 @@ will be used.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;auth-type&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&amp;ldquo;basic&amp;rdquo;&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -873,49 +877,49 @@ will be used.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#cors&#34;&gt;&lt;code&gt;cors-allow-credentials&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#cors&#34;&gt;&lt;code&gt;cors-allow-headers&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;headers list&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#cors&#34;&gt;&lt;code&gt;cors-allow-methods&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;methods list&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#cors&#34;&gt;&lt;code&gt;cors-allow-origin&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;URL&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#cors&#34;&gt;&lt;code&gt;cors-enable&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#cors&#34;&gt;&lt;code&gt;cors-expose-headers&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;headers&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#cors&#34;&gt;&lt;code&gt;cors-max-age&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;time (seconds)&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -1048,28 +1052,28 @@ will be used.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#hsts&#34;&gt;&lt;code&gt;hsts&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#hsts&#34;&gt;&lt;code&gt;hsts-include-subdomains&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#hsts&#34;&gt;&lt;code&gt;hsts-max-age&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;number of seconds&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;15768000&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#hsts&#34;&gt;&lt;code&gt;hsts-preload&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -1237,7 +1241,7 @@ will be used.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#proxy-body-size&#34;&gt;&lt;code&gt;proxy-body-size&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;size (bytes)&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;unlimited&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -1251,7 +1255,7 @@ will be used.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#rewrite-target&#34;&gt;&lt;code&gt;rewrite-target&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;path string&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -1426,7 +1430,7 @@ will be used.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#ssl-redirect&#34;&gt;&lt;code&gt;ssl-redirect&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -1622,21 +1626,21 @@ will be used.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#waf&#34;&gt;&lt;code&gt;waf&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;&amp;ldquo;modsecurity&amp;rdquo;&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#waf&#34;&gt;&lt;code&gt;waf-mode&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[deny|detect]&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;deny&lt;/code&gt; (if waf is set)&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;whitelist-source-range&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;CIDR&lt;/td&gt;
-&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
@@ -2622,49 +2626,49 @@ to add more than one line of configuration.&lt;/p&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;cors-allow-credentials&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;cors-allow-headers&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;em&gt;see below&lt;/em&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;cors-allow-methods&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;em&gt;see below&lt;/em&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;cors-allow-origin&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;*&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;cors-enable&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;cors-expose-headers&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;v0.8&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;cors-max-age&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;86400&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
@@ -3119,28 +3123,28 @@ This limitation doesn&amp;rsquo;t exist on v0.8 or above.
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;hsts&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;hsts-include-subdomains&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;hsts-max-age&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;15768000&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;hsts-preload&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
@@ -3590,7 +3594,7 @@ service - all paths from that domain will be protected.&lt;/p&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;proxy-body-size&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
@@ -3678,7 +3682,7 @@ resource.&lt;/p&gt;
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;rewrite-target&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
@@ -4257,7 +4261,7 @@ configured to SSL offload on HAProxy.&lt;/p&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;ssl-redirect&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
@@ -4672,14 +4676,14 @@ useful on http logs. The default value is &lt;code&gt;false&lt;/code&gt;. Usage:
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;waf&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;waf-mode&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;deny&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;v0.9&lt;/td&gt;
 &lt;/tr&gt;
