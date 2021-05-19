@@ -25,13 +25,13 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.13/docs/examples/blue-green/" />
-<meta property="article:modified_time" content="2021-01-18T08:44:52-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-04-21T16:31:16-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Blue/green">
 <meta itemprop="description" content="Demonstrate how to configure blue/green deployment, with and without header or cookie selection.
 ">
 
 
-<meta itemprop="dateModified" content="2021-01-18T08:44:52-03:00" />
+<meta itemprop="dateModified" content="2021-04-21T16:31:16-03:00" />
 <meta itemprop="wordCount" content="778">
 
 
@@ -499,10 +499,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.kubernetes.io/balance-algorithm: roundrobin
-    ingress.kubernetes.io/blue-green-deploy: group=blue=1,group=green=1
-    ingress.kubernetes.io/blue-green-mode: pod
-    ingress.kubernetes.io/ssl-redirect: &quot;false&quot;
+    haproxy-ingress.github.io/balance-algorithm: roundrobin
+    haproxy-ingress.github.io/blue-green-deploy: group=blue=1,group=green=1
+    haproxy-ingress.github.io/blue-green-mode: pod
+    haproxy-ingress.github.io/ssl-redirect: &quot;false&quot;
   name: bluegreen
 spec:
   rules:
@@ -578,7 +578,7 @@ instead of single pods.</p>
 <p><strong>Note:</strong> BG mode was added on v0.7. On v0.6, the only supported mode is <code>pod</code>.</p>
 
 <pre><code>$ kubectl annotate --overwrite ingress bluegreen \
-  ingress.kubernetes.io/blue-green-mode=deploy
+  haproxy-ingress.github.io/blue-green-mode=deploy
 </code></pre>
 
 <ul>
@@ -599,7 +599,7 @@ Running 100 requests...
 <p>Changing now the balance to <sup>1</sup>&frasl;<sub>3</sub> blue and <sup>2</sup>&frasl;<sub>3</sub> green:</p>
 
 <pre><code>$ kubectl annotate --overwrite ingress bluegreen \
-  ingress.kubernetes.io/blue-green-deploy=group=blue=1,group=green=2
+  haproxy-ingress.github.io/blue-green-deploy=group=blue=1,group=green=2
 </code></pre>
 
 <ul>
@@ -646,7 +646,7 @@ instructions to deploy the sample application.</p>
 <p>After that, add the following annotation:</p>
 
 <pre><code>$ kubectl annotate --overwrite ingress bluegreen \
-  ingress.kubernetes.io/blue-green-header=x-server:group
+  haproxy-ingress.github.io/blue-green-header=x-server:group
 </code></pre>
 
 <p>Create (or update) the <code>hareq</code> alias. Change <code>IP</code> to your HAProxy Ingress controller
@@ -683,7 +683,7 @@ Running 100 requests...
 <p>Choose an invalid group, the configured blue/green balance will be used:</p>
 
 <pre><code>$ kubectl annotate --overwrite ingress bluegreen \
-  ingress.kubernetes.io/blue-green-deploy=group=blue=1,group=green=3
+  haproxy-ingress.github.io/blue-green-deploy=group=blue=1,group=green=3
 $ GROUP=invalid
 $ hareq
 Running 100 requests...
@@ -753,7 +753,7 @@ Running 100 requests...
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified January 18, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/ea95378e643a25c70bd23b340705c499f2eb72a1">update to networking.k8s.io/v1 api (ea95378e)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified April 21, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/49c869e27ec565913f976ed18249cd40e53048b3">docs: change the default annotation prefix (49c869e2)</a>
 </div>
 </div>
 

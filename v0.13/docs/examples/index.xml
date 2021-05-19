@@ -98,10 +98,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.kubernetes.io/balance-algorithm: roundrobin
-    ingress.kubernetes.io/blue-green-deploy: group=blue=1,group=green=1
-    ingress.kubernetes.io/blue-green-mode: pod
-    ingress.kubernetes.io/ssl-redirect: &amp;quot;false&amp;quot;
+    haproxy-ingress.github.io/balance-algorithm: roundrobin
+    haproxy-ingress.github.io/blue-green-deploy: group=blue=1,group=green=1
+    haproxy-ingress.github.io/blue-green-mode: pod
+    haproxy-ingress.github.io/ssl-redirect: &amp;quot;false&amp;quot;
   name: bluegreen
 spec:
   rules:
@@ -177,7 +177,7 @@ instead of single pods.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Note:&lt;/strong&gt; BG mode was added on v0.7. On v0.6, the only supported mode is &lt;code&gt;pod&lt;/code&gt;.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ kubectl annotate --overwrite ingress bluegreen \
-  ingress.kubernetes.io/blue-green-mode=deploy
+  haproxy-ingress.github.io/blue-green-mode=deploy
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;ul&gt;
@@ -198,7 +198,7 @@ Running 100 requests...
 &lt;p&gt;Changing now the balance to &lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;3&lt;/sub&gt; blue and &lt;sup&gt;2&lt;/sup&gt;&amp;frasl;&lt;sub&gt;3&lt;/sub&gt; green:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ kubectl annotate --overwrite ingress bluegreen \
-  ingress.kubernetes.io/blue-green-deploy=group=blue=1,group=green=2
+  haproxy-ingress.github.io/blue-green-deploy=group=blue=1,group=green=2
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;ul&gt;
@@ -245,7 +245,7 @@ instructions to deploy the sample application.&lt;/p&gt;
 &lt;p&gt;After that, add the following annotation:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ kubectl annotate --overwrite ingress bluegreen \
-  ingress.kubernetes.io/blue-green-header=x-server:group
+  haproxy-ingress.github.io/blue-green-header=x-server:group
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Create (or update) the &lt;code&gt;hareq&lt;/code&gt; alias. Change &lt;code&gt;IP&lt;/code&gt; to your HAProxy Ingress controller
@@ -282,7 +282,7 @@ Running 100 requests...
 &lt;p&gt;Choose an invalid group, the configured blue/green balance will be used:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ kubectl annotate --overwrite ingress bluegreen \
-  ingress.kubernetes.io/blue-green-deploy=group=blue=1,group=green=3
+  haproxy-ingress.github.io/blue-green-deploy=group=blue=1,group=green=3
 $ GROUP=invalid
 $ hareq
 Running 100 requests...
@@ -343,9 +343,20 @@ to stdout.&lt;/p&gt;
 
 &lt;p&gt;Hint: change &lt;code&gt;install&lt;/code&gt; to &lt;code&gt;upgrade&lt;/code&gt; if HAProxy Ingress is already installed with Helm.&lt;/p&gt;
 
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
+We&amp;rsquo;re asking helm to install the latest v0.12 controller version, which will work
+on this example, but it&amp;rsquo;s a best practice to use a proper chart version when moving to
+staging or production. Check all stable versions with &lt;code&gt;helm search repo haproxy-ingress/ -l&lt;/code&gt;
+and update the &lt;code&gt;--version&lt;/code&gt; command-line below.
+&lt;/div&gt;
+
+
 &lt;pre&gt;&lt;code&gt;$ helm install haproxy-ingress haproxy-ingress/haproxy-ingress\
   --create-namespace --namespace=ingress-controller\
-  --version 0.13.0-snapshot.1 --devel\
+  --version 0.12\
   -f haproxy-ingress-values.yaml
 &lt;/code&gt;&lt;/pre&gt;
 
@@ -780,8 +791,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.kubernetes.io/ssl-redirect: &amp;#34;false&amp;#34;
-    ingress.kubernetes.io/waf: &amp;#34;modsecurity&amp;#34;
+    haproxy-ingress.github.io/ssl-redirect: &amp;#34;false&amp;#34;
+    haproxy-ingress.github.io/waf: &amp;#34;modsecurity&amp;#34;
   name: echo
 spec:
   rules:

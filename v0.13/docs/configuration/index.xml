@@ -122,16 +122,18 @@ as strings, HAProxy Ingress will convert them when needed.&lt;/p&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;A configuration key needs a prefix in front of its name to use as an annotation key.
-The default prefix is &lt;code&gt;ingress.kubernetes.io&lt;/code&gt;, change with the &lt;code&gt;--annotation-prefix&lt;/code&gt;
+The default prefix is &lt;code&gt;haproxy-ingress.github.io&lt;/code&gt;, and &lt;code&gt;ingress.kubernetes.io&lt;/code&gt; is also
+supported for backward compatibility. Change the prefix with the
+&lt;a href=&#34;/v0.13/v0.13/docs/configuration/command-line/#annotations-prefix&#34;&gt;&lt;code&gt;--annotations-prefix&lt;/code&gt;&lt;/a&gt;
 command-line option. The annotation value spec expects a string as the key value, so
 declare numbers and booleans as strings, HAProxy Ingress will convert them when needed.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;apiVersion&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;networking.k8s.io/v1&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;kind&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;Ingress&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;metadata&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;annotations&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;ingress.kubernetes.io/balance-algorithm&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;roundrobin&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;ingress.kubernetes.io/maxconn-server&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;500&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;ingress.kubernetes.io/ssl-redirect&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;false&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;haproxy-ingress.github.io/balance-algorithm&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;roundrobin&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;haproxy-ingress.github.io/maxconn-server&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;500&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;haproxy-ingress.github.io/ssl-redirect&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;false&amp;#34;&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;name&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;app&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;namespace&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;default&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;spec&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
@@ -212,7 +214,7 @@ to distinct routes. For example:&lt;/p&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;kind&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;Ingress&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;metadata&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;annotations&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;ingress.kubernetes.io/rewrite-target&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;/&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;haproxy-ingress.github.io/rewrite-target&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;/&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;name&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;app-back&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;spec&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;rules&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
@@ -386,10 +388,24 @@ TCP port number.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#auth-external&#34;&gt;&lt;code&gt;auth-headers&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;&amp;lt;header&amp;gt;:&amp;lt;var&amp;gt;,...&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#auth-external&#34;&gt;&lt;code&gt;auth-headers-fail&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;lt;header&amp;gt;,...&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;Path&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;*&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#auth-external&#34;&gt;&lt;code&gt;auth-headers-request&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;lt;header&amp;gt;,...&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;*&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#auth-external&#34;&gt;&lt;code&gt;auth-headers-succeed&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;lt;header&amp;gt;,...&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;*&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -397,6 +413,13 @@ TCP port number.&lt;/p&gt;
 &lt;td&gt;http log format for auth external&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
 &lt;td&gt;do not log&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#auth-external&#34;&gt;&lt;code&gt;auth-method&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;http request method&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -1088,7 +1111,7 @@ TCP port number.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#path-type&#34;&gt;&lt;code&gt;path-type&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;path matching type&lt;/td&gt;
-&lt;td&gt;Host&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;begin&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -1118,6 +1141,41 @@ TCP port number.&lt;/p&gt;
 &lt;td&gt;[v1|v2|v2-ssl|v2-ssl-cn]&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#redirect&#34;&gt;&lt;code&gt;redirect-from&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;domain name&lt;/td&gt;
+&lt;td&gt;Host&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#redirect&#34;&gt;&lt;code&gt;redirect-from-code&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;http status code&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;302&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#redirect&#34;&gt;&lt;code&gt;redirect-from-regex&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;regex&lt;/td&gt;
+&lt;td&gt;Host&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#redirect&#34;&gt;&lt;code&gt;redirect-to&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;fully qualified URL&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#redirect&#34;&gt;&lt;code&gt;redirect-to-code&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;http status code&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;302&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -1171,27 +1229,6 @@ TCP port number.&lt;/p&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#server-alias&#34;&gt;&lt;code&gt;server-alias-regex&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;regex&lt;/td&gt;
-&lt;td&gt;Host&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#server-redirect&#34;&gt;&lt;code&gt;server-redirect&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;domain name&lt;/td&gt;
-&lt;td&gt;Host&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#server-redirect&#34;&gt;&lt;code&gt;server-redirect-code&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;http status code&lt;/td&gt;
-&lt;td&gt;Host&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;302&lt;/code&gt;&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#server-redirect&#34;&gt;&lt;code&gt;server-redirect-regex&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;regex&lt;/td&gt;
 &lt;td&gt;Host&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
@@ -1748,7 +1785,7 @@ and certificate signing, and will also start a leader election to define which
 haproxy-ingress instance should perform authorizations and certificate signing.&lt;/p&gt;
 
 &lt;p&gt;The haproxy-ingress leader tracks ingress objects that declares the annotation
-&lt;code&gt;ingress.kubernetes.io/cert-signer&lt;/code&gt; with value &lt;code&gt;acme&lt;/code&gt; and a configured secret name for
+&lt;code&gt;haproxy-ingress.github.io/cert-signer&lt;/code&gt; with value &lt;code&gt;acme&lt;/code&gt; and a configured secret name for
 TLS certificate. The annotation &lt;code&gt;kubernetes.io/tls-acme&lt;/code&gt; with value &lt;code&gt;&amp;quot;true&amp;quot;&lt;/code&gt; will also
 be used if the command-line option &lt;code&gt;--acme-track-tls-annotation&lt;/code&gt; is declared. The
 secret does not need to exist. A new certificate will be issued if the certificate is
@@ -2085,6 +2122,12 @@ configured path, using &lt;code&gt;302&lt;/code&gt; status code, when the HTTP c
 to the root context of the configured domain. &lt;code&gt;app-root&lt;/code&gt; key binds to the root
 context path, so it needs to be declared in the same Ingress that configures it.&lt;/p&gt;
 
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#redirect&#34;&gt;Redirect&lt;/a&gt; configuration keys.&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;hr /&gt;
 
 &lt;h2 id=&#34;auth-basic&#34;&gt;Auth Basic&lt;/h2&gt;
@@ -2162,9 +2205,30 @@ Up to v0.12 the configuration key &lt;code&gt;auth-type&lt;/code&gt; was mandato
 
 &lt;tbody&gt;
 &lt;tr&gt;
-&lt;td&gt;&lt;code&gt;auth-headers&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;auth-headers-fail&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;*&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.13&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;auth-headers-request&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;*&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.13&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;auth-headers-succeed&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;*&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.13&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;auth-method&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;GET&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;v0.13&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -2194,15 +2258,18 @@ Up to v0.12 the configuration key &lt;code&gt;auth-type&lt;/code&gt; was mandato
 &lt;p&gt;Configures External Authentication options.&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;auth-url&lt;/code&gt;: Configures the endpoint of an authentication service. HAProxy will make the request and wait for the response before send the request to the backend server. The authentication service should respond with a 2xx status code, otherwise the request is considered as not allowed and HAProxy will respond to the client with 403 deny. See below some usage instructions.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;auth-signin&lt;/code&gt;: Optional, configures the endpoint of the sign in server used to redirect failed requests. HAProxy will respond the request with 403 deny if the authentication fails and &lt;code&gt;auth-signin&lt;/code&gt; is not declared.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;auth-headers&lt;/code&gt;: Optional, configures additional headers that should be sent to the backend server. Usage instructions later in this section.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-url&lt;/code&gt;: Configures the endpoint(s) of the authentication service. All requests made to the target backend server will be validated by the authentication service before continue, which should respond with &lt;code&gt;2xx&lt;/code&gt; HTTP status code, otherwise the request is considered as failed. In the case of a failure, the backend server is not used and the client receives the response from the authentication service.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-method&lt;/code&gt;: Configures the HTTP method used in the request to the external authentication service. The default value is &lt;code&gt;GET&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-headers-request&lt;/code&gt;: Configures a comma-separated list of header names that should be copied from the client to the authentication service. All HTTP headers will be copied if not declared.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-headers-succeed&lt;/code&gt;: Configures a comma-separated list of header names that should be copied from the authentication service to the backend server if the authentication succeed. All HTTP headers will be copied if not declared.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-headers-fail&lt;/code&gt;: Configures a comma-separated list of header names that should be copied from the authentication service to the client if the authentication fail. This option is ignored if &lt;code&gt;auth-signin&lt;/code&gt; is used. All HTTP headers will be copied if not declared.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-signin&lt;/code&gt;: Optional, configures the endpoint of the sign in server used to redirect failed requests. The content is parsed by haproxy as a &lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/2.2/configuration.html#8.2.4&#34;&gt;log-format&lt;/a&gt; string and the result is copied verbatim to the &lt;code&gt;Location&lt;/code&gt; header of a HTTP 302 response. The default behavior is to use the authentication service response.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;auth-proxy&lt;/code&gt;: Optional, changes the name of a frontend proxy and a free TCP port range, used by &lt;code&gt;auth-request.lua&lt;/code&gt; script to query the external authentication endpoint.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;HAProxy Ingress can configure haproxy to use an external HTTP service to validate every request made to a backend. The external authentication service will receive all the headers sent by the client, should accept HEAD requests, and should respond with HTTP status code between &lt;code&gt;200&lt;/code&gt; and &lt;code&gt;299&lt;/code&gt;, inclusive, if the request should be accepted. Any other status code will make haproxy redirect the client to a sign in endpoint, if configured, or will otherwise respond with HTTP status code &lt;code&gt;403&lt;/code&gt; to the client.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;External service URL&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;auth-url&lt;/code&gt; receives the authentication service endpoint. The url format is &lt;code&gt;&amp;lt;proto&amp;gt;://&amp;lt;name&amp;gt;[:&amp;lt;port&amp;gt;][&amp;lt;path&amp;gt;]&lt;/code&gt;, which means:&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;auth-url&lt;/code&gt; is the only mandatory option and receives the external authentication service endpoint. The url format is &lt;code&gt;&amp;lt;proto&amp;gt;://&amp;lt;name&amp;gt;[:&amp;lt;port&amp;gt;][&amp;lt;path&amp;gt;]&lt;/code&gt;, which means:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;&amp;lt;proto&amp;gt;&lt;/code&gt;: can be &lt;code&gt;http&lt;/code&gt;, &lt;code&gt;https&lt;/code&gt;, &lt;code&gt;service&lt;/code&gt; or &lt;code&gt;svc&lt;/code&gt;.&lt;/li&gt;
@@ -2215,21 +2282,39 @@ Up to v0.12 the configuration key &lt;code&gt;auth-type&lt;/code&gt; was mandato
 
 &lt;p&gt;&lt;code&gt;svc&lt;/code&gt; protocol allows to use a Kubernetes service declared in the same namespace of the ingress or the service being annotated. The service can be of any type and a port must always be declared - both in the &lt;code&gt;auth-url&lt;/code&gt; configuration and in the service resource. Using &lt;code&gt;svc&lt;/code&gt; protocol allows to configure a secure connection, see &lt;a href=&#34;#secure-backend&#34;&gt;secure&lt;/a&gt; configuration keys and annotate them in the target service.&lt;/p&gt;
 
-&lt;p&gt;A valid response (HTTP status code between &lt;code&gt;200&lt;/code&gt; and &lt;code&gt;299&lt;/code&gt;) from the external authentication service will allow the request to reach its backend server without further action. An invalid request, one that the authentication service respond without a 2xx status code, can be managed in two distinct ways: a HTTP status code 403 sent to the client or, if &lt;code&gt;auth-signin&lt;/code&gt; is configured, this endpoint is sent back to the client in the &lt;code&gt;Location&lt;/code&gt; header as a HTTP 302 response.&lt;/p&gt;
-
-&lt;p&gt;The external authentication service can provide information to the backend server using HTTP headers. All response headers received from the external authentication service are available as haproxy request variables, named as &lt;code&gt;req.auth_response_header.&amp;lt;sanitized_header_name&amp;gt;&lt;/code&gt;. Configures &lt;code&gt;auth-headers&lt;/code&gt; configuration key with a comma-separated list of &lt;code&gt;&amp;lt;header&amp;gt;:&amp;lt;haproxy-var&amp;gt;&lt;/code&gt; to send its content to the backend server. OAuth2-proxy for example sends a response with &lt;code&gt;X-Auth-Request-Email&lt;/code&gt;, so configuring &lt;code&gt;auth-headers&lt;/code&gt; with &lt;code&gt;X-Email:req.auth_response_header.x_auth_request_email&lt;/code&gt; will send a header &lt;code&gt;X-Email&lt;/code&gt; with the email content to the backend server.&lt;/p&gt;
-
-&lt;p&gt;An &lt;a href=&#34;https://github.com/oauth2-proxy/oauth2-proxy&#34;&gt;oauth2-proxy&lt;/a&gt; service can be configured this way:&lt;/p&gt;
+&lt;p&gt;Configuration examples:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;auth-url&lt;/code&gt; as &lt;code&gt;&amp;quot;https://&amp;lt;ip-or-hostname&amp;gt;/oauth2/auth&amp;quot;&lt;/code&gt;. Do use and properly configure &lt;code&gt;svc&lt;/code&gt; protocol instead if the network between HAProxy Ingress and the oauth2-proxy service is untrusted.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;auth-signin&lt;/code&gt; as &lt;code&gt;&amp;quot;https://&amp;lt;ip-or-hostname&amp;gt;/oauth2/start?rd=%[path]&amp;quot;&lt;/code&gt;. The content is parsed by haproxy as a &lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/2.2/configuration.html#8.2.4&#34;&gt;log-format&lt;/a&gt; string and the result is copied verbatim to the &lt;code&gt;Location&lt;/code&gt; header of a HTTP 302 response. The &lt;code&gt;rd&lt;/code&gt; query field asks oauth2-proxy to preserve the path provided by the client.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;auth-headers&lt;/code&gt; as &lt;code&gt;X-Auth-Request-Email:req.auth_response_header.x_auth_request_email&lt;/code&gt;, this will create the header &lt;code&gt;X-Auth-Request-Email&lt;/code&gt; with the user email provided by oauth2-proxy.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-url: &amp;quot;http://10.0.0.2&amp;quot;&lt;/code&gt;: Authentication service accepts plain HTTP connection, TCP port &lt;code&gt;80&lt;/code&gt; and root path are used.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-url: &amp;quot;https://10.0.0.2/auth&amp;quot;&lt;/code&gt;: Authentication service accepts HTTPS connection, TCP port &lt;code&gt;443&lt;/code&gt; and path &lt;code&gt;/auth&lt;/code&gt; are used.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-url: &amp;quot;https://auth.local:8443&amp;quot;&lt;/code&gt;: Domain &lt;code&gt;auth.local&lt;/code&gt; is resolved during configuration building, and requests will be distributed among all its IPs, using the default load balance algorithm. Authentication service accepts HTTPS connection, TCP port &lt;code&gt;8443&lt;/code&gt; and root path are used. SNI extention and Host header are added to the request.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-url: &amp;quot;svc://auth-cluster:8443/auth&amp;quot;&lt;/code&gt;: A service named &lt;code&gt;auth-cluster&lt;/code&gt; will be used as the destination of the request, service port &lt;code&gt;8443&lt;/code&gt; and path &lt;code&gt;/auth&lt;/code&gt;. The service can be annotated with Backend and Path scoped configuration keys, eg &lt;a href=&#34;#secure-backend&#34;&gt;&lt;code&gt;secure-backends&lt;/code&gt;&lt;/a&gt; to provide a secure connection.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;OAuth2-proxy can be running in the Kubernetes cluster and served by this same controller, however remember to not expose the service in the same ingress that configures the &lt;code&gt;auth-url&lt;/code&gt; and &lt;code&gt;auth-signin&lt;/code&gt;, otherwise it will endless loop in a HTTP 403 error.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Forwarding headers&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;HAProxy Ingress uses &lt;a href=&#34;https://github.com/TimWolla/haproxy-auth-request&#34;&gt;&lt;code&gt;auth-request.lua&lt;/code&gt;&lt;/a&gt; script, which in turn uses HAProxy Technologies&amp;rsquo; &lt;a href=&#34;https://github.com/haproxytech/haproxy-lua-http/&#34;&gt;&lt;code&gt;haproxy-lua-http&lt;/code&gt;&lt;/a&gt; to perform the authentication request and waits for the response. The request is managed by an internal haproxy frontend/backend pair, which can be fine tuned with &lt;code&gt;auth-proxy&lt;/code&gt;. The default value is &lt;code&gt;_front__auth:14415-14499&lt;/code&gt;: &lt;code&gt;_front__auth&lt;/code&gt; is the name of the frontend helper and &lt;code&gt;14415-14499&lt;/code&gt; is an &lt;a href=&#34;https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.txt&#34;&gt;unassigned TCP port range&lt;/a&gt; that &lt;code&gt;haproxy-lua-http&lt;/code&gt; uses to connect and send the authentication request. Requests to this proxy can be added to the log, see &lt;a href=&#34;#log-format&#34;&gt;&lt;code&gt;auth-log-format&lt;/code&gt;&lt;/a&gt; configuration key.&lt;/p&gt;
+&lt;p&gt;There are three distinct configurations to forward header names:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;auth-headers-request&lt;/code&gt;: headers from the client to the authentication service.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-headers-succeed&lt;/code&gt;: headers from the authentication service to the backend server.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-headers-fail&lt;/code&gt;: headers from the authentication service to the client.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The first option will always be used, the second one only on succeeded requests, the last one only on failures.&lt;/p&gt;
+
+&lt;p&gt;These configuration keys can be defined as a comma-separated list of header names. All HTTP headers will be copied if not declared. Each header name can use wildcard.&lt;/p&gt;
+
+&lt;p&gt;Configuration examples:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;auth-headers-request: &amp;quot;X-*&amp;quot;&lt;/code&gt;: copy only headers started with &lt;code&gt;X-&lt;/code&gt; from the client to the authentication service. All headers provided by the authentication service will be copied to the backend server if the authentication succeed, or to the client if the authentication fail.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-headers-request: &amp;quot;X-*&amp;quot;&lt;/code&gt; and &lt;code&gt;auth-headers-succeed: &amp;quot;X-Token,X-User-*&amp;quot;&lt;/code&gt;: just like the config above, copy only headers started with &lt;code&gt;X-&lt;/code&gt; from the client to the authentication service. If the request succeed, headers started with &lt;code&gt;X-User-&lt;/code&gt; and also the header &lt;code&gt;X-Token&lt;/code&gt; is copied to the backend server. If the request fail, all the provided headers are copied from the authentication server to the client.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Dependencies and port range&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;HAProxy Ingress uses &lt;a href=&#34;https://github.com/TimWolla/haproxy-auth-request&#34;&gt;&lt;code&gt;auth-request.lua&lt;/code&gt;&lt;/a&gt; script, which in turn uses HAProxy Technologies&amp;rsquo; &lt;a href=&#34;https://github.com/haproxytech/haproxy-lua-http/&#34;&gt;&lt;code&gt;haproxy-lua-http&lt;/code&gt;&lt;/a&gt; to perform the authentication request and wait for the response. The request is managed by an internal haproxy frontend/backend pair, which can be fine tuned with &lt;code&gt;auth-proxy&lt;/code&gt;. The default value is &lt;code&gt;_front__auth:14415-14499&lt;/code&gt;: &lt;code&gt;_front__auth&lt;/code&gt; is the name of the frontend helper and &lt;code&gt;14415-14499&lt;/code&gt; is an &lt;a href=&#34;https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.txt&#34;&gt;unassigned TCP port range&lt;/a&gt; that &lt;code&gt;haproxy-lua-http&lt;/code&gt; uses to connect and send the authentication request. Requests to this proxy can be added to the log, see &lt;a href=&#34;#log-format&#34;&gt;&lt;code&gt;auth-log-format&lt;/code&gt;&lt;/a&gt; configuration key.&lt;/p&gt;
 
 
 
@@ -2935,13 +3020,13 @@ to add more than one line of configuration.&lt;/p&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;      capture request header X-User-Id len 32&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Annotations:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;annotations&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;ingress.kubernetes.io/config-backend&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;|
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;haproxy-ingress.github.io/config-backend&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;|
 &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;        acl bar-url path /bar&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;http-request&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;deny&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;if&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;bar-url&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;http-request&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;set-var(txn.path)&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;path&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;http-request&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;cache-use&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;icons&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;if&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;{&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;var(txn.path)&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;-m&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;end&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;.ico&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;}&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;http-response&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;cache-store&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;icons&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;if&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;{&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;var(txn.path)&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;-m&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;end&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;.ico&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;annotations&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;ingress.kubernetes.io/config-tcp-service&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;|
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;haproxy-ingress.github.io/config-tcp-service&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;|
 &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;        timeout client 1m&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;timeout&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;connect&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;15s&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;hr /&gt;
@@ -3613,7 +3698,7 @@ This limitation doesn&amp;rsquo;t exist on v0.8 or above.
 
 &lt;p&gt;Configuration example:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;annotations&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;ingress.kubernetes.io/headers&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;|
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;haproxy-ingress.github.io/headers&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;|
 &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;        x-path: /&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;host&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;%&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;service&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;]&lt;/span&gt;.%&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;[&lt;/span&gt;namespace&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;]&lt;/span&gt;.svc.cluster.local&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;hr /&gt;
@@ -4223,25 +4308,25 @@ bind each thread on its own CPU core.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;oauth-headers&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;X-Auth-Request-Email&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;oauth-uri-prefix&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/oauth2&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;p&gt;Configure OAuth2 via Bitly&amp;rsquo;s &lt;code&gt;oauth2_proxy&lt;/code&gt;. These options have less precedence if used with &lt;code&gt;auth-url&lt;/code&gt; and &lt;code&gt;auth-signin&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Configure OAuth2 via Bitly&amp;rsquo;s &lt;code&gt;oauth2_proxy&lt;/code&gt;. These options have less precedence if used with &lt;a href=&#34;#auth-external&#34;&gt;&lt;code&gt;auth-url&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;oauth&lt;/code&gt;: Defines the oauth implementation. The only supported option is &lt;code&gt;oauth2_proxy&lt;/code&gt; or its alias &lt;code&gt;oauth2-proxy&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;oauth-uri-prefix&lt;/code&gt;: Defines the URI prefix of the oauth service. The default value is &lt;code&gt;/oauth2&lt;/code&gt;. There should be a backend with this path in the ingress resource.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;oauth-headers&lt;/code&gt;: Defines an optional comma-separated list of &lt;code&gt;&amp;lt;header&amp;gt;:&amp;lt;haproxy-var&amp;gt;&lt;/code&gt; used to configure request headers to the upstream backends. The default value is &lt;code&gt;X-Auth-Request-Email:req.auth_response_header.x_auth_request_email&lt;/code&gt; that configures a header &lt;code&gt;X-Auth-Request-Email&lt;/code&gt; with the value of the var &lt;code&gt;req.auth_response_header.x_auth_request_email&lt;/code&gt;. The &lt;a href=&#34;https://github.com/TimWolla/haproxy-auth-request&#34;&gt;&lt;code&gt;auth-request.lua&lt;/code&gt;&lt;/a&gt; script, used by HAProxy Ingress, creates a new &lt;code&gt;req.auth_response_header.&amp;lt;sanitized_header_name&amp;gt;&lt;/code&gt; variable for each response header received by &lt;code&gt;oauth2_proxy&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;oauth-headers&lt;/code&gt;: Defines an optional comma-separated list of &lt;code&gt;&amp;lt;header&amp;gt;[:&amp;lt;source&amp;gt;]&lt;/code&gt; used to configure request headers to the upstream backend. The default value is &lt;code&gt;X-Auth-Request-Email&lt;/code&gt; which copies this HTTP header from oauth2-proxy service response to the backend service. An optional &lt;code&gt;&amp;lt;source&amp;gt;&lt;/code&gt; can be provided with another HTTP header or an internal HAProxy variable.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;OAuth2 expects &lt;a href=&#34;https://github.com/oauth2-proxy/oauth2-proxy&#34;&gt;oauth2-proxy&lt;/a&gt;,
@@ -4255,6 +4340,16 @@ or any other compatible implementation running as a backend of the same domain t
 OAuth2 needs &lt;a href=&#34;#external&#34;&gt;&lt;code&gt;external-has-lua&lt;/code&gt;&lt;/a&gt; enabled if running on an external haproxy deployment. The external haproxy needs Lua json module installed (Alpine&amp;rsquo;s &lt;code&gt;lua-json4&lt;/code&gt; package)
 &lt;/div&gt;
 
+
+&lt;p&gt;Since v0.13 these same options can be used with &lt;a href=&#34;#auth-external&#34;&gt;Auth External&lt;/a&gt; configuration keys. Change &lt;code&gt;&amp;lt;oauth2-proxy-service&amp;gt;&lt;/code&gt; below with the oauth2-proxy service name, and &lt;code&gt;&amp;lt;hostname&amp;gt;&lt;/code&gt; to the hostname of the oauth2-proxy and the backend servers:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;auth-url: &amp;quot;svc://&amp;lt;oauth2-proxy-service&amp;gt;/oauth2/auth&amp;quot;&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-signin: &amp;quot;https://&amp;lt;hostname&amp;gt;/oauth2/start?rd=%[path]&amp;quot;&lt;/code&gt; - the content is parsed by haproxy as a &lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/2.2/configuration.html#8.2.4&#34;&gt;log-format&lt;/a&gt; string and the result is copied verbatim to the &lt;code&gt;Location&lt;/code&gt; header of a HTTP 302 response. The &lt;code&gt;rd&lt;/code&gt; query field asks oauth2-proxy to preserve the path provided by the client.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-headers-succeed: &amp;quot;X-Auth-Request-Email&amp;quot;&lt;/code&gt; - copy the &lt;code&gt;X-Auth-Request-Email&lt;/code&gt; HTTP header with the user email from oauth2-proxy to the backend server.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Configure oauth2 on a distinct ingress, without the &lt;code&gt;auth-url&lt;/code&gt; annotation, otherwise it will endless loop in a HTTP 403 error.&lt;/p&gt;
 
 &lt;p&gt;See also:&lt;/p&gt;
 
@@ -4281,7 +4376,7 @@ OAuth2 needs &lt;a href=&#34;#external&#34;&gt;&lt;code&gt;external-has-lua&lt;/
 &lt;tbody&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;path-type&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Host&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;begin&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;v0.11&lt;/td&gt;
 &lt;/tr&gt;
@@ -4299,14 +4394,14 @@ OAuth2 needs &lt;a href=&#34;#external&#34;&gt;&lt;code&gt;external-has-lua&lt;/
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;path-type&lt;/code&gt;: Configures the path type. Case insensitive, so &lt;code&gt;Begin&lt;/code&gt; and &lt;code&gt;begin&lt;/code&gt; configures the same path type option. The ingress spec has priority, this option will only be used if the &lt;code&gt;pathType&lt;/code&gt; attribute from the ingress spec is declared as &lt;code&gt;ImplementationSpecific&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;path-type-order&lt;/code&gt;: Defines a comma-separated list of the order that non overlapping paths should be matched. The default order starts with &lt;code&gt;exact&lt;/code&gt; which is the fastest match, and finishes with &lt;code&gt;regex&lt;/code&gt; which is the slowest one. All path types must be provided. Case insensitive, use all path types in lowercase. In the case of overlapping paths, eg &lt;code&gt;/dir/sub&lt;/code&gt; and &lt;code&gt;/dir&lt;/code&gt;, the one with the highest precedence, &lt;code&gt;/dir/sub&lt;/code&gt; in the example, will always be checked first despite its match type.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;path-type-order&lt;/code&gt;: Defines a comma-separated list of the order that non overlapping paths should be matched, which means that &lt;code&gt;/dir/sub&lt;/code&gt; will always be checked before &lt;code&gt;/dir&lt;/code&gt; despite their type and the configured order. Mostly used to define when &lt;code&gt;regex&lt;/code&gt; path types should be checked for incoming requests, since HAProxy Ingress doesn&amp;rsquo;t calculate overlapping from regex paths. All path types must be provided. Case insensitive, use all path types in lowercase.&lt;/li&gt;
 &lt;/ul&gt;
 
 
 
 &lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
 &lt;h4 class=&#34;alert-heading&#34;&gt;Warning&lt;/h4&gt;
-Wildcard hostnames and alias-regex match incoming requests using the regex path type, even if the path itself has a distinct one. Changing the precedence order of paths also changes the precedence order of hostnames. See also &lt;a href=&#34;#server-alias&#34;&gt;server-alias-regex&lt;/a&gt; and &lt;a href=&#34;#strict-host&#34;&gt;strict host&lt;/a&gt;.
+Wildcard hostnames and alias-regex match incoming requests using the regex path type, even if the path itself has a distinct one. This happens because hostname and path are checked for a match in a single step. So, changing the precedence order of paths also changes the precedence order of hostnames. See also &lt;a href=&#34;#server-alias&#34;&gt;server-alias-regex&lt;/a&gt; and &lt;a href=&#34;#strict-host&#34;&gt;strict host&lt;/a&gt;.
 &lt;/div&gt;
 
 
@@ -4470,6 +4565,136 @@ resource.&lt;/p&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-send-proxy-v2&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-send-proxy-v2&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-send-proxy-v2-ssl&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-send-proxy-v2-ssl&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-send-proxy-v2-ssl-cn&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-send-proxy-v2-ssl-cn&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;redirect&#34;&gt;Redirect&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;redirect-from&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Host&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.13&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;redirect-from-code&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;302&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.13&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;redirect-from-regex&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Host&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.13&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;redirect-to&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.13&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;redirect-to-code&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;302&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.13&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Configures HTTP redirect. Redirect &lt;em&gt;from&lt;/em&gt; matches source hostnames that should be redirected
+to the hostname declared in the ingess spec. Redirect &lt;em&gt;to&lt;/em&gt; uses the hostname declared in the
+ingress spec as the matching source and redirects the request to the configured URL. See
+examples below.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;redirect-from&lt;/code&gt;: Defines a source domain using hostname-like syntax, so wildcard domains can also be used. The request is redirected to the configured hostname, preserving protocol, path and query string.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;redirect-from-regex&lt;/code&gt;: Defines a POSIX extended regular expression used to match a source domain. The regex will be used verbatim, so add &lt;code&gt;^&lt;/code&gt; and &lt;code&gt;$&lt;/code&gt; if strict hostname is desired and escape &lt;code&gt;\.&lt;/code&gt; dots in order to strictly match them.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;redirect-from-code&lt;/code&gt;: Which HTTP status code should be used in the redirect from. A &lt;code&gt;302&lt;/code&gt; response is used by default if not configured.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;redirect-to&lt;/code&gt;: Defines the destination URL to redirect the incoming request. The declared hostname and path are used only to match the request, the backend will not be used and it&amp;rsquo;s only needed to be declared to satisfy ingress spec validation.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;redirect-to-code&lt;/code&gt;: Which HTTP status code should be used in the redirect to. A &lt;code&gt;302&lt;/code&gt; response is used by default if not configured.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Using redirect-from&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The following configuration redirects &lt;code&gt;app.local&lt;/code&gt; to &lt;code&gt;www.app.local&lt;/code&gt;, preserving protocol,
+path and query string:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    haproxy-ingress.github.io/redirect-from: &amp;quot;app.local&amp;quot;
+  name: app
+spec:
+  rules:
+  - host: www.app.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: app
+            port:
+              number: 8080
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The same source domain can be configured just once, and a target domain can be assigned
+just once as well, which means that this configuration can only be used on ingress
+resources that defines just one hostname. The redirect configuration has the lesser
+precedence, so if a source domain is also configured as a hostname on an ingress spec,
+or as an alias using annotation, the redirect will not happen.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Using redirect-to&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The following configuration redirects &lt;code&gt;app.local/...&lt;/code&gt; to &lt;code&gt;https://www.app.local/login&lt;/code&gt;,
+without preserving protocol, path or query string:&lt;/p&gt;
+
+&lt;p&gt;Note: &lt;code&gt;www.app.local&lt;/code&gt; should be configured on another ingress resource, and app service
+below will not be used.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    haproxy-ingress.github.io/redirect-to: &amp;quot;https://www.app.local/login&amp;quot;
+  name: app
+spec:
+  rules:
+  - host: app.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: app
+            port:
+              number: 8080
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#app-root&#34;&gt;&lt;code&gt;app-root&lt;/code&gt;&lt;/a&gt; configuration key.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -4787,59 +5012,6 @@ attribute in the same ACL, and any of them might be used to match SNI extensions
 
 &lt;hr /&gt;
 
-&lt;h2 id=&#34;server-redirect&#34;&gt;Server redirect&lt;/h2&gt;
-
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;Configuration key&lt;/th&gt;
-&lt;th&gt;Scope&lt;/th&gt;
-&lt;th&gt;Default&lt;/th&gt;
-&lt;th&gt;Since&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;server-redirect&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Host&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;v0.13&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;server-redirect-code&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Host&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;302&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;v0.13&lt;/td&gt;
-&lt;/tr&gt;
-
-&lt;tr&gt;
-&lt;td&gt;&lt;code&gt;server-redirect-regex&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;Host&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
-&lt;td&gt;v0.13&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;Configures hostname redirect. Requests that matches the configuration will be redirected
-to the hostname of the ingress spec. Protocol, path and query string are preserved.&lt;/p&gt;
-
-&lt;p&gt;The same source domain can be configured just once, and a target domain can be assigned
-just once as well, which means that this configuration can only be used on ingress
-resources that defines just one hostname. The redirect configuration has the lesser
-precedence, so if a source domain is also configured as a hostname in the ingress spec,
-or as an alias using annotation, the redirect will not happen.&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;server-redirect&lt;/code&gt;: Defines a source domain using hostname-like syntax, so wildcard domains can also be used.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;server-redirect-regex&lt;/code&gt;: Defines a POSIX extended regular expression used to match a source domain. The regex will be used verbatim, so add &lt;code&gt;^&lt;/code&gt; and &lt;code&gt;$&lt;/code&gt; if strict hostname is desired and escape &lt;code&gt;\.&lt;/code&gt; dots in order to strictly match them.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;server-redirect-code&lt;/code&gt;: Which HTTP status code should be used in the redirect. A &lt;code&gt;302&lt;/code&gt; response is used by default if not configured.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr /&gt;
-
 &lt;h2 id=&#34;service-upstream&#34;&gt;Service upstream&lt;/h2&gt;
 
 &lt;table&gt;
@@ -5152,11 +5324,24 @@ the ssl-engine used supports it.&lt;/p&gt;
 SSL passthrough is a per domain configuration, which means that other domains can be
 configured to SSL offload on HAProxy.&lt;/p&gt;
 
-&lt;p&gt;If using SSL passthrough, only root &lt;code&gt;/&lt;/code&gt; path is supported.&lt;/p&gt;
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
+Up to v0.12, &lt;code&gt;ssl-passthrough&lt;/code&gt; supports only root &lt;code&gt;/&lt;/code&gt; path. Since v0.13, non root paths are also supported and configured in the HAProxy&amp;rsquo;s HTTP port.
+&lt;/div&gt;
+
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;ssl-passthrough&lt;/code&gt;: Enable SSL passthrough if defined as &lt;code&gt;true&lt;/code&gt;. The backend is then expected to SSL offload the incoming traffic. The default value is &lt;code&gt;false&lt;/code&gt;, which means HAProxy should do the SSL handshake.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;ssl-passthrough-http-port&lt;/code&gt;: Since v0.7. Optional HTTP port number of the backend. If defined, connections to the HAProxy HTTP port, default &lt;code&gt;80&lt;/code&gt;, is sent to that port which expects to speak plain HTTP. If not defined, connections to the HTTP port will redirect connections to the HTTPS one.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ssl-passthrough-http-port&lt;/code&gt;: Optional HTTP port number of the backend. If defined, connections to the HAProxy&amp;rsquo;s HTTP port, defaults to &lt;code&gt;80&lt;/code&gt;, is sent to the configured port number of the backend, which expects to speak plain HTTP. If not defined, connections to the HTTP port will redirect the client to HTTPS.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Hostnames configured as &lt;code&gt;ssl-passthrough&lt;/code&gt; configures HAProxy in the following way:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Requests to the HTTPS port, defaults to &lt;code&gt;443&lt;/code&gt;, will be sent to the backend and port number configured in the root &lt;code&gt;/&lt;/code&gt; path of the domain. Such port must speak TLS and will make the TLS handshake with the client. There is no path inspection, so only one backend is supported.&lt;/li&gt;
+&lt;li&gt;Requests to the HTTP port, defaults to &lt;code&gt;80&lt;/code&gt;, will follow the same rules of non &lt;code&gt;ssl-passthrough&lt;/code&gt; domains: if the request matches a non root path, the configured backend will be used and it should speak plain HTTP, except if &lt;a href=&#34;#secure-backend&#34;&gt;&lt;code&gt;secure-backends&lt;/code&gt;&lt;/a&gt; is also configured. If there isn&amp;rsquo;t non root paths or if they doesn&amp;rsquo;t match, the request will fall back to: redirect to HTTPS (default), or the request will be sent to &lt;code&gt;ssl-passthrough-http-port&lt;/code&gt; port number of the ssl backend.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -5806,9 +5991,9 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#annotation-prefix&#34;&gt;&lt;code&gt;--annotation-prefix&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
-&lt;td&gt;prefix without &lt;code&gt;/&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;ingress.kubernetes.io&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#annotations-prefix&#34;&gt;&lt;code&gt;--annotations-prefix&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;prefix list without &lt;code&gt;/&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;haproxy-ingress.github.io,ingress.kubernetes.io&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;v0.8&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -6014,18 +6199,26 @@ against a server which implements the acme protocol, version 2.&lt;/p&gt;
 
 &lt;p&gt;&lt;code&gt;--allow-cross-namespace&lt;/code&gt; argument, if added, will allow reading secrets from one namespace to an
 ingress resource of another namespace. The default behavior is to deny such cross namespace reading.
-This adds a breaking change from &lt;code&gt;v0.4&lt;/code&gt; to &lt;code&gt;v0.5&lt;/code&gt; on &lt;code&gt;ingress.kubernetes.io/auth-tls-secret&lt;/code&gt;
+This adds a breaking change from &lt;code&gt;v0.4&lt;/code&gt; to &lt;code&gt;v0.5&lt;/code&gt; on &lt;code&gt;haproxy-ingress.github.io/auth-tls-secret&lt;/code&gt;
 annotation, where cross namespace reading were allowed without any configuration.&lt;/p&gt;
 
 &lt;hr /&gt;
 
-&lt;h2 id=&#34;annotation-prefix&#34;&gt;&amp;ndash;annotation-prefix&lt;/h2&gt;
+&lt;h2 id=&#34;annotations-prefix&#34;&gt;&amp;ndash;annotations-prefix&lt;/h2&gt;
 
-&lt;p&gt;Changes the annotation prefix the controller should look for when parsing services and ingress
-objects. The default value is &lt;code&gt;ingress.kubernetes.io&lt;/code&gt; if not declared, which means SSL Redirect
-should be configured with the annotation name &lt;code&gt;ingress.kubernetes.io/ssl-redirect&lt;/code&gt;. Annotations
-with other prefix are ignored. This allows using HAProxy Ingress with other ingress controllers
-that shares ingress and service objects without conflicting each other.&lt;/p&gt;
+&lt;p&gt;Configures a comma-separated list of annotations prefix that the controller should look for when
+parsing services and ingress objects. The default value is &lt;code&gt;haproxy-ingress.github.io,ingress.kubernetes.io&lt;/code&gt;.
+The default configuration means declare eg a SSL Redirect annotation with
+&lt;code&gt;haproxy-ingress.github.io/ssl-redirect: &amp;quot;true&amp;quot;&lt;/code&gt; or &lt;code&gt;ingress.kubernetes.io/ssl-redirect: &amp;quot;true&amp;quot;&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The order of the declaration is used to priorize one of them if the same configuration key is
+declared twice - if two distinct prefix is used to configure the same key in the same ingress or
+service resource, the value of the annotation with the prefix that was configured first in this
+command-line option is used.&lt;/p&gt;
+
+&lt;p&gt;Annotations with other prefix or without any prefix are ignored. This allows to use HAProxy Ingress
+with other ingress controllers that shares ingress and service resources without conflicting each
+other.&lt;/p&gt;
 
 &lt;hr /&gt;
 
