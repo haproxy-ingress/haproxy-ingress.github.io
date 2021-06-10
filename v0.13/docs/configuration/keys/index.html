@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.13/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2021-05-10T22:25:43-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-06-08T07:50:01-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2021-05-10T22:25:43-03:00" />
-<meta itemprop="wordCount" content="14742">
+<meta itemprop="dateModified" content="2021-06-08T07:50:01-03:00" />
+<meta itemprop="wordCount" content="15524">
 
 
 
@@ -290,6 +290,12 @@ if (!doNotTrack) {
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-13-docs-configuration-gateway-api" href="/v0.13/docs/configuration/gateway-api/">Gateway API</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page  active" id="m-v0-13-docs-configuration-keys" href="/v0.13/docs/configuration/keys/">Keys</a>
       
       
@@ -408,6 +414,7 @@ if (!doNotTrack) {
 <li><a href="#connection">Connection</a></li>
 <li><a href="#cors">CORS</a></li>
 <li><a href="#cpu-map">CPU map</a></li>
+<li><a href="#cross-namespace">Cross Namespace</a></li>
 <li><a href="#default-redirect">Default Redirect</a></li>
 <li><a href="#dns-resolvers">DNS resolvers</a></li>
 <li><a href="#drain-support">Drain support</a></li>
@@ -436,6 +443,8 @@ if (!doNotTrack) {
 <li><a href="#security">Security</a></li>
 <li><a href="#server-alias">Server alias</a></li>
 <li><a href="#service-upstream">Service upstream</a></li>
+<li><a href="#source-address-intf">Source Address Intf</a></li>
+<li><a href="#ssl-always-add-https">SSL always add HTTPS</a></li>
 <li><a href="#ssl-ciphers">SSL ciphers</a></li>
 <li><a href="#ssl-dh">SSL DH</a></li>
 <li><a href="#ssl-engine">SSL engine</a></li>
@@ -1220,6 +1229,34 @@ TCP port number.</p>
 </tr>
 
 <tr>
+<td><a href="#cross-namespace"><code>cross-namespace-secrets-ca</code></a></td>
+<td>[allow|deny]</td>
+<td>Global</td>
+<td><code>deny</code></td>
+</tr>
+
+<tr>
+<td><a href="#cross-namespace"><code>cross-namespace-secrets-crt</code></a></td>
+<td>[allow|deny]</td>
+<td>Global</td>
+<td><code>deny</code></td>
+</tr>
+
+<tr>
+<td><a href="#cross-namespace"><code>cross-namespace-secrets-passwd</code></a></td>
+<td>[allow|deny]</td>
+<td>Global</td>
+<td><code>deny</code></td>
+</tr>
+
+<tr>
+<td><a href="#cross-namespace"><code>cross-namespace-services</code></a></td>
+<td>[allow|deny]</td>
+<td>Global</td>
+<td><code>deny</code></td>
+</tr>
+
+<tr>
 <td><a href="#default-redirect"><code>default-backend-redirect</code></a></td>
 <td>Location</td>
 <td>Global</td>
@@ -1770,6 +1807,20 @@ TCP port number.</p>
 <td>minimum number of free slots</td>
 <td>Backend</td>
 <td><code>0</code></td>
+</tr>
+
+<tr>
+<td><a href="#source-address-intf"><code>source-address-intf</code></a></td>
+<td><code>&lt;intf1&gt;[,&lt;intf2&gt;...]</code></td>
+<td>Backend</td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="#ssl-always-add-https"><code>ssl-always-add-https</code></a></td>
+<td>[true|false]</td>
+<td>Host</td>
+<td><code>false</code></td>
 </tr>
 
 <tr>
@@ -2734,7 +2785,7 @@ Up to v0.12 the configuration key <code>auth-type</code> was mandatory, it enabl
 
 <ul>
 <li><code>auth-url</code>: Configures the endpoint(s) of the authentication service. All requests made to the target backend server will be validated by the authentication service before continue, which should respond with <code>2xx</code> HTTP status code, otherwise the request is considered as failed. In the case of a failure, the backend server is not used and the client receives the response from the authentication service.</li>
-<li><code>auth-method</code>: Configures the HTTP method used in the request to the external authentication service. The default value is <code>GET</code>.</li>
+<li><code>auth-method</code>: Configures the HTTP method used in the request to the external authentication service. Use an asterisk <code>*</code> to copy the same method used in the client request. The default value is <code>GET</code>.</li>
 <li><code>auth-headers-request</code>: Configures a comma-separated list of header names that should be copied from the client to the authentication service. All HTTP headers will be copied if not declared.</li>
 <li><code>auth-headers-succeed</code>: Configures a comma-separated list of header names that should be copied from the authentication service to the backend server if the authentication succeed. All HTTP headers will be copied if not declared.</li>
 <li><code>auth-headers-fail</code>: Configures a comma-separated list of header names that should be copied from the authentication service to the client if the authentication fail. This option is ignored if <code>auth-signin</code> is used. All HTTP headers will be copied if not declared.</li>
@@ -2755,7 +2806,7 @@ Up to v0.12 the configuration key <code>auth-type</code> was mandatory, it enabl
 
 <p><code>http</code> and <code>https</code> protocols are straightforward: use them to connect to an IP or hostname without any further configuration. <code>http</code> adds the HTTP <code>Host</code> header if a hostname is used, and <code>https</code> adds also the sni extension. Note that <code>https</code> connects in an insecure way and currently cannot be customized. Do NOT use neither <code>http</code> nor <code>https</code> if haproxy -&gt; authentication service communication has untrusted networks.</p>
 
-<p><code>svc</code> protocol allows to use a Kubernetes service declared in the same namespace of the ingress or the service being annotated. The service can be of any type and a port must always be declared - both in the <code>auth-url</code> configuration and in the service resource. Using <code>svc</code> protocol allows to configure a secure connection, see <a href="#secure-backend">secure</a> configuration keys and annotate them in the target service.</p>
+<p><code>svc</code> protocol allows to use a Kubernetes service declared in the same namespace of the ingress or the service being annotated. Services on other namespaces can also be used in the form <code>svc://namespace/servicename:port/path</code> if global config <a href="#cross-namespace"><code>cross-namespace-services</code></a> was configured as <code>allow</code>. The service can be of any type and a port must always be declared - both in the <code>auth-url</code> configuration and in the service resource. Using <code>svc</code> protocol allows to configure a secure connection, see <a href="#secure-backend">secure</a> configuration keys and annotate them in the target service.</p>
 
 <p>Configuration examples:</p>
 
@@ -3628,7 +3679,7 @@ to add more than one line of configuration.</p>
 
 <ul>
 <li><code>cors-enable</code>: Enable CORS if defined as <code>true</code>.</li>
-<li><code>cors-allow-origin</code>: Optional, configures <code>Access-Control-Allow-Origin</code> header which defines the URL that may access the resource. Defaults to <code>*</code>.</li>
+<li><code>cors-allow-origin</code>: Optional, configures <code>Access-Control-Allow-Origin</code> header which defines the URL that may access the resource. Defaults to <code>*</code>. This option accepts a comma-separated list of origins, the response will be dynamically built based on the <code>Origin</code> request header. If <code>Origin</code> belogs to the list, its content will be sent back to the client in the <code>Access-Control-Allow-Origin</code> header, otherwise the first item of the list will be used.</li>
 <li><code>cors-allow-methods</code>: Optional, configures <code>Access-Control-Allow-Methods</code> header which defines the allowed methods. Default value is <code>GET, PUT, POST, DELETE, PATCH, OPTIONS</code>.</li>
 <li><code>cors-allow-headers</code>: Optional, configures <code>Access-Control-Allow-Headers</code> header which defines the allowed headers. Default value is <code>DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization</code>.</li>
 <li><code>cors-allow-credentials</code>: Optional, configures <code>Access-Control-Allow-Credentials</code> header which defines whether or not credentials (cookies, authorization headers or client certificates) should be exposed. Defaults to <code>true</code>.</li>
@@ -3688,6 +3739,68 @@ on <a href="#nbthread">nbthread</a> and <a href="#nbproc">nbproc</a>.</p>
 <li><a href="#nbproc">nbproc</a> configuration key</li>
 <li><a href="https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map">https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map</a></li>
 </ul>
+
+<hr />
+
+<h2 id="cross-namespace">Cross Namespace</h2>
+
+<table>
+<thead>
+<tr>
+<th>Configuration key</th>
+<th>Scope</th>
+<th>Default</th>
+<th>Since</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>cross-namespace-secrets-ca</code></td>
+<td><code>Global</code></td>
+<td><code>deny</code></td>
+<td>v0.13</td>
+</tr>
+
+<tr>
+<td><code>cross-namespace-secrets-crt</code></td>
+<td><code>Global</code></td>
+<td><code>deny</code></td>
+<td>v0.13</td>
+</tr>
+
+<tr>
+<td><code>cross-namespace-secrets-passwd</code></td>
+<td><code>Global</code></td>
+<td><code>deny</code></td>
+<td>v0.13</td>
+</tr>
+
+<tr>
+<td><code>cross-namespace-services</code></td>
+<td><code>Global</code></td>
+<td><code>deny</code></td>
+<td>v0.13</td>
+</tr>
+</tbody>
+</table>
+
+<p>Defines if resources declared on a namespace can read resources declared on another namespace. Supported values are <code>allow</code> or <code>deny</code>. The default configuration denies access from all cross namespace access.</p>
+
+<ul>
+<li><code>cross-namespace-secrets-ca</code>: Allows or denies cross namespace reading of CA bundles and CRL files, used by <a href="#auth-tls"><code>auth-tls-secret</code></a> and <a href="#secure-backend"><code>secure-verify-ca-secret</code></a> configuration keys.</li>
+<li><code>cross-namespace-secrets-crt</code>: Allows or denies cross namespace reading of x509 certificates and private keys, used by gateway&rsquo;s, httpRoute&rsquo;s and ingress&rsquo; tls attribute, and also <a href="#secure-backend"><code>secure-crt-secret</code></a> configuration key.</li>
+<li><code>cross-namespace-secrets-passwd</code>: Allows or denies cross namespace reading of password files, used by <a href="#auth-basic"><code>auth-secret</code></a> configuration key.</li>
+<li><code>cross-namespace-services</code>: Allows or denies cross namespace reading of Kubernetes Service resources, used by <a href="#auth-external"><code>auth-url</code></a> configuration key.</li>
+</ul>
+
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">Note</h4>
+<a href="/v0.13/docs/configuration/command-line/#allow-cross-namespace"><code>--allow-cross-namespace</code></a> command-line option, if declared, overrides all the secret related configuration keys.
+</div>
+
 
 <hr />
 
@@ -5516,6 +5629,96 @@ service&rsquo;s ClusterIP is used instead.</p>
 
 <hr />
 
+<h2 id="source-address-intf">Source Address Intf</h2>
+
+<table>
+<thead>
+<tr>
+<th>Configuration key</th>
+<th>Scope</th>
+<th>Default</th>
+<th>Since</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>source-address-intf</code></td>
+<td><code>Backend</code></td>
+<td></td>
+<td>v0.13</td>
+</tr>
+</tbody>
+</table>
+
+<p>Configures a list of network interface names whose IPv4 address should be used as the source address for outgoing connections.</p>
+
+<ul>
+<li><code>source-address-intf</code>: Comma separated list of network interface names</li>
+</ul>
+
+<p>As the default behavior, HAProxy will leave the operating system choose the most apropriate address. However the same source address will be used, even if the network interface has more IP address or other interfaces can also reach the destination, leading to outgoing TCP port exaustion on deployments that needs more than 64k concurrent connections. Using more source IPs allows to bypass the maximum of 64k concurrent connections per instance.</p>
+
+<p>HAProxy Ingress will list all IPv4 from all provided interfaces, ignoring interfaces that cannot be found, does not have IPv4, or cannot list its IPs. The IP addresses will be distributed among all the servers/endpoints, where each distinct server will use an IP from the list as its source address for its outgoing connections. If there are more replicas than IPs, some IPs from the list will be used more than once. If there are more IPs than replicas, some of the IPs from the list will not be used in a particular backend, but can be used on others that shares the configuration. The IP distribution consistently starts on distinct positions on distinct backends, fairly distributing all the IPs from the list on workloads with a big amount of backends with one or so servers each. If all the interfaces failed to list IP address, HAProxy falls back to the default behavior and leaves the operating system to choose the source IP.</p>
+
+<p>Update also <code>/proc/sys/net/ipv4/ip_local_port_range</code> in the HAProxy hosts to allow each source IP use more than its default 28k ephemeral ports.</p>
+
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">Note</h4>
+Neither HAProxy Ingress nor HAProxy will validate if the configured network interface and/or their IPs are valid sources for the outgoing connection, its up to the admin to ensure that the correct interface is properly configured.
+</div>
+
+
+
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Warning</h4>
+The source IP is a static configuration added on each backend server. This configuration cannot be used on backends that use DNS resolver.
+</div>
+
+
+<p>See also:</p>
+
+<ul>
+<li><a href="http://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-source">http://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-source</a></li>
+<li><a href="http://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-source">http://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-source</a></li>
+<li><a href="https://www.kernel.org/doc/html/v5.12/networking/ip-sysctl.html#ip-variables">https://www.kernel.org/doc/html/v5.12/networking/ip-sysctl.html#ip-variables</a></li>
+</ul>
+
+<hr />
+
+<h2 id="ssl-always-add-https">SSL always add HTTPS</h2>
+
+<table>
+<thead>
+<tr>
+<th>Configuration key</th>
+<th>Scope</th>
+<th>Default</th>
+<th>Since</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>ssl-always-add-https</code></td>
+<td>Host</td>
+<td><code>false</code></td>
+<td>v0.12.4</td>
+</tr>
+</tbody>
+</table>
+
+<p>Every hostname declared on an Ingress resource is added to an internal HTTP map. If at least one Ingress adds the hostname in the <code>tls</code> attribute, the hostname is also added to an internal HTTPS map and does ssl offload using the default certificate. A secret name can also be added in the <code>tls</code> attribute, overriding the certificate used in the TLS handshake.</p>
+
+<p><code>ssl-always-add-https</code> asks the controller to always add the domain in the internal HTTP and HTTPS maps, even if the <code>tls</code> attribute isn&rsquo;t declared. If <code>false</code>, a missing <code>tls</code> attribute will only declare the domain in the HTTP map and <code>ssl-redirect</code> is ignored. If <code>true</code>, a missing <code>tls</code> attribute adds the domain in the HTTPS map, and the TLS handshake will use the default certificate. If <code>tls</code> attribute is used, this configuration is ignored.</p>
+
+<p>The default value is <code>false</code> since v0.13 to correctly implement Ingress spec. The default value can be globally changed in the global ConfigMap.</p>
+
+<hr />
+
 <h2 id="ssl-ciphers">SSL ciphers</h2>
 
 <table>
@@ -5868,6 +6071,7 @@ Up to v0.12, <code>ssl-passthrough</code> supports only root <code>/</code> path
 <p>See also:</p>
 
 <ul>
+<li><a href="#ssl-always-add-https"><code>ssl-always-add-https</code></a> configuration key</li>
 <li><a href="http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#redirect">http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#redirect</a></li>
 </ul>
 
@@ -6437,7 +6641,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified May 10, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/0b315c4ffe2efd033c4197cbcfed00cb41725334">add option to copy headers to/from auth external (0b315c4f)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified June 8, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/afd249ed66758549a94c24b6ea965d815316fe60">allow a list of origins in cors-allow-origin cfg (afd249ed)</a>
 </div>
 </div>
 

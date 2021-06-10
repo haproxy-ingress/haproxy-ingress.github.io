@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.13/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2021-04-21T16:31:16-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-06-06T17:17:59-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Command-line options">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2021-04-21T16:31:16-03:00" />
-<meta itemprop="wordCount" content="2736">
+<meta itemprop="dateModified" content="2021-06-06T17:17:59-03:00" />
+<meta itemprop="wordCount" content="2807">
 
 
 
@@ -290,6 +290,12 @@ if (!doNotTrack) {
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-13-docs-configuration-gateway-api" href="/v0.13/docs/configuration/gateway-api/">Gateway API</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-13-docs-configuration-keys" href="/v0.13/docs/configuration/keys/">Keys</a>
       
       
@@ -379,6 +385,7 @@ if (!doNotTrack) {
 <li><a href="#buckets-response-time">&ndash;buckets-response-time</a></li>
 <li><a href="#default-backend-service">&ndash;default-backend-service</a></li>
 <li><a href="#default-ssl-certificate">&ndash;default-ssl-certificate</a></li>
+<li><a href="#disable-api-warnings">&ndash;disable-api-warnings</a></li>
 <li><a href="#disable-pod-list">&ndash;disable-pod-list</a></li>
 <li><a href="#ingress-class">Ingress Class</a></li>
 <li><a href="#kubeconfig">&ndash;kubeconfig</a></li>
@@ -394,6 +401,7 @@ if (!doNotTrack) {
 <li><a href="#verify-hostname">&ndash;verify-hostname</a></li>
 <li><a href="#wait-before-shutdown">&ndash;wait-before-shutdown</a></li>
 <li><a href="#wait-before-update">&ndash;wait-before-update</a></li>
+<li><a href="#watch-gateway">&ndash;watch-gateway</a></li>
 <li><a href="#watch-namespace">&ndash;watch-namespace</a></li>
 </ul></li>
 </ul>
@@ -562,6 +570,13 @@ if (!doNotTrack) {
 </tr>
 
 <tr>
+<td><a href="#disable-api-warnings"><code>--disable-api-warnings</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.12</td>
+</tr>
+
+<tr>
 <td><a href="#disable-pod-list"><code>--disable-pod-list</code></a></td>
 <td>[true|false]</td>
 <td><code>false</code></td>
@@ -681,6 +696,13 @@ if (!doNotTrack) {
 </tr>
 
 <tr>
+<td><a href="#watch-gateway"><code>--watch-gateway</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.13</td>
+</tr>
+
+<tr>
 <td><a href="#ingress-class"><code>--watch-ingress-without-class</code></a></td>
 <td>[true|false]</td>
 <td><code>false</code></td>
@@ -730,6 +752,12 @@ against a server which implements the acme protocol, version 2.</p>
 ingress resource of another namespace. The default behavior is to deny such cross namespace reading.
 This adds a breaking change from <code>v0.4</code> to <code>v0.5</code> on <code>haproxy-ingress.github.io/auth-tls-secret</code>
 annotation, where cross namespace reading were allowed without any configuration.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><a href="/v0.13/docs/configuration/keys/#cross-namespace">cross namespace</a> configuration keys.</li>
+</ul>
 
 <hr />
 
@@ -783,6 +811,13 @@ with <code>file://</code> can be used, containing both certificate and private k
 <code>file:///dir/crt.pem</code>.</p>
 
 <p>A self-signed fake certificate is used if not declared, the secret or the file is not found.</p>
+
+<h2 id="disable-api-warnings">&ndash;disable-api-warnings</h2>
+
+<p>Since v0.12.4</p>
+
+<p>Disable warning logs sent from the API server. Most of the warnings are related with API
+deprecation. The default behavior is to log all API server warnings.</p>
 
 <hr />
 
@@ -1078,6 +1113,15 @@ changes in one single shot. The default value is <code>200ms</code>.</p>
 
 <hr />
 
+<h2 id="watch-gateway">&ndash;watch-gateway</h2>
+
+<p>Since v0.13</p>
+
+<p>Enables Gateway API watch and parse. The Gateway API CRDs should be installed before enable
+this option. See also the Gateway API configuration <a href="/v0.13/docs/configuration/gateway-api/">doc</a>.</p>
+
+<hr />
+
 <h2 id="watch-namespace">&ndash;watch-namespace</h2>
 
 <p>By default the proxy will be configured using all namespaces from the Kubernetes cluster. Use
@@ -1146,7 +1190,7 @@ single namespace.</p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified April 21, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/49c869e27ec565913f976ed18249cd40e53048b3">docs: change the default annotation prefix (49c869e2)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified June 6, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/cbc6db2cd124f6fe2afe5feb0cacd035fd8abf1e">add dynamic update for cross namespace reading (cbc6db2c)</a>
 </div>
 </div>
 

@@ -284,6 +284,12 @@ if (!doNotTrack) {
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-13-docs-configuration-gateway-api" href="/v0.13/docs/configuration/gateway-api/">Gateway API</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-13-docs-configuration-keys" href="/v0.13/docs/configuration/keys/">Keys</a>
       
       
@@ -440,7 +446,7 @@ if (!doNotTrack) {
 <p>5) Install HAProxy Ingress using <code>haproxy-ingress</code> as the release name and <code>haproxy-ingress-values.yaml</code> file as the custom parameters:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ helm install haproxy-ingress haproxy-ingress/haproxy-ingress<span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  --create-namespace --namespace ingress-controller<span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  --version <span style="color:#0000cf;font-weight:bold">0</span>.13.0-snapshot.2 --devel<span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  --version <span style="color:#0000cf;font-weight:bold">0</span>.13.0-snapshot.3 --devel<span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  -f haproxy-ingress-values.yaml</code></pre></div>
 
 
@@ -462,43 +468,32 @@ The command <code>install</code> above can be changed to <code>upgrade</code> to
 
 <h2 id="deploy-and-expose">Deploy and expose</h2>
 
-<p>The following steps deploy an echoserver image and exposes it in the current namespace.</p>
+<p>The following steps deploy an echoserver image and exposes it in the current namespace using an Ingress resource. See <a href="/v0.13/docs/configuration/gateway-api/">here</a> how to expose using Gateway API.</p>
 
 <p>1) Create the echoserver&rsquo;s deployment and service:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl create deployment echoserver --image k8s.gcr.io/echoserver:1.3
-$ kubectl expose deployment echoserver --port<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">8080</span></code></pre></div>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl --namespace default create deployment echoserver --image k8s.gcr.io/echoserver:1.3
+$ kubectl --namespace default expose deployment echoserver --port<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#0000cf;font-weight:bold">8080</span></code></pre></div>
 <p>2) Check if echoserver is up and running:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl get pod -w
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl -n default get pod -w
 NAME                          READY   STATUS    RESTARTS   AGE
 echoserver-5b6fb6dd96-68jwp   <span style="color:#0000cf;font-weight:bold">1</span>/1     Running   <span style="color:#0000cf;font-weight:bold">0</span>          27s</code></pre></div>
-<p>3) Make HAProxy Ingress exposes the echoserver service. Change <code>HOST</code> value in the example below to a hostname that resolves to an ingress controller node.</p>
+<p>3) Make HAProxy Ingress exposes the echoserver service. Change <code>echoserver.local</code> value in the <code>--rule</code> option below to a hostname that resolves to an ingress controller node.</p>
 
 <p>Obs.: <code>nip.io</code> is a convenient service which converts a valid domain name to any IP, either public or local. See <a href="https://nip.io">here</a> how it works.</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ <span style="color:#000">HOST</span><span style="color:#ce5c00;font-weight:bold">=</span>echoserver.192.168.1.11.nip.io
-$ kubectl create -f - <span style="color:#4e9a06">&lt;&lt;EOF
-</span><span style="color:#4e9a06">apiVersion: networking.k8s.io/v1
-</span><span style="color:#4e9a06">kind: Ingress
-</span><span style="color:#4e9a06">metadata:
-</span><span style="color:#4e9a06">  annotations:
-</span><span style="color:#4e9a06">    kubernetes.io/ingress.class: haproxy
-</span><span style="color:#4e9a06">  name: echoserver
-</span><span style="color:#4e9a06">spec:
-</span><span style="color:#4e9a06">  rules:
-</span><span style="color:#4e9a06">  - host: $HOST
-</span><span style="color:#4e9a06">    http:
-</span><span style="color:#4e9a06">      paths:
-</span><span style="color:#4e9a06">      - path: /
-</span><span style="color:#4e9a06">        pathType: Prefix
-</span><span style="color:#4e9a06">        backend:
-</span><span style="color:#4e9a06">          service:
-</span><span style="color:#4e9a06">            name: echoserver
-</span><span style="color:#4e9a06">            port:
-</span><span style="color:#4e9a06">              number: 8080
-</span><span style="color:#4e9a06">EOF</span></code></pre></div>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl --namespace default create ingress echoserver<span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  --annotation kubernetes.io/ingress.class<span style="color:#ce5c00;font-weight:bold">=</span>haproxy<span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  --rule<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#4e9a06">&#34;echoserver.local/*=echoserver:8080&#34;</span></code></pre></div>
 <p>4) Send a request to our echoserver.</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ curl -k https://echoserver.192.168.1.11.nip.io
-$ wget -qO- --no-check-certificate https://echoserver.192.168.1.11.nip.io</code></pre></div>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ curl -k https://echoserver.local
+$ wget -qO- --no-check-certificate https://echoserver.local</code></pre></div>
 <h2 id="what-s-next">What&rsquo;s next</h2>
+
+<p>See what differs to expose services using Gateway API:</p>
+
+<ul>
+<li><a href="https://gateway-api.sigs.k8s.io/">Gateway API introduction</a> from Kubernetes&rsquo; SIG-Network documentation</li>
+<li><a href="/v0.13/docs/configuration/gateway-api/">Getting started</a> with Gateway API and HAProxy Ingress</li>
+</ul>
 
 <p>Learn more about Ingress and IngressClass resources:</p>
 
@@ -520,6 +515,8 @@ $ wget -qO- --no-check-certificate https://echoserver.192.168.1.11.nip.io</code>
     
     
     <hr class="panel-line">
+        
+            
         
             
         
@@ -612,7 +609,7 @@ $ wget -qO- --no-check-certificate https://echoserver.192.168.1.11.nip.io</code>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified May 19, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/843280afe3e97607bb5e6e8904b14d8f7d76d8cb">update to v0.13.0-snapshot.2 (843280af)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified June 9, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/26e38194e9d09bc280910c00ec88f3b9f704f1fc">update to v0.13.0-snapshot.3 (26e38194)</a>
 </div>
 </div>
 

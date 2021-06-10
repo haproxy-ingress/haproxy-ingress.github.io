@@ -14,6 +14,126 @@
     
     
     <item>
+      <title>Docs: Gateway API</title>
+      <link>/v0.13/docs/configuration/gateway-api/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/v0.13/docs/configuration/gateway-api/</guid>
+      <description>
+        
+        
+        
+
+&lt;p&gt;&lt;a href=&#34;https://gateway-api.sigs.k8s.io/&#34;&gt;Gateway API&lt;/a&gt; is a collection of Kubernetes resources that can be installed as &lt;a href=&#34;https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/&#34;&gt;Custom Resource Definitions&lt;/a&gt;. Just like Ingress resources, Gateway API resources are used to configure incoming HTTP/s and TCP requests to the in cluster applications. HAProxy Ingress v0.13 partially supports the Gateway API spec.&lt;/p&gt;
+
+&lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;
+
+&lt;p&gt;The following steps configure the Kubernetes cluster and HAProxy Ingress to read and parse Gateway API resources:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Manually install the Gateway API CRDs, see the Gateway API &lt;a href=&#34;https://gateway-api.sigs.k8s.io/guides/getting-started/#installing-gateway-api-crds-manually&#34;&gt;documentation&lt;/a&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&amp;hellip; or simply &lt;code&gt;kubectl kustomize &amp;quot;github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.3.0&amp;quot; | kubectl apply -f -&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;Add the controller&amp;rsquo;s &lt;a href=&#34;/v0.13/v0.13/docs/configuration/command-line/#watch-gateway&#34;&gt;&lt;code&gt;--watch-gateway&lt;/code&gt;&lt;/a&gt; command-line option&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;See below the &lt;a href=&#34;#getting-started&#34;&gt;getting started steps&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;conformance&#34;&gt;Conformance&lt;/h2&gt;
+
+&lt;p&gt;Gateway API spec is partially implemented in the v0.13 release. The following list describes what is (or is not) supported. All the items are already in the v0.14 backlog, except when stated otherwise:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Target Services can be annotated with &lt;a href=&#34;/v0.13/v0.13/docs/configuration/keys/#scope&#34;&gt;Backend or Path scoped&lt;/a&gt; configuration keys, this will continue to be supported.&lt;/li&gt;
+&lt;li&gt;Gateway API resources doesn&amp;rsquo;t support annotations, this will continue to be unsupported, extensions to the Gateway API spec will be added in the extension points of the API.&lt;/li&gt;
+&lt;li&gt;Only the &lt;code&gt;GatewayClass&lt;/code&gt;, &lt;code&gt;Gateway&lt;/code&gt; and &lt;code&gt;HTTPRoute&lt;/code&gt; resource definitions were implemented.&lt;/li&gt;
+&lt;li&gt;The controller doesn&amp;rsquo;t implement partial parsing yet for Gateway API resources, changes should be a bit slow on clusters with thousands of Ingress, Gateway API resources or Services.&lt;/li&gt;
+&lt;li&gt;Gateway&amp;rsquo;s Listener Port and Protocol wasn&amp;rsquo;t implemented - Port uses the global &lt;a href=&#34;/v0.13/v0.13/docs/configuration/keys/#bind-port&#34;&gt;bind-port&lt;/a&gt; configuration and Protocol is based on the presence or absence of the TLS attribute.&lt;/li&gt;
+&lt;li&gt;Gateway&amp;rsquo;s Route Namespace selector only supports &lt;code&gt;Same&lt;/code&gt; or &lt;code&gt;All&lt;/code&gt; namespaces.&lt;/li&gt;
+&lt;li&gt;Gateway&amp;rsquo;s Hostname only supports empty/absence of Hostname or a single &lt;code&gt;*&lt;/code&gt;, any other string will override the HTTPRoute Hostnames configuration without any merging.&lt;/li&gt;
+&lt;li&gt;HTTPRoute&amp;rsquo;s Matches doesn&amp;rsquo;t support Headers.&lt;/li&gt;
+&lt;li&gt;HTTPRoute&amp;rsquo;s Rules and ForwardTo doesn&amp;rsquo;t support Filters.&lt;/li&gt;
+&lt;li&gt;Resources status aren&amp;rsquo;t updated.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;ingress&#34;&gt;Ingress&lt;/h2&gt;
+
+&lt;p&gt;A single HAProxy Ingress deployment can manage Ingress and Gateway API resources in the same Kubernetes cluster. If the same hostname and path is declared in the Gateway API and Ingress, the Gateway API wins and a warning is logged. Ingress resources will continue to be supported in future controller versions, without side effects, and without the need to install the Gateway API CRDs.&lt;/p&gt;
+
+&lt;h2 id=&#34;getting-started&#34;&gt;Getting started&lt;/h2&gt;
+
+&lt;p&gt;Add the following steps to the &lt;a href=&#34;/v0.13/v0.13/docs/getting-started/&#34;&gt;Getting Started guide&lt;/a&gt; in order to expose the echoserver service along with the Gateway API:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://gateway-api.sigs.k8s.io/guides/getting-started/#installing-gateway-api-crds-manually&#34;&gt;Manually install&lt;/a&gt; the Gateway API CRDs:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kubectl kustomize\
+ &amp;quot;github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.3.0&amp;quot; |\
+ kubectl apply -f -
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Add the following deployment and service if echoserver isn&amp;rsquo;t running yet:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;kubectl --namespace default create deployment echoserver --image k8s.gcr.io/echoserver:1.3
+kubectl --namespace default expose deployment echoserver --port=8080
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Add the &lt;a href=&#34;/v0.13/v0.13/docs/configuration/command-line/#watch-gateway&#34;&gt;&lt;code&gt;--watch-gateway&lt;/code&gt;&lt;/a&gt; command-line option in the &lt;code&gt;haproxy-ingress-values.yaml&lt;/code&gt; file and &lt;a href=&#34;/v0.13/v0.13/docs/getting-started/#installation&#34;&gt;&lt;code&gt;helm upgrade ...&lt;/code&gt;&lt;/a&gt; the controller (or simply edit the deployment):&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;controller&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;...&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;extraArgs&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;watch-gateway&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;true&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;A GatewayClass enables Gateways to be read and parsed by HAProxy Ingress. Create a GatewayClass with the following content:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;apiVersion&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;networking.x-k8s.io/v1alpha1&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;kind&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;GatewayClass&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;metadata&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;name&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;haproxy&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;spec&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;controller&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;haproxy-ingress.github.io/controller&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Gateways create listeners and allow to configure hostnames. Create a Gateway with the following content:&lt;/p&gt;
+
+&lt;p&gt;Note: port and protocol attributes &lt;a href=&#34;#conformance&#34;&gt;have some limitations&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;apiVersion&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;networking.x-k8s.io/v1alpha1&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;kind&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;Gateway&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;metadata&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;name&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;echoserver&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;namespace&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;default&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;spec&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;gatewayClassName&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;haproxy&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;listeners&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;-&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;protocol&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;HTTP&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;port&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;80&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;routes&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;kind&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;HTTPRoute&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;selector&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;matchLabels&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;          &lt;/span&gt;gateway&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;echo&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;HTTPRoutes configure the hostnames and target services. Create a HTTPRoute with the following content, changing &lt;code&gt;echoserver-from-gateway.local&lt;/code&gt; to a hostname that resolves to a HAProxy Ingress node:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;apiVersion&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;networking.x-k8s.io/v1alpha1&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;kind&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;HTTPRoute&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;metadata&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;labels&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;gateway&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;echo&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;name&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;echoserver&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;namespace&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;default&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;spec&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;hostnames&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;-&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;echoserver-from-gateway.local&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;rules&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;-&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;forwardTo&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;-&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;serviceName&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;echoserver&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;port&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;8080&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Send a request to our just configured route:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;curl http://echoserver-from-gateway.local
+wget -qO- http://echoserver-from-gateway.local
+&lt;/code&gt;&lt;/pre&gt;
+
+      </description>
+    </item>
+    
+    <item>
       <title>Docs: Configuration keys</title>
       <link>/v0.13/docs/configuration/keys/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -745,6 +865,34 @@ TCP port number.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#cross-namespace&#34;&gt;&lt;code&gt;cross-namespace-secrets-ca&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[allow|deny]&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;deny&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#cross-namespace&#34;&gt;&lt;code&gt;cross-namespace-secrets-crt&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[allow|deny]&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;deny&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#cross-namespace&#34;&gt;&lt;code&gt;cross-namespace-secrets-passwd&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[allow|deny]&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;deny&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#cross-namespace&#34;&gt;&lt;code&gt;cross-namespace-services&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[allow|deny]&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;deny&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#default-redirect&#34;&gt;&lt;code&gt;default-backend-redirect&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;Location&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
@@ -1295,6 +1443,20 @@ TCP port number.&lt;/p&gt;
 &lt;td&gt;minimum number of free slots&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;0&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#source-address-intf&#34;&gt;&lt;code&gt;source-address-intf&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;lt;intf1&amp;gt;[,&amp;lt;intf2&amp;gt;...]&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#ssl-always-add-https&#34;&gt;&lt;code&gt;ssl-always-add-https&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;Host&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -2259,7 +2421,7 @@ Up to v0.12 the configuration key &lt;code&gt;auth-type&lt;/code&gt; was mandato
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;auth-url&lt;/code&gt;: Configures the endpoint(s) of the authentication service. All requests made to the target backend server will be validated by the authentication service before continue, which should respond with &lt;code&gt;2xx&lt;/code&gt; HTTP status code, otherwise the request is considered as failed. In the case of a failure, the backend server is not used and the client receives the response from the authentication service.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;auth-method&lt;/code&gt;: Configures the HTTP method used in the request to the external authentication service. The default value is &lt;code&gt;GET&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-method&lt;/code&gt;: Configures the HTTP method used in the request to the external authentication service. Use an asterisk &lt;code&gt;*&lt;/code&gt; to copy the same method used in the client request. The default value is &lt;code&gt;GET&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;auth-headers-request&lt;/code&gt;: Configures a comma-separated list of header names that should be copied from the client to the authentication service. All HTTP headers will be copied if not declared.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;auth-headers-succeed&lt;/code&gt;: Configures a comma-separated list of header names that should be copied from the authentication service to the backend server if the authentication succeed. All HTTP headers will be copied if not declared.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;auth-headers-fail&lt;/code&gt;: Configures a comma-separated list of header names that should be copied from the authentication service to the client if the authentication fail. This option is ignored if &lt;code&gt;auth-signin&lt;/code&gt; is used. All HTTP headers will be copied if not declared.&lt;/li&gt;
@@ -2280,7 +2442,7 @@ Up to v0.12 the configuration key &lt;code&gt;auth-type&lt;/code&gt; was mandato
 
 &lt;p&gt;&lt;code&gt;http&lt;/code&gt; and &lt;code&gt;https&lt;/code&gt; protocols are straightforward: use them to connect to an IP or hostname without any further configuration. &lt;code&gt;http&lt;/code&gt; adds the HTTP &lt;code&gt;Host&lt;/code&gt; header if a hostname is used, and &lt;code&gt;https&lt;/code&gt; adds also the sni extension. Note that &lt;code&gt;https&lt;/code&gt; connects in an insecure way and currently cannot be customized. Do NOT use neither &lt;code&gt;http&lt;/code&gt; nor &lt;code&gt;https&lt;/code&gt; if haproxy -&amp;gt; authentication service communication has untrusted networks.&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;svc&lt;/code&gt; protocol allows to use a Kubernetes service declared in the same namespace of the ingress or the service being annotated. The service can be of any type and a port must always be declared - both in the &lt;code&gt;auth-url&lt;/code&gt; configuration and in the service resource. Using &lt;code&gt;svc&lt;/code&gt; protocol allows to configure a secure connection, see &lt;a href=&#34;#secure-backend&#34;&gt;secure&lt;/a&gt; configuration keys and annotate them in the target service.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;svc&lt;/code&gt; protocol allows to use a Kubernetes service declared in the same namespace of the ingress or the service being annotated. Services on other namespaces can also be used in the form &lt;code&gt;svc://namespace/servicename:port/path&lt;/code&gt; if global config &lt;a href=&#34;#cross-namespace&#34;&gt;&lt;code&gt;cross-namespace-services&lt;/code&gt;&lt;/a&gt; was configured as &lt;code&gt;allow&lt;/code&gt;. The service can be of any type and a port must always be declared - both in the &lt;code&gt;auth-url&lt;/code&gt; configuration and in the service resource. Using &lt;code&gt;svc&lt;/code&gt; protocol allows to configure a secure connection, see &lt;a href=&#34;#secure-backend&#34;&gt;secure&lt;/a&gt; configuration keys and annotate them in the target service.&lt;/p&gt;
 
 &lt;p&gt;Configuration examples:&lt;/p&gt;
 
@@ -3153,7 +3315,7 @@ to add more than one line of configuration.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;cors-enable&lt;/code&gt;: Enable CORS if defined as &lt;code&gt;true&lt;/code&gt;.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;cors-allow-origin&lt;/code&gt;: Optional, configures &lt;code&gt;Access-Control-Allow-Origin&lt;/code&gt; header which defines the URL that may access the resource. Defaults to &lt;code&gt;*&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cors-allow-origin&lt;/code&gt;: Optional, configures &lt;code&gt;Access-Control-Allow-Origin&lt;/code&gt; header which defines the URL that may access the resource. Defaults to &lt;code&gt;*&lt;/code&gt;. This option accepts a comma-separated list of origins, the response will be dynamically built based on the &lt;code&gt;Origin&lt;/code&gt; request header. If &lt;code&gt;Origin&lt;/code&gt; belogs to the list, its content will be sent back to the client in the &lt;code&gt;Access-Control-Allow-Origin&lt;/code&gt; header, otherwise the first item of the list will be used.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;cors-allow-methods&lt;/code&gt;: Optional, configures &lt;code&gt;Access-Control-Allow-Methods&lt;/code&gt; header which defines the allowed methods. Default value is &lt;code&gt;GET, PUT, POST, DELETE, PATCH, OPTIONS&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;cors-allow-headers&lt;/code&gt;: Optional, configures &lt;code&gt;Access-Control-Allow-Headers&lt;/code&gt; header which defines the allowed headers. Default value is &lt;code&gt;DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;cors-allow-credentials&lt;/code&gt;: Optional, configures &lt;code&gt;Access-Control-Allow-Credentials&lt;/code&gt; header which defines whether or not credentials (cookies, authorization headers or client certificates) should be exposed. Defaults to &lt;code&gt;true&lt;/code&gt;.&lt;/li&gt;
@@ -3213,6 +3375,68 @@ on &lt;a href=&#34;#nbthread&#34;&gt;nbthread&lt;/a&gt; and &lt;a href=&#34;#nbp
 &lt;li&gt;&lt;a href=&#34;#nbproc&#34;&gt;nbproc&lt;/a&gt; configuration key&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;cross-namespace&#34;&gt;Cross Namespace&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;cross-namespace-secrets-ca&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;deny&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.13&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;cross-namespace-secrets-crt&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;deny&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.13&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;cross-namespace-secrets-passwd&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;deny&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.13&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;cross-namespace-services&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;deny&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.13&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Defines if resources declared on a namespace can read resources declared on another namespace. Supported values are &lt;code&gt;allow&lt;/code&gt; or &lt;code&gt;deny&lt;/code&gt;. The default configuration denies access from all cross namespace access.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;cross-namespace-secrets-ca&lt;/code&gt;: Allows or denies cross namespace reading of CA bundles and CRL files, used by &lt;a href=&#34;#auth-tls&#34;&gt;&lt;code&gt;auth-tls-secret&lt;/code&gt;&lt;/a&gt; and &lt;a href=&#34;#secure-backend&#34;&gt;&lt;code&gt;secure-verify-ca-secret&lt;/code&gt;&lt;/a&gt; configuration keys.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cross-namespace-secrets-crt&lt;/code&gt;: Allows or denies cross namespace reading of x509 certificates and private keys, used by gateway&amp;rsquo;s, httpRoute&amp;rsquo;s and ingress&amp;rsquo; tls attribute, and also &lt;a href=&#34;#secure-backend&#34;&gt;&lt;code&gt;secure-crt-secret&lt;/code&gt;&lt;/a&gt; configuration key.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cross-namespace-secrets-passwd&lt;/code&gt;: Allows or denies cross namespace reading of password files, used by &lt;a href=&#34;#auth-basic&#34;&gt;&lt;code&gt;auth-secret&lt;/code&gt;&lt;/a&gt; configuration key.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cross-namespace-services&lt;/code&gt;: Allows or denies cross namespace reading of Kubernetes Service resources, used by &lt;a href=&#34;#auth-external&#34;&gt;&lt;code&gt;auth-url&lt;/code&gt;&lt;/a&gt; configuration key.&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
+&lt;a href=&#34;/v0.13/v0.13/docs/configuration/command-line/#allow-cross-namespace&#34;&gt;&lt;code&gt;--allow-cross-namespace&lt;/code&gt;&lt;/a&gt; command-line option, if declared, overrides all the secret related configuration keys.
+&lt;/div&gt;
+
 
 &lt;hr /&gt;
 
@@ -5041,6 +5265,96 @@ service&amp;rsquo;s ClusterIP is used instead.&lt;/p&gt;
 
 &lt;hr /&gt;
 
+&lt;h2 id=&#34;source-address-intf&#34;&gt;Source Address Intf&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;source-address-intf&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.13&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Configures a list of network interface names whose IPv4 address should be used as the source address for outgoing connections.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;source-address-intf&lt;/code&gt;: Comma separated list of network interface names&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;As the default behavior, HAProxy will leave the operating system choose the most apropriate address. However the same source address will be used, even if the network interface has more IP address or other interfaces can also reach the destination, leading to outgoing TCP port exaustion on deployments that needs more than 64k concurrent connections. Using more source IPs allows to bypass the maximum of 64k concurrent connections per instance.&lt;/p&gt;
+
+&lt;p&gt;HAProxy Ingress will list all IPv4 from all provided interfaces, ignoring interfaces that cannot be found, does not have IPv4, or cannot list its IPs. The IP addresses will be distributed among all the servers/endpoints, where each distinct server will use an IP from the list as its source address for its outgoing connections. If there are more replicas than IPs, some IPs from the list will be used more than once. If there are more IPs than replicas, some of the IPs from the list will not be used in a particular backend, but can be used on others that shares the configuration. The IP distribution consistently starts on distinct positions on distinct backends, fairly distributing all the IPs from the list on workloads with a big amount of backends with one or so servers each. If all the interfaces failed to list IP address, HAProxy falls back to the default behavior and leaves the operating system to choose the source IP.&lt;/p&gt;
+
+&lt;p&gt;Update also &lt;code&gt;/proc/sys/net/ipv4/ip_local_port_range&lt;/code&gt; in the HAProxy hosts to allow each source IP use more than its default 28k ephemeral ports.&lt;/p&gt;
+
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
+Neither HAProxy Ingress nor HAProxy will validate if the configured network interface and/or their IPs are valid sources for the outgoing connection, its up to the admin to ensure that the correct interface is properly configured.
+&lt;/div&gt;
+
+
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Warning&lt;/h4&gt;
+The source IP is a static configuration added on each backend server. This configuration cannot be used on backends that use DNS resolver.
+&lt;/div&gt;
+
+
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-source&#34;&gt;http://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-source&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-source&#34;&gt;http://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-source&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.kernel.org/doc/html/v5.12/networking/ip-sysctl.html#ip-variables&#34;&gt;https://www.kernel.org/doc/html/v5.12/networking/ip-sysctl.html#ip-variables&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;ssl-always-add-https&#34;&gt;SSL always add HTTPS&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;ssl-always-add-https&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Host&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.12.4&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Every hostname declared on an Ingress resource is added to an internal HTTP map. If at least one Ingress adds the hostname in the &lt;code&gt;tls&lt;/code&gt; attribute, the hostname is also added to an internal HTTPS map and does ssl offload using the default certificate. A secret name can also be added in the &lt;code&gt;tls&lt;/code&gt; attribute, overriding the certificate used in the TLS handshake.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;ssl-always-add-https&lt;/code&gt; asks the controller to always add the domain in the internal HTTP and HTTPS maps, even if the &lt;code&gt;tls&lt;/code&gt; attribute isn&amp;rsquo;t declared. If &lt;code&gt;false&lt;/code&gt;, a missing &lt;code&gt;tls&lt;/code&gt; attribute will only declare the domain in the HTTP map and &lt;code&gt;ssl-redirect&lt;/code&gt; is ignored. If &lt;code&gt;true&lt;/code&gt;, a missing &lt;code&gt;tls&lt;/code&gt; attribute adds the domain in the HTTPS map, and the TLS handshake will use the default certificate. If &lt;code&gt;tls&lt;/code&gt; attribute is used, this configuration is ignored.&lt;/p&gt;
+
+&lt;p&gt;The default value is &lt;code&gt;false&lt;/code&gt; since v0.13 to correctly implement Ingress spec. The default value can be globally changed in the global ConfigMap.&lt;/p&gt;
+
+&lt;hr /&gt;
+
 &lt;h2 id=&#34;ssl-ciphers&#34;&gt;SSL ciphers&lt;/h2&gt;
 
 &lt;table&gt;
@@ -5393,6 +5707,7 @@ Up to v0.12, &lt;code&gt;ssl-passthrough&lt;/code&gt; supports only root &lt;cod
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#ssl-always-add-https&#34;&gt;&lt;code&gt;ssl-always-add-https&lt;/code&gt;&lt;/a&gt; configuration key&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#redirect&#34;&gt;http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#redirect&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -6033,6 +6348,13 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#disable-api-warnings&#34;&gt;&lt;code&gt;--disable-api-warnings&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.12&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#disable-pod-list&#34;&gt;&lt;code&gt;--disable-pod-list&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
@@ -6152,6 +6474,13 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#watch-gateway&#34;&gt;&lt;code&gt;--watch-gateway&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.13&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#ingress-class&#34;&gt;&lt;code&gt;--watch-ingress-without-class&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
@@ -6201,6 +6530,12 @@ against a server which implements the acme protocol, version 2.&lt;/p&gt;
 ingress resource of another namespace. The default behavior is to deny such cross namespace reading.
 This adds a breaking change from &lt;code&gt;v0.4&lt;/code&gt; to &lt;code&gt;v0.5&lt;/code&gt; on &lt;code&gt;haproxy-ingress.github.io/auth-tls-secret&lt;/code&gt;
 annotation, where cross namespace reading were allowed without any configuration.&lt;/p&gt;
+
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/v0.13/v0.13/docs/configuration/keys/#cross-namespace&#34;&gt;cross namespace&lt;/a&gt; configuration keys.&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;hr /&gt;
 
@@ -6254,6 +6589,13 @@ with &lt;code&gt;file://&lt;/code&gt; can be used, containing both certificate a
 &lt;code&gt;file:///dir/crt.pem&lt;/code&gt;.&lt;/p&gt;
 
 &lt;p&gt;A self-signed fake certificate is used if not declared, the secret or the file is not found.&lt;/p&gt;
+
+&lt;h2 id=&#34;disable-api-warnings&#34;&gt;&amp;ndash;disable-api-warnings&lt;/h2&gt;
+
+&lt;p&gt;Since v0.12.4&lt;/p&gt;
+
+&lt;p&gt;Disable warning logs sent from the API server. Most of the warnings are related with API
+deprecation. The default behavior is to log all API server warnings.&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -6546,6 +6888,15 @@ the controller starts shutting down itself right after signal was sent.&lt;/p&gt
 &lt;p&gt;Defines the amount of time to wait before start a reconciliation event and update haproxy.
 The purpose of this delay is to group all the notifications of a batch update and apply pending
 changes in one single shot. The default value is &lt;code&gt;200ms&lt;/code&gt;.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;watch-gateway&#34;&gt;&amp;ndash;watch-gateway&lt;/h2&gt;
+
+&lt;p&gt;Since v0.13&lt;/p&gt;
+
+&lt;p&gt;Enables Gateway API watch and parse. The Gateway API CRDs should be installed before enable
+this option. See also the Gateway API configuration &lt;a href=&#34;/v0.13/v0.13/docs/configuration/gateway-api/&#34;&gt;doc&lt;/a&gt;.&lt;/p&gt;
 
 &lt;hr /&gt;
 
