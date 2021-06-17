@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2020-11-15T20:15:16-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-05-30T19:27:37-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Command-line options">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2020-11-15T20:15:16-03:00" />
-<meta itemprop="wordCount" content="2544">
+<meta itemprop="dateModified" content="2021-05-30T19:27:37-03:00" />
+<meta itemprop="wordCount" content="2578">
 
 
 
@@ -377,6 +377,7 @@ if (!doNotTrack) {
 <li><a href="#buckets-response-time">&ndash;buckets-response-time</a></li>
 <li><a href="#default-backend-service">&ndash;default-backend-service</a></li>
 <li><a href="#default-ssl-certificate">&ndash;default-ssl-certificate</a></li>
+<li><a href="#disable-api-warnings">&ndash;disable-api-warnings</a></li>
 <li><a href="#disable-pod-list">&ndash;disable-pod-list</a></li>
 <li><a href="#ingress-class">Ingress Class</a></li>
 <li><a href="#kubeconfig">&ndash;kubeconfig</a></li>
@@ -557,6 +558,13 @@ if (!doNotTrack) {
 <td>namespace/secretname</td>
 <td>fake, auto generated</td>
 <td></td>
+</tr>
+
+<tr>
+<td><a href="#disable-api-warnings"><code>--disable-api-warnings</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.12</td>
 </tr>
 
 <tr>
@@ -770,6 +778,13 @@ hostname, or the requested path doesn&rsquo;t match any location within the desi
 <p>Defines the <code>namespace/secretname</code> of the default certificate that should be used if ingress
 resources using TLS configuration doesn&rsquo;t provide it&rsquo;s own certificate. A self-signed fake
 certificate is used if not declared.</p>
+
+<h2 id="disable-api-warnings">&ndash;disable-api-warnings</h2>
+
+<p>Since v0.12.4</p>
+
+<p>Disable warning logs sent from the API server. Most of the warnings are related with API
+deprecation. The default behavior is to log all API server warnings.</p>
 
 <hr />
 
@@ -1116,7 +1131,7 @@ single namespace.</p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified November 15, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/04f956f644b7191be965e53ea294b13c2d419457">docs: small lay out and description fixes and improvements (04f956f6)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified May 30, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/2c4e8348c8e4eefccba1456aa18fe3f83bdd79e8">add option to disable API server warnings (2c4e8348)</a>
 </div>
 </div>
 

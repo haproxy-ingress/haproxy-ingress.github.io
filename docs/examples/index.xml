@@ -340,9 +340,20 @@ haproxy to log to stdout.&lt;/p&gt;
 
 &lt;p&gt;Hint: change &lt;code&gt;install&lt;/code&gt; to &lt;code&gt;upgrade&lt;/code&gt; if HAProxy Ingress is already installed with Helm.&lt;/p&gt;
 
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
+We&amp;rsquo;re asking helm to install the latest v0.12 controller version, which will work
+on this example, but it&amp;rsquo;s a best practice to use a proper chart version when moving to
+staging or production. Check all stable versions with &lt;code&gt;helm search repo haproxy-ingress/ -l&lt;/code&gt;
+and update the &lt;code&gt;--version&lt;/code&gt; command-line below.
+&lt;/div&gt;
+
+
 &lt;pre&gt;&lt;code&gt;$ helm install haproxy-ingress haproxy-ingress/haproxy-ingress\
   --create-namespace --namespace=ingress-controller\
-  --version 0.12.3\
+  --version 0.12\
   -f haproxy-ingress-values.yaml
 &lt;/code&gt;&lt;/pre&gt;
 
