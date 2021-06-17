@@ -1170,6 +1170,13 @@ never conflict.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#ssl-always-add-https&#34;&gt;&lt;code&gt;ssl-always-add-https&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;Host&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#ssl-ciphers&#34;&gt;&lt;code&gt;ssl-cipher-suites&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;colon-separated list&lt;/td&gt;
 &lt;td&gt;Host&lt;/td&gt;
@@ -4529,6 +4536,36 @@ service&amp;rsquo;s ClusterIP is used instead.&lt;/p&gt;
 
 &lt;hr /&gt;
 
+&lt;h2 id=&#34;ssl-always-add-https&#34;&gt;SSL always add HTTPS&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;ssl-always-add-https&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Host&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.12.4&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Every hostname declared on an Ingress resource is added to an internal HTTP map. If at least one Ingress adds the hostname in the &lt;code&gt;tls&lt;/code&gt; attribute, the hostname is also added to an internal HTTPS map and does ssl offload using the default certificate. A secret name can also be added in the &lt;code&gt;tls&lt;/code&gt; attribute, overriding the certificate used in the TLS handshake.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;ssl-always-add-https&lt;/code&gt; asks the controller to always add the domain in the internal HTTP and HTTPS maps, even if the &lt;code&gt;tls&lt;/code&gt; attribute isn&amp;rsquo;t declared. If &lt;code&gt;false&lt;/code&gt;, a missing &lt;code&gt;tls&lt;/code&gt; attribute will only declare the domain in the HTTP map and &lt;code&gt;ssl-redirect&lt;/code&gt; is ignored. If &lt;code&gt;true&lt;/code&gt;, a missing &lt;code&gt;tls&lt;/code&gt; attribute adds the domain in the HTTPS map, and the TLS handshake will use the default certificate. If &lt;code&gt;tls&lt;/code&gt; attribute is used, this configuration is ignored.&lt;/p&gt;
+
+&lt;p&gt;The default value is &lt;code&gt;true&lt;/code&gt; up to v0.12 releases to preserve historical behavior of this controller. The default value can be globally changed in the global ConfigMap.&lt;/p&gt;
+
+&lt;hr /&gt;
+
 &lt;h2 id=&#34;ssl-ciphers&#34;&gt;SSL ciphers&lt;/h2&gt;
 
 &lt;table&gt;
@@ -4868,6 +4905,7 @@ configured to SSL offload on HAProxy.&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#ssl-always-add-https&#34;&gt;&lt;code&gt;ssl-always-add-https&lt;/code&gt;&lt;/a&gt; configuration key&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#redirect&#34;&gt;http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#redirect&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -5445,6 +5483,13 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#disable-api-warnings&#34;&gt;&lt;code&gt;--disable-api-warnings&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.12&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#disable-pod-list&#34;&gt;&lt;code&gt;--disable-pod-list&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
@@ -5655,6 +5700,13 @@ hostname, or the requested path doesn&amp;rsquo;t match any location within the 
 &lt;p&gt;Defines the &lt;code&gt;namespace/secretname&lt;/code&gt; of the default certificate that should be used if ingress
 resources using TLS configuration doesn&amp;rsquo;t provide it&amp;rsquo;s own certificate. A self-signed fake
 certificate is used if not declared.&lt;/p&gt;
+
+&lt;h2 id=&#34;disable-api-warnings&#34;&gt;&amp;ndash;disable-api-warnings&lt;/h2&gt;
+
+&lt;p&gt;Since v0.12.4&lt;/p&gt;
+
+&lt;p&gt;Disable warning logs sent from the API server. Most of the warnings are related with API
+deprecation. The default behavior is to log all API server warnings.&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -6342,9 +6394,20 @@ haproxy to log to stdout.&lt;/p&gt;
 
 &lt;p&gt;Hint: change &lt;code&gt;install&lt;/code&gt; to &lt;code&gt;upgrade&lt;/code&gt; if HAProxy Ingress is already installed with Helm.&lt;/p&gt;
 
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
+We&amp;rsquo;re asking helm to install the latest v0.12 controller version, which will work
+on this example, but it&amp;rsquo;s a best practice to use a proper chart version when moving to
+staging or production. Check all stable versions with &lt;code&gt;helm search repo haproxy-ingress/ -l&lt;/code&gt;
+and update the &lt;code&gt;--version&lt;/code&gt; command-line below.
+&lt;/div&gt;
+
+
 &lt;pre&gt;&lt;code&gt;$ helm install haproxy-ingress haproxy-ingress/haproxy-ingress\
   --create-namespace --namespace=ingress-controller\
-  --version 0.12.3\
+  --version 0.12\
   -f haproxy-ingress-values.yaml
 &lt;/code&gt;&lt;/pre&gt;
 

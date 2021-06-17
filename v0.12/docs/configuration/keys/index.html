@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.12/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2021-02-04T17:25:35-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-06-04T07:43:16-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2021-02-04T17:25:35-03:00" />
-<meta itemprop="wordCount" content="12180">
+<meta itemprop="dateModified" content="2021-06-04T07:43:16-03:00" />
+<meta itemprop="wordCount" content="12363">
 
 
 
@@ -431,6 +431,7 @@ if (!doNotTrack) {
 <li><a href="#security">Security</a></li>
 <li><a href="#server-alias">Server alias</a></li>
 <li><a href="#service-upstream">Service upstream</a></li>
+<li><a href="#ssl-always-add-https">SSL always add HTTPS</a></li>
 <li><a href="#ssl-ciphers">SSL ciphers</a></li>
 <li><a href="#ssl-dh">SSL DH</a></li>
 <li><a href="#ssl-engine">SSL engine</a></li>
@@ -1636,6 +1637,13 @@ never conflict.</p>
 <td>minimum number of free slots</td>
 <td>Backend</td>
 <td><code>0</code></td>
+</tr>
+
+<tr>
+<td><a href="#ssl-always-add-https"><code>ssl-always-add-https</code></a></td>
+<td>[true|false]</td>
+<td>Host</td>
+<td><code>true</code></td>
 </tr>
 
 <tr>
@@ -4998,6 +5006,36 @@ service&rsquo;s ClusterIP is used instead.</p>
 
 <hr />
 
+<h2 id="ssl-always-add-https">SSL always add HTTPS</h2>
+
+<table>
+<thead>
+<tr>
+<th>Configuration key</th>
+<th>Scope</th>
+<th>Default</th>
+<th>Since</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>ssl-always-add-https</code></td>
+<td>Host</td>
+<td><code>true</code></td>
+<td>v0.12.4</td>
+</tr>
+</tbody>
+</table>
+
+<p>Every hostname declared on an Ingress resource is added to an internal HTTP map. If at least one Ingress adds the hostname in the <code>tls</code> attribute, the hostname is also added to an internal HTTPS map and does ssl offload using the default certificate. A secret name can also be added in the <code>tls</code> attribute, overriding the certificate used in the TLS handshake.</p>
+
+<p><code>ssl-always-add-https</code> asks the controller to always add the domain in the internal HTTP and HTTPS maps, even if the <code>tls</code> attribute isn&rsquo;t declared. If <code>false</code>, a missing <code>tls</code> attribute will only declare the domain in the HTTP map and <code>ssl-redirect</code> is ignored. If <code>true</code>, a missing <code>tls</code> attribute adds the domain in the HTTPS map, and the TLS handshake will use the default certificate. If <code>tls</code> attribute is used, this configuration is ignored.</p>
+
+<p>The default value is <code>true</code> up to v0.12 releases to preserve historical behavior of this controller. The default value can be globally changed in the global ConfigMap.</p>
+
+<hr />
+
 <h2 id="ssl-ciphers">SSL ciphers</h2>
 
 <table>
@@ -5337,6 +5375,7 @@ configured to SSL offload on HAProxy.</p>
 <p>See also:</p>
 
 <ul>
+<li><a href="#ssl-always-add-https"><code>ssl-always-add-https</code></a> configuration key</li>
 <li><a href="http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#redirect">http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#redirect</a></li>
 </ul>
 
@@ -5843,7 +5882,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified February 4, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/7460e7f72cdd809a225cf6ca1bfc288be3fa60c3">Add support for native redirection of default backend (7460e7f7)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified June 4, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/d1b48a718aebd5f91ae793a6ea174db9a4b908f3">add ssl-always-add-https config key (d1b48a71)</a>
 </div>
 </div>
 
