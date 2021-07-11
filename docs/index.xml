@@ -1784,10 +1784,10 @@ limitation was removed on v0.6.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie&#34;&gt;https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-cookie&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-cookie&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-cookie&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-cookie&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-cookie&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-cookie&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-cookie&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-cookie&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.haproxy.com/blog/load-balancing-affinity-persistence-sticky-sessions-what-you-need-to-know/&#34;&gt;https://www.haproxy.com/blog/load-balancing-affinity-persistence-sticky-sessions-what-you-need-to-know/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#dynamic-cookie-key&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#dynamic-cookie-key&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#dynamic-cookie-key&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#dynamic-cookie-key&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -1875,10 +1875,10 @@ overwrite the weight defined from the agent&lt;/li&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-check&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-check&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-port&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-port&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-inter&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-inter&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-send&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-agent-send&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-agent-check&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-agent-check&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-agent-port&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-agent-port&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-agent-inter&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-agent-inter&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-agent-send&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-agent-send&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -1948,7 +1948,7 @@ configurations overlap and a source IP matches both the allowlist and denylist.&
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-http-request%20deny&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4.2-http-request%20deny&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4.2-http-request%20deny&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -2182,7 +2182,7 @@ will still configures SSL/TLS.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;#use-htx&#34;&gt;use-htx&lt;/a&gt; configuration key to enable HTTP/2 backends.&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#secure-backend&#34;&gt;secure-backend&lt;/a&gt; configuration keys to configure optional client certificate and certificate authority bundle of SSL/TLS connections.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-proto&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-proto&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-proto&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-proto&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -2254,7 +2254,7 @@ HAProxy Ingress won&amp;rsquo;t refuse to change the default naming if dynamic u
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-balance&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-balance&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-balance&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-balance&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -2302,7 +2302,7 @@ The bind configuration keys in this section have precedente if declared.&lt;/p&g
 
 &lt;p&gt;Any HAProxy supported option can be used, this will be copied verbatim to the
 bind keyword. See HAProxy
-&lt;a href=&#34;#https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-bind&#34;&gt;bind keyword doc&lt;/a&gt;.&lt;/p&gt;
+&lt;a href=&#34;#https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-bind&#34;&gt;bind keyword doc&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;Configuration examples:&lt;/p&gt;
 
@@ -2335,7 +2335,7 @@ configuration key.
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-bind&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-bind&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-bind&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-bind&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#bind-ip-addr&#34;&gt;Bind IP addr&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#bind-port&#34;&gt;Bind port&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -2407,7 +2407,7 @@ binds on all IPv4 address.&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-bind&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-bind&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-bind&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-bind&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#bind&#34;&gt;Bind&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#bind-port&#34;&gt;Bind port&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -2484,7 +2484,7 @@ choosing between one or the other.
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;#bind&#34;&gt;Bind&lt;/a&gt; configuration key&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-monitor-uri&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-monitor-uri&lt;/a&gt; (&lt;code&gt;healthz-port&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-monitor-uri&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-monitor-uri&lt;/a&gt; (&lt;code&gt;healthz-port&lt;/code&gt;)&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://git.haproxy.org/?p=haproxy-2.0.git;a=blob;f=contrib/prometheus-exporter/README;hb=HEAD&#34;&gt;https://git.haproxy.org/?p=haproxy-2.0.git;a=blob;f=contrib/prometheus-exporter/README;hb=HEAD&lt;/a&gt; (&lt;code&gt;prometheus-port&lt;/code&gt;)&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -2617,8 +2617,8 @@ uses the chosen load balance algorithm.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;/docs/examples/blue-green/&#34;&gt;example&lt;/a&gt; page.&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;/docs/configuration/command-line/#disable-pod-list&#34;&gt;disable-pod-list&lt;/a&gt; command-line option doc.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-weight&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-weight&lt;/a&gt; (&lt;code&gt;weight&lt;/code&gt; based balance)&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-use-server&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-use-server&lt;/a&gt; (&lt;code&gt;use-server&lt;/code&gt; based selector)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-weight&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-weight&lt;/a&gt; (&lt;code&gt;weight&lt;/code&gt; based balance)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-use-server&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-use-server&lt;/a&gt; (&lt;code&gt;use-server&lt;/code&gt; based selector)&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -2737,9 +2737,9 @@ to add more than one line of configuration.&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.2-maxconn&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.2-maxconn&lt;/a&gt; (&lt;code&gt;max-connections&lt;/code&gt;)&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-maxconn&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-maxconn&lt;/a&gt; (&lt;code&gt;maxconn-server&lt;/code&gt;)&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-maxqueue&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-maxqueue&lt;/a&gt; (&lt;code&gt;maxqueue-server&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.2-maxconn&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.2-maxconn&lt;/a&gt; (&lt;code&gt;max-connections&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-maxconn&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-maxconn&lt;/a&gt; (&lt;code&gt;maxconn-server&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-maxqueue&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-maxqueue&lt;/a&gt; (&lt;code&gt;maxqueue-server&lt;/code&gt;)&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -2861,7 +2861,7 @@ to add more than one line of configuration.&lt;/p&gt;
 on &lt;a href=&#34;#nbthread&#34;&gt;nbthread&lt;/a&gt; and &lt;a href=&#34;#nbproc&#34;&gt;nbproc&lt;/a&gt;.&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;cpu-map&lt;/code&gt;: Custom override specifying the cpu mapping behaviour in the format described &lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map&#34;&gt;here&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cpu-map&lt;/code&gt;: Custom override specifying the cpu mapping behaviour in the format described &lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-cpu-map&#34;&gt;here&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;use-cpu-map&lt;/code&gt;: Set to &lt;code&gt;false&lt;/code&gt; to prevent any cpu mapping&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -2870,7 +2870,7 @@ on &lt;a href=&#34;#nbthread&#34;&gt;nbthread&lt;/a&gt; and &lt;a href=&#34;#nbp
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;#nbthread&#34;&gt;nbthread&lt;/a&gt; configuration key&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#nbproc&#34;&gt;nbproc&lt;/a&gt; configuration key&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-cpu-map&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-cpu-map&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -3012,8 +3012,8 @@ a user. Defaults to 302 (Moved Temporarily)&lt;/p&gt;&lt;/li&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/tree/master/examples/dns-service-discovery&#34;&gt;example&lt;/a&gt; page.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.3.2&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.3.2&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-resolvers&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-resolvers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.3.2&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.3.2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-resolvers&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-resolvers&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/&#34;&gt;https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://kubernetes.io/docs/concepts/services-networking/service/#headless-services&#34;&gt;https://kubernetes.io/docs/concepts/services-networking/service/#headless-services&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
@@ -3134,7 +3134,7 @@ also happen when the number of servers could be reduced.&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/management.html#9.3&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/management.html#9.3&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/management.html#9.3&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/management.html#9.3&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -3223,7 +3223,7 @@ doesn&amp;rsquo;t provide one.&lt;/li&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-option%20forwardfor&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-option%20forwardfor&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-option%20forwardfor&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-option%20forwardfor&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For&#34;&gt;https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -3432,12 +3432,12 @@ This limitation doesn&amp;rsquo;t exist on v0.8 or above.
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-option%20httpchk&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4.2-option%20httpchk&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-addr&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-addr&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-port&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-port&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-inter&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-inter&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-rise&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-rise&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-fall&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-fall&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4.2-option%20httpchk&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4.2-option%20httpchk&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-addr&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-addr&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-port&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-port&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-inter&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-inter&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-rise&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-rise&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-fall&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-fall&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -3539,7 +3539,7 @@ provided that the maximum is lesser than or equal &lt;code&gt;256&lt;/code&gt;.&
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;#agent-check&#34;&gt;&lt;code&gt;agent-check&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-weight&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-weight&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-weight&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-weight&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -3625,8 +3625,8 @@ an old state with disabled servers will disable them in the new configuration.&l
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-server-state-file&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-server-state-file&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-load-server-state-from-file&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-load-server-state-from-file&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-server-state-file&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-server-state-file&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-load-server-state-from-file&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-load-server-state-from-file&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -3679,7 +3679,7 @@ an old state with disabled servers will disable them in the new configuration.&l
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.4&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#8.2.4&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#8.2.4&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#8.2.4&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#syslog&#34;&gt;&lt;code&gt;syslog&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -3731,8 +3731,8 @@ websockets, and clusters that frequently changes and forces haproxy to reload.&l
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;/docs/examples/external-haproxy/&#34;&gt;Example&lt;/a&gt; page&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-master-worker&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-master-worker&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#mworker-max-reloads&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#mworker-max-reloads&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-master-worker&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-master-worker&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#mworker-max-reloads&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#mworker-max-reloads&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;/docs/configuration/command-line/#master-socket&#34;&gt;master-socket&lt;/a&gt; command-line option&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -3823,7 +3823,7 @@ Since v0.8 the spoe filter is configured on a per-backend basis.&lt;/p&gt;
 &lt;li&gt;&lt;a href=&#34;/docs/examples/modsecurity/&#34;&gt;example&lt;/a&gt; page.&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#waf&#34;&gt;&lt;code&gt;waf&lt;/code&gt;&lt;/a&gt; configuration key.&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.haproxy.org/download/2.0/doc/SPOE.txt&#34;&gt;https://www.haproxy.org/download/2.0/doc/SPOE.txt&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#9.3&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#9.3&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#9.3&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#9.3&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/jcmoraisjr/modsecurity-spoa&#34;&gt;https://github.com/jcmoraisjr/modsecurity-spoa&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -3878,9 +3878,9 @@ process. Leave one core dedicated to header inspection and load balancing.&lt;/p
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;#nbthread&#34;&gt;nbthread&lt;/a&gt; configuration key&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#cpu-map&#34;&gt;cpu-map&lt;/a&gt; configuration key&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-nbproc&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-nbproc&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-bind-process&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-bind-process&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-nbproc&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-nbproc&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-bind-process&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-bind-process&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-cpu-map&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-cpu-map&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -3918,8 +3918,8 @@ bind each thread on its own CPU core.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;#cpu-map&#34;&gt;cpu-map&lt;/a&gt; configuration key&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-nbthread&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-nbthread&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-cpu-map&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-nbthread&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-nbthread&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-cpu-map&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-cpu-map&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -4140,7 +4140,7 @@ resource.&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#7.3.6-req.body_size&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#7.3.6-req.body_size&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#7.3.6-req.body_size&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#7.3.6-req.body_size&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -4185,11 +4185,11 @@ resource.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.haproxy.org/download/2.0/doc/proxy-protocol.txt&#34;&gt;https://www.haproxy.org/download/2.0/doc/proxy-protocol.txt&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.1-accept-proxy&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.1-accept-proxy&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-send-proxy&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-send-proxy&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-send-proxy-v2&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-send-proxy-v2&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-send-proxy-v2-ssl&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-send-proxy-v2-ssl&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-send-proxy-v2-ssl-cn&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-send-proxy-v2-ssl-cn&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.1-accept-proxy&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.1-accept-proxy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-send-proxy&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-send-proxy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-send-proxy-v2&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-send-proxy-v2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-send-proxy-v2-ssl&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-send-proxy-v2-ssl&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-send-proxy-v2-ssl-cn&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-send-proxy-v2-ssl-cn&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -4361,9 +4361,9 @@ The following table shows some examples:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;#backend-protocol&#34;&gt;Backend protocol&lt;/a&gt; configuration key.&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-verify&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-verify&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-verifyhost&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-verifyhost&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-sni&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-sni&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-verify&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-verify&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-verifyhost&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-verifyhost&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-sni&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-sni&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -4423,7 +4423,7 @@ The following table shows some examples:&lt;/p&gt;
 
 &lt;p&gt;In the default configuration HAProxy Ingress container starts as root. Since v0.9 it&amp;rsquo;s also possible to configure the container to start as &lt;code&gt;haproxy&lt;/code&gt; user, UID &lt;code&gt;1001&lt;/code&gt;.&lt;/p&gt;
 
-&lt;p&gt;If using the embedded haproxy, read the &lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/2.0/management.html#13&#34;&gt;Security considerations&lt;/a&gt; from HAProxy doc before change the starting user.&lt;/p&gt;
+&lt;p&gt;If using the embedded haproxy, read the &lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/management.html#13&#34;&gt;Security considerations&lt;/a&gt; from HAProxy doc before change the starting user.&lt;/p&gt;
 
 &lt;p&gt;If using an external haproxy, configures the pod&amp;rsquo;s securityContext (instead of the container&amp;rsquo;s one) which will make Kubernetes create the shared file system with write access, so the controller can create and update configuration, maps and certificate files.&lt;/p&gt;
 
@@ -4458,11 +4458,11 @@ The following table shows some examples:&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/1.9/management.html#13&#34;&gt;http://cbonte.github.io/haproxy-dconv/1.9/management.html#13&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#3.1-chroot&#34;&gt;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#3.1-chroot&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#3.1-uid&#34;&gt;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#3.1-uid&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#3.1-gid&#34;&gt;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#3.1-gid&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#3.1-unix-bind&#34;&gt;http://cbonte.github.io/haproxy-dconv/1.9/configuration.html#3.1-unix-bind&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/management.html#13&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/management.html#13&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-chroot&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-chroot&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-uid&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-uid&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-gid&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-gid&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-unix-bind&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-unix-bind&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -4637,10 +4637,10 @@ service&amp;rsquo;s ClusterIP is used instead.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://ssl-config.mozilla.org/#server=haproxy&#34;&gt;https://ssl-config.mozilla.org/#server=haproxy&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-ssl-default-bind-ciphers&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-ssl-default-bind-ciphers&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-ssl-default-bind-ciphersuites&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-ssl-default-bind-ciphersuites&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-ciphers&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-ciphers&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-ciphersuites&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.2-ciphersuites&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-ssl-default-bind-ciphers&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-ssl-default-bind-ciphers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-ssl-default-bind-ciphersuites&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-ssl-default-bind-ciphersuites&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-ciphers&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-ciphers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-ciphersuites&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.2-ciphersuites&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -4684,8 +4684,8 @@ service&amp;rsquo;s ClusterIP is used instead.&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#tune.ssl.default-dh-param&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#tune.ssl.default-dh-param&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-ssl-dh-param-file&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-ssl-dh-param-file&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#tune.ssl.default-dh-param&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#tune.ssl.default-dh-param&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-ssl-dh-param-file&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-ssl-dh-param-file&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -4728,8 +4728,8 @@ the ssl-engine used supports it.&lt;/p&gt;
 &lt;p&gt;Reference:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#ssl-engine&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#ssl-engine&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#ssl-mode-async&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#ssl-mode-async&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#ssl-engine&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#ssl-engine&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#ssl-mode-async&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#ssl-mode-async&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -4811,7 +4811,7 @@ the ssl-engine used supports it.&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.1-crt-list&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.1-crt-list&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.1-crt-list&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.1-crt-list&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -4906,7 +4906,7 @@ configured to SSL offload on HAProxy.&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;#ssl-always-add-https&#34;&gt;&lt;code&gt;ssl-always-add-https&lt;/code&gt;&lt;/a&gt; configuration key&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#redirect&#34;&gt;http://cbonte.github.io/haproxy-dconv/2.0/configuration.html#redirect&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#redirect&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#redirect&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -5077,8 +5077,8 @@ if a path couldn&amp;rsquo;t be matched.&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-log&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-log&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-log-tag&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-log-tag&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-log&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-log&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-log-tag&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-log-tag&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -5196,8 +5196,8 @@ Since &lt;code&gt;v0.11&lt;/code&gt;, &lt;code&gt;timeout-client&lt;/code&gt; an
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-hard-stop-after&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#3.1-hard-stop-after&lt;/a&gt; (&lt;code&gt;timeout-stop&lt;/code&gt;)&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#2.4&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#2.4&lt;/a&gt; (time suffix)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-hard-stop-after&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#3.1-hard-stop-after&lt;/a&gt; (&lt;code&gt;timeout-stop&lt;/code&gt;)&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#2.4&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#2.4&lt;/a&gt; (time suffix)&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -5232,7 +5232,7 @@ HTTP/2 on the client side.&lt;/p&gt;
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.1-alpn&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#5.1-alpn&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.1-alpn&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#5.1-alpn&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -5266,7 +5266,7 @@ is &lt;code&gt;true&lt;/code&gt; since v0.10, it was &lt;code&gt;false&lt;/code&
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;#backend-protocol&#34;&gt;backend-protocol&lt;/a&gt; configuration keys&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-option%20http-use-htx&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.0/configuration.html#4-option%20http-use-htx&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-option%20http-use-htx&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4-option%20http-use-htx&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
@@ -5448,6 +5448,13 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#apiserver-host&#34;&gt;&lt;code&gt;--apiserver-host&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;address of K8s API server&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#backend-shards&#34;&gt;&lt;code&gt;--backend-shards&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;int&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;0&lt;/code&gt;&lt;/td&gt;
@@ -5462,9 +5469,16 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#configmap&#34;&gt;&lt;code&gt;--configmap&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;namespace/configmapname&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#ingress-class&#34;&gt;&lt;code&gt;--controller-class&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;suffix&lt;/td&gt;
-&lt;td&gt;``&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;v0.12&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -5490,10 +5504,45 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#disable-config-keywords&#34;&gt;&lt;code&gt;--disable-config-keywords&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;comma-separated list of keywords&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.10&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#disable-external-name&#34;&gt;&lt;code&gt;--disable-external-name&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.10&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#disable-pod-list&#34;&gt;&lt;code&gt;--disable-pod-list&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;v0.11&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#election-id&#34;&gt;&lt;code&gt;--election-id&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;identifier&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;ingress-controller-leader&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#force-namespace-isolation&#34;&gt;&lt;code&gt;--force-namespace-isolation&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#stats&#34;&gt;&lt;code&gt;--health-check-path&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;path&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/healthz&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -5560,6 +5609,13 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#report-node-internal-ip-address&#34;&gt;&lt;code&gt;--report-node-internal-ip-address&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#sort-backends&#34;&gt;&lt;code&gt;--sort-backends&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
@@ -5581,6 +5637,13 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#sync-period&#34;&gt;&lt;code&gt;--sync-period&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;time&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;10m&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#tcp-services-configmap&#34;&gt;&lt;code&gt;--tcp-services-configmap&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;namespace/configmapname&lt;/td&gt;
 &lt;td&gt;no tcp svc&lt;/td&gt;
@@ -5588,9 +5651,44 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#update-status&#34;&gt;&lt;code&gt;--update-status&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#update-status-on-shutdown&#34;&gt;&lt;code&gt;--update-status-on-shutdown&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#v&#34;&gt;&lt;code&gt;--v&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;log level as integer&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;1&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#validate-config&#34;&gt;&lt;code&gt;--validate-config&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#verify-hostname&#34;&gt;&lt;code&gt;--verify-hostname&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#version&#34;&gt;&lt;code&gt;--version&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -5671,6 +5769,15 @@ that shares ingress and service objects without conflicting each other.&lt;/p&gt
 
 &lt;hr /&gt;
 
+&lt;h2 id=&#34;apiserver-host&#34;&gt;&amp;ndash;apiserver-host&lt;/h2&gt;
+
+&lt;p&gt;Allows you to specify an explicit host for the Kubernetes API server, in the format of
+&lt;code&gt;protocol://address:port&lt;/code&gt;, e.g., &lt;code&gt;http://localhost:8080&lt;/code&gt;.  If this value isn&amp;rsquo;t specified, the
+assumption is that the binary is running inside a Kubernetes cluster and local discovery will be
+attempted.&lt;/p&gt;
+
+&lt;hr /&gt;
+
 &lt;h2 id=&#34;backend-shards&#34;&gt;&amp;ndash;backend-shards&lt;/h2&gt;
 
 &lt;p&gt;Defines how many files should be used to configure the haproxy backends. The default value is
@@ -5684,6 +5791,20 @@ services.&lt;/p&gt;
 &lt;h2 id=&#34;buckets-response-time&#34;&gt;&amp;ndash;buckets-response-time&lt;/h2&gt;
 
 &lt;p&gt;Configures the buckets of the histogram &lt;code&gt;haproxyingress_haproxy_response_time_seconds&lt;/code&gt;, used to compute the response time of the haproxy&amp;rsquo;s admin socket. The response time unit is in seconds.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;configmap&#34;&gt;&amp;ndash;configmap&lt;/h2&gt;
+
+&lt;p&gt;The name of the ConfigMap that contains the custom configuration to use, in the format
+&lt;code&gt;namespace/configmapname&lt;/code&gt;.  Beware that in version 0.12 and below, an incorrect value here will
+silently fail.  Version 0.13 and later will crash if the ConfigMap is unreadable or nonexistent.&lt;/p&gt;
+
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/blob/master/examples/custom-configuration/README.md&#34;&gt;custom-configuration example using &lt;code&gt;--configmap&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;hr /&gt;
 
@@ -5701,6 +5822,8 @@ hostname, or the requested path doesn&amp;rsquo;t match any location within the 
 resources using TLS configuration doesn&amp;rsquo;t provide it&amp;rsquo;s own certificate. A self-signed fake
 certificate is used if not declared.&lt;/p&gt;
 
+&lt;hr /&gt;
+
 &lt;h2 id=&#34;disable-api-warnings&#34;&gt;&amp;ndash;disable-api-warnings&lt;/h2&gt;
 
 &lt;p&gt;Since v0.12.4&lt;/p&gt;
@@ -5710,11 +5833,46 @@ deprecation. The default behavior is to log all API server warnings.&lt;/p&gt;
 
 &lt;hr /&gt;
 
+&lt;h2 id=&#34;disable-config-keywords&#34;&gt;&amp;ndash;disable-config-keywords&lt;/h2&gt;
+
+&lt;p&gt;Since v0.10.9&lt;/p&gt;
+
+&lt;p&gt;Defines a comma-separated list of HAProxy keywords that should not be used on annotation based configuration snippets. Configuration snippets added as a global config does not follow this option. Use an asterisk &lt;code&gt;*&lt;/code&gt; to disable configuration snippets using annotations.&lt;/p&gt;
+
+&lt;p&gt;Every keyword in the configuration will be compared with the first token of every configuration line, ignoring tabs and spaces. If a match occur, all the configuration snippet will be ignored and a warning is logged.&lt;/p&gt;
+
+&lt;p&gt;The default value is an empty string, enabling the configuration and accepting any HAProxy keyword.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;disable-external-name&#34;&gt;&amp;ndash;disable-external-name&lt;/h2&gt;
+
+&lt;p&gt;Since v0.10.9&lt;/p&gt;
+
+&lt;p&gt;Services of type ExternalName uses DNS lookup to define the target server IP list. Declare &lt;code&gt;--disable-external-name&lt;/code&gt; to disable a DNS based target IP list, refusing services of type ExternalName.&lt;/p&gt;
+
+&lt;hr /&gt;
+
 &lt;h2 id=&#34;disable-pod-list&#34;&gt;&amp;ndash;disable-pod-list&lt;/h2&gt;
 
 &lt;p&gt;Since v0.11&lt;/p&gt;
 
 &lt;p&gt;Disables in memory pod list and also pod watch for changes. Pod list and watch is used by &lt;code&gt;drain-support&lt;/code&gt; option, which will not work if pod list is disabled. Blue/green and &lt;code&gt;session-cookie-value-strategy&lt;/code&gt; set to &lt;code&gt;pod-uid&lt;/code&gt; also use pod list if enabled, otherwise k8s api is called if needed. The default value is &lt;code&gt;false&lt;/code&gt;, which means pods will be watched and listed in memory.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;election-id&#34;&gt;&amp;ndash;election-id&lt;/h2&gt;
+
+&lt;p&gt;The ID to be used for electing ingress controller leader.  Defaults to &lt;code&gt;ingress-controller-leader&lt;/code&gt;.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;force-namespace-isolation&#34;&gt;&amp;ndash;force-namespace-isolation&lt;/h2&gt;
+
+&lt;p&gt;Whether to force namespace isolation.  This flag is required to avoid the reference of secrets,
+configmaps or the default backend service located in a different namespace than specified in the
+flag &lt;code&gt;--watch-namespace&lt;/code&gt; (which defaults to all namespaces, so you will probably want to set that
+flag, too).&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -5848,6 +6006,13 @@ describes how it works.&lt;/li&gt;
 
 &lt;hr /&gt;
 
+&lt;h2 id=&#34;report-node-internal-ip-address&#34;&gt;&amp;ndash;report-node-internal-ip-address&lt;/h2&gt;
+
+&lt;p&gt;Sets whether the node&amp;rsquo;s IP address returned in the ingress status should be the node&amp;rsquo;s internal
+instead of the external IP address.  Defaults to &lt;code&gt;false&lt;/code&gt;.&lt;/p&gt;
+
+&lt;hr /&gt;
+
 &lt;h2 id=&#34;sort-backends&#34;&gt;&amp;ndash;sort-backends&lt;/h2&gt;
 
 &lt;p&gt;Defines if backend&amp;rsquo;s endpoints should be sorted by name. Since v0.8 the endpoints will stay in the
@@ -5900,10 +6065,18 @@ option, because the default value builds the server name using a numeric sequenc
 &lt;p&gt;Options:&lt;/p&gt;
 
 &lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--health-check-path&lt;/code&gt;: Defines the URL to be used as a health check for the default server.  Defaults to &lt;code&gt;/healthz&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;--healthz-port&lt;/code&gt;: Defines the port number haproxy-ingress should listen to. Defaults to &lt;code&gt;10254&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;--profiling&lt;/code&gt;: Configures if the profiling URI should be enabled. Defaults to &lt;code&gt;true&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;--stats-collect-processing-period&lt;/code&gt;: Defines the interval between two consecutive readings of haproxy&amp;rsquo;s &lt;code&gt;Idle_pct&lt;/code&gt;, used to generate &lt;code&gt;haproxy_processing_seconds_total&lt;/code&gt; metric. haproxy updates Idle_pct every &lt;code&gt;500ms&lt;/code&gt;, which makes that the best configuration value, and it&amp;rsquo;s also the default if not configured. Values higher than &lt;code&gt;500ms&lt;/code&gt; will produce a less accurate collect. Change to 0 (zero) to disable this metric.&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;sync-period&#34;&gt;&amp;ndash;sync-period&lt;/h2&gt;
+
+&lt;p&gt;Configures the default resync period of the Kubernetes client&amp;rsquo;s informer factory. Defaults to 10
+minutes.&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -5955,6 +6128,40 @@ data:
 
 &lt;hr /&gt;
 
+&lt;h2 id=&#34;update-status&#34;&gt;&amp;ndash;update-status&lt;/h2&gt;
+
+&lt;p&gt;Indicates whether the ingress controller should update the &lt;code&gt;status&lt;/code&gt; attribute of all the Ingress
+resources that this controller is tracking.  Defaults to &lt;code&gt;true&lt;/code&gt;.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;update-status-on-shutdown&#34;&gt;&amp;ndash;update-status-on-shutdown&lt;/h2&gt;
+
+&lt;p&gt;Indicates whether the ingress controller should update the &lt;code&gt;status&lt;/code&gt; attribute of all the Ingress
+resources that this controller is tracking when the controller is being stopped.  Defaults to
+&lt;code&gt;true&lt;/code&gt;.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;v&#34;&gt;&amp;ndash;v&lt;/h2&gt;
+
+&lt;p&gt;Configures the log verbosity.  &lt;code&gt;1&lt;/code&gt; is the default value and outputs only errors, warnings and a few
+update events.  &lt;code&gt;2&lt;/code&gt; is a good balance between low verbosity and rich details about controller
+events.  &lt;code&gt;3&lt;/code&gt; is also available and provides even more details.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;validate-config&#34;&gt;&amp;ndash;validate-config&lt;/h2&gt;
+
+&lt;p&gt;Determines whether the resulting configuration files should be validated when a dynamic update was
+applied. Default value is &lt;code&gt;false&lt;/code&gt;, which means the validation will only happen when HAProxy needs to
+be reloaded.&lt;/p&gt;
+
+&lt;p&gt;If validation fails, HAProxy Ingress will log the error and set the metric
+&lt;code&gt;haproxyingress_update_success&lt;/code&gt; to zero, indicating failure.&lt;/p&gt;
+
+&lt;hr /&gt;
+
 &lt;h2 id=&#34;verify-hostname&#34;&gt;&amp;ndash;verify-hostname&lt;/h2&gt;
 
 &lt;p&gt;Ingress resources has &lt;code&gt;spec/tls[]/secretName&lt;/code&gt; attribute to override the default X509 certificate.
@@ -5964,6 +6171,12 @@ match the hostname are discarded and a warning is logged into the ingress contro
 
 &lt;p&gt;Use &lt;code&gt;--verify-hostname=false&lt;/code&gt; argument to bypass this validation. If used, HAProxy will provide
 the certificate declared in the &lt;code&gt;secretName&lt;/code&gt; ignoring if the certificate is or is not valid.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;version&#34;&gt;&amp;ndash;version&lt;/h2&gt;
+
+&lt;p&gt;Show release information about the ingress controller.&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -5990,6 +6203,10 @@ changes in one single shot. The default value is &lt;code&gt;200ms&lt;/code&gt;.
 &lt;p&gt;By default the proxy will be configured using all namespaces from the Kubernetes cluster. Use
 &lt;code&gt;--watch-namespace&lt;/code&gt; with the name of a namespace to watch and build the configuration of a
 single namespace.&lt;/p&gt;
+
+&lt;p&gt;You may also want to use &lt;code&gt;--force-namespace-isolation&lt;/code&gt; to completely disallow referencing secrets,
+configmaps or the default backend service located in a different namespace than specified with
+&lt;code&gt;--watch-namespace&lt;/code&gt;.&lt;/p&gt;
 
       </description>
     </item>
@@ -6380,10 +6597,10 @@ following content:&lt;/p&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;enabled&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;image&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;repository&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;haproxy&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;tag&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2.3.8&lt;/span&gt;-alpine&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;tag&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2.3.12&lt;/span&gt;-alpine&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Change the hostNetwork to &lt;code&gt;true&lt;/code&gt; if your cluster doesn&amp;rsquo;t provide a service loadbalancer.
-These parameters are also configuring an external haproxy, version 2.3.8, and configuring
-haproxy to log to stdout.&lt;/p&gt;
+These parameters are also configuring an external haproxy and configuring it to log to
+stdout.&lt;/p&gt;
 
 &lt;p&gt;Add the HAProxy Ingress Helm repository if using HAProxy Ingress&amp;rsquo; chart for the first time:&lt;/p&gt;
 
@@ -6474,9 +6691,10 @@ default installation.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;init&lt;/code&gt;, a Kubernetes&amp;rsquo; &lt;a href=&#34;https://kubernetes.io/docs/concepts/workloads/pods/init-containers/&#34;&gt;initContainer&lt;/a&gt; used to create an initial and valid haproxy configuration.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;The &lt;code&gt;haproxy&lt;/code&gt; container references the official Alpine based image &lt;code&gt;haproxy:2.3.4-alpine&lt;/code&gt;,
-but can be any other. The only requisite is to be 2.0 or newer due to some new keywords
-used by HAProxy Ingress.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;haproxy&lt;/code&gt; container references the official Alpine based image &lt;code&gt;haproxy:2.3.12-alpine&lt;/code&gt;,
+but can be any other, provided that it isn&amp;rsquo;t older than the minimal required version. The
+minimal version for the external HAProxy can be found in the
+&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/#use-haproxy-ingress&#34;&gt;README&lt;/a&gt; file.&lt;/p&gt;
 
 &lt;p&gt;The &lt;code&gt;init&lt;/code&gt; container just copy a minimum and valid &lt;code&gt;haproxy.cfg&lt;/code&gt;. This file is used
 to properly starts haproxy and configures its master CLI that HAProxy Ingress uses
