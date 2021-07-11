@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.12/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2021-05-30T19:27:37-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-07-09T09:16:29-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Command-line options">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2021-05-30T19:27:37-03:00" />
-<meta itemprop="wordCount" content="2578">
+<meta itemprop="dateModified" content="2021-07-09T09:16:29-03:00" />
+<meta itemprop="wordCount" content="3153">
 
 
 
@@ -373,12 +373,18 @@ if (!doNotTrack) {
 <li><a href="#acme">Acme</a></li>
 <li><a href="#allow-cross-namespace">&ndash;allow-cross-namespace</a></li>
 <li><a href="#annotation-prefix">&ndash;annotation-prefix</a></li>
+<li><a href="#apiserver-host">&ndash;apiserver-host</a></li>
 <li><a href="#backend-shards">&ndash;backend-shards</a></li>
 <li><a href="#buckets-response-time">&ndash;buckets-response-time</a></li>
+<li><a href="#configmap">&ndash;configmap</a></li>
 <li><a href="#default-backend-service">&ndash;default-backend-service</a></li>
 <li><a href="#default-ssl-certificate">&ndash;default-ssl-certificate</a></li>
 <li><a href="#disable-api-warnings">&ndash;disable-api-warnings</a></li>
+<li><a href="#disable-config-keywords">&ndash;disable-config-keywords</a></li>
+<li><a href="#disable-external-name">&ndash;disable-external-name</a></li>
 <li><a href="#disable-pod-list">&ndash;disable-pod-list</a></li>
+<li><a href="#election-id">&ndash;election-id</a></li>
+<li><a href="#force-namespace-isolation">&ndash;force-namespace-isolation</a></li>
 <li><a href="#ingress-class">Ingress Class</a></li>
 <li><a href="#kubeconfig">&ndash;kubeconfig</a></li>
 <li><a href="#master-socket">&ndash;master-socket</a></li>
@@ -386,11 +392,18 @@ if (!doNotTrack) {
 <li><a href="#publish-service">&ndash;publish-service</a></li>
 <li><a href="#rate-limit-update">&ndash;rate-limit-update</a></li>
 <li><a href="#reload-strategy">&ndash;reload-strategy</a></li>
+<li><a href="#report-node-internal-ip-address">&ndash;report-node-internal-ip-address</a></li>
 <li><a href="#sort-backends">&ndash;sort-backends</a></li>
 <li><a href="#sort-endpoints-by">&ndash;sort-endpoints-by</a></li>
 <li><a href="#stats">Stats</a></li>
+<li><a href="#sync-period">&ndash;sync-period</a></li>
 <li><a href="#tcp-services-configmap">&ndash;tcp-services-configmap</a></li>
+<li><a href="#update-status">&ndash;update-status</a></li>
+<li><a href="#update-status-on-shutdown">&ndash;update-status-on-shutdown</a></li>
+<li><a href="#v">&ndash;v</a></li>
+<li><a href="#validate-config">&ndash;validate-config</a></li>
 <li><a href="#verify-hostname">&ndash;verify-hostname</a></li>
+<li><a href="#version">&ndash;version</a></li>
 <li><a href="#wait-before-shutdown">&ndash;wait-before-shutdown</a></li>
 <li><a href="#wait-before-update">&ndash;wait-before-update</a></li>
 <li><a href="#watch-namespace">&ndash;watch-namespace</a></li>
@@ -526,6 +539,13 @@ if (!doNotTrack) {
 </tr>
 
 <tr>
+<td><a href="#apiserver-host"><code>--apiserver-host</code></a></td>
+<td>address of K8s API server</td>
+<td></td>
+<td></td>
+</tr>
+
+<tr>
 <td><a href="#backend-shards"><code>--backend-shards</code></a></td>
 <td>int</td>
 <td><code>0</code></td>
@@ -540,9 +560,16 @@ if (!doNotTrack) {
 </tr>
 
 <tr>
+<td><a href="#configmap"><code>--configmap</code></a></td>
+<td>namespace/configmapname</td>
+<td></td>
+<td></td>
+</tr>
+
+<tr>
 <td><a href="#ingress-class"><code>--controller-class</code></a></td>
 <td>suffix</td>
-<td>``</td>
+<td><code>&quot;&quot;</code></td>
 <td>v0.12</td>
 </tr>
 
@@ -568,10 +595,45 @@ if (!doNotTrack) {
 </tr>
 
 <tr>
+<td><a href="#disable-config-keywords"><code>--disable-config-keywords</code></a></td>
+<td>comma-separated list of keywords</td>
+<td><code>&quot;&quot;</code></td>
+<td>v0.10</td>
+</tr>
+
+<tr>
+<td><a href="#disable-external-name"><code>--disable-external-name</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.10</td>
+</tr>
+
+<tr>
 <td><a href="#disable-pod-list"><code>--disable-pod-list</code></a></td>
 <td>[true|false]</td>
 <td><code>false</code></td>
 <td>v0.11</td>
+</tr>
+
+<tr>
+<td><a href="#election-id"><code>--election-id</code></a></td>
+<td>identifier</td>
+<td><code>ingress-controller-leader</code></td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="#force-namespace-isolation"><code>--force-namespace-isolation</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="#stats"><code>--health-check-path</code></a></td>
+<td>path</td>
+<td><code>/healthz</code></td>
+<td></td>
 </tr>
 
 <tr>
@@ -638,6 +700,13 @@ if (!doNotTrack) {
 </tr>
 
 <tr>
+<td><a href="#report-node-internal-ip-address"><code>--report-node-internal-ip-address</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td></td>
+</tr>
+
+<tr>
 <td><a href="#sort-backends"><code>--sort-backends</code></a></td>
 <td>[true|false]</td>
 <td><code>false</code></td>
@@ -659,6 +728,13 @@ if (!doNotTrack) {
 </tr>
 
 <tr>
+<td><a href="#sync-period"><code>--sync-period</code></a></td>
+<td>time</td>
+<td><code>10m</code></td>
+<td></td>
+</tr>
+
+<tr>
 <td><a href="#tcp-services-configmap"><code>--tcp-services-configmap</code></a></td>
 <td>namespace/configmapname</td>
 <td>no tcp svc</td>
@@ -666,9 +742,44 @@ if (!doNotTrack) {
 </tr>
 
 <tr>
+<td><a href="#update-status"><code>--update-status</code></a></td>
+<td>[true|false]</td>
+<td><code>true</code></td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="#update-status-on-shutdown"><code>--update-status-on-shutdown</code></a></td>
+<td>[true|false]</td>
+<td><code>true</code></td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="#v"><code>--v</code></a></td>
+<td>log level as integer</td>
+<td><code>1</code></td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="#validate-config"><code>--validate-config</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td></td>
+</tr>
+
+<tr>
 <td><a href="#verify-hostname"><code>--verify-hostname</code></a></td>
 <td>[true|false]</td>
 <td><code>true</code></td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="#version"><code>--version</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
 <td></td>
 </tr>
 
@@ -749,6 +860,15 @@ that shares ingress and service objects without conflicting each other.</p>
 
 <hr />
 
+<h2 id="apiserver-host">&ndash;apiserver-host</h2>
+
+<p>Allows you to specify an explicit host for the Kubernetes API server, in the format of
+<code>protocol://address:port</code>, e.g., <code>http://localhost:8080</code>.  If this value isn&rsquo;t specified, the
+assumption is that the binary is running inside a Kubernetes cluster and local discovery will be
+attempted.</p>
+
+<hr />
+
 <h2 id="backend-shards">&ndash;backend-shards</h2>
 
 <p>Defines how many files should be used to configure the haproxy backends. The default value is
@@ -762,6 +882,20 @@ services.</p>
 <h2 id="buckets-response-time">&ndash;buckets-response-time</h2>
 
 <p>Configures the buckets of the histogram <code>haproxyingress_haproxy_response_time_seconds</code>, used to compute the response time of the haproxy&rsquo;s admin socket. The response time unit is in seconds.</p>
+
+<hr />
+
+<h2 id="configmap">&ndash;configmap</h2>
+
+<p>The name of the ConfigMap that contains the custom configuration to use, in the format
+<code>namespace/configmapname</code>.  Beware that in version 0.12 and below, an incorrect value here will
+silently fail.  Version 0.13 and later will crash if the ConfigMap is unreadable or nonexistent.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><a href="https://github.com/jcmoraisjr/haproxy-ingress/blob/master/examples/custom-configuration/README.md">custom-configuration example using <code>--configmap</code></a></li>
+</ul>
 
 <hr />
 
@@ -779,6 +913,8 @@ hostname, or the requested path doesn&rsquo;t match any location within the desi
 resources using TLS configuration doesn&rsquo;t provide it&rsquo;s own certificate. A self-signed fake
 certificate is used if not declared.</p>
 
+<hr />
+
 <h2 id="disable-api-warnings">&ndash;disable-api-warnings</h2>
 
 <p>Since v0.12.4</p>
@@ -788,11 +924,46 @@ deprecation. The default behavior is to log all API server warnings.</p>
 
 <hr />
 
+<h2 id="disable-config-keywords">&ndash;disable-config-keywords</h2>
+
+<p>Since v0.10.9</p>
+
+<p>Defines a comma-separated list of HAProxy keywords that should not be used on annotation based configuration snippets. Configuration snippets added as a global config does not follow this option. Use an asterisk <code>*</code> to disable configuration snippets using annotations.</p>
+
+<p>Every keyword in the configuration will be compared with the first token of every configuration line, ignoring tabs and spaces. If a match occur, all the configuration snippet will be ignored and a warning is logged.</p>
+
+<p>The default value is an empty string, enabling the configuration and accepting any HAProxy keyword.</p>
+
+<hr />
+
+<h2 id="disable-external-name">&ndash;disable-external-name</h2>
+
+<p>Since v0.10.9</p>
+
+<p>Services of type ExternalName uses DNS lookup to define the target server IP list. Declare <code>--disable-external-name</code> to disable a DNS based target IP list, refusing services of type ExternalName.</p>
+
+<hr />
+
 <h2 id="disable-pod-list">&ndash;disable-pod-list</h2>
 
 <p>Since v0.11</p>
 
 <p>Disables in memory pod list and also pod watch for changes. Pod list and watch is used by <code>drain-support</code> option, which will not work if pod list is disabled. Blue/green and <code>session-cookie-value-strategy</code> set to <code>pod-uid</code> also use pod list if enabled, otherwise k8s api is called if needed. The default value is <code>false</code>, which means pods will be watched and listed in memory.</p>
+
+<hr />
+
+<h2 id="election-id">&ndash;election-id</h2>
+
+<p>The ID to be used for electing ingress controller leader.  Defaults to <code>ingress-controller-leader</code>.</p>
+
+<hr />
+
+<h2 id="force-namespace-isolation">&ndash;force-namespace-isolation</h2>
+
+<p>Whether to force namespace isolation.  This flag is required to avoid the reference of secrets,
+configmaps or the default backend service located in a different namespace than specified in the
+flag <code>--watch-namespace</code> (which defaults to all namespaces, so you will probably want to set that
+flag, too).</p>
 
 <hr />
 
@@ -926,6 +1097,13 @@ describes how it works.</li>
 
 <hr />
 
+<h2 id="report-node-internal-ip-address">&ndash;report-node-internal-ip-address</h2>
+
+<p>Sets whether the node&rsquo;s IP address returned in the ingress status should be the node&rsquo;s internal
+instead of the external IP address.  Defaults to <code>false</code>.</p>
+
+<hr />
+
 <h2 id="sort-backends">&ndash;sort-backends</h2>
 
 <p>Defines if backend&rsquo;s endpoints should be sorted by name. Since v0.8 the endpoints will stay in the
@@ -978,10 +1156,18 @@ option, because the default value builds the server name using a numeric sequenc
 <p>Options:</p>
 
 <ul>
+<li><code>--health-check-path</code>: Defines the URL to be used as a health check for the default server.  Defaults to <code>/healthz</code>.</li>
 <li><code>--healthz-port</code>: Defines the port number haproxy-ingress should listen to. Defaults to <code>10254</code>.</li>
 <li><code>--profiling</code>: Configures if the profiling URI should be enabled. Defaults to <code>true</code>.</li>
 <li><code>--stats-collect-processing-period</code>: Defines the interval between two consecutive readings of haproxy&rsquo;s <code>Idle_pct</code>, used to generate <code>haproxy_processing_seconds_total</code> metric. haproxy updates Idle_pct every <code>500ms</code>, which makes that the best configuration value, and it&rsquo;s also the default if not configured. Values higher than <code>500ms</code> will produce a less accurate collect. Change to 0 (zero) to disable this metric.</li>
 </ul>
+
+<hr />
+
+<h2 id="sync-period">&ndash;sync-period</h2>
+
+<p>Configures the default resync period of the Kubernetes client&rsquo;s informer factory. Defaults to 10
+minutes.</p>
 
 <hr />
 
@@ -1033,6 +1219,40 @@ data:
 
 <hr />
 
+<h2 id="update-status">&ndash;update-status</h2>
+
+<p>Indicates whether the ingress controller should update the <code>status</code> attribute of all the Ingress
+resources that this controller is tracking.  Defaults to <code>true</code>.</p>
+
+<hr />
+
+<h2 id="update-status-on-shutdown">&ndash;update-status-on-shutdown</h2>
+
+<p>Indicates whether the ingress controller should update the <code>status</code> attribute of all the Ingress
+resources that this controller is tracking when the controller is being stopped.  Defaults to
+<code>true</code>.</p>
+
+<hr />
+
+<h2 id="v">&ndash;v</h2>
+
+<p>Configures the log verbosity.  <code>1</code> is the default value and outputs only errors, warnings and a few
+update events.  <code>2</code> is a good balance between low verbosity and rich details about controller
+events.  <code>3</code> is also available and provides even more details.</p>
+
+<hr />
+
+<h2 id="validate-config">&ndash;validate-config</h2>
+
+<p>Determines whether the resulting configuration files should be validated when a dynamic update was
+applied. Default value is <code>false</code>, which means the validation will only happen when HAProxy needs to
+be reloaded.</p>
+
+<p>If validation fails, HAProxy Ingress will log the error and set the metric
+<code>haproxyingress_update_success</code> to zero, indicating failure.</p>
+
+<hr />
+
 <h2 id="verify-hostname">&ndash;verify-hostname</h2>
 
 <p>Ingress resources has <code>spec/tls[]/secretName</code> attribute to override the default X509 certificate.
@@ -1042,6 +1262,12 @@ match the hostname are discarded and a warning is logged into the ingress contro
 
 <p>Use <code>--verify-hostname=false</code> argument to bypass this validation. If used, HAProxy will provide
 the certificate declared in the <code>secretName</code> ignoring if the certificate is or is not valid.</p>
+
+<hr />
+
+<h2 id="version">&ndash;version</h2>
+
+<p>Show release information about the ingress controller.</p>
 
 <hr />
 
@@ -1068,6 +1294,10 @@ changes in one single shot. The default value is <code>200ms</code>.</p>
 <p>By default the proxy will be configured using all namespaces from the Kubernetes cluster. Use
 <code>--watch-namespace</code> with the name of a namespace to watch and build the configuration of a
 single namespace.</p>
+
+<p>You may also want to use <code>--force-namespace-isolation</code> to completely disallow referencing secrets,
+configmaps or the default backend service located in a different namespace than specified with
+<code>--watch-namespace</code>.</p>
 
 	
 		<style>
@@ -1131,7 +1361,7 @@ single namespace.</p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified May 30, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/2c4e8348c8e4eefccba1456aa18fe3f83bdd79e8">add option to disable API server warnings (2c4e8348)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified July 9, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/5afc1047557aac7621ec877b4383bbed7d0a0253">add disable-config-keywords command-line options (5afc1047)</a>
 </div>
 </div>
 

@@ -433,10 +433,11 @@ About the Kubernetes&rsquo; ingress controllers, what HAProxy Ingress watches in
 
 <p>To get an overview of the individual releases and to read the changelog per release follow this <a href="https://github.com/jcmoraisjr/haproxy-ingress/releases">link</a>.</p>
 
-<p>Images are built by <a href="https://travis-ci.org/jcmoraisjr/haproxy-ingress">Travis CI</a> and
-deployed to <a href="https://quay.io/repository/jcmoraisjr/haproxy-ingress?tag=latest&amp;tab=tags">quay.io</a>
-whenever a tag is applied. The <code>latest</code> tag will always point to the latest stable version while
-<code>canary</code> tag will always point to the latest beta-quality and release-candidate versions.</p>
+<p>Images are built by a <a href="https://github.com/jcmoraisjr/haproxy-ingress/actions/workflows/image.yaml">GitHub Workflow</a>
+and deployed to <a href="https://quay.io/repository/jcmoraisjr/haproxy-ingress">quay.io</a> and
+<a href="https://hub.docker.com/r/jcmoraisjr/haproxy-ingress">Docker Hub</a> whenever a tag is applied.
+The <code>latest</code> tag will always point to the latest stable version while <code>canary</code> tag will always
+point to the latest beta-quality and release-candidate versions.</p>
 
 <p>Before the beta-quality releases, the source code could also be tagged and images deployed.
 The <code>snapshot</code> tag will always point to the latest tagged version, which could be a release,
@@ -546,7 +547,7 @@ a beta-quality or a development version.</p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified January 10, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/e9ff78f2c3293cccdce9cd520253b881838c24f4">[DOCS] Link the releases (e9ff78f2)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified July 10, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/0d134de09a636673bd67d1b5750759edd5dbbe85">build: remove travis-ci configs (0d134de0)</a>
 </div>
 </div>
 
