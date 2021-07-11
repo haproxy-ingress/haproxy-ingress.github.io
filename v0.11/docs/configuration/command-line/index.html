@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.11/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2020-11-15T20:15:16-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-07-09T09:14:04-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Command-line options">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2020-11-15T20:15:16-03:00" />
-<meta itemprop="wordCount" content="2230">
+<meta itemprop="dateModified" content="2021-07-09T09:14:04-03:00" />
+<meta itemprop="wordCount" content="2366">
 
 
 
@@ -370,6 +370,8 @@ if (!doNotTrack) {
 <li><a href="#default-backend-service">&ndash;default-backend-service</a></li>
 <li><a href="#default-ssl-certificate">&ndash;default-ssl-certificate</a></li>
 <li><a href="#disable-pod-list">&ndash;disable-pod-list</a></li>
+<li><a href="#disable-config-keywords">&ndash;disable-config-keywords</a></li>
+<li><a href="#disable-external-name">&ndash;disable-external-name</a></li>
 <li><a href="#ignore-ingress-without-class">&ndash;ignore-ingress-without-class</a></li>
 <li><a href="#ingress-class">&ndash;ingress-class</a></li>
 <li><a href="#kubeconfig">&ndash;kubeconfig</a></li>
@@ -542,6 +544,20 @@ if (!doNotTrack) {
 <td>namespace/secretname</td>
 <td>fake, auto generated</td>
 <td></td>
+</tr>
+
+<tr>
+<td><a href="#disable-config-keywords"><code>--disable-config-keywords</code></a></td>
+<td>comma-separated list of keywords</td>
+<td><code>&quot;&quot;</code></td>
+<td>v0.10</td>
+</tr>
+
+<tr>
+<td><a href="#disable-external-name"><code>--disable-external-name</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.10</td>
 </tr>
 
 <tr>
@@ -756,6 +772,26 @@ certificate is used if not declared.</p>
 <p>Since v0.11</p>
 
 <p>Disables in memory pod list and also pod watch for changes. Pod list and watch is used by <code>drain-support</code> option, which will not work if pod list is disabled. Blue/green also uses pod list if enabled, otherwise k8s api is called if needed. The default value is <code>false</code>, which means pods will be watched and listed in memory.</p>
+
+<hr />
+
+<h2 id="disable-config-keywords">&ndash;disable-config-keywords</h2>
+
+<p>Since v0.10.9</p>
+
+<p>Defines a comma-separated list of HAProxy keywords that should not be used on annotation based configuration snippets. Configuration snippets added as a global config does not follow this option. Use an asterisk <code>*</code> to disable configuration snippets using annotations.</p>
+
+<p>Every keyword in the configuration will be compared with the first token of every configuration line, ignoring tabs and spaces. If a match occur, all the configuration snippet will be ignored and a warning is logged.</p>
+
+<p>The default value is an empty string, enabling the configuration and accepting any HAProxy keyword.</p>
+
+<hr />
+
+<h2 id="disable-external-name">&ndash;disable-external-name</h2>
+
+<p>Since v0.10.9</p>
+
+<p>Services of type ExternalName uses DNS lookup to define the target server IP list. Declare <code>--disable-external-name</code> to disable a DNS based target IP list, refusing services of type ExternalName.</p>
 
 <hr />
 
@@ -1045,7 +1081,7 @@ single namespace.</p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified November 15, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/c63ff18d1cc22f06b7609778deae5535a2b0506a">docs: small lay out and description fixes and improvements (c63ff18d)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified July 9, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/02b2e4bd3604095f0098816518b3a50166ccd14c">add disable-config-keywords command-line options (02b2e4bd)</a>
 </div>
 </div>
 

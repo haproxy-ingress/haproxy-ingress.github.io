@@ -4934,6 +4934,20 @@ included in the list are denied, and clients receive the HAProxy&amp;rsquo;s 403
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#disable-config-keywords&#34;&gt;&lt;code&gt;--disable-config-keywords&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;comma-separated list of keywords&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.10&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#disable-external-name&#34;&gt;&lt;code&gt;--disable-external-name&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.10&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#disable-pod-list&#34;&gt;&lt;code&gt;--disable-pod-list&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
@@ -5145,6 +5159,26 @@ certificate is used if not declared.&lt;/p&gt;
 &lt;p&gt;Since v0.11&lt;/p&gt;
 
 &lt;p&gt;Disables in memory pod list and also pod watch for changes. Pod list and watch is used by &lt;code&gt;drain-support&lt;/code&gt; option, which will not work if pod list is disabled. Blue/green also uses pod list if enabled, otherwise k8s api is called if needed. The default value is &lt;code&gt;false&lt;/code&gt;, which means pods will be watched and listed in memory.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;disable-config-keywords&#34;&gt;&amp;ndash;disable-config-keywords&lt;/h2&gt;
+
+&lt;p&gt;Since v0.10.9&lt;/p&gt;
+
+&lt;p&gt;Defines a comma-separated list of HAProxy keywords that should not be used on annotation based configuration snippets. Configuration snippets added as a global config does not follow this option. Use an asterisk &lt;code&gt;*&lt;/code&gt; to disable configuration snippets using annotations.&lt;/p&gt;
+
+&lt;p&gt;Every keyword in the configuration will be compared with the first token of every configuration line, ignoring tabs and spaces. If a match occur, all the configuration snippet will be ignored and a warning is logged.&lt;/p&gt;
+
+&lt;p&gt;The default value is an empty string, enabling the configuration and accepting any HAProxy keyword.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;disable-external-name&#34;&gt;&amp;ndash;disable-external-name&lt;/h2&gt;
+
+&lt;p&gt;Since v0.10.9&lt;/p&gt;
+
+&lt;p&gt;Services of type ExternalName uses DNS lookup to define the target server IP list. Declare &lt;code&gt;--disable-external-name&lt;/code&gt; to disable a DNS based target IP list, refusing services of type ExternalName.&lt;/p&gt;
 
 &lt;hr /&gt;
 
