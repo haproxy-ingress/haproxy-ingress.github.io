@@ -15,6 +15,9 @@ spec:
       labels:
         run: modsecurity-spoa
     spec:
+      volumes:
+      - name: varlog
+        emptyDir: {}
       containers:
       - name: modsecurity-spoa
         image: quay.io/jcmoraisjr/modsecurity-spoa
