@@ -1425,7 +1425,7 @@ never conflict.&lt;/p&gt;
 &lt;td&gt;&lt;a href=&#34;#timeout&#34;&gt;&lt;code&gt;timeout-stop&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;time with suffix&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
-&lt;td&gt;no timeout&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;10m&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -5155,7 +5155,7 @@ if a path couldn&amp;rsquo;t be matched.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;timeout-stop&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;10m&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
