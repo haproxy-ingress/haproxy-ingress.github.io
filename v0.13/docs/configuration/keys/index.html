@@ -25,13 +25,13 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.13/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2021-07-10T18:21:25-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-07-31T16:02:55-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2021-07-10T18:21:25-03:00" />
+<meta itemprop="dateModified" content="2021-07-31T16:02:55-03:00" />
 <meta itemprop="wordCount" content="15662">
 
 
@@ -309,6 +309,29 @@ if (!doNotTrack) {
       
       
       <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-13-docs-configuration-template" href="/v0.13/docs/configuration/template/">Template</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v0.13/docs/faq/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">FAQ</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v0-13-docs-faq">
+      
       
       
     </li>
@@ -2101,7 +2124,7 @@ TCP port number.</p>
 <td><a href="#timeout"><code>timeout-stop</code></a></td>
 <td>time with suffix</td>
 <td>Global</td>
-<td>no timeout</td>
+<td><code>10m</code></td>
 </tr>
 
 <tr>
@@ -6420,7 +6443,7 @@ The documentation continues to refer to the old, and now deprecated <a href="/v0
 <tr>
 <td><code>timeout-stop</code></td>
 <td><code>Global</code></td>
-<td></td>
+<td><code>10m</code></td>
 <td></td>
 </tr>
 
@@ -6677,7 +6700,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified July 10, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/032db56c78cd7d9db88de58b39e238fa66b18987">docs: update haproxy doc link to 2.2 (032db56c)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified July 31, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/a3f42d71c71688241a46a34a31cfc78910fbaac4">docs: fix default timeout-stop value (a3f42d71)</a>
 </div>
 </div>
 

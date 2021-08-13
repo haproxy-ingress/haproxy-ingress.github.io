@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.13/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2021-07-09T08:54:23-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-08-12T19:24:28-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Command-line options">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2021-07-09T08:54:23-03:00" />
-<meta itemprop="wordCount" content="3558">
+<meta itemprop="dateModified" content="2021-08-12T19:24:28-03:00" />
+<meta itemprop="wordCount" content="3571">
 
 
 
@@ -309,6 +309,29 @@ if (!doNotTrack) {
       
       
       <a class="td-sidebar-link td-sidebar-link__page " id="m-v0-13-docs-configuration-template" href="/v0.13/docs/configuration/template/">Template</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/v0.13/docs/faq/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">FAQ</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v0-13-docs-faq">
+      
       
       
     </li>
@@ -919,7 +942,7 @@ services.</p>
 
 <h2 id="buckets-response-time">&ndash;buckets-response-time</h2>
 
-<p>Configures the buckets of the histogram <code>haproxyingress_haproxy_response_time_seconds</code>, used to compute the response time of the haproxy&rsquo;s admin socket. The response time unit is in seconds.</p>
+<p>Configures the buckets of the histogram <code>haproxyingress_haproxy_response_time_seconds</code>, used to compute the response time of the haproxy&rsquo;s admin socket. The response time unit is in seconds. The default value is <code>.0005,.001,.002,.005,.01</code> (<code>500µs</code>, <code>1ms</code>, <code>2ms</code>, <code>5ms</code>, <code>10ms</code>) if not configured.</p>
 
 <hr />
 
@@ -1450,7 +1473,7 @@ configmaps or the default backend service located in a different namespace than 
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified July 9, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/867c2eb53fc8e98a9a0fd6db9358acf77545185f">add disable-config-keywords command-line options (867c2eb5)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified August 12, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/9747470f655128239725f5ea022b0c0ac7e9af1b">docs: add default values to the histogram buckets (9747470f)</a>
 </div>
 </div>
 

@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.13/docs/examples/modsecurity/" />
-<meta property="article:modified_time" content="2021-04-21T16:31:16-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-08-11T09:27:12-04:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="ModSecurity">
 <meta itemprop="description" content="Demonstrate how to configure ModSecurity web application firewall.
 ">
 
 
-<meta itemprop="dateModified" content="2021-04-21T16:31:16-03:00" />
-<meta itemprop="wordCount" content="488">
+<meta itemprop="dateModified" content="2021-08-11T09:27:12-04:00" />
+<meta itemprop="wordCount" content="710">
 
 
 
@@ -327,6 +327,29 @@ if (!doNotTrack) {
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
+    <a  href="/v0.13/docs/faq/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">FAQ</a>
+  </li>
+  <ul>
+    <li class="collapse " id="v0-13-docs-faq">
+      
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
     <a  href="/v0.13/docs/contribution-guidelines/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Contribution Guidelines</a>
   </li>
   <ul>
@@ -382,6 +405,7 @@ if (!doNotTrack) {
 <li><a href="#deploying-agent">Deploying agent</a></li>
 <li><a href="#configuring-haproxy-ingress">Configuring HAProxy Ingress</a></li>
 <li><a href="#test">Test</a></li>
+<li><a href="#deploy-modsecurity-agent-with-a-sidecar-container-for-audit-logs">Deploy ModSecurity Agent With a Sidecar Container for Audit Logs</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -452,28 +476,30 @@ adjust the steps to fit your need.</p>
 
 <p>The ModSecurity agent used is <a href="https://github.com/jcmoraisjr/modsecurity-spoa">jcmoraisjr/modsecurity-spoa</a>.</p>
 
-<p>Create the ModSecurity agent daemonset:</p>
+<p>Create the ModSecurity agent deployment with 3 running pods:</p>
 
-<pre><code>$ kubectl create -f https://haproxy-ingress.github.io/resources/modsecurity-daemonset.yaml
-daemonset &quot;modsecurity-spoa&quot; created
-</code></pre>
-
-<p>Select the node(s) where ModSecurity agent should run:</p>
-
-<pre><code>$ kubectl get node
-NAME             STATUS    AGE       VERSION
-192.168.100.99   Ready     102d      v1.9.2
-...
-
-$ kubectl label node 192.168.100.99 waf=modsec
-node &quot;192.168.100.99&quot; labeled
+<pre><code>$ kubectl create -f https://haproxy-ingress.github.io/resources/modsecurity-deployment.yaml
+deployment.apps/modsecurity-spoa created
 </code></pre>
 
 <p>Check if the agent is up and running:</p>
 
-<pre><code>$ kubectl -n ingress-controller get pod -lrun=modsecurity-spoa -owide
-NAME                     READY     STATUS    RESTARTS   AGE       IP               NODE
-modsecurity-spoa-pp6jz   1/1       Running   0          7s        192.168.100.99   192.168.100.99
+<pre><code>$ kubectl -n ingress-controller get deployment modsecurity-spoa
+NAME                     READY     UP-TO-DATE   AVAILABLE  AGE  
+modsecurity-spoa         3/3       3            3          7s   
+</code></pre>
+
+<p>You can now create the service that provides a ClusterIP address for the HAProxy ConfigMap.</p>
+
+<pre><code>$ kubectl -n ingress-controller expose deployment modsecurity-spoa --port=12345 --type=ClusterIP
+service/modsecurity-spoa exposed
+</code></pre>
+
+<p>Once the service is created, you can obtain the ClusterIP address to be used later in the ConfigMap.</p>
+
+<pre><code>$ kubectl -n ingress-controller get service modsecurity-spoa
+NAME                     TYPE       CLUSTERIP        EXTERNAL-IP  PORT(S)     AGE
+modsecurity-spoa         ClusterIP  172.20.216.246   &lt;none&gt;       12345/TCP   7m
 </code></pre>
 
 <h2 id="configuring-haproxy-ingress">Configuring HAProxy Ingress</h2>
@@ -482,11 +508,10 @@ modsecurity-spoa-pp6jz   1/1       Running   0          7s        192.168.100.99
 of the ModSecurity agent server(s). The default port number of the agent is <code>12345</code>.
 A <code>kubectl -n ingress-controller edit configmap haproxy-ingress</code> should work.</p>
 
-<p>Example of a ConfigMap content if ModSecurity agents has IPs <code>192.168.100.99</code> and
-<code>192.168.100.100</code>:</p>
+<p>Example of a ConfigMap content if the ModSecurity service has a ClusterIP of <code>172.20.216.246</code>:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>v1<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span>data<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">  </span>modsecurity-endpoints<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">192.168.100.99</span><span style="color:#000;font-weight:bold">:</span><span style="color:#0000cf;font-weight:bold">12345</span><span style="color:#000;font-weight:bold">,</span><span style="color:#0000cf;font-weight:bold">192.168.100.100</span><span style="color:#000;font-weight:bold">:</span><span style="color:#0000cf;font-weight:bold">12345</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>modsecurity-endpoints<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">172.20.216.246</span><span style="color:#000;font-weight:bold">:</span><span style="color:#0000cf;font-weight:bold">12345</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">  </span>...<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span>kind<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>ConfigMap</code></pre></div>
 <h2 id="test">Test</h2>
@@ -547,11 +572,13 @@ Request forbidden by administrative rules.
 <p>Check the agent logs:</p>
 
 <pre><code>$ kubectl -n ingress-controller get pod -lrun=modsecurity-spoa
-NAME                     READY     STATUS    RESTARTS   AGE
-modsecurity-spoa-5g5h2   1/1       Running   0          1h
+NAME                                READY   STATUS    RESTARTS   AGE
+modsecurity-spoa-6f757ffd88-9qt2f   1/1     Running   0          11m
+modsecurity-spoa-6f757ffd88-vwtzr   1/1     Running   0          11m
+modsecurity-spoa-6f757ffd88-q4rvm   1/1     Running   0          11m
 ...
 
-$ kubectl -n ingress-controller logs --tail=10 modsecurity-spoa-5g5h2
+$ kubectl -n ingress-controller logs --tail=10 modsecurity-spoa-6f757ffd88-9qt2f
 ...
 1527464273.942819 [00] [client 127.0.0.1] ModSecurity: Access denied with code 403 (phase 2). Matche
 d phrase &quot;etc/passwd&quot; at ARGS:p. [file &quot;/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APP
@@ -562,6 +589,27 @@ m-multi&quot;] [tag &quot;attack-lfi&quot;] [tag &quot;OWASP_CRS/WEB_ATTACK/FILE
  &quot;OWASP_TOP_10/A4&quot;] [tag &quot;PCI/6.5.4&quot;] [hostname &quot;ingress.localdomain&quot;] [uri &quot;http://echo.domain/&quot;] [
 unique_id &quot;&quot;]
 ...
+</code></pre>
+
+<h2 id="deploy-modsecurity-agent-with-a-sidecar-container-for-audit-logs">Deploy ModSecurity Agent With a Sidecar Container for Audit Logs</h2>
+
+<p>A ModSecurity agent can be deployed with an additional sidecar container so you can have access to the logs stored in the AuditLog file. If you are using the default configuration of the ModSecurity agent, the logs written to the AuditLog specified are not reachable in the agent container&rsquo;s STDOUT.</p>
+
+<p>In order to read information written to that file, you must add a sidecar container to the method of deployment of the ModSecurity agent in Kubernetes. This is especially useful if you set the SecRuleEngine configuration to DetectionOnly.</p>
+
+<p>Update the ModSecurity agent deployment to have a sidecar container to read the audit log file to STDOUT</p>
+
+<pre><code>$ kubectl apply -f https://haproxy-ingress.github.io/resources/modsecurity-deployment-auditlog-sidecar.yaml
+deployment &quot;modsecurity-spoa&quot; configured
+</code></pre>
+
+<p>Now the ModSecurity agent pods will have two containers to get logs from: one for the traditional ModSecurity logs and one for the logs written to the AuditLog file.</p>
+
+<pre><code>$ kubectl -n ingress-controller get pod -lrun=modsecurity-spoa
+NAME                                READY   STATUS    RESTARTS   AGE
+modsecurity-spoa-6596c6b444-cht27   2/2     Running   0          14m
+modsecurity-spoa-6596c6b444-kw2tr   2/2     Running   0          14m
+modsecurity-spoa-6596c6b444-mkndw   2/2     Running   0          14m
 </code></pre>
 
 	
@@ -626,7 +674,7 @@ unique_id &quot;&quot;]
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified April 21, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/49c869e27ec565913f976ed18249cd40e53048b3">docs: change the default annotation prefix (49c869e2)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified August 11, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/0d596dbe1a834709ae6bc9edb167cd12642f98aa">docs: changing NodeSelector to ClusterIP service for ModSecurity (#826) (0d596dbe)</a>
 </div>
 </div>
 

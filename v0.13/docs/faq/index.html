@@ -7,7 +7,7 @@
 
 <META NAME="ROBOTS" CONTENT="INDEX, FOLLOW">
 
-<link rel="alternate" type="application/rss&#43;xml" href="/v0.13/docs/overview/index.xml">
+<link rel="alternate" type="application/rss&#43;xml" href="/v0.13/docs/faq/index.xml">
 
 
 <link rel="shortcut icon" href="/favicons/favicon.ico" >
@@ -21,19 +21,19 @@
 <link rel="icon" type="image/png" href="/v0.13/favicons/android-144x144.png" sizes="144x144">
 <link rel="icon" type="image/png" href="/v0.13/favicons/android-192x192.png" sizes="192x192">
 
-<title>Overview | HAProxy Ingress</title><meta property="og:title" content="Overview" />
-<meta property="og:description" content="What HAProxy Ingress is and how it works.
+<title>FAQ | HAProxy Ingress</title><meta property="og:title" content="FAQ" />
+<meta property="og:description" content="A bit of history and some of the most asked questions.
 " />
 <meta property="og:type" content="website" />
-<meta property="og:url" content="/v0.13/docs/overview/" />
+<meta property="og:url" content="/v0.13/docs/faq/" />
 <meta property="og:site_name" content="HAProxy Ingress" />
-<meta itemprop="name" content="Overview">
-<meta itemprop="description" content="What HAProxy Ingress is and how it works.
+<meta itemprop="name" content="FAQ">
+<meta itemprop="description" content="A bit of history and some of the most asked questions.
 ">
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Overview"/>
-<meta name="twitter:description" content="What HAProxy Ingress is and how it works.
+<meta name="twitter:title" content="FAQ"/>
+<meta name="twitter:description" content="A bit of history and some of the most asked questions.
 "/>
 
 
@@ -63,7 +63,7 @@ if (!doNotTrack) {
   crossorigin="anonymous"></script>
 
 
-    <title>Overview | HAProxy Ingress</title>
+    <title>FAQ | HAProxy Ingress</title>
   </head>
   <body class="td-section">
     <header>
@@ -181,10 +181,10 @@ if (!doNotTrack) {
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/v0.13/docs/overview/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">Overview</a>
+    <a  href="/v0.13/docs/overview/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">Overview</a>
   </li>
   <ul>
-    <li class="collapse show" id="v0-13-docs-overview">
+    <li class="collapse " id="v0-13-docs-overview">
       
       
       
@@ -321,10 +321,10 @@ if (!doNotTrack) {
 
 <ul class="td-sidebar-nav__section pr-md-3">
   <li class="td-sidebar-nav__section-title">
-    <a  href="/v0.13/docs/faq/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">FAQ</a>
+    <a  href="/v0.13/docs/faq/" class="align-left pl-0 pr-2 active td-sidebar-link td-sidebar-link__section">FAQ</a>
   </li>
   <ul>
-    <li class="collapse " id="v0-13-docs-faq">
+    <li class="collapse show" id="v0-13-docs-faq">
       
       
       
@@ -381,8 +381,8 @@ if (!doNotTrack) {
 
 
 
-<a href="https://github.com/jcmoraisjr/haproxy-ingress/edit/master/docs/content/en/docs/overview/_index.md" target="_blank"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
-<a href="https://github.com/jcmoraisjr/haproxy-ingress/issues/new?title=Overview" target="_blank"><i class="fab fa-github fa-fw"></i> Create doc issue</a>
+<a href="https://github.com/jcmoraisjr/haproxy-ingress/edit/master/docs/content/en/docs/faq/_index.md" target="_blank"><i class="fa fa-edit fa-fw"></i> Edit this page</a>
+<a href="https://github.com/jcmoraisjr/haproxy-ingress/issues/new?title=FAQ" target="_blank"><i class="fab fa-github fa-fw"></i> Create doc issue</a>
 
 </div>
 
@@ -395,10 +395,22 @@ if (!doNotTrack) {
 <ul>
 <li>
 <ul>
-<li><a href="#haproxy">HAProxy</a></li>
-<li><a href="#ingress-controllers">Ingress Controllers</a></li>
-<li><a href="#releases">Releases</a></li>
-<li><a href="#where-should-i-go-next">Where should I go next?</a></li>
+<li>
+<ul>
+<li><a href="#why-another-ingress-controller">Why another ingress controller?</a></li>
+<li><a href="#how-was-the-name-chosen">How was the name chosen?</a></li>
+<li><a href="#why-the-latest-is-v0-may-i-use-it-in-production">Why the latest is v0, may I use it in production?</a></li>
+<li><a href="#how-many-active-users-haproxy-ingress-have">How many active users HAProxy Ingress have?</a></li>
+<li><a href="#how-much-haproxy-ingress-scale">How much HAProxy Ingress scale?</a></li>
+<li><a href="#how-to-improve-performance">How to improve performance?</a></li>
+<li><a href="#how-to-track-the-proxy-performance">How to track the proxy performance?</a></li>
+<li><a href="#how-to-prioritize-a-feature-request">How to prioritize a feature request?</a></li>
+<li><a href="#how-frequently-new-versions-are-released">How frequently new versions are released?</a></li>
+<li><a href="#how-can-i-pay-for-support">How can I pay for support?</a></li>
+<li><a href="#i-m-stuck-how-can-i-get-help">I&rsquo;m stuck, how can I get help?</a></li>
+<li><a href="#how-can-i-help">How can I help?</a></li>
+<li><a href="#why-did-you-start-and-still-implement-haproxy-ingress">Why did you start and still implement HAProxy Ingress?</a></li>
+</ul></li>
 </ul></li>
 </ul>
 </nav>
@@ -425,7 +437,7 @@ if (!doNotTrack) {
 
 
 <li class="breadcrumb-item active" aria-current="page">
-	<a href="/v0.13/docs/overview/">Overview</a>
+	<a href="/v0.13/docs/faq/">FAQ</a>
 </li>
 
 	</ol>
@@ -433,52 +445,116 @@ if (!doNotTrack) {
 
             
 <div class="td-content">
-	<h1>Overview</h1>
-	<div class="lead">What HAProxy Ingress is and how it works.</div>
+	<h1>FAQ</h1>
+	<div class="lead">A bit of history and some of the most asked questions.</div>
 	
 
-<h2 id="haproxy">HAProxy</h2>
+<h3 id="why-another-ingress-controller">Why another ingress controller?</h3>
 
+<p>HAProxy Ingress is one of the first ingress controller implementations, there wasn&rsquo;t any HAProxy based one when v0.1 was released on feb/2017. It was maintained since then because it replaced our former controller at work, and also and not less important because it was being used by a growing number of users.</p>
 
+<hr />
 
-<div class="alert alert-primary" role="alert">
-<h4 class="alert-heading">TODO</h4>
-About the HAProxy load balancer itself and why HAProxy.
-</div>
+<h3 id="how-was-the-name-chosen">How was the name chosen?</h3>
 
+<p>In the past, what is now kubernetes/ingress-nginx was just kubernetes/ingress - a common code base that could be used by controller developers. <a href="https://github.com/kubernetes/ingress-nginx/pull/214">I started the &ldquo;HAProxy flavor&rdquo;</a> of the ingress project, leading to HAProxy Ingress as the name. The common code base didn&rsquo;t evolve as it was initially planned, and since v0.8 HAProxy Ingress has its own resource parser implementation - but without changing the name received on its debut.</p>
 
-<h2 id="ingress-controllers">Ingress Controllers</h2>
+<hr />
 
+<h3 id="why-the-latest-is-v0-may-i-use-it-in-production">Why the latest is v0, may I use it in production?</h3>
 
+<p>Sure, yes, production ready! Zero based versions were chosen while API is being stabilized, so you can interpret the <code>v0.x</code> versions as possible breaking compatibility changes between two minor versions. The changelog will always report all breaking compatibility changes.</p>
 
-<div class="alert alert-primary" role="alert">
-<h4 class="alert-heading">TODO</h4>
-About the Kubernetes&rsquo; ingress controllers, what HAProxy Ingress watches in the k8s cluster and how it builds HAProxy configuration.
-</div>
+<hr />
 
+<h3 id="how-many-active-users-haproxy-ingress-have">How many active users HAProxy Ingress have?</h3>
 
-<h2 id="releases">Releases</h2>
+<p>I don&rsquo;t know, both HAProxy (the load balancer) and HAProxy Ingress don&rsquo;t advertise themselves and don&rsquo;t track users. It should be between several hundreds and a few thousands based on the number of downloads (specially from Quay), the number of users in the Slack channel (started nov/2020) and how fast issues from some very specific scenarios used to be reported.</p>
 
-<p>HAProxy Ingress is released as a Docker image on top of Alpine&rsquo;s flavor of
-<a href="https://hub.docker.com/_/haproxy">HAProxy image</a>.</p>
+<hr />
 
-<p>To get an overview of the individual releases and to read the changelog per release follow this <a href="https://github.com/jcmoraisjr/haproxy-ingress/releases">link</a>.</p>
+<h3 id="how-much-haproxy-ingress-scale">How much HAProxy Ingress scale?</h3>
 
-<p>Images are built by a <a href="https://github.com/jcmoraisjr/haproxy-ingress/actions/workflows/image.yaml">GitHub Workflow</a>
-and deployed to <a href="https://quay.io/repository/jcmoraisjr/haproxy-ingress">quay.io</a> and
-<a href="https://hub.docker.com/r/jcmoraisjr/haproxy-ingress">Docker Hub</a> whenever a tag is applied.
-The <code>latest</code> tag will always point to the latest stable version while <code>canary</code> tag will always
-point to the latest beta-quality and release-candidate versions.</p>
+<p>We use HAProxy Ingress in front of a cluster with about 4k distinct hostnames, 1k hostnames with ACME-v2 tracking, 5k ingress resources and 5k distinct backends. This configuration takes about 2 seconds to be parsed and written to disk if a full parsing is needed (first run and when a global key is changed), and HAProxy takes about 8 seconds to reload the configuration. Every new configuration parsing (partial parsing) takes a few tens of milliseconds depending on the number of changed backends. I&rsquo;ve received reports from users whose cluster is about four times bigger and partial configuration parsing is almost as fast as ours. In short we&rsquo;re still looking for the limits. Let us know if you have a cluster with this amount of resources and you can share some numbers.</p>
 
-<p>Before the beta-quality releases, the source code could also be tagged and images deployed.
-The <code>snapshot</code> tag will always point to the latest tagged version, which could be a release,
-a beta-quality or a development version.</p>
+<hr />
 
-<h2 id="where-should-i-go-next">Where should I go next?</h2>
+<h3 id="how-to-improve-performance">How to improve performance?</h3>
+
+<p>It mostly depends on the workload, and the following list has some tips to improve the proxy performance:</p>
 
 <ul>
-<li><a href="/v0.13/docs/getting-started/">Getting Started</a>: Get started with HAProxy Ingress!</li>
+<li>Check if the <a href="/v0.13/docs/configuration/keys/#nbthread">number of threads</a> is appropriate. Use all but one of the vCPUs of a dedicated host, leaving just one to the controller and other OS related tasks.</li>
+<li>Configure <a href="/v0.13/docs/configuration/command-line/#reload-interval"><code>--reload-interval</code></a> if the workloads demand several HAProxy reloads on a short period of time. Other configuration parsing options that worth to be mentioned are <a href="/v0.13/docs/configuration/command-line/#rate-limit-update"><code>--rate-limit-update</code></a> and <a href="/v0.13/docs/configuration/command-line/#wait-before-update"><code>--wait-before-update</code></a>.</li>
+<li>Configure <a href="/v0.13/docs/configuration/keys/#master-worker"><code>worker-max-reloads</code></a> if <a href="/v0.13/docs/examples/external-haproxy/">external HAProxy</a> is used and the ingress hosts have a limited amount of memory.</li>
+<li>Configure <a href="/v0.13/docs/configuration/keys/#source-address-intf"><code>source-address-intf</code></a> if the number of concurrent outgoing connections might be greater than 64k, or at least <code>/proc/sys/net/ipv4/ip_local_port_range</code> if the number of connections might be greater than 28k.</li>
+<li>Avoid usage of <a href="/v0.13/docs/configuration/keys/#ssl-passthrough"><code>ssl-passthrough</code></a> if possible, moving the needed ones to a new ingress class. <code>ssl-passthrough</code> enforces the creation of a new internal proxy, duplicating the number of connections and generating a bit more latency.</li>
 </ul>
+
+<p>Improving the controller performance:</p>
+
+<ul>
+<li>Configure <a href="/v0.13/docs/configuration/command-line/#backend-shards"><code>--backend-shards</code></a> if the number of distinct backends/services is greater than about 500. Generating the configuration file is the most expensive controller&rsquo;s task of a configuration update, and sharding the backends decreases disk IO and CPU used by the controller. One new shard every 100 or so backends is a fair value.</li>
+</ul>
+
+<hr />
+
+<h3 id="how-to-track-the-proxy-performance">How to track the proxy performance?</h3>
+
+<p>HAProxy Ingress has some useful <a href="/v0.13/docs/examples/metrics/">metrics</a> and also a suggested <a href="https://grafana.com/grafana/dashboards/12056">Grafana dashboard</a>. Two of these metrics help to analyze how HAProxy is performing and must be tracked on mission-critical deployments. These metrics can be read from <code>&lt;controller&gt;:10254/metrics</code> using Prometheus or a compatible tool:</p>
+
+<ul>
+<li><code>haproxyingress_haproxy_processing_seconds_total</code> is a counter that uses <code>Idle_pct</code> from HAProxy&rsquo;s <code>show info</code> to calculate the number of seconds HAProxy spent doing something on its event loop. Using this metric is much more accurate than reading directly from <code>Idle_pct</code>, because HAProxy Ingress reads this value frequently, see <a href="/v0.13/docs/configuration/command-line/#stats"><code>--stats-collect-processing-period</code></a>, and will consider the spikes. Use this metric with the <code>rate()</code> function to find the actual rate. Rates close to 1 (one) means that HAProxy is very close to being saturated.</li>
+<li><code>haproxyingress_haproxy_response_time_seconds</code> is a histogram with the response time of calls to the admin socket. Dividing the <code>rate()</code> of the <code>_sum</code> counter by the <code>rate()</code> of the <code>_count</code> counter, filtered by <code>command=&quot;show_info&quot;</code> label, will give the amount of time HAProxy takes to answer the <code>show info</code> command. This should be below <code>1ms</code> most of the time, higher values suggest a saturated proxy or a noisy neighborhood stealing CPU from the proxy. The buckets of this histogram can be configured using <a href="/v0.13/docs/configuration/command-line/#buckets-response-time"><code>--buckets-response-time</code></a>. Here is the full promql to calculate the response time: <code>rate(haproxyingress_haproxy_response_time_seconds_sum{command=&quot;show_info&quot;}[1m]) / rate(haproxyingress_haproxy_response_time_seconds_count{command=&quot;show_info&quot;}[1m])</code></li>
+</ul>
+
+<hr />
+
+<h3 id="how-to-prioritize-a-feature-request">How to prioritize a feature request?</h3>
+
+<p>There isn&rsquo;t a way, someone from the community will have to have the same need or want to face the challenge. So the best way is to fill a feature request with as many details as possible and wait.</p>
+
+<hr />
+
+<h3 id="how-frequently-new-versions-are-released">How frequently new versions are released?</h3>
+
+<p>HAProxy Ingress is currently following HAProxy releases, so about two new minor versions are released per year. New patches are also released with fixes and small and non intrusive features, cherry-picked from master. All new controller&rsquo;s minor version uses a new HAProxy branch as its embedded HAProxy, so v0.12 uses HAProxy 2.2, v0.13 uses HAProxy 2.3 and so on.</p>
+
+<hr />
+
+<h3 id="how-can-i-pay-for-support">How can I pay for support?</h3>
+
+<p>There is currently no paid support, unfortunately, so if your company or your manager wants someone to be paid, HAProxy Ingress actually isn&rsquo;t an option. This can be changed in the future. No matter what happens, the code base will continue to be maintained as an open source project.</p>
+
+<hr />
+
+<h3 id="i-m-stuck-how-can-i-get-help">I&rsquo;m stuck, how can I get help?</h3>
+
+<p>See the Learn and Connect options in the <a href="/v0.13/community/">Community</a> page.</p>
+
+<hr />
+
+<h3 id="how-can-i-help">How can I help?</h3>
+
+<p>Great that you asked! It depends on your skills and interests:</p>
+
+<ul>
+<li><strong>Visibility:</strong> Write about HAProxy Ingress, add it on your public comparisons, promote it when applicable, improve the <a href="https://github.com/jcmoraisjr/haproxy-ingress">repository</a> visibility giving it a GitHub star.</li>
+<li><strong>Community:</strong> Follow the Slack channel, mailing list, and Stack Overflow tag, links in the <a href="/v0.13/community/">Community</a> page. Don&rsquo;t hesitate to answer what you know and ask what you don&rsquo;t know. We are there to help each other.</li>
+<li><strong>Quality:</strong> Use the controller, report bugs, misbehavior, bad quality log messages and other related issues.</li>
+<li><strong>Documentation:</strong> Fix typos and bad sentence constructions. Add, revise or migrate examples. There are some <a href="https://github.com/jcmoraisjr/haproxy-ingress/issues?q=is%3Aissue+is%3Aopen+label%3Akind%2Fdocs">doc related issues</a> in the issue tracker as well.</li>
+<li><strong>Features:</strong> Pull requests are welcome! Some feature ideas and some discussion on feature requests are welcome as well.</li>
+</ul>
+
+<hr />
+
+<h3 id="why-did-you-start-and-still-implement-haproxy-ingress">Why did you start and still implement HAProxy Ingress?</h3>
+
+<p><a href="https://github.com/kubernetes-retired/contrib/tree/master/service-loadbalancer#readme">Service loadbalancer</a> was a kind of pre-ingress component that I&rsquo;ve <a href="https://quay.io/repository/jcmoraisjr/kube-loadbalancer">improved</a>, between jul and dec/2016, to meet our needs at work. About jan/2017 we migrated to ingress and deployed a controller. I was enjoying to play with Kubernetes, as much as with HAProxy in the service-loadbalancer days, so I chose to start the controller just to see how far I could go. HAProxy Ingress was conceived because, in one single project, I could use two technologies that I love - HAProxy and Kubernetes, and also to improve two other skills - writing infrastructure code and contributing back to the great communities around HAProxy and Kubernetes.</p>
+
+<p>Early 2018 we observed some annoying issues in the controller we were using, probably due to the amount of configuration updates that enforces the reload of the proxy. At the same time my manager and I observed how stable a HAProxy deployment is, after deploying a HAProxy Ingress instance side by side with the former controllers, but outside the DNS. &ldquo;Hey Joao, what if we move some requests to HAProxy and see how it behaves?&rdquo;. This sentence started our move to HAProxy Ingress, which was completed with a v0.8-snapshot version.</p>
+
+<p>HAProxy Ingress is still on the road mainly due to the following reasons, with no special order: it&rsquo;s being used and useful, it&rsquo;s developed with passion, and we built a great community around it. These last years were awesome, looking forward to the years to come.</p>
 
         <div class="section-index">
     
@@ -582,7 +658,7 @@ a beta-quality or a development version.</p>
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified July 10, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/4ac3938d8ee7bb242d8e6db1882eb378feb47762">build: remove travis-ci configs (4ac3938d)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified August 12, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/f3568c39be744d5110aa852868565f7e3ad2b93d">docs: add a faq (f3568c39)</a>
 </div>
 </div>
 

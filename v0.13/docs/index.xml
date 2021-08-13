@@ -1736,7 +1736,7 @@ TCP port number.&lt;/p&gt;
 &lt;td&gt;&lt;a href=&#34;#timeout&#34;&gt;&lt;code&gt;timeout-stop&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;time with suffix&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
-&lt;td&gt;no timeout&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;10m&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -6055,7 +6055,7 @@ The documentation continues to refer to the old, and now deprecated &lt;a href=&
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;timeout-stop&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;10m&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -6718,7 +6718,7 @@ services.&lt;/p&gt;
 
 &lt;h2 id=&#34;buckets-response-time&#34;&gt;&amp;ndash;buckets-response-time&lt;/h2&gt;
 
-&lt;p&gt;Configures the buckets of the histogram &lt;code&gt;haproxyingress_haproxy_response_time_seconds&lt;/code&gt;, used to compute the response time of the haproxy&amp;rsquo;s admin socket. The response time unit is in seconds.&lt;/p&gt;
+&lt;p&gt;Configures the buckets of the histogram &lt;code&gt;haproxyingress_haproxy_response_time_seconds&lt;/code&gt;, used to compute the response time of the haproxy&amp;rsquo;s admin socket. The response time unit is in seconds. The default value is &lt;code&gt;.0005,.001,.002,.005,.01&lt;/code&gt; (&lt;code&gt;500µs&lt;/code&gt;, &lt;code&gt;1ms&lt;/code&gt;, &lt;code&gt;2ms&lt;/code&gt;, &lt;code&gt;5ms&lt;/code&gt;, &lt;code&gt;10ms&lt;/code&gt;) if not configured.&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -7988,28 +7988,30 @@ adjust the steps to fit your need.&lt;/p&gt;
 
 &lt;p&gt;The ModSecurity agent used is &lt;a href=&#34;https://github.com/jcmoraisjr/modsecurity-spoa&#34;&gt;jcmoraisjr/modsecurity-spoa&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;Create the ModSecurity agent daemonset:&lt;/p&gt;
+&lt;p&gt;Create the ModSecurity agent deployment with 3 running pods:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;$ kubectl create -f https://haproxy-ingress.github.io/resources/modsecurity-daemonset.yaml
-daemonset &amp;quot;modsecurity-spoa&amp;quot; created
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Select the node(s) where ModSecurity agent should run:&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ kubectl get node
-NAME             STATUS    AGE       VERSION
-192.168.100.99   Ready     102d      v1.9.2
-...
-
-$ kubectl label node 192.168.100.99 waf=modsec
-node &amp;quot;192.168.100.99&amp;quot; labeled
+&lt;pre&gt;&lt;code&gt;$ kubectl create -f https://haproxy-ingress.github.io/resources/modsecurity-deployment.yaml
+deployment.apps/modsecurity-spoa created
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;Check if the agent is up and running:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;$ kubectl -n ingress-controller get pod -lrun=modsecurity-spoa -owide
-NAME                     READY     STATUS    RESTARTS   AGE       IP               NODE
-modsecurity-spoa-pp6jz   1/1       Running   0          7s        192.168.100.99   192.168.100.99
+&lt;pre&gt;&lt;code&gt;$ kubectl -n ingress-controller get deployment modsecurity-spoa
+NAME                     READY     UP-TO-DATE   AVAILABLE  AGE  
+modsecurity-spoa         3/3       3            3          7s   
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You can now create the service that provides a ClusterIP address for the HAProxy ConfigMap.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl -n ingress-controller expose deployment modsecurity-spoa --port=12345 --type=ClusterIP
+service/modsecurity-spoa exposed
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Once the service is created, you can obtain the ClusterIP address to be used later in the ConfigMap.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl -n ingress-controller get service modsecurity-spoa
+NAME                     TYPE       CLUSTERIP        EXTERNAL-IP  PORT(S)     AGE
+modsecurity-spoa         ClusterIP  172.20.216.246   &amp;lt;none&amp;gt;       12345/TCP   7m
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&#34;configuring-haproxy-ingress&#34;&gt;Configuring HAProxy Ingress&lt;/h2&gt;
@@ -8018,11 +8020,10 @@ modsecurity-spoa-pp6jz   1/1       Running   0          7s        192.168.100.99
 of the ModSecurity agent server(s). The default port number of the agent is &lt;code&gt;12345&lt;/code&gt;.
 A &lt;code&gt;kubectl -n ingress-controller edit configmap haproxy-ingress&lt;/code&gt; should work.&lt;/p&gt;
 
-&lt;p&gt;Example of a ConfigMap content if ModSecurity agents has IPs &lt;code&gt;192.168.100.99&lt;/code&gt; and
-&lt;code&gt;192.168.100.100&lt;/code&gt;:&lt;/p&gt;
+&lt;p&gt;Example of a ConfigMap content if the ModSecurity service has a ClusterIP of &lt;code&gt;172.20.216.246&lt;/code&gt;:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;apiVersion&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;v1&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;data&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;modsecurity-endpoints&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;192.168.100.99&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;12345&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;,&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;192.168.100.100&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;12345&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;modsecurity-endpoints&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;172.20.216.246&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;12345&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;...&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;&lt;/span&gt;kind&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;ConfigMap&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;test&#34;&gt;Test&lt;/h2&gt;
@@ -8083,11 +8084,13 @@ Request forbidden by administrative rules.
 &lt;p&gt;Check the agent logs:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ kubectl -n ingress-controller get pod -lrun=modsecurity-spoa
-NAME                     READY     STATUS    RESTARTS   AGE
-modsecurity-spoa-5g5h2   1/1       Running   0          1h
+NAME                                READY   STATUS    RESTARTS   AGE
+modsecurity-spoa-6f757ffd88-9qt2f   1/1     Running   0          11m
+modsecurity-spoa-6f757ffd88-vwtzr   1/1     Running   0          11m
+modsecurity-spoa-6f757ffd88-q4rvm   1/1     Running   0          11m
 ...
 
-$ kubectl -n ingress-controller logs --tail=10 modsecurity-spoa-5g5h2
+$ kubectl -n ingress-controller logs --tail=10 modsecurity-spoa-6f757ffd88-9qt2f
 ...
 1527464273.942819 [00] [client 127.0.0.1] ModSecurity: Access denied with code 403 (phase 2). Matche
 d phrase &amp;quot;etc/passwd&amp;quot; at ARGS:p. [file &amp;quot;/etc/modsecurity/owasp-modsecurity-crs/rules/REQUEST-930-APP
@@ -8098,6 +8101,27 @@ m-multi&amp;quot;] [tag &amp;quot;attack-lfi&amp;quot;] [tag &amp;quot;OWASP_CRS
  &amp;quot;OWASP_TOP_10/A4&amp;quot;] [tag &amp;quot;PCI/6.5.4&amp;quot;] [hostname &amp;quot;ingress.localdomain&amp;quot;] [uri &amp;quot;http://echo.domain/&amp;quot;] [
 unique_id &amp;quot;&amp;quot;]
 ...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;deploy-modsecurity-agent-with-a-sidecar-container-for-audit-logs&#34;&gt;Deploy ModSecurity Agent With a Sidecar Container for Audit Logs&lt;/h2&gt;
+
+&lt;p&gt;A ModSecurity agent can be deployed with an additional sidecar container so you can have access to the logs stored in the AuditLog file. If you are using the default configuration of the ModSecurity agent, the logs written to the AuditLog specified are not reachable in the agent container&amp;rsquo;s STDOUT.&lt;/p&gt;
+
+&lt;p&gt;In order to read information written to that file, you must add a sidecar container to the method of deployment of the ModSecurity agent in Kubernetes. This is especially useful if you set the SecRuleEngine configuration to DetectionOnly.&lt;/p&gt;
+
+&lt;p&gt;Update the ModSecurity agent deployment to have a sidecar container to read the audit log file to STDOUT&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl apply -f https://haproxy-ingress.github.io/resources/modsecurity-deployment-auditlog-sidecar.yaml
+deployment &amp;quot;modsecurity-spoa&amp;quot; configured
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now the ModSecurity agent pods will have two containers to get logs from: one for the traditional ModSecurity logs and one for the logs written to the AuditLog file.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ kubectl -n ingress-controller get pod -lrun=modsecurity-spoa
+NAME                                READY   STATUS    RESTARTS   AGE
+modsecurity-spoa-6596c6b444-cht27   2/2     Running   0          14m
+modsecurity-spoa-6596c6b444-kw2tr   2/2     Running   0          14m
+modsecurity-spoa-6596c6b444-mkndw   2/2     Running   0          14m
 &lt;/code&gt;&lt;/pre&gt;
 
       </description>
