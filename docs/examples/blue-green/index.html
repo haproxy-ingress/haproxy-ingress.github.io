@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/examples/blue-green/" />
-<meta property="article:modified_time" content="2020-07-10T14:58:58-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-04-21T16:31:16-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Blue/green">
 <meta itemprop="description" content="Demonstrate how to configure blue/green deployment, with and without header or cookie selection.
 ">
 
 
-<meta itemprop="dateModified" content="2020-07-10T14:58:58-03:00" />
-<meta itemprop="wordCount" content="774">
+<meta itemprop="dateModified" content="2021-04-21T16:31:16-03:00" />
+<meta itemprop="wordCount" content="778">
 
 
 
@@ -115,13 +115,13 @@ if (!doNotTrack) {
 			
 			<li class="nav-item dropdown d-none d-lg-block">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	v0.12 (latest)
+	v0.13 (latest)
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.13/docs">v0.13 (beta)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.13 (latest)</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.12 (latest)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.12/docs">v0.12</a>
 	
 	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.11/docs">v0.11</a>
 	
@@ -288,6 +288,12 @@ if (!doNotTrack) {
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-gateway-api" href="/docs/configuration/gateway-api/">Gateway API</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-keys" href="/docs/configuration/keys/">Keys</a>
       
       
@@ -301,6 +307,29 @@ if (!doNotTrack) {
       
       
       <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-template" href="/docs/configuration/template/">Template</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/faq/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">FAQ</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-faq">
+      
       
       
     </li>
@@ -493,24 +522,27 @@ green-7546d648c4-p7pmz   1/1       Running   0          2m        172.17.0.19   
 <p>Configure the ingress resource. No need to change the host below, <code>bluegreen.example.com</code> is fine:</p>
 
 <pre><code>$ kubectl create -f - &lt;&lt;EOF
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    ingress.kubernetes.io/balance-algorithm: roundrobin
-    ingress.kubernetes.io/blue-green-deploy: group=blue=1,group=green=1
-    ingress.kubernetes.io/blue-green-mode: pod
-    ingress.kubernetes.io/ssl-redirect: &quot;false&quot;
+    haproxy-ingress.github.io/balance-algorithm: roundrobin
+    haproxy-ingress.github.io/blue-green-deploy: group=blue=1,group=green=1
+    haproxy-ingress.github.io/blue-green-mode: pod
+    haproxy-ingress.github.io/ssl-redirect: &quot;false&quot;
   name: bluegreen
 spec:
   rules:
   - host: bluegreen.example.com
     http:
       paths:
-      - backend:
-          serviceName: bluegreen
-          servicePort: 8000
-        path: /
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: bluegreen
+            port:
+              number: 8000
 EOF
 </code></pre>
 
@@ -573,7 +605,7 @@ instead of single pods.</p>
 <p><strong>Note:</strong> BG mode was added on v0.7. On v0.6, the only supported mode is <code>pod</code>.</p>
 
 <pre><code>$ kubectl annotate --overwrite ingress bluegreen \
-  ingress.kubernetes.io/blue-green-mode=deploy
+  haproxy-ingress.github.io/blue-green-mode=deploy
 </code></pre>
 
 <ul>
@@ -594,7 +626,7 @@ Running 100 requests...
 <p>Changing now the balance to <sup>1</sup>&frasl;<sub>3</sub> blue and <sup>2</sup>&frasl;<sub>3</sub> green:</p>
 
 <pre><code>$ kubectl annotate --overwrite ingress bluegreen \
-  ingress.kubernetes.io/blue-green-deploy=group=blue=1,group=green=2
+  haproxy-ingress.github.io/blue-green-deploy=group=blue=1,group=green=2
 </code></pre>
 
 <ul>
@@ -641,7 +673,7 @@ instructions to deploy the sample application.</p>
 <p>After that, add the following annotation:</p>
 
 <pre><code>$ kubectl annotate --overwrite ingress bluegreen \
-  ingress.kubernetes.io/blue-green-header=x-server:group
+  haproxy-ingress.github.io/blue-green-header=x-server:group
 </code></pre>
 
 <p>Create (or update) the <code>hareq</code> alias. Change <code>IP</code> to your HAProxy Ingress controller
@@ -678,7 +710,7 @@ Running 100 requests...
 <p>Choose an invalid group, the configured blue/green balance will be used:</p>
 
 <pre><code>$ kubectl annotate --overwrite ingress bluegreen \
-  ingress.kubernetes.io/blue-green-deploy=group=blue=1,group=green=3
+  haproxy-ingress.github.io/blue-green-deploy=group=blue=1,group=green=3
 $ GROUP=invalid
 $ hareq
 Running 100 requests...
@@ -748,7 +780,7 @@ Running 100 requests...
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified July 10, 2020: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/2b3cc6701b27866acd9db35cbbd0c4de114aaec2">Update deprecated APIs docs (2b3cc670)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified April 21, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/49c869e27ec565913f976ed18249cd40e53048b3">docs: change the default annotation prefix (49c869e2)</a>
 </div>
 </div>
 

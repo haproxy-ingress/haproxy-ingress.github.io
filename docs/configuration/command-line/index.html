@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2021-07-09T09:16:29-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-08-12T19:24:28-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Command-line options">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2021-07-09T09:16:29-03:00" />
-<meta itemprop="wordCount" content="3153">
+<meta itemprop="dateModified" content="2021-08-12T19:24:28-03:00" />
+<meta itemprop="wordCount" content="3571">
 
 
 
@@ -115,13 +115,13 @@ if (!doNotTrack) {
 			
 			<li class="nav-item dropdown d-none d-lg-block">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	v0.12 (latest)
+	v0.13 (latest)
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.13/docs">v0.13 (beta)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.13 (latest)</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.12 (latest)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.12/docs">v0.12</a>
 	
 	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.11/docs">v0.11</a>
 	
@@ -288,6 +288,12 @@ if (!doNotTrack) {
       
       
       
+      <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-gateway-api" href="/docs/configuration/gateway-api/">Gateway API</a>
+      
+      
+      
+      
+      
       <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-keys" href="/docs/configuration/keys/">Keys</a>
       
       
@@ -301,6 +307,29 @@ if (!doNotTrack) {
       
       
       <a class="td-sidebar-link td-sidebar-link__page " id="m-docs-configuration-template" href="/docs/configuration/template/">Template</a>
+      
+      
+    </li>
+  </ul>
+</ul>
+
+      
+      
+      
+      
+
+
+
+
+
+
+<ul class="td-sidebar-nav__section pr-md-3">
+  <li class="td-sidebar-nav__section-title">
+    <a  href="/docs/faq/" class="align-left pl-0 pr-2 collapsed td-sidebar-link td-sidebar-link__section">FAQ</a>
+  </li>
+  <ul>
+    <li class="collapse " id="docs-faq">
+      
       
       
     </li>
@@ -372,7 +401,7 @@ if (!doNotTrack) {
 <ul>
 <li><a href="#acme">Acme</a></li>
 <li><a href="#allow-cross-namespace">&ndash;allow-cross-namespace</a></li>
-<li><a href="#annotation-prefix">&ndash;annotation-prefix</a></li>
+<li><a href="#annotations-prefix">&ndash;annotations-prefix</a></li>
 <li><a href="#apiserver-host">&ndash;apiserver-host</a></li>
 <li><a href="#backend-shards">&ndash;backend-shards</a></li>
 <li><a href="#buckets-response-time">&ndash;buckets-response-time</a></li>
@@ -391,6 +420,7 @@ if (!doNotTrack) {
 <li><a href="#max-old-config-files">&ndash;max-old-config-files</a></li>
 <li><a href="#publish-service">&ndash;publish-service</a></li>
 <li><a href="#rate-limit-update">&ndash;rate-limit-update</a></li>
+<li><a href="#reload-interval">&ndash;reload-interval</a></li>
 <li><a href="#reload-strategy">&ndash;reload-strategy</a></li>
 <li><a href="#report-node-internal-ip-address">&ndash;report-node-internal-ip-address</a></li>
 <li><a href="#sort-backends">&ndash;sort-backends</a></li>
@@ -406,6 +436,7 @@ if (!doNotTrack) {
 <li><a href="#version">&ndash;version</a></li>
 <li><a href="#wait-before-shutdown">&ndash;wait-before-shutdown</a></li>
 <li><a href="#wait-before-update">&ndash;wait-before-update</a></li>
+<li><a href="#watch-gateway">&ndash;watch-gateway</a></li>
 <li><a href="#watch-namespace">&ndash;watch-namespace</a></li>
 </ul></li>
 </ul>
@@ -532,9 +563,9 @@ if (!doNotTrack) {
 </tr>
 
 <tr>
-<td><a href="#annotation-prefix"><code>--annotation-prefix</code></a></td>
-<td>prefix without <code>/</code></td>
-<td><code>ingress.kubernetes.io</code></td>
+<td><a href="#annotations-prefix"><code>--annotations-prefix</code></a></td>
+<td>prefix list without <code>/</code></td>
+<td><code>haproxy-ingress.github.io,ingress.kubernetes.io</code></td>
 <td>v0.8</td>
 </tr>
 
@@ -693,6 +724,13 @@ if (!doNotTrack) {
 </tr>
 
 <tr>
+<td><a href="#reload-interval"><code>--reload-interval</code></a></td>
+<td>time</td>
+<td><code>0</code></td>
+<td>v0.13</td>
+</tr>
+
+<tr>
 <td><a href="#reload-strategy"><code>--reload-strategy</code></a></td>
 <td>[native|reusesocket]</td>
 <td><code>reusesocket</code></td>
@@ -798,6 +836,13 @@ if (!doNotTrack) {
 </tr>
 
 <tr>
+<td><a href="#watch-gateway"><code>--watch-gateway</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.13</td>
+</tr>
+
+<tr>
 <td><a href="#ingress-class"><code>--watch-ingress-without-class</code></a></td>
 <td>[true|false]</td>
 <td><code>false</code></td>
@@ -845,18 +890,32 @@ against a server which implements the acme protocol, version 2.</p>
 
 <p><code>--allow-cross-namespace</code> argument, if added, will allow reading secrets from one namespace to an
 ingress resource of another namespace. The default behavior is to deny such cross namespace reading.
-This adds a breaking change from <code>v0.4</code> to <code>v0.5</code> on <code>ingress.kubernetes.io/auth-tls-secret</code>
+This adds a breaking change from <code>v0.4</code> to <code>v0.5</code> on <code>haproxy-ingress.github.io/auth-tls-secret</code>
 annotation, where cross namespace reading were allowed without any configuration.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><a href="/docs/configuration/keys/#cross-namespace">cross namespace</a> configuration keys.</li>
+</ul>
 
 <hr />
 
-<h2 id="annotation-prefix">&ndash;annotation-prefix</h2>
+<h2 id="annotations-prefix">&ndash;annotations-prefix</h2>
 
-<p>Changes the annotation prefix the controller should look for when parsing services and ingress
-objects. The default value is <code>ingress.kubernetes.io</code> if not declared, which means SSL Redirect
-should be configured with the annotation name <code>ingress.kubernetes.io/ssl-redirect</code>. Annotations
-with other prefix are ignored. This allows using HAProxy Ingress with other ingress controllers
-that shares ingress and service objects without conflicting each other.</p>
+<p>Configures a comma-separated list of annotations prefix that the controller should look for when
+parsing services and ingress objects. The default value is <code>haproxy-ingress.github.io,ingress.kubernetes.io</code>.
+The default configuration means declare eg a SSL Redirect annotation with
+<code>haproxy-ingress.github.io/ssl-redirect: &quot;true&quot;</code> or <code>ingress.kubernetes.io/ssl-redirect: &quot;true&quot;</code>.</p>
+
+<p>The order of the declaration is used to priorize one of them if the same configuration key is
+declared twice - if two distinct prefix is used to configure the same key in the same ingress or
+service resource, the value of the annotation with the prefix that was configured first in this
+command-line option is used.</p>
+
+<p>Annotations with other prefix or without any prefix are ignored. This allows to use HAProxy Ingress
+with other ingress controllers that shares ingress and service resources without conflicting each
+other.</p>
 
 <hr />
 
@@ -881,7 +940,7 @@ services.</p>
 
 <h2 id="buckets-response-time">&ndash;buckets-response-time</h2>
 
-<p>Configures the buckets of the histogram <code>haproxyingress_haproxy_response_time_seconds</code>, used to compute the response time of the haproxy&rsquo;s admin socket. The response time unit is in seconds.</p>
+<p>Configures the buckets of the histogram <code>haproxyingress_haproxy_response_time_seconds</code>, used to compute the response time of the haproxy&rsquo;s admin socket. The response time unit is in seconds. The default value is <code>.0005,.001,.002,.005,.01</code> (<code>500µs</code>, <code>1ms</code>, <code>2ms</code>, <code>5ms</code>, <code>10ms</code>) if not configured.</p>
 
 <hr />
 
@@ -910,8 +969,11 @@ hostname, or the requested path doesn&rsquo;t match any location within the desi
 <h2 id="default-ssl-certificate">&ndash;default-ssl-certificate</h2>
 
 <p>Defines the <code>namespace/secretname</code> of the default certificate that should be used if ingress
-resources using TLS configuration doesn&rsquo;t provide it&rsquo;s own certificate. A self-signed fake
-certificate is used if not declared.</p>
+resources using TLS configuration doesn&rsquo;t provide it&rsquo;s own certificate.  A filename prefixed
+with <code>file://</code> can be used, containing both certificate and private key in PEM format, eg
+<code>file:///dir/crt.pem</code>.</p>
+
+<p>A self-signed fake certificate is used if not declared, the secret or the file is not found.</p>
 
 <hr />
 
@@ -948,7 +1010,7 @@ deprecation. The default behavior is to log all API server warnings.</p>
 
 <p>Since v0.11</p>
 
-<p>Disables in memory pod list and also pod watch for changes. Pod list and watch is used by <code>drain-support</code> option, which will not work if pod list is disabled. Blue/green and <code>session-cookie-value-strategy</code> set to <code>pod-uid</code> also use pod list if enabled, otherwise k8s api is called if needed. The default value is <code>false</code>, which means pods will be watched and listed in memory.</p>
+<p>Disables in memory pod list and also pod watch for changes. Pod list and watch is used by the <code>drain-support</code> and <code>assign-backend-server-id</code> options, which will not work if pod list is disabled. Blue/green and <code>session-cookie-value-strategy</code> set to <code>pod-uid</code> also use pod list if enabled, otherwise k8s api is called if needed. The default value is <code>false</code>, which means pods will be watched and listed in memory.</p>
 
 <hr />
 
@@ -1056,7 +1118,7 @@ remove old configuration files. If <code>0</code>, the default value, a single <
 
 <p>Some infrastructure tools like <code>external-DNS</code> relay in the ingress status to created access routes to the services exposed with ingress object.</p>
 
-<pre><code>apiVersion: networking.k8s.io/v1beta1
+<pre><code>apiVersion: networking.k8s.io/v1
 kind: Ingress
 ...
 status:
@@ -1071,15 +1133,37 @@ status:
 
 <h2 id="rate-limit-update">&ndash;rate-limit-update</h2>
 
-<p>Use <code>--rate-limit-update</code> to change how much time to wait between HAProxy reloads. Note that the first
-update is always immediate, the delay will only prevent two or more updates in the same time frame.
-Moreover reloads will only occur if the cluster configuration has changed, otherwise no reload will
-occur despite of the rate limit configuration.</p>
+<p>Use <code>--rate-limit-update</code> to change how much time to wait between two consecutive configuration updates.
+A configuration update is the process of read all enqueued Kubernetes events, reflect in the HAProxy
+model and immediately apply everything that does not need a reload, eg server certificate endpoint
+updates. Note that the first configuration update is always immediate, the delay will only prevent
+two or more consecutive updates in the same time frame - the second update will be enqueued and
+processed later, satisfying the rate limit configuration. Moreover, updates will only happen if
+Kubernetes reports changing events. The default value is <code>0.5</code> which means to wait two seconds between
+two consecutive configuration changes.</p>
 
-<p>This argument receives the allowed reloads per second. The default value is <code>0.5</code> which means no more
-than one reload will occur within <code>2</code> seconds. The lower limit is <code>0.05</code> which means one reload within
-<code>20</code> seconds. The highest one is <code>10</code> which will allow ingress controller to reload HAProxy up to 10
-times per second.</p>
+<p>Up to v0.12 this was the only way to limit how often HAProxy would be reloaded, but this also prevents
+to dynamically update HAProxy as fast as possible. v0.13 adds <a href="#reload-interval"><code>--reload-interval</code></a>,
+which allows a higher rate limit update with a lower rate of reloads.</p>
+
+<p>See also <a href="#reload-interval"><code>--reload-interval</code></a>.</p>
+
+<hr />
+
+<h2 id="reload-interval">&ndash;reload-interval</h2>
+
+<p>Since v0.13</p>
+
+<p>Configures the minimal time between two consecutive HAProxy reloads. The default value is <code>0</code>,
+which means to always reload HAProxy just after a configuration change requires a reload. The
+interval should be configured with a time suffix, e.g., <code>30s</code> means that if two distinct and
+consecutive configuration changes enforce a reload, the second reload will be enqueued until 30
+seconds have passed from the first one, applying every new configuration changes made between
+this interval.</p>
+
+<p>Higher values help to limit the number of active instances and save some memory on large clusters
+with long connections. Note however that, if two consecutive updates require a reload, the second
+one will delay up to the configured duration to be reflected by HAProxy.</p>
 
 <hr />
 
@@ -1177,6 +1261,17 @@ minutes.</p>
 services and ports that HAProxy should listen to. Use the HAProxy&rsquo;s port number as the key of the
 ConfigMap.</p>
 
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">Note</h4>
+<p>Starting on v0.13, <code>--tcp-services-configmap</code> is deprecated. Use <a href="/docs/configuration/keys/#tcp-services"><code>tcp-service-port</code></a> configuration key instead.</p>
+
+<p>The documentation refers to &ldquo;ConfigMap based TCP&rdquo; when taking about this configuration options, and it refers to &ldquo;TCP Service&rdquo; when talking about to the new, annotation based TCP configuration.</p>
+
+</div>
+
+
 <p>The value of the ConfigMap entry is a colon separated list of the following arguments:</p>
 
 <ol>
@@ -1184,9 +1279,9 @@ ConfigMap.</p>
 <li><code>&lt;portnumber&gt;</code>, mandatory, is the port number the upstream service is listening - this is not related to the listening port of HAProxy.</li>
 <li><code>&lt;in-proxy&gt;</code>, optional, should be defined as <code>PROXY</code> if HAProxy should expect requests using the <a href="https://www.haproxy.org/download/2.0/doc/proxy-protocol.txt">PROXY</a> protocol. Leave empty to not use PROXY protocol. This is usually used only if there is another load balancer in front of HAProxy which supports the PROXY protocol. PROXY protocol v1 and v2 are supported.</li>
 <li><code>&lt;out-proxy&gt;</code>, optional, should be defined as <code>PROXY</code> or <code>PROXY-V2</code> if the upstream service expect connections using the PROXY protocol v2. Use <code>PROXY-V1</code> instead if the upstream service only support v1 protocol. Leave empty to connect without using the PROXY protocol.</li>
-<li><code>&lt;namespace/secret-name&gt;</code>, optional, used to configure SSL/TLS over the TCP connection. Secret should have <code>tls.crt</code> and <code>tls.key</code> pair used on TLS handshake. Leave empty to not use ssl-offload.</li>
+<li><code>&lt;namespace/secret-name&gt;</code>, optional, used to configure SSL/TLS over the TCP connection. Secret should have <code>tls.crt</code> and <code>tls.key</code> pair used on TLS handshake. Leave empty to not use ssl-offload. A filename prefixed with <code>file://</code> can be used containing both certificate and private key in PEM format, eg <code>file:///dir/crt.pem</code>.</li>
 <li><code>&lt;check-interval&gt;</code>, added in v0.10, optional and defaults to <code>2s</code>, configures a TCP check interval. Declare <code>-</code> (one single dash) as the time to disable it. Valid time is a number and a mandatory suffix: <code>us</code>, <code>ms</code>, <code>s</code>, <code>m</code>, <code>h</code> or <code>d</code>.</li>
-<li><code>&lt;namespace/secret-name&gt;</code>, added in v0.10, optional, used to configure SSL/TLS client verification over the TCP connection. Secret should have <code>ca.crt</code> and optional <code>ca.crl</code>. Leave empty to not use ssl client verification.</li>
+<li><code>&lt;namespace/secret-name&gt;</code>, added in v0.10, optional, used to configure SSL/TLS client verification over the TCP connection. Secret should have <code>ca.crt</code> and optional <code>ca.crl</code>. Leave empty to not use ssl client verification. A filename prefixed with <code>file://</code> can be used containing the CA bundle in PEM format, and optionally followed by a comma and the filename with the crl, eg <code>file:///dir/ca.pem</code> or <code>file:///dir/ca.pem,/dir/crl.pem</code>.</li>
 </ol>
 
 <p>Optional fields can be skipped using consecutive colons.</p>
@@ -1216,6 +1311,12 @@ data:
 </ul>
 
 <p>Note: Check interval was added in v0.10 and defaults to <code>2s</code>. All declared services has check interval enabled, except <code>3306</code> which disabled it.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><a href="/docs/configuration/keys/#tcp-services">TCP Services</a> configuration keys</li>
+</ul>
 
 <hr />
 
@@ -1286,6 +1387,15 @@ the controller starts shutting down itself right after signal was sent.</p>
 <p>Defines the amount of time to wait before start a reconciliation event and update haproxy.
 The purpose of this delay is to group all the notifications of a batch update and apply pending
 changes in one single shot. The default value is <code>200ms</code>.</p>
+
+<hr />
+
+<h2 id="watch-gateway">&ndash;watch-gateway</h2>
+
+<p>Since v0.13</p>
+
+<p>Enables Gateway API watch and parse. The Gateway API CRDs should be installed before enable
+this option. See also the Gateway API configuration <a href="/docs/configuration/gateway-api/">doc</a>.</p>
 
 <hr />
 
@@ -1361,7 +1471,7 @@ configmaps or the default backend service located in a different namespace than 
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified July 9, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/5afc1047557aac7621ec877b4383bbed7d0a0253">add disable-config-keywords command-line options (5afc1047)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified August 12, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/9747470f655128239725f5ea022b0c0ac7e9af1b">docs: add default values to the histogram buckets (9747470f)</a>
 </div>
 </div>
 
