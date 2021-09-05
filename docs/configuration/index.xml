@@ -501,6 +501,13 @@ TCP port number.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#allowlist&#34;&gt;&lt;code&gt;allowlist-source-header&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Header name that will be used as a src&lt;/td&gt;
+&lt;td&gt;Path&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#app-root&#34;&gt;&lt;code&gt;app-root&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;/url&lt;/td&gt;
 &lt;td&gt;Host&lt;/td&gt;
@@ -2227,6 +2234,13 @@ overwrite the weight defined from the agent&lt;/li&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;allowlist-source-header&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Path&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.13.2&lt;/td&gt;
+&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
@@ -2251,15 +2265,29 @@ and will be ignored if &lt;code&gt;allowlist-source-range&lt;/code&gt; is declar
 &lt;li&gt;&lt;code&gt;denylist-source-range&lt;/code&gt;: Used to allow requests by default, denying only the IPs
 and CIDRs in the list, except IPs and CIDRs prefixed with &lt;code&gt;!&lt;/code&gt; which will continue to
 be allowed.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;allowlist-source-header&lt;/code&gt;: Used to define a header from which source IP will be
+taken in order to compare with the allow and deny list. If not defined a normal source
+will be used. This option is useful when ingress is hidden behind reverse proxy but you
+still want to control access to separate paths from ingress configuration.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Allowlist and denylist can be used together. The request will be denied if the
 configurations overlap and a source IP matches both the allowlist and denylist.&lt;/p&gt;
 
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Warning&lt;/h4&gt;
+Setting a &lt;code&gt;allowlist-source-header&lt;/code&gt; comes with a security risk. You must ensure that
+the selected header can be trusted!
+&lt;/div&gt;
+
+
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4.2-http-request%20deny&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4.2-http-request%20deny&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4.2-http-request%20set-src&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4.2-http-request%20set-src&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;

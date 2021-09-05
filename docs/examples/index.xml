@@ -744,6 +744,15 @@ adjust the steps to fit your need.&lt;/p&gt;
 deployment.apps/modsecurity-spoa created
 &lt;/code&gt;&lt;/pre&gt;
 
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
+This deployment configures a small amount of requests and limits resources,
+remember to adjust them before moving to production.
+&lt;/div&gt;
+
+
 &lt;p&gt;Check if the agent is up and running:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ kubectl -n ingress-controller get deployment modsecurity-spoa
