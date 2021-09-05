@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.13/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2021-07-31T16:02:55-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-08-29T16:00:29-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2021-07-31T16:02:55-03:00" />
-<meta itemprop="wordCount" content="15662">
+<meta itemprop="dateModified" content="2021-08-29T16:00:29-03:00" />
+<meta itemprop="wordCount" content="15752">
 
 
 
@@ -884,6 +884,13 @@ TCP port number.</p>
 <tr>
 <td><a href="#allowlist"><code>allowlist-source-range</code></a></td>
 <td>Comma-separated IPs or CIDRs</td>
+<td>Path</td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="#allowlist"><code>allowlist-source-header</code></a></td>
+<td>Header name that will be used as a src</td>
 <td>Path</td>
 <td></td>
 </tr>
@@ -2615,6 +2622,13 @@ overwrite the weight defined from the agent</li>
 <td></td>
 <td></td>
 </tr>
+
+<tr>
+<td><code>allowlist-source-header</code></td>
+<td><code>Path</code></td>
+<td></td>
+<td>v0.13.2</td>
+</tr>
 </tbody>
 </table>
 
@@ -2639,15 +2653,29 @@ and will be ignored if <code>allowlist-source-range</code> is declared.</li>
 <li><code>denylist-source-range</code>: Used to allow requests by default, denying only the IPs
 and CIDRs in the list, except IPs and CIDRs prefixed with <code>!</code> which will continue to
 be allowed.</li>
+<li><code>allowlist-source-header</code>: Used to define a header from which source IP will be
+taken in order to compare with the allow and deny list. If not defined a normal source
+will be used. This option is useful when ingress is hidden behind reverse proxy but you
+still want to control access to separate paths from ingress configuration.</li>
 </ul>
 
 <p>Allowlist and denylist can be used together. The request will be denied if the
 configurations overlap and a source IP matches both the allowlist and denylist.</p>
 
+
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Warning</h4>
+Setting a <code>allowlist-source-header</code> comes with a security risk. You must ensure that
+the selected header can be trusted!
+</div>
+
+
 <p>See also:</p>
 
 <ul>
 <li><a href="https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4.2-http-request%20deny">https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4.2-http-request%20deny</a></li>
+<li><a href="https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4.2-http-request%20set-src">https://cbonte.github.io/haproxy-dconv/2.2/configuration.html#4.2-http-request%20set-src</a></li>
 </ul>
 
 <hr />
@@ -6700,7 +6728,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 		<br />
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified July 31, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/a3f42d71c71688241a46a34a31cfc78910fbaac4">docs: fix default timeout-stop value (a3f42d71)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified August 29, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/ca85d9dc855673d26fe7a7094d1a9ee67b1fde3e">Allowlist behind reverse proxy (ca85d9dc)</a>
 </div>
 </div>
 
