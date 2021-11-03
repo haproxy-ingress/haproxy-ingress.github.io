@@ -43,17 +43,6 @@
 "/>
 
 
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-	ga('create', 'UA-150719229-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
-<script async src='https://www.google-analytics.com/analytics.js'></script>
-
 
 
 
@@ -67,6 +56,21 @@ if (!doNotTrack) {
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
+
+
+<script>
+  var _paq = window._paq = window._paq || [];
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//tags.joaomora.is/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '3']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="//tags.joaomora.is/matomo.php?idsite=3&amp;rec=1" style="border:0;" alt="" /></p></noscript>
 
 
     <title>External haproxy | HAProxy Ingress</title>
@@ -423,6 +427,9 @@ if (!doNotTrack) {
 
             
 <div class="td-content">
+	<div class="alert alert-secondary" role="alert">
+		<h3>This page refers to v0.12 documentation</h3>
+	</div>
 	<h1>External haproxy</h1>
 	<div class="lead">Demonstrate how to configure HAProxy Ingress to use an external haproxy deployment.</div>
 	
@@ -579,68 +586,6 @@ works well.</p>
 check URI. This example changes the liveness probe from the HAProxy Ingress
 container to the haproxy one.</p>
 
-	
-		<style>
-  .feedback--answer {
-    display: inline-block;
-  }
-  .feedback--answer-no {
-    margin-left: 1em;
-  }
-  .feedback--response {
-    display: none;
-    margin-top: 1em;
-  }
-  .feedback--response__visible {
-    display: block;
-  }
-</style>
-<h2 class="feedback--title">Feedback</h2>
-<p class="feedback--question">Was this page helpful?</p>
-<button class="feedback--answer feedback--answer-yes">Yes</button>
-<button class="feedback--answer feedback--answer-no">No</button>
-<p class="feedback--response feedback--response-yes">
-  Glad to hear it! Please <a href="https://github.com/jcmoraisjr/haproxy-ingress/issues/new">tell us how we can improve</a>.
-</p>
-<p class="feedback--response feedback--response-no">
-  Sorry to hear that. Please <a href="https://github.com/jcmoraisjr/haproxy-ingress/issues/new">tell us how we can improve</a>.
-</p>
-<script>
-  const yesButton = document.querySelector('.feedback--answer-yes');
-  const noButton = document.querySelector('.feedback--answer-no');
-  const yesResponse = document.querySelector('.feedback--response-yes');
-  const noResponse = document.querySelector('.feedback--response-no');
-  const disableButtons = () => {
-    yesButton.disabled = true;
-    noButton.disabled = true;
-  };
-  const sendFeedback = (value) => {
-    if (typeof ga !== 'function') return;
-    const args = {
-      command: 'send',
-      hitType: 'event',
-      category: 'Helpful',
-      action: 'click',
-      label: window.location.pathname,
-      value: value
-    };
-    ga(args.command, args.hitType, args.category, args.action, args.label, args.value);
-  };
-  yesButton.addEventListener('click', () => {
-    yesResponse.classList.add('feedback--response__visible');
-    disableButtons();
-    sendFeedback(1);
-  });
-  noButton.addEventListener('click', () => {
-    noResponse.classList.add('feedback--response__visible');
-    disableButtons();
-    sendFeedback(0);
-  });
-</script>
-
-		<br />
-	
-	
 	<div class="text-muted mt-5 pt-3 border-top">Last modified July 11, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/4bcef6ec9eb40dc264514a976cfb4809d8553d7a">update to v0.12.6 (4bcef6ec)</a>
 </div>
 </div>
