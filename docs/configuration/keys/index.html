@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2021-08-29T16:00:29-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-10-17T09:17:32-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2021-08-29T16:00:29-03:00" />
-<meta itemprop="wordCount" content="15752">
+<meta itemprop="dateModified" content="2021-10-17T09:17:32-03:00" />
+<meta itemprop="wordCount" content="15849">
 
 
 
@@ -832,6 +832,13 @@ TCP port number.</p>
 <td>number of days</td>
 <td>Global</td>
 <td><code>30</code></td>
+</tr>
+
+<tr>
+<td><a href="#acme"><code>acme-preferred-chain</code></a></td>
+<td>CN (Common Name) of the issuer</td>
+<td>Host</td>
+<td></td>
 </tr>
 
 <tr>
@@ -2280,6 +2287,13 @@ TCP port number.</p>
 </tr>
 
 <tr>
+<td><code>acme-preferred-chain</code></td>
+<td><code>Host</code></td>
+<td></td>
+<td>v0.13.5</td>
+</tr>
+
+<tr>
 <td><code>acme-shared</code></td>
 <td><code>Global</code></td>
 <td><code>false</code></td>
@@ -2314,6 +2328,7 @@ acme-v2.</p>
 <li><code>acme-emails</code>: mandatory, a comma-separated list of emails used to configure the client account. The account will be updated if this option is changed.</li>
 <li><code>acme-endpoint</code>: mandatory, endpoint of the acme environment. <code>v2-staging</code> and <code>v02-staging</code> are alias to <code>https://acme-staging-v02.api.letsencrypt.org</code>, while <code>v2</code> and <code>v02</code> are alias to <code>https://acme-v02.api.letsencrypt.org</code>.</li>
 <li><code>acme-expiring</code>: how many days before expiring a certificate should be considered old and should be updated. Defaults to <code>30</code> days.</li>
+<li><code>acme-preferred-chain</code>: optional, defines the Issuer&rsquo;s CN (Common Name) of the topmost certificate in the chain, if the acme server offers multiple certificate chains. The default certificate chain will be used if empty or no match is found. Note that changing this option will not force a new certificate to be issued if a valid one is already in place and actual and preferred chains differ. A new certificate can be emitted by changing the secret name in the ingress resource, or removing the secret being referenced.</li>
 <li><code>acme-shared</code>: defines if another certificate signer is running in the cluster. If <code>false</code>, the default value, any request to <code>/.well-known/acme-challenge/</code> is sent to the local acme server despite any ingress object configuration. Otherwise, if <code>true</code>, a configured ingress object would take precedence.</li>
 <li><code>acme-terms-agreed</code>: mandatory, it should be defined as <code>true</code>, otherwise certificates won&rsquo;t be issued.</li>
 <li><code>cert-signer</code>: defines the certificate signer that should be used to authorize and sign new certificates. The only supported value is <code>&quot;acme&quot;</code>. Add this config as an annotation in the ingress object that should have its certificate managed by haproxy-ingress and signed by the configured acme environment. The annotation <code>kubernetes.io/tls-acme: &quot;true&quot;</code> is also supported if the command-line option <code>--acme-track-tls-annotation</code> is used.</li>
@@ -6670,7 +6685,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified August 29, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/ca85d9dc855673d26fe7a7094d1a9ee67b1fde3e">Allowlist behind reverse proxy (ca85d9dc)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified October 17, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/dba7a2de4fb1133b2927a7ef2eecccb0372cc237">add acme-preferred-chain config key (dba7a2de)</a>
 </div>
 </div>
 
