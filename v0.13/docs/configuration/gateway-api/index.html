@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.13/docs/configuration/gateway-api/" />
-<meta property="article:modified_time" content="2021-06-08T11:59:40-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2021-12-06T21:45:42-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Gateway API">
 <meta itemprop="description" content="Configure HAProxy using Gateway API resources.
 ">
 
 
-<meta itemprop="dateModified" content="2021-06-08T11:59:40-03:00" />
-<meta itemprop="wordCount" content="525">
+<meta itemprop="dateModified" content="2021-12-06T21:45:42-03:00" />
+<meta itemprop="wordCount" content="531">
 
 
 
@@ -476,7 +476,7 @@
 
 <h2 id="conformance">Conformance</h2>
 
-<p>Gateway API spec is partially implemented in the v0.13 release. The following list describes what is (or is not) supported. All the items are already in the v0.14 backlog, except when stated otherwise:</p>
+<p>Gateway API v1alpha1 spec is partially implemented in the v0.13 release. The following list describes what is (or is not) supported:</p>
 
 <ul>
 <li>Target Services can be annotated with <a href="/v0.13/docs/configuration/keys/#scope">Backend or Path scoped</a> configuration keys, this will continue to be supported.</li>
@@ -490,6 +490,8 @@
 <li>HTTPRoute&rsquo;s Rules and ForwardTo doesn&rsquo;t support Filters.</li>
 <li>Resources status aren&rsquo;t updated.</li>
 </ul>
+
+<p>Version v1alpha2 should be partially implemented in v0.14 (beta version starting jan/22) and fully implemented in v0.15 (Q2&rsquo;22).</p>
 
 <h2 id="ingress">Ingress</h2>
 
@@ -565,7 +567,7 @@ wget -qO- http://echoserver-from-gateway.local
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified June 8, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/52cb931f61d0544bef6b3d9ce5380038fec639c8">docs: getting started guides improvement (52cb931f)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified December 6, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/ebfe0a234bacd4554b2d8d9114fa922d2277fae0">docs: rescheduling gateway api implementation (ebfe0a23)</a>
 </div>
 </div>
 

@@ -473,7 +473,7 @@
 <p>5) Install HAProxy Ingress using <code>haproxy-ingress</code> as the release name and <code>haproxy-ingress-values.yaml</code> file as the custom parameters:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ helm install haproxy-ingress haproxy-ingress/haproxy-ingress<span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  --create-namespace --namespace ingress-controller<span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  --version <span style="color:#0000cf;font-weight:bold">0</span>.13.4<span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  --version <span style="color:#0000cf;font-weight:bold">0</span>.13.5<span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  -f haproxy-ingress-values.yaml</code></pre></div>
 
 
@@ -509,7 +509,7 @@ echoserver-5b6fb6dd96-68jwp   <span style="color:#0000cf;font-weight:bold">1</sp
 <p>Obs.: <code>nip.io</code> is a convenient service which converts a valid domain name to any IP, either public or local. See <a href="https://nip.io">here</a> how it works.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl --namespace default create ingress echoserver<span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  --annotation kubernetes.io/ingress.class<span style="color:#ce5c00;font-weight:bold">=</span>haproxy<span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  --rule<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#4e9a06">&#34;echoserver.local/*=echoserver:8080&#34;</span></code></pre></div>
+</span><span style="color:#4e9a06"></span>  --rule<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#4e9a06">&#34;echoserver.local/*=echoserver:8080,tls&#34;</span></code></pre></div>
 <p>4) Send a request to our echoserver.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ curl -k https://echoserver.local
 $ wget -qO- --no-check-certificate https://echoserver.local</code></pre></div>
@@ -578,7 +578,7 @@ $ wget -qO- --no-check-certificate https://echoserver.local</code></pre></div>
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified September 16, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/2070a805254ebb61c74dd85e1e9c6d05532d9ead">update v0.13.4 (2070a805)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified December 25, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/b307a15fc0dfcd76cc2958d071022f1cffcc30d4">update to v0.13.5 (b307a15f)</a>
 </div>
 </div>
 

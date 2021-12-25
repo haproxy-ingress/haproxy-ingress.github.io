@@ -43,7 +43,7 @@
 
 &lt;h2 id=&#34;conformance&#34;&gt;Conformance&lt;/h2&gt;
 
-&lt;p&gt;Gateway API spec is partially implemented in the v0.13 release. The following list describes what is (or is not) supported. All the items are already in the v0.14 backlog, except when stated otherwise:&lt;/p&gt;
+&lt;p&gt;Gateway API v1alpha1 spec is partially implemented in the v0.13 release. The following list describes what is (or is not) supported:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Target Services can be annotated with &lt;a href=&#34;/v0.13/v0.13/docs/configuration/keys/#scope&#34;&gt;Backend or Path scoped&lt;/a&gt; configuration keys, this will continue to be supported.&lt;/li&gt;
@@ -57,6 +57,8 @@
 &lt;li&gt;HTTPRoute&amp;rsquo;s Rules and ForwardTo doesn&amp;rsquo;t support Filters.&lt;/li&gt;
 &lt;li&gt;Resources status aren&amp;rsquo;t updated.&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;Version v1alpha2 should be partially implemented in v0.14 (beta version starting jan/22) and fully implemented in v0.15 (Q2&amp;rsquo;22).&lt;/p&gt;
 
 &lt;h2 id=&#34;ingress&#34;&gt;Ingress&lt;/h2&gt;
 
@@ -442,6 +444,13 @@ TCP port number.&lt;/p&gt;
 &lt;td&gt;number of days&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;30&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#acme&#34;&gt;&lt;code&gt;acme-preferred-chain&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;CN (Common Name) of the issuer&lt;/td&gt;
+&lt;td&gt;Host&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -1890,6 +1899,13 @@ TCP port number.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;code&gt;acme-preferred-chain&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Host&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.13.5&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;code&gt;acme-shared&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
@@ -1924,6 +1940,7 @@ acme-v2.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;acme-emails&lt;/code&gt;: mandatory, a comma-separated list of emails used to configure the client account. The account will be updated if this option is changed.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;acme-endpoint&lt;/code&gt;: mandatory, endpoint of the acme environment. &lt;code&gt;v2-staging&lt;/code&gt; and &lt;code&gt;v02-staging&lt;/code&gt; are alias to &lt;code&gt;https://acme-staging-v02.api.letsencrypt.org&lt;/code&gt;, while &lt;code&gt;v2&lt;/code&gt; and &lt;code&gt;v02&lt;/code&gt; are alias to &lt;code&gt;https://acme-v02.api.letsencrypt.org&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;acme-expiring&lt;/code&gt;: how many days before expiring a certificate should be considered old and should be updated. Defaults to &lt;code&gt;30&lt;/code&gt; days.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;acme-preferred-chain&lt;/code&gt;: optional, defines the Issuer&amp;rsquo;s CN (Common Name) of the topmost certificate in the chain, if the acme server offers multiple certificate chains. The default certificate chain will be used if empty or no match is found. Note that changing this option will not force a new certificate to be issued if a valid one is already in place and actual and preferred chains differ. A new certificate can be emitted by changing the secret name in the ingress resource, or removing the secret being referenced.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;acme-shared&lt;/code&gt;: defines if another certificate signer is running in the cluster. If &lt;code&gt;false&lt;/code&gt;, the default value, any request to &lt;code&gt;/.well-known/acme-challenge/&lt;/code&gt; is sent to the local acme server despite any ingress object configuration. Otherwise, if &lt;code&gt;true&lt;/code&gt;, a configured ingress object would take precedence.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;acme-terms-agreed&lt;/code&gt;: mandatory, it should be defined as &lt;code&gt;true&lt;/code&gt;, otherwise certificates won&amp;rsquo;t be issued.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;cert-signer&lt;/code&gt;: defines the certificate signer that should be used to authorize and sign new certificates. The only supported value is &lt;code&gt;&amp;quot;acme&amp;quot;&lt;/code&gt;. Add this config as an annotation in the ingress object that should have its certificate managed by haproxy-ingress and signed by the configured acme environment. The annotation &lt;code&gt;kubernetes.io/tls-acme: &amp;quot;true&amp;quot;&lt;/code&gt; is also supported if the command-line option &lt;code&gt;--acme-track-tls-annotation&lt;/code&gt; is used.&lt;/li&gt;
@@ -6488,6 +6505,13 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#ingress-class&#34;&gt;&lt;code&gt;--ingress-class-precedence&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.13.5&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#kubeconfig&#34;&gt;&lt;code&gt;--kubeconfig&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;/path/to/kubeconfig&lt;/td&gt;
 &lt;td&gt;in cluster config&lt;/td&gt;
@@ -6855,6 +6879,8 @@ link to these IngressClasses will be added to the configuration. The &lt;code&gt
 command-line option customizes the controller name, allowing to run more than one HAProxy Ingress
 in the same cluster. Configuring &lt;code&gt;--controller-class=staging&lt;/code&gt; would listen to IngressClasses whose
 controller name is &lt;code&gt;haproxy-ingress.github.io/controller/staging&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--ingress-class-precedence&lt;/code&gt;: defines if IngressClass resource should take precedence over
+kubernetes.io/ingress.class annotation if both are defined and conflicting.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;--watch-ingress-without-class&lt;/code&gt;: defines if this controller should also listen to ingress resources
 that doesn&amp;rsquo;t declare neither the &lt;code&gt;kubernetes.io/ingress.class&lt;/code&gt; annotation nor the
 &lt;code&gt;&amp;lt;ingress&amp;gt;.spec.ingressClassName&lt;/code&gt; field. The default since v0.12 is to ignore ingress without class
