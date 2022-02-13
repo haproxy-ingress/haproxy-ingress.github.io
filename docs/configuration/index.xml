@@ -31,7 +31,7 @@
 &lt;p&gt;The following steps configure the Kubernetes cluster and HAProxy Ingress to read and parse Gateway API resources:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Manually install the Gateway API CRDs, see the Gateway API &lt;a href=&#34;https://gateway-api.sigs.k8s.io/guides/getting-started/#installing-gateway-api-crds-manually&#34;&gt;documentation&lt;/a&gt;
+&lt;li&gt;Manually install the Gateway API CRDs, see the Gateway API &lt;a href=&#34;https://gateway-api.sigs.k8s.io/v1alpha1/guides/getting-started/#installing-gateway-api-crds-manually&#34;&gt;documentation&lt;/a&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&amp;hellip; or simply &lt;code&gt;kubectl kustomize &amp;quot;github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.3.0&amp;quot; | kubectl apply -f -&lt;/code&gt;&lt;/li&gt;
@@ -68,7 +68,7 @@
 
 &lt;p&gt;Add the following steps to the &lt;a href=&#34;/docs/getting-started/&#34;&gt;Getting Started guide&lt;/a&gt; in order to expose the echoserver service along with the Gateway API:&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&#34;https://gateway-api.sigs.k8s.io/guides/getting-started/#installing-gateway-api-crds-manually&#34;&gt;Manually install&lt;/a&gt; the Gateway API CRDs:&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://gateway-api.sigs.k8s.io/v1alpha1/guides/getting-started/#installing-gateway-api-crds-manually&#34;&gt;Manually install&lt;/a&gt; the Gateway API CRDs:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;kubectl kustomize\
  &amp;quot;github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.3.0&amp;quot; |\

@@ -117,15 +117,13 @@
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 	
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.14/docs">v0.14 (alpha)</a>
+	
 	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.13 (latest)</a>
 	
 	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.12/docs">v0.12</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.11/docs">v0.11</a>
-	
 	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.10/docs">v0.10</a>
-	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.9/docs">v0.9</a>
 	
 </div>
 
@@ -491,6 +489,7 @@
 <li>Configure <a href="/docs/configuration/keys/#master-worker"><code>worker-max-reloads</code></a> if <a href="/docs/examples/external-haproxy/">external HAProxy</a> is used and the ingress hosts have a limited amount of memory.</li>
 <li>Configure <a href="/docs/configuration/keys/#source-address-intf"><code>source-address-intf</code></a> if the number of concurrent outgoing connections might be greater than 64k, or at least <code>/proc/sys/net/ipv4/ip_local_port_range</code> if the number of connections might be greater than 28k.</li>
 <li>Avoid usage of <a href="/docs/configuration/keys/#ssl-passthrough"><code>ssl-passthrough</code></a> if possible, moving the needed ones to a new ingress class. <code>ssl-passthrough</code> enforces the creation of a new internal proxy, duplicating the number of connections and generating a bit more latency.</li>
+<li>Use dynamic scaling <a href="/docs/configuration/keys/#dynamic-scaling"><code>dynamic-scaling</code></a> and increase the value of [<code>backend-server-slots-increment</code>] or [<code>slots-min-free</code>] for workloads that rapidly auto-scale. This reduces the amount of full haproxy reloads when a backend rapidly auto-scales.</li>
 </ul>
 
 <p>Improving the controller performance:</p>
@@ -600,7 +599,7 @@
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified August 12, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/f3568c39be744d5110aa852868565f7e3ad2b93d">docs: add a faq (f3568c39)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified February 13, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/158c97ee110ad7cda934f92733880f99d21d5c5f">docs: fix index link (158c97ee)</a>
 </div>
 </div>
 
