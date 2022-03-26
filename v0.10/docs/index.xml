@@ -847,7 +847,7 @@ will be used.&lt;/p&gt;
 &lt;td&gt;&lt;a href=&#34;#dynamic-scaling&#34;&gt;&lt;code&gt;backend-server-slots-increment&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;number of slots&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;32&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;1&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
