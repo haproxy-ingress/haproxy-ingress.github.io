@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.14/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2022-02-04T20:47:27-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2022-04-05T09:18:29-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2022-02-04T20:47:27-03:00" />
-<meta itemprop="wordCount" content="16314">
+<meta itemprop="dateModified" content="2022-04-05T09:18:29-03:00" />
+<meta itemprop="wordCount" content="17105">
 
 
 
@@ -452,6 +452,7 @@
 <li><a href="#headers">Headers</a></li>
 <li><a href="#health-check">Health check</a></li>
 <li><a href="#hsts">HSTS</a></li>
+<li><a href="#http-response">HTTP Response</a></li>
 <li><a href="#initial-weight">Initial weight</a></li>
 <li><a href="#limit">Limit</a></li>
 <li><a href="#load-server-state">Load server state</a></li>
@@ -1522,6 +1523,20 @@ TCP port number.</p>
 </tr>
 
 <tr>
+<td><a href="#http-response"><code>http-response-&lt;code&gt;</code></a></td>
+<td>response output</td>
+<td>Global</td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="#http-response"><code>http-response-prometheus-root</code></a></td>
+<td>response output</td>
+<td>Global</td>
+<td></td>
+</tr>
+
+<tr>
 <td><a href="#log-format"><code>https-log-format</code></a></td>
 <td>https(tcp) log format|<code>default</code></td>
 <td>Global</td>
@@ -1939,6 +1954,13 @@ TCP port number.</p>
 <td>[true|false]</td>
 <td>Backend</td>
 <td><code>false</code></td>
+</tr>
+
+<tr>
+<td><a href="#auth-tls"><code>ssl-fingerprint-sha2-bits</code></a></td>
+<td>Bits of the SHA-2 fingerprint</td>
+<td>Backend</td>
+<td></td>
 </tr>
 
 <tr>
@@ -3015,6 +3037,13 @@ Auth External needs <a href="#external"><code>external-has-lua</code></a> enable
 </tr>
 
 <tr>
+<td><code>ssl-fingerprint-sha2-bits</code></td>
+<td><code>Backend</code></td>
+<td></td>
+<td>v0.14</td>
+</tr>
+
+<tr>
 <td><code>ssl-headers-prefix</code></td>
 <td><code>Global</code></td>
 <td><code>X-SSL</code></td>
@@ -3032,6 +3061,13 @@ added to the request:</p>
 <li><code>X-SSL-Client-CN</code>: Common name of the certificate</li>
 </ul>
 
+<p>These headers can also be added depending on the configuration:</p>
+
+<ul>
+<li><code>X-SSL-Client-SHA2</code>: Only if <code>ssl-fingerprint-sha2-bits</code> is declared. Hex encoding of the SHA-2 fingerprint of the X509 certificate. Valid <code>ssl-fingerprint-sha2-bits</code> values are <code>224</code>, <code>256</code>, <code>384</code> or <code>512</code>. The default output uses uppercase hexadecimal digits, configure <code>ssl-fingerprint-lower</code> to <code>true</code> to use lowercase digits instead.</li>
+<li><code>X-SSL-Client-Cert</code>: Only if <code>auth-tls-cert-header</code> is <code>true</code>. Base64 encoding of the X509 certificate in DER format.</li>
+</ul>
+
 <p>The prefix of the header names can be configured with <code>ssl-headers-prefix</code> key.
 The default value is to <code>X-SSL</code>, which will create a <code>X-SSL-Client-DN</code> header with
 the DN of the certificate.</p>
@@ -3045,6 +3081,7 @@ the DN of the certificate.</p>
 <li><code>auth-tls-strict</code>: Defines if a wrong or incomplete configuration, eg missing secret with <code>ca.crt</code>, should forbid connection attempts. If <code>false</code>, a wrong or incomplete configuration will ignore the authentication config, allowing anonymous connection. If <code>true</code>, a strict configuration is used: all requests will be rejected with HTTP 495 or 496, or redirected to the error page if configured, until a proper <code>ca.crt</code> is provided. Strict configuration will only be used if <code>auth-tls-secret</code> has a secret name and <code>auth-tls-verify-client</code> is missing or is not configured as <code>off</code>. This options used to have <code>false</code> as the default value up to v0.13, changing its default to <code>true</code> since v0.14 to improve security.</li>
 <li><code>auth-tls-verify-client</code>: Optional configuration of Client Verification behavior. Supported values are <code>off</code>, <code>on</code>, <code>optional</code> and <code>optional_no_ca</code>. The default value is <code>on</code> if a valid secret is provided, <code>off</code> otherwise.</li>
 <li><code>ssl-fingerprint-lower</code>: Defines if the certificate fingerprint should be in lowercase hexadecimal digits. The default value is <code>false</code>, which uses uppercase digits.</li>
+<li><code>ssl-fingerprint-sha2-bits</code>: Defines the number of bits of the SHA-2 fingerprint of the client certificate. Valid values are <code>224</code>, <code>256</code>, <code>384</code> or <code>512</code>. The header <code>X-SSL-Client-SHA2</code> will only be added if this option is declared.</li>
 <li><code>ssl-headers-prefix</code>: Configures which prefix should be used on HTTP headers. Since <a href="https://tools.ietf.org/html/rfc6648">RFC 6648</a> <code>X-</code> prefix on unstandardized headers changed from a convention to deprecation. This configuration allows to select which pattern should be used on header names.</li>
 </ul>
 
@@ -4616,6 +4653,249 @@ This limitation doesn&rsquo;t exist on v0.8 or above.
 </ul>
 
 <hr />
+
+<h2 id="http-response">HTTP Response</h2>
+
+<table>
+<thead>
+<tr>
+<th>Configuration key</th>
+<th>Scope</th>
+<th>Default</th>
+<th>Since</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>http-response-&lt;code&gt;</code></td>
+<td><code>Global</code></td>
+<td></td>
+<td>v0.14</td>
+</tr>
+
+<tr>
+<td><code>http-response-prometheus-root</code></td>
+<td><code>Global</code></td>
+<td></td>
+<td>v0.14</td>
+</tr>
+</tbody>
+</table>
+
+<p>Overwrites the default response payload for all the HAProxy&rsquo;s generated HTTP responses.</p>
+
+<ul>
+<li><code>http-response-&lt;code&gt;</code>: represents all the payload of HAProxy or HAProxy Ingress generated HTTP responses. Change <code>&lt;code&gt;</code> to one of the supported HTTP status code, see Supported codes below.</li>
+<li><code>http-response-prometheus-root</code>: response used on requests sent to the root context of the prometheus exporter port.</li>
+</ul>
+
+<p><strong>Supported codes</strong></p>
+
+<p>The following list has all the HTTP status codes supported by the controller:</p>
+
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">Note</h4>
+All the overwrites refer to HAProxy or HAProxy Ingress generated responses, e.g. a 403 response overwrite will not change a 403 response generated by a backend server, but instead only 403 responses that HAProxy generates itself, such as when an allow list rule denies a request to reach a backend server.
+</div>
+
+
+<blockquote>
+<p>All descriptions with <code>[haproxy]</code> refers to internal HAProxy responses, described in the <a href="https://cbonte.github.io/haproxy-dconv/2.4/configuration.html#1.3.1">HAProxy documentation</a> or in the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status">MDN</a>. All the others are handled and issued by HAProxy Ingress configurations.</p>
+</blockquote>
+
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Reason</th>
+<th>Description</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td><code>200</code></td>
+<td>OK</td>
+<td><code>[haproxy]</code></td>
+</tr>
+
+<tr>
+<td><code>400</code></td>
+<td>Bad Request</td>
+<td><code>[haproxy]</code></td>
+</tr>
+
+<tr>
+<td><code>401</code></td>
+<td>Unauthorized</td>
+<td><code>[haproxy]</code></td>
+</tr>
+
+<tr>
+<td><code>403</code></td>
+<td>Forbidden</td>
+<td><code>[haproxy]</code></td>
+</tr>
+
+<tr>
+<td><code>404</code></td>
+<td>Not Found</td>
+<td>The requested host and path was not found, the <code>--default-backend-service</code> command-line is not used and there is no ingress configured as the default backend with a matching path.</td>
+</tr>
+
+<tr>
+<td><code>405</code></td>
+<td>Method Not Allowed</td>
+<td><code>[haproxy]</code></td>
+</tr>
+
+<tr>
+<td><code>407</code></td>
+<td>Proxy Authentication Required</td>
+<td><code>[haproxy]</code></td>
+</tr>
+
+<tr>
+<td><code>408</code></td>
+<td>Request Timeout</td>
+<td><code>[haproxy]</code></td>
+</tr>
+
+<tr>
+<td><code>410</code></td>
+<td>Gone</td>
+<td><code>[haproxy]</code></td>
+</tr>
+
+<tr>
+<td><code>413</code></td>
+<td>Payload Too Large</td>
+<td>A request is bigger than specified in the <code>proxy-body-size</code> configuration key.</td>
+</tr>
+
+<tr>
+<td><code>421</code></td>
+<td>Misdirected Request</td>
+<td>Incoming SNI was used to match a hostname and the Host header has a distinct value.</td>
+</tr>
+
+<tr>
+<td><code>425</code></td>
+<td>Too Early</td>
+<td><code>[haproxy]</code></td>
+</tr>
+
+<tr>
+<td><code>429</code></td>
+<td>Too Many Requests</td>
+<td><code>[haproxy]</code></td>
+</tr>
+
+<tr>
+<td><code>495</code></td>
+<td>SSL Certificate Error</td>
+<td>An invalid certificate was used on a mTLS connection.</td>
+</tr>
+
+<tr>
+<td><code>496</code></td>
+<td>SSL Certificate Required</td>
+<td>A certificate wasn&rsquo;t used on a mTLS connection but a certificate is mandatory.</td>
+</tr>
+
+<tr>
+<td><code>500</code></td>
+<td>Internal Server Error</td>
+<td><code>[haproxy]</code></td>
+</tr>
+
+<tr>
+<td><code>501</code></td>
+<td>Not Implemented</td>
+<td><code>[haproxy]</code></td>
+</tr>
+
+<tr>
+<td><code>502</code></td>
+<td>Bad Gateway</td>
+<td><code>[haproxy]</code></td>
+</tr>
+
+<tr>
+<td><code>503</code></td>
+<td>Service Unavailable</td>
+<td><code>[haproxy]</code></td>
+</tr>
+
+<tr>
+<td><code>504</code></td>
+<td>Gateway Timeout</td>
+<td><code>[haproxy]</code></td>
+</tr>
+</tbody>
+</table>
+
+<p><strong>Syntax</strong></p>
+
+<p>A multi-line configuration is used to customize the response payload on all the configuration keys:</p>
+
+<ul>
+<li>The very first line: Optional, the HTTP status code of the response, optionally followed by the status reason used on HTTP/1.1 responses. The default value is used if missing. Valid inputs are e.g. <code>404</code> or <code>404 Not Found</code>.</li>
+<li>Lines before the first empty line: Optional HTTP headers, one per line, whose name and value are separated by a colon <code>:</code>. It is recommended to always add <code>content-type</code> header. <code>content-length</code> is always calculated and should not be used.</li>
+<li>Lines after the first empty line: Optional HTTP body. It will be copied verbatim to a Lua script. Any char is allowed here except the <code>]==]</code> string which is reserved by the controller.</li>
+</ul>
+
+<p>Some general hints about response overwriting:</p>
+
+<ul>
+<li>Do not create huge responses, the whole overwrite must fit into the internal buffer, which is 16k by default, leaving some room to configured downstream rules to operate. See <a href="https://cbonte.github.io/haproxy-dconv/2.4/configuration.html#4-errorfile">HAProxy&rsquo;s errorfile doc</a>.</li>
+<li>Take care with external links, e.g. the overwrite of a 503 error page might lead to another 503 error.</li>
+<li>Only add the status code line if changing the code, otherwise let the controller configure with default values.</li>
+<li>A missing status code and status reason will lead to default values, but missing headers and missing body will lead to, respectively, only the <code>content-length</code> header and an empty body.</li>
+<li>Always add at least the HTTP header <code>content-type</code> with the correct value.</li>
+<li>The HTTP header <code>content-length</code> will be overwritten if used.</li>
+</ul>
+
+<p><strong>Examples</strong></p>
+
+<p>Change the payload type and content, using the default status code and status reason:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f8f8f8;text-decoration:underline">  </span>data<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>http-response<span style="color:#0000cf;font-weight:bold">-404</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#8f5902;font-style:italic">|
+</span><span style="color:#8f5902;font-style:italic">      content-type: text/plain</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>connection<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>close<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#0000cf;font-weight:bold">404</span><span style="color:#f8f8f8;text-decoration:underline"> </span>not<span style="color:#f8f8f8;text-decoration:underline"> </span>found</code></pre></div>
+<p>Overwrite the Status Code - always add the status reason (see <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status">MDN</a>) if changing the status code:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f8f8f8;text-decoration:underline">  </span>data<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>http-response<span style="color:#0000cf;font-weight:bold">-404</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#8f5902;font-style:italic">|
+</span><span style="color:#8f5902;font-style:italic">      302 Found</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>location<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>https<span style="color:#000;font-weight:bold">:</span>//this.other.local</code></pre></div>
+<p>Response without header and with an empty body:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f8f8f8;text-decoration:underline">  </span>data<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>http-response<span style="color:#0000cf;font-weight:bold">-404</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#8f5902;font-style:italic">|
+</span><span style="color:#8f5902;font-style:italic">      404 Not Found</span></code></pre></div>
+<p>Response with the headers only:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f8f8f8;text-decoration:underline">  </span>data<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>http-response<span style="color:#0000cf;font-weight:bold">-404</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#8f5902;font-style:italic">|
+</span><span style="color:#8f5902;font-style:italic">      connection: close</span></code></pre></div>
+<p>Response with only the body - discouraged, at least the content-type should be added:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f8f8f8;text-decoration:underline">  </span>data<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>http-response<span style="color:#0000cf;font-weight:bold">-404</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#8f5902;font-style:italic">|
+</span><span style="color:#8f5902;font-style:italic">
+</span><span style="color:#8f5902;font-style:italic">      not found</span></code></pre></div>
+<p>See also:</p>
+
+<ul>
+<li><a href="/v0.14/docs/configuration/command-line/#default-backend-service"><code>--default-backend-service</code></a> command-line option</li>
+<li><a href="#proxy-body-size"><code>proxy-body-size</code></a> configuration key</li>
+<li><a href="#auth-tls">mTLS</a> related configuration keys</li>
+<li><a href="https://cbonte.github.io/haproxy-dconv/2.4/configuration.html#4-errorfile">https://cbonte.github.io/haproxy-dconv/2.4/configuration.html#4-errorfile</a></li>
+<li>HAProxy&rsquo;s HTTP response at <a href="https://cbonte.github.io/haproxy-dconv/2.4/configuration.html#1.3.1">HAProxy documentation</a></li>
+<li>HTTP response status codes at <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status">MDN</a></li>
+</ul>
 
 <h2 id="initial-weight">Initial weight</h2>
 
@@ -6771,7 +7051,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified February 4, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/2a2e41e8f1625d5b6a59640fe4b4f6df12cf0636">docs: update haproxy doc link to 2.4 (#886) (2a2e41e8)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified April 5, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/21aef8308778c206cd6c0b5747d43a2afb4d14f7">add http-response configuration keys (21aef830)</a>
 </div>
 </div>
 

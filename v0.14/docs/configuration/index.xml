@@ -1128,6 +1128,20 @@ TCP port number.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#http-response&#34;&gt;&lt;code&gt;http-response-&amp;lt;code&amp;gt;&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;response output&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#http-response&#34;&gt;&lt;code&gt;http-response-prometheus-root&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;response output&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#log-format&#34;&gt;&lt;code&gt;https-log-format&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;https(tcp) log format|&lt;code&gt;default&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
@@ -1545,6 +1559,13 @@ TCP port number.&lt;/p&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
 &lt;td&gt;Backend&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#auth-tls&#34;&gt;&lt;code&gt;ssl-fingerprint-sha2-bits&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;Bits of the SHA-2 fingerprint&lt;/td&gt;
+&lt;td&gt;Backend&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -2621,6 +2642,13 @@ Auth External needs &lt;a href=&#34;#external&#34;&gt;&lt;code&gt;external-has-l
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;code&gt;ssl-fingerprint-sha2-bits&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Backend&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.14&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;code&gt;ssl-headers-prefix&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;X-SSL&lt;/code&gt;&lt;/td&gt;
@@ -2638,6 +2666,13 @@ added to the request:&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;X-SSL-Client-CN&lt;/code&gt;: Common name of the certificate&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;p&gt;These headers can also be added depending on the configuration:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;X-SSL-Client-SHA2&lt;/code&gt;: Only if &lt;code&gt;ssl-fingerprint-sha2-bits&lt;/code&gt; is declared. Hex encoding of the SHA-2 fingerprint of the X509 certificate. Valid &lt;code&gt;ssl-fingerprint-sha2-bits&lt;/code&gt; values are &lt;code&gt;224&lt;/code&gt;, &lt;code&gt;256&lt;/code&gt;, &lt;code&gt;384&lt;/code&gt; or &lt;code&gt;512&lt;/code&gt;. The default output uses uppercase hexadecimal digits, configure &lt;code&gt;ssl-fingerprint-lower&lt;/code&gt; to &lt;code&gt;true&lt;/code&gt; to use lowercase digits instead.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;X-SSL-Client-Cert&lt;/code&gt;: Only if &lt;code&gt;auth-tls-cert-header&lt;/code&gt; is &lt;code&gt;true&lt;/code&gt;. Base64 encoding of the X509 certificate in DER format.&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;p&gt;The prefix of the header names can be configured with &lt;code&gt;ssl-headers-prefix&lt;/code&gt; key.
 The default value is to &lt;code&gt;X-SSL&lt;/code&gt;, which will create a &lt;code&gt;X-SSL-Client-DN&lt;/code&gt; header with
 the DN of the certificate.&lt;/p&gt;
@@ -2651,6 +2686,7 @@ the DN of the certificate.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;auth-tls-strict&lt;/code&gt;: Defines if a wrong or incomplete configuration, eg missing secret with &lt;code&gt;ca.crt&lt;/code&gt;, should forbid connection attempts. If &lt;code&gt;false&lt;/code&gt;, a wrong or incomplete configuration will ignore the authentication config, allowing anonymous connection. If &lt;code&gt;true&lt;/code&gt;, a strict configuration is used: all requests will be rejected with HTTP 495 or 496, or redirected to the error page if configured, until a proper &lt;code&gt;ca.crt&lt;/code&gt; is provided. Strict configuration will only be used if &lt;code&gt;auth-tls-secret&lt;/code&gt; has a secret name and &lt;code&gt;auth-tls-verify-client&lt;/code&gt; is missing or is not configured as &lt;code&gt;off&lt;/code&gt;. This options used to have &lt;code&gt;false&lt;/code&gt; as the default value up to v0.13, changing its default to &lt;code&gt;true&lt;/code&gt; since v0.14 to improve security.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;auth-tls-verify-client&lt;/code&gt;: Optional configuration of Client Verification behavior. Supported values are &lt;code&gt;off&lt;/code&gt;, &lt;code&gt;on&lt;/code&gt;, &lt;code&gt;optional&lt;/code&gt; and &lt;code&gt;optional_no_ca&lt;/code&gt;. The default value is &lt;code&gt;on&lt;/code&gt; if a valid secret is provided, &lt;code&gt;off&lt;/code&gt; otherwise.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;ssl-fingerprint-lower&lt;/code&gt;: Defines if the certificate fingerprint should be in lowercase hexadecimal digits. The default value is &lt;code&gt;false&lt;/code&gt;, which uses uppercase digits.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ssl-fingerprint-sha2-bits&lt;/code&gt;: Defines the number of bits of the SHA-2 fingerprint of the client certificate. Valid values are &lt;code&gt;224&lt;/code&gt;, &lt;code&gt;256&lt;/code&gt;, &lt;code&gt;384&lt;/code&gt; or &lt;code&gt;512&lt;/code&gt;. The header &lt;code&gt;X-SSL-Client-SHA2&lt;/code&gt; will only be added if this option is declared.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;ssl-headers-prefix&lt;/code&gt;: Configures which prefix should be used on HTTP headers. Since &lt;a href=&#34;https://tools.ietf.org/html/rfc6648&#34;&gt;RFC 6648&lt;/a&gt; &lt;code&gt;X-&lt;/code&gt; prefix on unstandardized headers changed from a convention to deprecation. This configuration allows to select which pattern should be used on header names.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -4222,6 +4258,249 @@ This limitation doesn&amp;rsquo;t exist on v0.8 or above.
 &lt;/ul&gt;
 
 &lt;hr /&gt;
+
+&lt;h2 id=&#34;http-response&#34;&gt;HTTP Response&lt;/h2&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Configuration key&lt;/th&gt;
+&lt;th&gt;Scope&lt;/th&gt;
+&lt;th&gt;Default&lt;/th&gt;
+&lt;th&gt;Since&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;http-response-&amp;lt;code&amp;gt;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.14&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;http-response-prometheus-root&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.14&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Overwrites the default response payload for all the HAProxy&amp;rsquo;s generated HTTP responses.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;http-response-&amp;lt;code&amp;gt;&lt;/code&gt;: represents all the payload of HAProxy or HAProxy Ingress generated HTTP responses. Change &lt;code&gt;&amp;lt;code&amp;gt;&lt;/code&gt; to one of the supported HTTP status code, see Supported codes below.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;http-response-prometheus-root&lt;/code&gt;: response used on requests sent to the root context of the prometheus exporter port.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Supported codes&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The following list has all the HTTP status codes supported by the controller:&lt;/p&gt;
+
+
+
+&lt;div class=&#34;alert alert-primary&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Note&lt;/h4&gt;
+All the overwrites refer to HAProxy or HAProxy Ingress generated responses, e.g. a 403 response overwrite will not change a 403 response generated by a backend server, but instead only 403 responses that HAProxy generates itself, such as when an allow list rule denies a request to reach a backend server.
+&lt;/div&gt;
+
+
+&lt;blockquote&gt;
+&lt;p&gt;All descriptions with &lt;code&gt;[haproxy]&lt;/code&gt; refers to internal HAProxy responses, described in the &lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.4/configuration.html#1.3.1&#34;&gt;HAProxy documentation&lt;/a&gt; or in the &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTTP/Status&#34;&gt;MDN&lt;/a&gt;. All the others are handled and issued by HAProxy Ingress configurations.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Code&lt;/th&gt;
+&lt;th&gt;Reason&lt;/th&gt;
+&lt;th&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;200&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;OK&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[haproxy]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;400&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Bad Request&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[haproxy]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;401&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Unauthorized&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[haproxy]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;403&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Forbidden&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[haproxy]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;404&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Not Found&lt;/td&gt;
+&lt;td&gt;The requested host and path was not found, the &lt;code&gt;--default-backend-service&lt;/code&gt; command-line is not used and there is no ingress configured as the default backend with a matching path.&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;405&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Method Not Allowed&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[haproxy]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;407&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Proxy Authentication Required&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[haproxy]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;408&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Request Timeout&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[haproxy]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;410&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Gone&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[haproxy]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;413&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Payload Too Large&lt;/td&gt;
+&lt;td&gt;A request is bigger than specified in the &lt;code&gt;proxy-body-size&lt;/code&gt; configuration key.&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;421&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Misdirected Request&lt;/td&gt;
+&lt;td&gt;Incoming SNI was used to match a hostname and the Host header has a distinct value.&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;425&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Too Early&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[haproxy]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;429&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Too Many Requests&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[haproxy]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;495&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;SSL Certificate Error&lt;/td&gt;
+&lt;td&gt;An invalid certificate was used on a mTLS connection.&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;496&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;SSL Certificate Required&lt;/td&gt;
+&lt;td&gt;A certificate wasn&amp;rsquo;t used on a mTLS connection but a certificate is mandatory.&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;500&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Internal Server Error&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[haproxy]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;501&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Not Implemented&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[haproxy]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;502&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Bad Gateway&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[haproxy]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;503&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Service Unavailable&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[haproxy]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;504&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Gateway Timeout&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;[haproxy]&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;strong&gt;Syntax&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;A multi-line configuration is used to customize the response payload on all the configuration keys:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;The very first line: Optional, the HTTP status code of the response, optionally followed by the status reason used on HTTP/1.1 responses. The default value is used if missing. Valid inputs are e.g. &lt;code&gt;404&lt;/code&gt; or &lt;code&gt;404 Not Found&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Lines before the first empty line: Optional HTTP headers, one per line, whose name and value are separated by a colon &lt;code&gt;:&lt;/code&gt;. It is recommended to always add &lt;code&gt;content-type&lt;/code&gt; header. &lt;code&gt;content-length&lt;/code&gt; is always calculated and should not be used.&lt;/li&gt;
+&lt;li&gt;Lines after the first empty line: Optional HTTP body. It will be copied verbatim to a Lua script. Any char is allowed here except the &lt;code&gt;]==]&lt;/code&gt; string which is reserved by the controller.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Some general hints about response overwriting:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Do not create huge responses, the whole overwrite must fit into the internal buffer, which is 16k by default, leaving some room to configured downstream rules to operate. See &lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.4/configuration.html#4-errorfile&#34;&gt;HAProxy&amp;rsquo;s errorfile doc&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Take care with external links, e.g. the overwrite of a 503 error page might lead to another 503 error.&lt;/li&gt;
+&lt;li&gt;Only add the status code line if changing the code, otherwise let the controller configure with default values.&lt;/li&gt;
+&lt;li&gt;A missing status code and status reason will lead to default values, but missing headers and missing body will lead to, respectively, only the &lt;code&gt;content-length&lt;/code&gt; header and an empty body.&lt;/li&gt;
+&lt;li&gt;Always add at least the HTTP header &lt;code&gt;content-type&lt;/code&gt; with the correct value.&lt;/li&gt;
+&lt;li&gt;The HTTP header &lt;code&gt;content-length&lt;/code&gt; will be overwritten if used.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Examples&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Change the payload type and content, using the default status code and status reason:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;data&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;http-response&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;-404&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;|
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;      content-type: text/plain&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;connection&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;close&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;404&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;not&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;found&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Overwrite the Status Code - always add the status reason (see &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTTP/Status&#34;&gt;MDN&lt;/a&gt;) if changing the status code:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;data&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;http-response&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;-404&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;|
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;      302 Found&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;location&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;https&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;//this.other.local&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Response without header and with an empty body:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;data&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;http-response&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;-404&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;|
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;      404 Not Found&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Response with the headers only:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;data&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;http-response&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;-404&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;|
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;      connection: close&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Response with only the body - discouraged, at least the content-type should be added:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;data&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;http-response&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;-404&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;|
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;      not found&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;See also:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;/v0.14/v0.14/docs/configuration/command-line/#default-backend-service&#34;&gt;&lt;code&gt;--default-backend-service&lt;/code&gt;&lt;/a&gt; command-line option&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#proxy-body-size&#34;&gt;&lt;code&gt;proxy-body-size&lt;/code&gt;&lt;/a&gt; configuration key&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#auth-tls&#34;&gt;mTLS&lt;/a&gt; related configuration keys&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.4/configuration.html#4-errorfile&#34;&gt;https://cbonte.github.io/haproxy-dconv/2.4/configuration.html#4-errorfile&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;HAProxy&amp;rsquo;s HTTP response at &lt;a href=&#34;https://cbonte.github.io/haproxy-dconv/2.4/configuration.html#1.3.1&#34;&gt;HAProxy documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;HTTP response status codes at &lt;a href=&#34;https://developer.mozilla.org/en-US/docs/Web/HTTP/Status&#34;&gt;MDN&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h2 id=&#34;initial-weight&#34;&gt;Initial weight&lt;/h2&gt;
 
