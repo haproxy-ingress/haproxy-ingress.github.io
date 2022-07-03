@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.14/docs/examples/metrics/" />
-<meta property="article:modified_time" content="2021-01-18T08:44:52-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2022-06-20T22:37:59-04:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Metrics">
 <meta itemprop="description" content="Demonstrate how to collect and expose ingress controller and haproxy metrics.
 ">
 
 
-<meta itemprop="dateModified" content="2021-01-18T08:44:52-03:00" />
-<meta itemprop="wordCount" content="1015">
+<meta itemprop="dateModified" content="2022-06-20T22:37:59-04:00" />
+<meta itemprop="wordCount" content="824">
 
 
 
@@ -404,11 +404,10 @@
 <li>
 <ul>
 <li><a href="#prerequisites">Prerequisites</a></li>
-<li><a href="#configure-the-controller">Configure the controller</a></li>
-<li><a href="#deploy-prometheus">Deploy Prometheus</a></li>
-<li><a href="#deploy-grafana">Deploy Grafana</a></li>
-<li><a href="#configure-dashboard">Configure dashboard</a></li>
+<li><a href="#configure-prometheus-operator">Configure Prometheus Operator</a></li>
+<li><a href="#configure-haproxy-ingress">Configure HAProxy Ingress</a></li>
 <li><a href="#compatibility">Compatibility</a></li>
+<li><a href="#configure-the-dashboard">Configure the dashboard</a></li>
 <li><a href="#test">Test</a></li>
 </ul></li>
 </ul>
@@ -458,173 +457,121 @@
 	<div class="lead">Demonstrate how to collect and expose ingress controller and haproxy metrics.</div>
 	
 
-
-
-<div class="pageinfo pageinfo-primary">
-<p>This is a <code>v0.10</code> example and need HAProxy Ingress <code>v0.10-snapshot.5</code> or above</p>
-
-</div>
-
-
-<p>This example demonstrates how to configure <a href="https://prometheus.io">Prometheus</a> to collect ingress controller and haproxy metrics, and also to configure a <a href="https://grafana.com">Grafana</a> dashboard to expose these metrics.</p>
+<p>This example demonstrates how to configure <a href="https://prometheus.io">Prometheus</a> and <a href="https://grafana.com">Grafana</a> to collect and expose HAProxy and HAProxy Ingress metrics using <a href="https://prometheus-operator.dev">Prometheus Operator</a>.</p>
 
 <h2 id="prerequisites">Prerequisites</h2>
 
-<p>This document has the following prerequisite:</p>
+<p>This document requires only a Kubernetes cluster. HAProxy Ingress doesn&rsquo;t need to be installed, and if so, the installation process should use the <a href="/v0.14/docs/getting-started/#installation">Helm chart</a>.</p>
 
-<ul>
-<li>A Kubernetes cluster with a running HAProxy Ingress controller v0.10 or above. See the <a href="/v0.14/docs/getting-started/">getting started</a> guide.</li>
-</ul>
+<h2 id="configure-prometheus-operator">Configure Prometheus Operator</h2>
 
-<h2 id="configure-the-controller">Configure the controller</h2>
+<p>This section can be skipped if the Kubernetes cluster has already a running Prometheus Operator.</p>
 
-<p>HAProxy Ingress by default does not configure the haproxy&rsquo;s prometheus exporter. The patch below configures the haproxy&rsquo;s internal prometheus exporter in the port <code>9105</code>:</p>
+<p>HAProxy Ingress installation configures Prometheus using a ServiceMonitor custom resource. This resource is used by <a href="https://prometheus-operator.dev">Prometheus Operator</a> to configure Prometheus instances. The following steps deploy Prometheus Operator via <a href="https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack"><code>kube-prometheus-stack</code></a> Helm chart.</p>
 
-<pre><code>kubectl --namespace ingress-controller patch configmap haproxy-ingress -p '{&quot;data&quot;:{&quot;prometheus-port&quot;:&quot;9105&quot;}}'
+<p>Create a file named <code>prometheus-operator-values.yaml</code> - change both hostnames with a name that resolves to the Kubernetes cluster:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">grafana<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>enabled<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>ingress<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>enabled<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>annotations<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>kubernetes.io/ingress.class<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>haproxy<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>hosts<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>grafana<span style="color:#0000cf;font-weight:bold">.192.168.0.11</span>.nip.io<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>tls<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>hosts<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>grafana<span style="color:#0000cf;font-weight:bold">.192.168.0.11</span>.nip.io</code></pre></div>
+<p>Add <code>kube-prometheus-stack</code> helm repo:</p>
+
+<pre><code>helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 </code></pre>
 
-<p>The following patch adds ports <code>9105</code> and <code>10254</code> to the HAProxy Ingress container. The port declaration is used by the Prometheus&rsquo; service discovery:</p>
+<p>Install the chart:</p>
 
-<p>Note: this patch will restart the controller!</p>
-
-<pre><code>kubectl --namespace ingress-controller patch deployment haproxy-ingress -p '{&quot;spec&quot;:{&quot;template&quot;:{&quot;spec&quot;:{&quot;containers&quot;:[{&quot;name&quot;:&quot;haproxy-ingress&quot;,&quot;ports&quot;:[{&quot;name&quot;:&quot;exporter&quot;,&quot;containerPort&quot;:9105},{&quot;name&quot;:&quot;ingress-stats&quot;,&quot;containerPort&quot;:10254}]}]}}}}'
-</code></pre>
-
-<h2 id="deploy-prometheus">Deploy Prometheus</h2>
-
-<p>This will create a Prometheus deployment with no resource limits, a configuration file which will scrape haproxy and also HAProxy Ingress metrics every <code>10s</code>, and also a role and rolebinding which allows Prometheus to discover haproxy and controller endpoints using k8s:</p>
-
-<pre><code>kubectl create -f https://haproxy-ingress.github.io/docs/examples/metrics/prometheus.yaml
+<pre><code>helm install prometheus prometheus-community/kube-prometheus-stack\
+  --create-namespace --namespace monitoring\
+  -f prometheus-operator-values.yaml
 </code></pre>
 
 
 
 <div class="alert alert-primary" role="alert">
 <h4 class="alert-heading">Note</h4>
-This deployment has no persistent volume, so all the collected metrics will be lost if the pod is recreated.
+Bitnami has also a Prometheus Operator <a href="https://github.com/bitnami/charts/tree/master/bitnami/kube-prometheus">helm chart</a> and it&rsquo;s also a good option. Note however that the values file has a different syntax.
 </div>
 
 
+<h2 id="configure-haproxy-ingress">Configure HAProxy Ingress</h2>
 
+<p>The steps below configures HAProxy Ingress&rsquo; Helm chart to add a new ServiceMonitor custom resource. This resource will be responsible for HAProxy and HAProxy Ingress metrics scrape.</p>
 
-<div class="alert alert-warning" role="alert">
-<h4 class="alert-heading">Warning</h4>
-<p>If HAProxy Ingress wasn&rsquo;t deployed with Helm, change the following line in the <code>configmap/prometheus-cfg</code> resource, jobs <code>haproxy-ingress</code> and <code>haproxy-exporter</code>:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-diff" data-lang="diff">       relabel_configs:
-<span style="color:#a40000">-      - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_instance]
-</span><span style="color:#a40000"></span><span style="color:#00a000">+      - source_labels: [__meta_kubernetes_pod_label_run]
-</span><span style="color:#00a000"></span>         regex: haproxy-ingress
-</code></pre></div>
-<p>This will ensure that Prometheus finds the controller pods.</p>
-
-</div>
-
-
-<p>Check if Prometheus is up and running:</p>
-
-<pre><code>kubectl --namespace ingress-controller get pod -lrun=prometheus -w
-</code></pre>
-
-<p>Check also if Prometheus found the haproxy and the controller endpoints:</p>
-
-<pre><code>kubectl --namespace ingress-controller port-forward svc/prometheus 9090:9090
-</code></pre>
-
-<p>Open <a href="http://127.0.0.1:9090/targets">localhost:9090/targets</a> in your browser, all haproxy and controller instances should be listed, up, and green.</p>
-
-<h2 id="deploy-grafana">Deploy Grafana</h2>
-
-<p>The following instruction will create a Grafana deployment with no resource limit, and also its service:</p>
-
-<pre><code>kubectl create -f https://haproxy-ingress.github.io/docs/examples/metrics/grafana.yaml
-</code></pre>
-
-<p>Check if Grafana is up and running:</p>
-
-<pre><code>kubectl --namespace ingress-controller get pod -lrun=grafana -w
-</code></pre>
-
-<p>Create the ingress which will expose Grafana. Change <code>HOST</code> below to a domain of the cluster, or just change the inner IP number to the IP of the HAProxy Ingress node:</p>
-
-<pre><code>HOST=grafana.192.168.1.1.nip.io
-kubectl create -f - &lt;&lt;EOF
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: grafana
-  namespace: ingress-controller
-spec:
-  rules:
-  - host: $HOST
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: grafana
-            port:
-              number: 3000
-  tls:
-  - hosts:
-    - $HOST
-EOF
-</code></pre>
-
-<h2 id="configure-dashboard">Configure dashboard</h2>
-
-<p>Now its time to see what Prometheus is collecting. Grafana can be acessed in the <code>HOST</code> used to configure the ingress object.</p>
+<p>Merge the content below to the actual <code>haproxy-ingress-values.yaml</code> file:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">controller<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>stats<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>enabled<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>metrics<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>enabled<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>serviceMonitor<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>enabled<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>labels<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>release<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>prometheus<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>metrics<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>relabelings<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>replacement<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>cl1<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span>targetLabel<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>cluster<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>sourceLabels<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">[</span>__meta_kubernetes_pod_node_name<span style="color:#000;font-weight:bold">]</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span>targetLabel<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>hostname<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>ctrlMetrics<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>relabelings<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>replacement<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>cl1<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span>targetLabel<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>cluster<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>sourceLabels<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">[</span>__meta_kubernetes_pod_node_name<span style="color:#000;font-weight:bold">]</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span>targetLabel<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>hostname</code></pre></div>
+<p>There are two important configurations in the snippet above:</p>
 
 <ul>
-<li>Log in to Grafana, user is <code>admin</code> and the first password is <code>admin</code></li>
-<li>Create a Prometheus data source, the endpoint is <code>http://prometheus:9090</code></li>
-<li>Click the big <code>+</code> plus sign in the left side, and Import <a href="https://grafana.com/grafana/dashboards/12056">this</a> dashboard</li>
+<li>Added a label <code>release: prometheus</code> in the ServiceMonitor. HAProxy Ingress metrics will share the same Prometheus instance installed by Prometheus Operator. This can be changed to another dedicated instance, and must be checked if using another customized Prometheus Operator deployment.</li>
+<li>Added relabels to HAProxy and HAProxy Ingress metrics. The HAProxy Ingress dashboard uses <code>hostname</code> label as a way to distinguish two controller instances, and also <code>cluster</code> label to distinguish controllers running on distinct clusters. The source of the name can be adjusted but the label name should be the same.</li>
 </ul>
 
+<p>Now upgrade the chart - change <code>upgrade</code> to <code>install</code> if HAProxy Ingress isn&rsquo;t installed yet:</p>
 
-
-<div class="alert alert-primary" role="alert">
-<h4 class="alert-heading">Note</h4>
-This deployment has no persistent volume, so all customizations will be lost if the pod is recreated.
-</div>
-
-
-<p>If everything worked as expected, you should see a dashboard like this:</p>
-
-<p><img src="/docs/examples/metrics/dashboard-1.png" alt="" /></p>
+<pre><code>helm upgrade haproxy-ingress haproxy-ingress/haproxy-ingress\
+  --create-namespace --namespace ingress-controller\
+  -f haproxy-ingress-values.yaml
+</code></pre>
 
 <h2 id="compatibility">Compatibility</h2>
 
-<p>Check if you have any of these scenarios and adjust Prometheus or Grafana accordingly.</p>
+<p>This dashboard works with HAProxy&rsquo;s internal Prometheus exporter. Follow these steps to adjust the scrape config and the dashboard if using <a href="https://github.com/prometheus/haproxy_exporter">Prometheus&rsquo; HAProxy Exporter</a>:</p>
 
-<p><strong>Grafana &lt; 6.5</strong></p>
+<p>Change the metric name of &ldquo;Backend status / Top 5 max/avg connection time&rdquo; to <code>haproxy_backend_http_connect_time_average_seconds</code></p>
 
-<p>Use Grafana 6.5 or higher. Although an older Grafana won&rsquo;t refuse to install this dashboard, some widgets will not render as expected on older versions.</p>
+<p>Add this relabel configuration in the <code>haproxy-ingress-values.yaml</code> file</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">controller<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>...<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>serviceMonitor<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>...<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>metrics<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>...<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>metricRelabelings<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>sourceLabels<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">[</span>frontend<span style="color:#000;font-weight:bold">]</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span>targetLabel<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>proxy<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>sourceLabels<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">[</span>backend<span style="color:#000;font-weight:bold">]</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span>targetLabel<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>proxy</code></pre></div>
+<h2 id="configure-the-dashboard">Configure the dashboard</h2>
 
-<p><strong>The <code>hostname</code> label</strong></p>
-
-<p>All the metrics of this dashboard are grouped by the <code>hostname</code> label. If you already have Prometheus and HAProxy Exporter, ensure that the <code>hostname</code> label uniquely identifies all HAProxy Ingress instances, just like the proposed Prometheus configuration does.</p>
-
-<p><strong>The <code>_front__tls</code> proxy</strong></p>
-
-<p>This dashboard is designed to work without the <code>_front__tls</code> proxy, such proxy is created whenever ssl-passthrough is used or timeout client is configured in the ingress object. Just to be sure, check if <code>grep _front__tls /etc/haproxy/haproxy.cfg</code> find a proxy declaration. If the <code>_front__tls</code> proxy exists, edit the dashboard and change the variable <code>$public_frontend</code> to the following new value: <code>(_tcp_.*|_front_http|_front__tls)</code></p>
-
-<p><strong>Using the Prometheus&rsquo; HAProxy Exporter</strong></p>
-
-<p>This dashboard works with haproxy&rsquo;s internal Prometheus exporter. Follow these steps to adjust the scrape config and the dashboard if using <a href="https://github.com/prometheus/haproxy_exporter">Prometheus&rsquo; HAProxy Exporter</a>:</p>
+<p>Import <a href="https://grafana.com/grafana/dashboards/12056">this</a> Grafana dashboard. If Grafana was deployed using the steps provided in this walkthrough:</p>
 
 <ul>
-<li>Change the metric name of &ldquo;Backend status / Top 5 max/avg connection time&rdquo; to <code>haproxy_backend_http_connect_time_average_seconds</code></li>
-
-<li><p>Add this <code>metric_relabel_config</code> in the Prometheus configuration:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f8f8f8;text-decoration:underline">  </span>metric_relabel_configs<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">  </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>source_labels<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">[</span>frontend<span style="color:#000;font-weight:bold">]</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">    </span>regex<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>(.+)<span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">    </span>target_label<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>proxy<span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">  </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>source_labels<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">[</span>backend<span style="color:#000;font-weight:bold">]</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">    </span>regex<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>(.+)<span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">    </span>target_label<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>proxy</code></pre></div></li>
+<li>Open Grafana page - the URL is the same provided in the <code>prometheus-operator-values.yaml</code> file and should resolve to the ingress deployment</li>
+<li>Log in to Grafana, user is <code>admin</code> and the first password is <code>prom-operator</code></li>
+<li>Click the big plus <code>+</code> sign in the left side, Import, type <code>12056</code> as the Grafana.com ID, Load, select a Prometheus datasource, Import</li>
 </ul>
+
+<p>If everything worked as expected, the dashboard should look like this:</p>
+
+<p><img src="/docs/examples/metrics/dashboard-1.png" alt="" /></p>
 
 <h2 id="test">Test</h2>
 
@@ -632,31 +579,36 @@ This deployment has no persistent volume, so all customizations will be lost if 
 
 <p>Deploy a demo application and a custom (self-signed) certificate:</p>
 
-<pre><code>openssl req -x509 -subj &quot;/CN=whoami.localdomain&quot; -nodes -days 30 -newkey rsa:2048 -keyout /tmp/w.key -out /tmp/w.crt
-kubectl --namespace default create secret tls whoami --cert /tmp/w.crt --key /tmp/w.key
-rm -fv /tmp/w.crt /tmp/w.key
-kubectl --namespace default create deploy whoami --image jcmoraisjr/whoami
-kubectl --namespace default scale deploy whoami --replicas=4
-kubectl --namespace default expose deploy whoami --port 8000
-kubectl create -f https://haproxy-ingress.github.io/docs/examples/metrics/whoami-ingress.yaml
+<pre><code>openssl req -x509 -subj &quot;/CN=dory.localdomain&quot; -nodes -days 30 -newkey rsa:2048 -keyout /tmp/h.key -out /tmp/h.crt
+kubectl --namespace default create secret tls dory --cert /tmp/h.crt --key /tmp/h.key
+rm -fv /tmp/h.crt /tmp/h.key
+kubectl --namespace default create deploy dory --image jcmoraisjr/dory
+kubectl --namespace default scale deploy dory --replicas=4
+kubectl --namespace default expose deploy dory --port 8000
+kubectl --namespace default create ingress dory\
+  --annotation kubernetes.io/ingress.class=haproxy\
+  --annotation haproxy-ingress.github.io/ssl-redirect=false\
+  --rule=&quot;dory.localdomain/*=dory:8000,tls=dory&quot;
 </code></pre>
 
 <p>Check if the app is up and running:</p>
 
-<pre><code>kubectl --namespace default get pod -lapp=whoami -w
+<pre><code>kubectl --namespace default get pod -lapp=dory -w
 </code></pre>
 
 <p>Download <a href="https://github.com/tsenart/vegeta/releases">vegeta</a> and place it in the path.</p>
 
 <p>Make a test and check if everything is working as expected. Change IP below to the IP of a HAProxy Ingress node:</p>
 
-<pre><code>IP=192.168.1.1
-echo &quot;GET http://${IP}&quot; |\
-  vegeta attack -duration=1s -rate=1 -header &quot;Host: whoami.localdomain&quot; -keepalive=true |\
+<pre><code>IP=192.168.0.11
+## Using Fish?
+# set IP 192.168.0.11
+echo &quot;GET http://$IP&quot; |\
+  vegeta attack -duration=1s -rate=1 -header &quot;Host: dory.localdomain&quot; -keepalive=true |\
   vegeta report
 </code></pre>
 
-<p>You should see something like this. The most important part is Success ratio=100% and an Error Set empty:</p>
+<p>The output should look like this. The most important part is Success ratio=100% and an Error Set empty:</p>
 
 <pre><code>...
 Success       [ratio]                    100.00%
@@ -664,35 +616,37 @@ Status Codes  [code:count]               200:1
 Error Set:
 </code></pre>
 
-<p>Now the real test. Adjust the duration and rate (number of requests per second) if needed. A dual core VM dedicated to HAProxy Ingress should accept a few thousands requests per second. Lets configure <code>200</code> which should move some lines in the dashoard:</p>
+<p>Now the real test. Adjust the duration and rate (number of requests per second) if needed. A dual core VM dedicated to HAProxy Ingress should accept a few thousands requests per second. Lets configure <code>200</code> which should move some lines in the dashboard:</p>
 
-<pre><code>IP=192.168.1.1
-echo &quot;GET http://${IP}&quot; |\
-  vegeta attack -duration=5m -rate=200 -header &quot;Host: whoami.localdomain&quot; -keepalive=true |\
+<pre><code>IP=192.168.0.11
+echo &quot;GET http://$IP&quot; |\
+  vegeta attack -duration=5m -rate=200 -header &quot;Host: dory.localdomain&quot; -keepalive=true |\
   vegeta report
 </code></pre>
 
-<p>Follow the dashboard while the test is running. Most metrics have its resolution in <code>1m</code> (one minute) so you should wait this time to see the correct conn/s, rps, proc use and so on.</p>
+<p>Follow the dashboard while the test is running. Most metrics have its resolution in <code>1m</code> (one minute) so wait at least this amount of time to see the correct conns/s, rps, proc use and so on.</p>
 
-<p>What&rsquo;s the impact of not use keepalive? Try the same test, changing only <code>-keepalive</code> to  <code>false</code>:</p>
+<p>What&rsquo;s the impact of not using keepalive? Try the same test, changing only <code>-keepalive</code> to  <code>false</code>:</p>
 
-<pre><code>IP=192.168.1.1
-echo &quot;GET http://${IP}&quot; |\
-  vegeta attack -duration=5m -rate=200 -header &quot;Host: whoami.localdomain&quot; -keepalive=false |\
+<pre><code>IP=192.168.0.11
+ulimit -n 2048 # avoids 'too many open files' error in the client side
+echo &quot;GET http://$IP&quot; |\
+  vegeta attack -duration=5m -rate=200 -header &quot;Host: dory.localdomain&quot; -keepalive=false |\
   vegeta report
 </code></pre>
 
 <p>Last test: what about TLS connections without keepalive? Change <code>http</code> to <code>https</code> and add <code>-insecure</code> command-line option to Vegeta:</p>
 
-<pre><code>IP=192.168.1.1
-echo &quot;GET https://${IP}&quot; |\
-  vegeta attack -insecure -duration=5m -rate=200 -header &quot;Host: whoami.localdomain&quot; -keepalive=false |\
+<pre><code>IP=192.168.0.11
+ulimit -n 2048
+echo &quot;GET https://$IP&quot; |\
+  vegeta attack -insecure -duration=5m -rate=200 -header &quot;Host: dory.localdomain&quot; -keepalive=false |\
   vegeta report
 </code></pre>
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified January 18, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/ea95378e643a25c70bd23b340705c499f2eb72a1">update to networking.k8s.io/v1 api (ea95378e)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified June 20, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/3f904ee4e2476dfc2fb4e4f93d78b48977aa5052">Spelling fixes (3f904ee4)</a>
 </div>
 </div>
 

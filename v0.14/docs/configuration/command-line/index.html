@@ -25,13 +25,13 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.14/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2022-01-30T09:23:43-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2022-06-20T22:37:59-04:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Command-line options">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2022-01-30T09:23:43-03:00" />
+<meta itemprop="dateModified" content="2022-06-20T22:37:59-04:00" />
 <meta itemprop="wordCount" content="3838">
 
 
@@ -943,7 +943,7 @@ parsing services and ingress objects. The default value is <code>haproxy-ingress
 The default configuration means declare eg a SSL Redirect annotation with
 <code>haproxy-ingress.github.io/ssl-redirect: &quot;true&quot;</code> or <code>ingress.kubernetes.io/ssl-redirect: &quot;true&quot;</code>.</p>
 
-<p>The order of the declaration is used to priorize one of them if the same configuration key is
+<p>The order of the declaration is used to prioritize one of them if the same configuration key is
 declared twice - if two distinct prefix is used to configure the same key in the same ingress or
 service resource, the value of the annotation with the prefix that was configured first in this
 command-line option is used.</p>
@@ -966,7 +966,7 @@ attempted.</p>
 <h2 id="backend-shards">&ndash;backend-shards</h2>
 
 <p>Defines how many files should be used to configure the haproxy backends. The default value is
-0 (zero) which uses one single file to configure the whole haproxy process. Values greather than
+0 (zero) which uses one single file to configure the whole haproxy process. Values greater than
 0 (zero) splits the backend configuration into separated files. Only files with changed backends
 are parsed and written to disk, reducing io and cpu usage on big clusters - about 1000 or more
 services.</p>
@@ -1367,7 +1367,7 @@ data:
 <li><code>8000</code> will proxy to <code>http</code> service, port <code>8000</code>, on the <code>system-prod</code> namespace. The upstream service will expect connections using the PROXY protocol but it only supports v1.</li>
 <li><code>9900</code> will proxy to <code>admin</code> service, port <code>9900</code>, on the <code>system-prod</code> namespace. Clients should connect using the PROXY protocol v1 or v2. Upcoming connections should be encrypted, HAProxy will ssl-offload data using crt/key provided by <code>system-prod/tcp-9900</code> secret.</li>
 <li><code>9990</code> and <code>9999</code> will proxy to the same <code>admin</code> service and <code>9999</code> port and the upstream service will expect connections using the PROXY protocol v2. The HAProxy frontend, however, will only expect PROXY protocol v1 or v2 on it&rsquo;s port <code>9999</code>.</li>
-<li><code>9995</code> will proxy to <code>admin</code> service, port <code>9900</code>, on the <code>system-prod</code> namespace. Upcoming connections should be encrypted, HAProxy will ssl-offload data using crt/key provided by <code>system-prod/tcp-9995</code> secret. Furthermore, clients must present a certificate that will be valid under the certificate authority (and optional certificate revocation list) provded in the <code>system-prod/tcp-9995-ca</code> secret.</li>
+<li><code>9995</code> will proxy to <code>admin</code> service, port <code>9900</code>, on the <code>system-prod</code> namespace. Upcoming connections should be encrypted, HAProxy will ssl-offload data using crt/key provided by <code>system-prod/tcp-9995</code> secret. Furthermore, clients must present a certificate that will be valid under the certificate authority (and optional certificate revocation list) provided in the <code>system-prod/tcp-9995-ca</code> secret.</li>
 </ul>
 
 <p>Note: Check interval was added in v0.10 and defaults to <code>2s</code>. All declared services has check interval enabled, except <code>3306</code> which disabled it.</p>
@@ -1494,7 +1494,7 @@ configmaps or the default backend service located in a different namespace than 
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified January 30, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/c7ee930eec187e75c7035ab2594e32163b5db926">check by default if gateway api crds are installed (c7ee930e)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified June 20, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/3f904ee4e2476dfc2fb4e4f93d78b48977aa5052">Spelling fixes (3f904ee4)</a>
 </div>
 </div>
 
