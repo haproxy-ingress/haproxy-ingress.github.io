@@ -218,7 +218,7 @@ keys, and this is what the rest of this documentation page is all about.&lt;/p&g
 &lt;p&gt;ConfigMap key/value options are read in the following conditions:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;Global config, using &lt;code&gt;--configmap&lt;/code&gt; command-line option. The installation process configures a Global config ConfigMap named &lt;code&gt;haproxy-ingress&lt;/code&gt; in the controller namespace. This is the only way to configure keys from the &lt;code&gt;Global&lt;/code&gt; scope. See about scopes &lt;a href=&#34;#scope&#34;&gt;later&lt;/a&gt; in this page.&lt;/li&gt;
+&lt;li&gt;Global config, using &lt;code&gt;--configmap&lt;/code&gt; command-line option. The installation process configures a Global config ConfigMap named &lt;code&gt;haproxy-ingress&lt;/code&gt; in the controller namespace. This is the only way to configure keys from the &lt;code&gt;Global&lt;/code&gt; scope. See about scopes &lt;a href=&#34;#scope&#34;&gt;later&lt;/a&gt; in this page. Note, &lt;code&gt;--configmap&lt;/code&gt; needs to be in the following format: &lt;code&gt;&amp;lt;namespace&amp;gt;/&amp;lt;configmap-name&amp;gt;&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;IngressClass config, using its &lt;code&gt;parameters&lt;/code&gt; field linked to a ConfigMap declared in the same namespace of the controller. See about IngressClass &lt;a href=&#34;#ingressclass&#34;&gt;later&lt;/a&gt; in this same section.&lt;/li&gt;
 &lt;/ul&gt;
 
