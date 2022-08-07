@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2022-01-19T07:38:31-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2022-08-01T09:07:25-07:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2022-01-19T07:38:31-03:00" />
-<meta itemprop="wordCount" content="16008">
+<meta itemprop="dateModified" content="2022-08-01T09:07:25-07:00" />
+<meta itemprop="wordCount" content="16018">
 
 
 
@@ -604,7 +604,7 @@ keys, and this is what the rest of this documentation page is all about.</p>
 <p>ConfigMap key/value options are read in the following conditions:</p>
 
 <ul>
-<li>Global config, using <code>--configmap</code> command-line option. The installation process configures a Global config ConfigMap named <code>haproxy-ingress</code> in the controller namespace. This is the only way to configure keys from the <code>Global</code> scope. See about scopes <a href="#scope">later</a> in this page.</li>
+<li>Global config, using <code>--configmap</code> command-line option. The installation process configures a Global config ConfigMap named <code>haproxy-ingress</code> in the controller namespace. This is the only way to configure keys from the <code>Global</code> scope. See about scopes <a href="#scope">later</a> in this page. Note, <code>--configmap</code> needs to be in the following format: <code>&lt;namespace&gt;/&lt;configmap-name&gt;</code>.</li>
 <li>IngressClass config, using its <code>parameters</code> field linked to a ConfigMap declared in the same namespace of the controller. See about IngressClass <a href="#ingressclass">later</a> in this same section.</li>
 </ul>
 
@@ -6698,7 +6698,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified January 19, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/9e314599b451d914e74edb5d6db26fbe2891369d">docs: fix default backend-server-slots-increment (9e314599)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified August 1, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/a7556193502a83e79dd23b83123c07d6b089c184">Documents the expected format for --configmap key (a7556193)</a>
 </div>
 </div>
 
