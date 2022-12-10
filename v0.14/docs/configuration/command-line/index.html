@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.14/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2022-06-20T22:37:59-04:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2022-11-20T18:01:28-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Command-line options">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2022-06-20T22:37:59-04:00" />
-<meta itemprop="wordCount" content="3838">
+<meta itemprop="dateModified" content="2022-11-20T18:01:28-03:00" />
+<meta itemprop="wordCount" content="3987">
 
 
 
@@ -421,6 +421,7 @@
 <li><a href="#ingress-class">Ingress Class</a></li>
 <li><a href="#kubeconfig">&ndash;kubeconfig</a></li>
 <li><a href="#local-filesystem-prefix">&ndash;local-filesystem-prefix</a></li>
+<li><a href="#logging">Logging</a></li>
 <li><a href="#master-socket">&ndash;master-socket</a></li>
 <li><a href="#master-worker">&ndash;master-worker</a></li>
 <li><a href="#max-old-config-files">&ndash;max-old-config-files</a></li>
@@ -437,7 +438,6 @@
 <li><a href="#track-old-instances">&ndash;track-old-instances</a></li>
 <li><a href="#update-status">&ndash;update-status</a></li>
 <li><a href="#update-status-on-shutdown">&ndash;update-status-on-shutdown</a></li>
-<li><a href="#v">&ndash;v</a></li>
 <li><a href="#validate-config">&ndash;validate-config</a></li>
 <li><a href="#verify-hostname">&ndash;verify-hostname</a></li>
 <li><a href="#version">&ndash;version</a></li>
@@ -710,6 +710,48 @@
 </tr>
 
 <tr>
+<td><a href="#logging"><code>--log-zap</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.14</td>
+</tr>
+
+<tr>
+<td><a href="#logging"><code>--log-dev</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.14</td>
+</tr>
+
+<tr>
+<td><a href="#logging"><code>--log-caller</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.14</td>
+</tr>
+
+<tr>
+<td><a href="#logging"><code>--log-enable-stacktrace</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.14</td>
+</tr>
+
+<tr>
+<td><a href="#logging"><code>--log-encoder</code></a></td>
+<td>encoder name</td>
+<td><code>json</code> (prod), <code>console</code> (dev)</td>
+<td>v0.14</td>
+</tr>
+
+<tr>
+<td><a href="#logging"><code>--log-encode-time</code></a></td>
+<td>encoder name</td>
+<td><code>rfc3339nano</code> (prod), <code>iso8601</code> (dev)</td>
+<td>v0.14</td>
+</tr>
+
+<tr>
 <td><a href="#master-socket"><code>--master-socket</code></a></td>
 <td>socket path</td>
 <td>use embedded haproxy</td>
@@ -829,9 +871,9 @@
 </tr>
 
 <tr>
-<td><a href="#v"><code>--v</code></a></td>
+<td><a href="#logging"><code>--v</code></a></td>
 <td>log level as integer</td>
-<td><code>1</code></td>
+<td><code>2</code></td>
 <td></td>
 </tr>
 
@@ -1120,6 +1162,24 @@ is deployed outside of the Kubernetes cluster.</p>
 directory HAProxy Ingress should create and maintain all the configuration files. Useful for local
 deployment. Start HAProxy Ingress in the root directory of the repository when using
 <code>--local-filesystem-prefix</code>, or simply use via <code>make run</code>.</p>
+
+<hr />
+
+<h2 id="logging">Logging</h2>
+
+<p>Since v0.14</p>
+
+<p>Logging configuration options.</p>
+
+<ul>
+<li><code>--log-zap</code>: Configures <a href="https://pkg.go.dev/go.uber.org/zap">zap</a> as the controller&rsquo;s logger sink. <a href="https://github.com/kubernetes/klog">klog</a> output is used if not enabled. Most of the logging options need zap enabled.</li>
+<li><code>--log-dev</code>: Defines if development style logging should be used. Defaults to production. Needs <code>--log-zap</code> enabled.</li>
+<li><code>--log-caller</code>: Defines if the log output should add a reference of the caller with file name and line number. Defaults to not add. Needs <code>--log-zap</code> enabled.</li>
+<li><code>--log-enable-stacktrace</code>: Defines if error output should add stracktraces. Defaults to not add. Needs <code>--log-zap</code> enabled.</li>
+<li><code>--log-encoder</code>: Defines the log encoder. Options are: <code>console</code> or <code>json</code>. Defaults to <code>json</code> if <code>--log-dev</code> is disabled and <code>console</code> if <code>--log-dev</code> is enabled. Needs <code>--log-zap</code> enabled.</li>
+<li><code>--log-encode-time</code>: Configures the encode time used in the logs. Options are: <code>rfc3339nano</code>, <code>rfc3339</code>, <code>iso8601</code>, <code>millis</code>, <code>nanos</code>. Defaults to <code>rfc3339nano</code> if <code>--log-dev</code> is disabled and <code>iso8601</code> if <code>--log-dev</code> is enabled. Needs <code>--log-zap</code> enabled.</li>
+<li><code>--v</code>: Number of the log level verbosity. 1: info; 2: add low verbosity debug. Defaults to 2.</li>
+</ul>
 
 <hr />
 
@@ -1415,14 +1475,6 @@ resources that this controller is tracking when the controller is being stopped.
 
 <hr />
 
-<h2 id="v">&ndash;v</h2>
-
-<p>Configures the log verbosity.  <code>1</code> is the default value and outputs only errors, warnings and a few
-update events.  <code>2</code> is a good balance between low verbosity and rich details about controller
-events.  <code>3</code> is also available and provides even more details.</p>
-
-<hr />
-
 <h2 id="validate-config">&ndash;validate-config</h2>
 
 <p>Determines whether the resulting configuration files should be validated when a dynamic update was
@@ -1494,7 +1546,7 @@ configmaps or the default backend service located in a different namespace than 
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified June 20, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/3f904ee4e2476dfc2fb4e4f93d78b48977aa5052">Spelling fixes (3f904ee4)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified November 20, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/78c90696c7092d4f8a754416e52755eed80e7c46">add zap as a logger sink option (78c90696)</a>
 </div>
 </div>
 

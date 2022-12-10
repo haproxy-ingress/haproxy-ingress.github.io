@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.14/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2022-08-01T09:07:25-07:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2022-12-03T18:09:25-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2022-08-01T09:07:25-07:00" />
-<meta itemprop="wordCount" content="17196">
+<meta itemprop="dateModified" content="2022-12-03T18:09:25-03:00" />
+<meta itemprop="wordCount" content="17344">
 
 
 
@@ -1628,6 +1628,13 @@ TCP port number.</p>
 </tr>
 
 <tr>
+<td><a href="#modsecurity"><code>modsecurity-args</code></a></td>
+<td>space-separated list of strings</td>
+<td>Global</td>
+<td><code>unique-id method path query req.ver req.hdrs_bin req.body_size req.body</code></td>
+</tr>
+
+<tr>
 <td><a href="#modsecurity"><code>modsecurity-endpoints</code></a></td>
 <td>comma-separated list of IP:port (spoa)</td>
 <td>Global</td>
@@ -1653,6 +1660,13 @@ TCP port number.</p>
 <td>time with suffix</td>
 <td>Global</td>
 <td><code>1s</code></td>
+</tr>
+
+<tr>
+<td><a href="#modsecurity"><code>modsecurity-use-coraza</code></a></td>
+<td>[true|false]</td>
+<td>Global</td>
+<td><code>false</code></td>
 </tr>
 
 <tr>
@@ -2957,7 +2971,7 @@ Up to v0.12 the configuration key <code>auth-type</code> was mandatory, it enabl
 
 <p>The first option will always be used, the second one only on succeeded requests, the last one only on failures.</p>
 
-<p>These configuration keys can be defined as a comma-separated list of header names. All HTTP headers will be copied if not declared. Each header name can use wildcard.</p>
+<p>These configuration keys can be defined as a comma-separated list of header names. All HTTP headers will be copied if not declared. Each header name can use wildcard. Using a dash <code>-</code> or an empty string instructs the controller not to copy any header.</p>
 
 <p>Configuration examples:</p>
 
@@ -5183,6 +5197,13 @@ websockets, and clusters that frequently changes and forces haproxy to reload.</
 
 <tbody>
 <tr>
+<td><code>modsecurity-args</code></td>
+<td><code>Global</code></td>
+<td><code>unique-id method path query req.ver req.hdrs_bin req.body_size req.body</code></td>
+<td>v0.14</td>
+</tr>
+
+<tr>
 <td><code>modsecurity-endpoints</code></td>
 <td><code>Global</code></td>
 <td></td>
@@ -5223,6 +5244,13 @@ websockets, and clusters that frequently changes and forces haproxy to reload.</
 <td><code>5s</code></td>
 <td>v0.10</td>
 </tr>
+
+<tr>
+<td><code>modsecurity-use-coraza</code></td>
+<td><code>Global</code></td>
+<td><code>false</code></td>
+<td>v0.14</td>
+</tr>
 </tbody>
 </table>
 
@@ -5240,18 +5268,20 @@ Since v0.8 the spoe filter is configured on a per-backend basis.</p>
 <p>The following keys are supported:</p>
 
 <ul>
+<li><code>modsecurity-args</code>: Space separated list of arguments that HAProxy will send to the modsecurity agent. You can override this to e.g. prevent sending the request body to modsecurity which will improve performance, but reduce security. The arguments must be valid HAProxy <a href="https://www.haproxy.com/documentation/hapee/latest/configuration/fetches/overview/">sample fetch methods</a>.</li>
 <li><code>modsecurity-endpoints</code>: Comma separated list of ModSecurity agent endpoints.</li>
 <li><code>modsecurity-timeout-connect</code>: Defines the maximum time to wait for the connection to the agent be established. Configures the haproxy&rsquo;s timeout connect. Defaults to <code>5s</code> if not configured.</li>
 <li><code>modsecurity-timeout-hello</code>: Defines the maximum time to wait for the AGENT-HELLO frame from the agent. Default value is <code>100ms</code>.</li>
 <li><code>modsecurity-timeout-idle</code>: Defines the maximum time to wait before close an idle connection. Default value is <code>30s</code>.</li>
 <li><code>modsecurity-timeout-processing</code>: Defines the maximum time to wait for the whole ModSecurity processing. Default value is <code>1s</code>.</li>
 <li><code>modsecurity-timeout-server</code>: Defines the maximum time to wait for an agent response. Configures the haproxy&rsquo;s timeout server. Defaults to <code>5s</code> if not configured.</li>
+<li><code>modsecurity-use-coraza</code>: Defines whether the generated SPOE config should include Coraza-specific values. In order to use Coraza instead of Modsecurity, you must set this to &ldquo;true&rdquo; and also set <code>modsecurity-args</code> based on the instructions in the <a href="https://github.com/corazawaf/coraza-spoa">coraza-spoa repository</a>. A full example can be found <a href="/v0.14/docs/examples/modsecurity/#using-coraza-instead-of-modsecurity">here</a>.</li>
 </ul>
 
 <p>See also:</p>
 
 <ul>
-<li><a href="/v0.14/docs/examples/modsecurity/">example</a> page.</li>
+<li><a href="/v0.14/docs/examples/modsecurity/">modsecurity example</a> page.</li>
 <li><a href="#waf"><code>waf</code></a> configuration key.</li>
 <li><a href="https://www.haproxy.org/download/2.0/doc/SPOE.txt">https://www.haproxy.org/download/2.0/doc/SPOE.txt</a></li>
 <li><a href="https://docs.haproxy.org/2.4/configuration.html#9.3">https://docs.haproxy.org/2.4/configuration.html#9.3</a></li>
@@ -7051,7 +7081,7 @@ useful on http logs. The default value is <code>false</code>. Usage: <code>k8s-n
 </table>
 
 <p>Defines which web application firewall (WAF) implementation should be used
-to validate requests. Currently the only supported value is <code>modsecurity</code>.</p>
+to validate requests. Currently the only supported value is <code>modsecurity</code>, which also supports Coraza endpoints when <code>modsecurity-use-coraza</code> is set to &ldquo;true&rdquo;.</p>
 
 <p>This configuration has no effect if the ModSecurity endpoints are not configured.</p>
 
@@ -7068,7 +7098,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified August 1, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/acb777926b188589793f3d4b197e5f26c2320e06">Documents the expected format for --configmap key (acb77792)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified December 3, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/409a076a36cffcc5ab18b41b9e110c7566a95440">makes auth-headers not copying on empty string (409a076a)</a>
 </div>
 </div>
 

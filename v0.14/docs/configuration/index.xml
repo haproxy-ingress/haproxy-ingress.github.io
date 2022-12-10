@@ -1233,6 +1233,13 @@ TCP port number.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#modsecurity&#34;&gt;&lt;code&gt;modsecurity-args&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;space-separated list of strings&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;unique-id method path query req.ver req.hdrs_bin req.body_size req.body&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#modsecurity&#34;&gt;&lt;code&gt;modsecurity-endpoints&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;comma-separated list of IP:port (spoa)&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
@@ -1258,6 +1265,13 @@ TCP port number.&lt;/p&gt;
 &lt;td&gt;time with suffix&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;1s&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#modsecurity&#34;&gt;&lt;code&gt;modsecurity-use-coraza&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -2562,7 +2576,7 @@ Up to v0.12 the configuration key &lt;code&gt;auth-type&lt;/code&gt; was mandato
 
 &lt;p&gt;The first option will always be used, the second one only on succeeded requests, the last one only on failures.&lt;/p&gt;
 
-&lt;p&gt;These configuration keys can be defined as a comma-separated list of header names. All HTTP headers will be copied if not declared. Each header name can use wildcard.&lt;/p&gt;
+&lt;p&gt;These configuration keys can be defined as a comma-separated list of header names. All HTTP headers will be copied if not declared. Each header name can use wildcard. Using a dash &lt;code&gt;-&lt;/code&gt; or an empty string instructs the controller not to copy any header.&lt;/p&gt;
 
 &lt;p&gt;Configuration examples:&lt;/p&gt;
 
@@ -4788,6 +4802,13 @@ websockets, and clusters that frequently changes and forces haproxy to reload.&l
 
 &lt;tbody&gt;
 &lt;tr&gt;
+&lt;td&gt;&lt;code&gt;modsecurity-args&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;unique-id method path query req.ver req.hdrs_bin req.body_size req.body&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.14&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;code&gt;modsecurity-endpoints&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
@@ -4828,6 +4849,13 @@ websockets, and clusters that frequently changes and forces haproxy to reload.&l
 &lt;td&gt;&lt;code&gt;5s&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;v0.10&lt;/td&gt;
 &lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;modsecurity-use-coraza&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.14&lt;/td&gt;
+&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
@@ -4845,18 +4873,20 @@ Since v0.8 the spoe filter is configured on a per-backend basis.&lt;/p&gt;
 &lt;p&gt;The following keys are supported:&lt;/p&gt;
 
 &lt;ul&gt;
+&lt;li&gt;&lt;code&gt;modsecurity-args&lt;/code&gt;: Space separated list of arguments that HAProxy will send to the modsecurity agent. You can override this to e.g. prevent sending the request body to modsecurity which will improve performance, but reduce security. The arguments must be valid HAProxy &lt;a href=&#34;https://www.haproxy.com/documentation/hapee/latest/configuration/fetches/overview/&#34;&gt;sample fetch methods&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;modsecurity-endpoints&lt;/code&gt;: Comma separated list of ModSecurity agent endpoints.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;modsecurity-timeout-connect&lt;/code&gt;: Defines the maximum time to wait for the connection to the agent be established. Configures the haproxy&amp;rsquo;s timeout connect. Defaults to &lt;code&gt;5s&lt;/code&gt; if not configured.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;modsecurity-timeout-hello&lt;/code&gt;: Defines the maximum time to wait for the AGENT-HELLO frame from the agent. Default value is &lt;code&gt;100ms&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;modsecurity-timeout-idle&lt;/code&gt;: Defines the maximum time to wait before close an idle connection. Default value is &lt;code&gt;30s&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;modsecurity-timeout-processing&lt;/code&gt;: Defines the maximum time to wait for the whole ModSecurity processing. Default value is &lt;code&gt;1s&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;modsecurity-timeout-server&lt;/code&gt;: Defines the maximum time to wait for an agent response. Configures the haproxy&amp;rsquo;s timeout server. Defaults to &lt;code&gt;5s&lt;/code&gt; if not configured.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;modsecurity-use-coraza&lt;/code&gt;: Defines whether the generated SPOE config should include Coraza-specific values. In order to use Coraza instead of Modsecurity, you must set this to &amp;ldquo;true&amp;rdquo; and also set &lt;code&gt;modsecurity-args&lt;/code&gt; based on the instructions in the &lt;a href=&#34;https://github.com/corazawaf/coraza-spoa&#34;&gt;coraza-spoa repository&lt;/a&gt;. A full example can be found &lt;a href=&#34;/v0.14/v0.14/docs/examples/modsecurity/#using-coraza-instead-of-modsecurity&#34;&gt;here&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;/v0.14/v0.14/docs/examples/modsecurity/&#34;&gt;example&lt;/a&gt; page.&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;/v0.14/v0.14/docs/examples/modsecurity/&#34;&gt;modsecurity example&lt;/a&gt; page.&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;#waf&#34;&gt;&lt;code&gt;waf&lt;/code&gt;&lt;/a&gt; configuration key.&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.haproxy.org/download/2.0/doc/SPOE.txt&#34;&gt;https://www.haproxy.org/download/2.0/doc/SPOE.txt&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://docs.haproxy.org/2.4/configuration.html#9.3&#34;&gt;https://docs.haproxy.org/2.4/configuration.html#9.3&lt;/a&gt;&lt;/li&gt;
@@ -6656,7 +6686,7 @@ useful on http logs. The default value is &lt;code&gt;false&lt;/code&gt;. Usage:
 &lt;/table&gt;
 
 &lt;p&gt;Defines which web application firewall (WAF) implementation should be used
-to validate requests. Currently the only supported value is &lt;code&gt;modsecurity&lt;/code&gt;.&lt;/p&gt;
+to validate requests. Currently the only supported value is &lt;code&gt;modsecurity&lt;/code&gt;, which also supports Coraza endpoints when &lt;code&gt;modsecurity-use-coraza&lt;/code&gt; is set to &amp;ldquo;true&amp;rdquo;.&lt;/p&gt;
 
 &lt;p&gt;This configuration has no effect if the ModSecurity endpoints are not configured.&lt;/p&gt;
 
@@ -6902,6 +6932,48 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#logging&#34;&gt;&lt;code&gt;--log-zap&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.14&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#logging&#34;&gt;&lt;code&gt;--log-dev&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.14&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#logging&#34;&gt;&lt;code&gt;--log-caller&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.14&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#logging&#34;&gt;&lt;code&gt;--log-enable-stacktrace&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.14&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#logging&#34;&gt;&lt;code&gt;--log-encoder&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;encoder name&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;json&lt;/code&gt; (prod), &lt;code&gt;console&lt;/code&gt; (dev)&lt;/td&gt;
+&lt;td&gt;v0.14&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#logging&#34;&gt;&lt;code&gt;--log-encode-time&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;encoder name&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;rfc3339nano&lt;/code&gt; (prod), &lt;code&gt;iso8601&lt;/code&gt; (dev)&lt;/td&gt;
+&lt;td&gt;v0.14&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#master-socket&#34;&gt;&lt;code&gt;--master-socket&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;socket path&lt;/td&gt;
 &lt;td&gt;use embedded haproxy&lt;/td&gt;
@@ -7021,9 +7093,9 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;/tr&gt;
 
 &lt;tr&gt;
-&lt;td&gt;&lt;a href=&#34;#v&#34;&gt;&lt;code&gt;--v&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;&lt;a href=&#34;#logging&#34;&gt;&lt;code&gt;--v&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;log level as integer&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;1&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;2&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
@@ -7312,6 +7384,24 @@ is deployed outside of the Kubernetes cluster.&lt;/p&gt;
 directory HAProxy Ingress should create and maintain all the configuration files. Useful for local
 deployment. Start HAProxy Ingress in the root directory of the repository when using
 &lt;code&gt;--local-filesystem-prefix&lt;/code&gt;, or simply use via &lt;code&gt;make run&lt;/code&gt;.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;logging&#34;&gt;Logging&lt;/h2&gt;
+
+&lt;p&gt;Since v0.14&lt;/p&gt;
+
+&lt;p&gt;Logging configuration options.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--log-zap&lt;/code&gt;: Configures &lt;a href=&#34;https://pkg.go.dev/go.uber.org/zap&#34;&gt;zap&lt;/a&gt; as the controller&amp;rsquo;s logger sink. &lt;a href=&#34;https://github.com/kubernetes/klog&#34;&gt;klog&lt;/a&gt; output is used if not enabled. Most of the logging options need zap enabled.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--log-dev&lt;/code&gt;: Defines if development style logging should be used. Defaults to production. Needs &lt;code&gt;--log-zap&lt;/code&gt; enabled.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--log-caller&lt;/code&gt;: Defines if the log output should add a reference of the caller with file name and line number. Defaults to not add. Needs &lt;code&gt;--log-zap&lt;/code&gt; enabled.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--log-enable-stacktrace&lt;/code&gt;: Defines if error output should add stracktraces. Defaults to not add. Needs &lt;code&gt;--log-zap&lt;/code&gt; enabled.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--log-encoder&lt;/code&gt;: Defines the log encoder. Options are: &lt;code&gt;console&lt;/code&gt; or &lt;code&gt;json&lt;/code&gt;. Defaults to &lt;code&gt;json&lt;/code&gt; if &lt;code&gt;--log-dev&lt;/code&gt; is disabled and &lt;code&gt;console&lt;/code&gt; if &lt;code&gt;--log-dev&lt;/code&gt; is enabled. Needs &lt;code&gt;--log-zap&lt;/code&gt; enabled.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--log-encode-time&lt;/code&gt;: Configures the encode time used in the logs. Options are: &lt;code&gt;rfc3339nano&lt;/code&gt;, &lt;code&gt;rfc3339&lt;/code&gt;, &lt;code&gt;iso8601&lt;/code&gt;, &lt;code&gt;millis&lt;/code&gt;, &lt;code&gt;nanos&lt;/code&gt;. Defaults to &lt;code&gt;rfc3339nano&lt;/code&gt; if &lt;code&gt;--log-dev&lt;/code&gt; is disabled and &lt;code&gt;iso8601&lt;/code&gt; if &lt;code&gt;--log-dev&lt;/code&gt; is enabled. Needs &lt;code&gt;--log-zap&lt;/code&gt; enabled.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;--v&lt;/code&gt;: Number of the log level verbosity. 1: info; 2: add low verbosity debug. Defaults to 2.&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;hr /&gt;
 
@@ -7604,14 +7694,6 @@ resources that this controller is tracking.  Defaults to &lt;code&gt;true&lt;/co
 &lt;p&gt;Indicates whether the ingress controller should update the &lt;code&gt;status&lt;/code&gt; attribute of all the Ingress
 resources that this controller is tracking when the controller is being stopped.  Defaults to
 &lt;code&gt;true&lt;/code&gt;.&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;h2 id=&#34;v&#34;&gt;&amp;ndash;v&lt;/h2&gt;
-
-&lt;p&gt;Configures the log verbosity.  &lt;code&gt;1&lt;/code&gt; is the default value and outputs only errors, warnings and a few
-update events.  &lt;code&gt;2&lt;/code&gt; is a good balance between low verbosity and rich details about controller
-events.  &lt;code&gt;3&lt;/code&gt; is also available and provides even more details.&lt;/p&gt;
 
 &lt;hr /&gt;
 
