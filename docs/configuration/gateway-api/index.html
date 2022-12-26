@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/gateway-api/" />
-<meta property="article:modified_time" content="2022-02-13T15:33:46-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2022-12-26T10:26:22-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Gateway API">
 <meta itemprop="description" content="Configure HAProxy using Gateway API resources.
 ">
 
 
-<meta itemprop="dateModified" content="2022-02-13T15:33:46-03:00" />
-<meta itemprop="wordCount" content="531">
+<meta itemprop="dateModified" content="2022-12-26T10:26:22-03:00" />
+<meta itemprop="wordCount" content="533">
 
 
 
@@ -119,13 +119,13 @@
 			
 			<li class="nav-item dropdown d-none d-lg-block">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	v0.13 (latest)
+	v0.14 (latest)
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.14/docs">v0.14 (beta)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.14 (latest)</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.13 (latest)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.13/docs">v0.13</a>
 	
 	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.12/docs">v0.12</a>
 	
@@ -453,54 +453,58 @@
 	<div class="lead">Configure HAProxy using Gateway API resources.</div>
 	
 
-<p><a href="https://gateway-api.sigs.k8s.io/">Gateway API</a> is a collection of Kubernetes resources that can be installed as <a href="https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/">Custom Resource Definitions</a>. Just like Ingress resources, Gateway API resources are used to configure incoming HTTP/s and TCP requests to the in cluster applications. HAProxy Ingress v0.13 partially supports the Gateway API spec.</p>
+<p><a href="https://gateway-api.sigs.k8s.io/">Gateway API</a> is a collection of Kubernetes resources that can be installed as <a href="https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/">Custom Resource Definitions</a>. Just like Ingress resources, Gateway API resources are used to configure incoming HTTP/s and TCP requests to the in cluster applications. HAProxy Ingress v0.14 partially supports the Gateway API spec, v1alpha1 and v1alpha2 versions.</p>
 
 <h2 id="installation">Installation</h2>
 
 <p>The following steps configure the Kubernetes cluster and HAProxy Ingress to read and parse Gateway API resources:</p>
 
 <ul>
-<li>Manually install the Gateway API CRDs, see the Gateway API <a href="https://gateway-api.sigs.k8s.io/v1alpha1/guides/getting-started/#installing-gateway-api-crds-manually">documentation</a>
+<li>Manually install the Gateway API CRDs, see the Gateway API <a href="https://gateway-api.sigs.k8s.io/v1alpha2/guides/getting-started/#installing-gateway-api-crds-manually">documentation</a>
 
 <ul>
-<li>&hellip; or simply <code>kubectl kustomize &quot;github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.3.0&quot; | kubectl apply -f -</code></li>
+<li>&hellip; or simply <code>kubectl kustomize &quot;github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.4.1&quot; | kubectl apply -f -</code></li>
 </ul></li>
-<li>Add the controller&rsquo;s <a href="/docs/configuration/command-line/#watch-gateway"><code>--watch-gateway</code></a> command-line option</li>
+<li>Start (or restart) the controller</li>
 </ul>
 
 <p>See below the <a href="#getting-started">getting started steps</a>.</p>
 
 <h2 id="conformance">Conformance</h2>
 
-<p>Gateway API v1alpha1 spec is partially implemented in the v0.13 release. The following list describes what is (or is not) supported:</p>
+<p>Gateway API v1alpha2 spec is partially implemented in the v0.14 release. The following list describes what is (or is not) supported:</p>
 
 <ul>
 <li>Target Services can be annotated with <a href="/docs/configuration/keys/#scope">Backend or Path scoped</a> configuration keys, this will continue to be supported.</li>
-<li>Gateway API resources doesn&rsquo;t support annotations, this will continue to be unsupported, extensions to the Gateway API spec will be added in the extension points of the API.</li>
+<li>Gateway API resources doesn&rsquo;t support annotations, this is planned to continue to be unsupported. Extensions to the Gateway API spec will be added in the extension points of the API.</li>
 <li>Only the <code>GatewayClass</code>, <code>Gateway</code> and <code>HTTPRoute</code> resource definitions were implemented.</li>
 <li>The controller doesn&rsquo;t implement partial parsing yet for Gateway API resources, changes should be a bit slow on clusters with thousands of Ingress, Gateway API resources or Services.</li>
 <li>Gateway&rsquo;s Listener Port and Protocol wasn&rsquo;t implemented - Port uses the global <a href="/docs/configuration/keys/#bind-port">bind-port</a> configuration and Protocol is based on the presence or absence of the TLS attribute.</li>
-<li>Gateway&rsquo;s Route Namespace selector only supports <code>Same</code> or <code>All</code> namespaces.</li>
+<li>Gateway&rsquo;s Addresses wasn&rsquo;t implemented - binding addresses use the global <a href="/docs/configuration/keys/#bind-ip-addr">bind-ip-addr</a> configuration.</li>
 <li>Gateway&rsquo;s Hostname only supports empty/absence of Hostname or a single <code>*</code>, any other string will override the HTTPRoute Hostnames configuration without any merging.</li>
 <li>HTTPRoute&rsquo;s Matches doesn&rsquo;t support Headers.</li>
-<li>HTTPRoute&rsquo;s Rules and ForwardTo doesn&rsquo;t support Filters.</li>
+<li>HTTPRoute&rsquo;s Rules and BackendRefs don&rsquo;t support Filters.</li>
 <li>Resources status aren&rsquo;t updated.</li>
 </ul>
 
-<p>Version v1alpha2 should be partially implemented in v0.14 (beta version starting jan/22) and fully implemented in v0.15 (Q2&rsquo;22).</p>
+<p>Version v1beta1 should be fully implemented in v0.15 (Q1&rsquo;23).</p>
+
+<p>Version v1alpha1 support should be dropped in v0.15.</p>
+
+<p>Version v1alpha2 support should be dropped in v0.16.</p>
 
 <h2 id="ingress">Ingress</h2>
 
-<p>A single HAProxy Ingress deployment can manage Ingress and Gateway API resources in the same Kubernetes cluster. If the same hostname and path is declared in the Gateway API and Ingress, the Gateway API wins and a warning is logged. Ingress resources will continue to be supported in future controller versions, without side effects, and without the need to install the Gateway API CRDs.</p>
+<p>A single HAProxy Ingress deployment can manage Ingress, and both v1alpha1 and v1alpha2 Gateway API resources in the same Kubernetes cluster. If the same hostname and path with the same path type is declared in the Gateway API and Ingress, the Gateway API wins and a warning is logged. Ingress resources will continue to be supported in future controller versions, without side effects, and without the need to install the Gateway API CRDs.</p>
 
 <h2 id="getting-started">Getting started</h2>
 
 <p>Add the following steps to the <a href="/docs/getting-started/">Getting Started guide</a> in order to expose the echoserver service along with the Gateway API:</p>
 
-<p><a href="https://gateway-api.sigs.k8s.io/v1alpha1/guides/getting-started/#installing-gateway-api-crds-manually">Manually install</a> the Gateway API CRDs:</p>
+<p><a href="https://gateway-api.sigs.k8s.io/v1alpha2/guides/getting-started/#installing-gateway-api-crds-manually">Manually install</a> the Gateway API CRDs:</p>
 
 <pre><code>kubectl kustomize\
- &quot;github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.3.0&quot; |\
+ &quot;github.com/kubernetes-sigs/gateway-api/config/crd?ref=v0.4.1&quot; |\
  kubectl apply -f -
 </code></pre>
 
@@ -510,22 +514,17 @@
 kubectl --namespace default expose deployment echoserver --port=8080
 </code></pre>
 
-<p>Add the <a href="/docs/configuration/command-line/#watch-gateway"><code>--watch-gateway</code></a> command-line option in the <code>haproxy-ingress-values.yaml</code> file and <a href="/docs/getting-started/#installation"><code>helm upgrade ...</code></a> the controller (or simply edit the deployment):</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">controller<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">  </span>...<span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">  </span>extraArgs<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">    </span>watch-gateway<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#4e9a06">&#34;true&#34;</span></code></pre></div>
 <p>A GatewayClass enables Gateways to be read and parsed by HAProxy Ingress. Create a GatewayClass with the following content:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>networking.x-k8s.io/v1alpha1<span style="color:#f8f8f8;text-decoration:underline">
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>gateway.networking.k8s.io/v1alpha2<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span>kind<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>GatewayClass<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span>metadata<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">  </span>name<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>haproxy<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span>spec<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">  </span>controller<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>haproxy-ingress.github.io/controller</code></pre></div>
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>controllerName<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>haproxy-ingress.github.io/controller</code></pre></div>
 <p>Gateways create listeners and allow to configure hostnames. Create a Gateway with the following content:</p>
 
 <p>Note: port and protocol attributes <a href="#conformance">have some limitations</a>.</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>networking.x-k8s.io/v1alpha1<span style="color:#f8f8f8;text-decoration:underline">
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>gateway.networking.k8s.io/v1alpha2<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span>kind<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>Gateway<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span>metadata<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">  </span>name<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>echoserver<span style="color:#f8f8f8;text-decoration:underline">
@@ -533,15 +532,11 @@ kubectl --namespace default expose deployment echoserver --port=8080
 </span><span style="color:#f8f8f8;text-decoration:underline"></span>spec<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">  </span>gatewayClassName<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>haproxy<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">  </span>listeners<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">  </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>protocol<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>HTTP<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>name<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>echoserver-gw<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">    </span>port<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">80</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">    </span>routes<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">      </span>kind<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>HTTPRoute<span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">      </span>selector<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">        </span>matchLabels<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">          </span>gateway<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>echo</code></pre></div>
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>protocol<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>HTTP</code></pre></div>
 <p>HTTPRoutes configure the hostnames and target services. Create a HTTPRoute with the following content, changing <code>echoserver-from-gateway.local</code> to a hostname that resolves to a HAProxy Ingress node:</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>networking.x-k8s.io/v1alpha1<span style="color:#f8f8f8;text-decoration:underline">
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">apiVersion<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>gateway.networking.k8s.io/v1alpha2<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span>kind<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>HTTPRoute<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span>metadata<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">  </span>labels<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
@@ -549,11 +544,13 @@ kubectl --namespace default expose deployment echoserver --port=8080
 </span><span style="color:#f8f8f8;text-decoration:underline">  </span>name<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>echoserver<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">  </span>namespace<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>default<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline"></span>spec<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>parentRefs<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>name<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>echoserver<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">  </span>hostnames<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">  </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>echoserver-from-gateway.local<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">  </span>rules<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">  </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>forwardTo<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">    </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>serviceName<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>echoserver<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>backendRefs<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>name<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>echoserver<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">      </span>port<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">8080</span></code></pre></div>
 <p>Send a request to our just configured route:</p>
 
@@ -563,7 +560,7 @@ wget -qO- http://echoserver-from-gateway.local
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified February 13, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/b58024ae7937a0b8f34e772e059ede3c93e063b0">docs: update gateway api getting started link (b58024ae)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified December 26, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/f1bc500831ae430d1479cfcb3de57f540fd38339">update to v0.14.0 (f1bc5008)</a>
 </div>
 </div>
 

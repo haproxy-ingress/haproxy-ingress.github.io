@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2021-09-23T09:54:12+02:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2022-11-20T18:01:28-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Command-line options">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2021-09-23T09:54:12&#43;02:00" />
-<meta itemprop="wordCount" content="3592">
+<meta itemprop="dateModified" content="2022-11-20T18:01:28-03:00" />
+<meta itemprop="wordCount" content="3987">
 
 
 
@@ -119,13 +119,13 @@
 			
 			<li class="nav-item dropdown d-none d-lg-block">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	v0.13 (latest)
+	v0.14 (latest)
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.14/docs">v0.14 (beta)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.14 (latest)</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.13 (latest)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.13/docs">v0.13</a>
 	
 	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.12/docs">v0.12</a>
 	
@@ -418,7 +418,10 @@
 <li><a href="#force-namespace-isolation">&ndash;force-namespace-isolation</a></li>
 <li><a href="#ingress-class">Ingress Class</a></li>
 <li><a href="#kubeconfig">&ndash;kubeconfig</a></li>
+<li><a href="#local-filesystem-prefix">&ndash;local-filesystem-prefix</a></li>
+<li><a href="#logging">Logging</a></li>
 <li><a href="#master-socket">&ndash;master-socket</a></li>
+<li><a href="#master-worker">&ndash;master-worker</a></li>
 <li><a href="#max-old-config-files">&ndash;max-old-config-files</a></li>
 <li><a href="#publish-service">&ndash;publish-service</a></li>
 <li><a href="#rate-limit-update">&ndash;rate-limit-update</a></li>
@@ -430,9 +433,9 @@
 <li><a href="#stats">Stats</a></li>
 <li><a href="#sync-period">&ndash;sync-period</a></li>
 <li><a href="#tcp-services-configmap">&ndash;tcp-services-configmap</a></li>
+<li><a href="#track-old-instances">&ndash;track-old-instances</a></li>
 <li><a href="#update-status">&ndash;update-status</a></li>
 <li><a href="#update-status-on-shutdown">&ndash;update-status-on-shutdown</a></li>
-<li><a href="#v">&ndash;v</a></li>
 <li><a href="#validate-config">&ndash;validate-config</a></li>
 <li><a href="#verify-hostname">&ndash;verify-hostname</a></li>
 <li><a href="#version">&ndash;version</a></li>
@@ -698,10 +701,66 @@
 </tr>
 
 <tr>
+<td><a href="#local-filesystem-prefix"><code>--local-filesystem-prefix</code></a></td>
+<td>temporary base directory</td>
+<td></td>
+<td>v0.14</td>
+</tr>
+
+<tr>
+<td><a href="#logging"><code>--log-zap</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.14</td>
+</tr>
+
+<tr>
+<td><a href="#logging"><code>--log-dev</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.14</td>
+</tr>
+
+<tr>
+<td><a href="#logging"><code>--log-caller</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.14</td>
+</tr>
+
+<tr>
+<td><a href="#logging"><code>--log-enable-stacktrace</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.14</td>
+</tr>
+
+<tr>
+<td><a href="#logging"><code>--log-encoder</code></a></td>
+<td>encoder name</td>
+<td><code>json</code> (prod), <code>console</code> (dev)</td>
+<td>v0.14</td>
+</tr>
+
+<tr>
+<td><a href="#logging"><code>--log-encode-time</code></a></td>
+<td>encoder name</td>
+<td><code>rfc3339nano</code> (prod), <code>iso8601</code> (dev)</td>
+<td>v0.14</td>
+</tr>
+
+<tr>
 <td><a href="#master-socket"><code>--master-socket</code></a></td>
 <td>socket path</td>
 <td>use embedded haproxy</td>
 <td>v0.12</td>
+</tr>
+
+<tr>
+<td><a href="#master-worker"><code>--master-worker</code></a></td>
+<td>[true|false]</td>
+<td>false</td>
+<td>v0.14</td>
 </tr>
 
 <tr>
@@ -789,6 +848,13 @@
 </tr>
 
 <tr>
+<td><a href="#track-old-instances"><code>--track-old-instances</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.14</td>
+</tr>
+
+<tr>
 <td><a href="#update-status"><code>--update-status</code></a></td>
 <td>[true|false]</td>
 <td><code>true</code></td>
@@ -803,9 +869,9 @@
 </tr>
 
 <tr>
-<td><a href="#v"><code>--v</code></a></td>
+<td><a href="#logging"><code>--v</code></a></td>
 <td>log level as integer</td>
-<td><code>1</code></td>
+<td><code>2</code></td>
 <td></td>
 </tr>
 
@@ -917,7 +983,7 @@ parsing services and ingress objects. The default value is <code>haproxy-ingress
 The default configuration means declare eg a SSL Redirect annotation with
 <code>haproxy-ingress.github.io/ssl-redirect: &quot;true&quot;</code> or <code>ingress.kubernetes.io/ssl-redirect: &quot;true&quot;</code>.</p>
 
-<p>The order of the declaration is used to priorize one of them if the same configuration key is
+<p>The order of the declaration is used to prioritize one of them if the same configuration key is
 declared twice - if two distinct prefix is used to configure the same key in the same ingress or
 service resource, the value of the annotation with the prefix that was configured first in this
 command-line option is used.</p>
@@ -940,7 +1006,7 @@ attempted.</p>
 <h2 id="backend-shards">&ndash;backend-shards</h2>
 
 <p>Defines how many files should be used to configure the haproxy backends. The default value is
-0 (zero) which uses one single file to configure the whole haproxy process. Values greather than
+0 (zero) which uses one single file to configure the whole haproxy process. Values greater than
 0 (zero) splits the backend configuration into separated files. Only files with changed backends
 are parsed and written to disk, reducing io and cpu usage on big clusters - about 1000 or more
 services.</p>
@@ -1086,6 +1152,35 @@ is deployed outside of the Kubernetes cluster.</p>
 
 <hr />
 
+<h2 id="local-filesystem-prefix">&ndash;local-filesystem-prefix</h2>
+
+<p>Since v0.14</p>
+
+<p>Enables HAProxy Ingress to run in local mode. Define <code>--local-filesystem-prefix</code> with a temporary
+directory HAProxy Ingress should create and maintain all the configuration files. Useful for local
+deployment. Start HAProxy Ingress in the root directory of the repository when using
+<code>--local-filesystem-prefix</code>, or simply use via <code>make run</code>.</p>
+
+<hr />
+
+<h2 id="logging">Logging</h2>
+
+<p>Since v0.14</p>
+
+<p>Logging configuration options.</p>
+
+<ul>
+<li><code>--log-zap</code>: Configures <a href="https://pkg.go.dev/go.uber.org/zap">zap</a> as the controller&rsquo;s logger sink. <a href="https://github.com/kubernetes/klog">klog</a> output is used if not enabled. Most of the logging options need zap enabled.</li>
+<li><code>--log-dev</code>: Defines if development style logging should be used. Defaults to production. Needs <code>--log-zap</code> enabled.</li>
+<li><code>--log-caller</code>: Defines if the log output should add a reference of the caller with file name and line number. Defaults to not add. Needs <code>--log-zap</code> enabled.</li>
+<li><code>--log-enable-stacktrace</code>: Defines if error output should add stracktraces. Defaults to not add. Needs <code>--log-zap</code> enabled.</li>
+<li><code>--log-encoder</code>: Defines the log encoder. Options are: <code>console</code> or <code>json</code>. Defaults to <code>json</code> if <code>--log-dev</code> is disabled and <code>console</code> if <code>--log-dev</code> is enabled. Needs <code>--log-zap</code> enabled.</li>
+<li><code>--log-encode-time</code>: Configures the encode time used in the logs. Options are: <code>rfc3339nano</code>, <code>rfc3339</code>, <code>iso8601</code>, <code>millis</code>, <code>nanos</code>. Defaults to <code>rfc3339nano</code> if <code>--log-dev</code> is disabled and <code>iso8601</code> if <code>--log-dev</code> is enabled. Needs <code>--log-zap</code> enabled.</li>
+<li><code>--v</code>: Number of the log level verbosity. 1: info; 2: add low verbosity debug. Defaults to 2.</li>
+</ul>
+
+<hr />
+
 <h2 id="master-socket">&ndash;master-socket</h2>
 
 <p>Since v0.12</p>
@@ -1113,6 +1208,18 @@ instruct the controller to start and manage the embedded haproxy instead of an e
 <li><a href="/docs/examples/external-haproxy/">example</a> page.</li>
 <li><a href="/docs/configuration/keys/#external">External</a> and <a href="/docs/configuration/keys/#master-worker">Master-worker</a> configuration keys</li>
 </ul>
+
+<hr />
+
+<h2 id="master-worker">&ndash;master-worker</h2>
+
+<p>Since v0.14</p>
+
+<p>Defines if haproxy should be configured in master-worker mode. If <code>false</code>, one single process
+is forked in the background. If <code>true</code>, a master process is started in the foreground and can
+be used to manage current and old worker processes. The default value is <code>false</code>, which
+preserves historical behavior of HAProxy Ingress. External HAProxy deployment needs
+master-worker mode and will enforce <code>--master-worker</code> as <code>true</code> if configured.</p>
 
 <hr />
 
@@ -1318,7 +1425,7 @@ data:
 <li><code>8000</code> will proxy to <code>http</code> service, port <code>8000</code>, on the <code>system-prod</code> namespace. The upstream service will expect connections using the PROXY protocol but it only supports v1.</li>
 <li><code>9900</code> will proxy to <code>admin</code> service, port <code>9900</code>, on the <code>system-prod</code> namespace. Clients should connect using the PROXY protocol v1 or v2. Upcoming connections should be encrypted, HAProxy will ssl-offload data using crt/key provided by <code>system-prod/tcp-9900</code> secret.</li>
 <li><code>9990</code> and <code>9999</code> will proxy to the same <code>admin</code> service and <code>9999</code> port and the upstream service will expect connections using the PROXY protocol v2. The HAProxy frontend, however, will only expect PROXY protocol v1 or v2 on it&rsquo;s port <code>9999</code>.</li>
-<li><code>9995</code> will proxy to <code>admin</code> service, port <code>9900</code>, on the <code>system-prod</code> namespace. Upcoming connections should be encrypted, HAProxy will ssl-offload data using crt/key provided by <code>system-prod/tcp-9995</code> secret. Furthermore, clients must present a certificate that will be valid under the certificate authority (and optional certificate revocation list) provded in the <code>system-prod/tcp-9995-ca</code> secret.</li>
+<li><code>9995</code> will proxy to <code>admin</code> service, port <code>9900</code>, on the <code>system-prod</code> namespace. Upcoming connections should be encrypted, HAProxy will ssl-offload data using crt/key provided by <code>system-prod/tcp-9995</code> secret. Furthermore, clients must present a certificate that will be valid under the certificate authority (and optional certificate revocation list) provided in the <code>system-prod/tcp-9995-ca</code> secret.</li>
 </ul>
 
 <p>Note: Check interval was added in v0.10 and defaults to <code>2s</code>. All declared services has check interval enabled, except <code>3306</code> which disabled it.</p>
@@ -1327,6 +1434,26 @@ data:
 
 <ul>
 <li><a href="/docs/configuration/keys/#tcp-services">TCP Services</a> configuration keys</li>
+</ul>
+
+<hr />
+
+<h2 id="track-old-instances">&ndash;track-old-instances</h2>
+
+<p>Since v0.14</p>
+
+<p>Creates an internal list of connections to old HAProxy instances. These connections are used to
+read or send data to stopping instances, which is usually serving long lived connections like
+TCP services or websockets.</p>
+
+<p>Enabling this option will make old HAProxy instances to not stop before <code>timeout-stop</code> timeout,
+even if all the remaining sessions finish, so only enable it if using a feature that requests
+it.</p>
+
+<p>See also:</p>
+
+<ul>
+<li><a href="/docs/configuration/keys/#close-sessions-duration"><code>close-sessions-duration</code></a> configuration key</li>
 </ul>
 
 <hr />
@@ -1343,14 +1470,6 @@ resources that this controller is tracking.  Defaults to <code>true</code>.</p>
 <p>Indicates whether the ingress controller should update the <code>status</code> attribute of all the Ingress
 resources that this controller is tracking when the controller is being stopped.  Defaults to
 <code>true</code>.</p>
-
-<hr />
-
-<h2 id="v">&ndash;v</h2>
-
-<p>Configures the log verbosity.  <code>1</code> is the default value and outputs only errors, warnings and a few
-update events.  <code>2</code> is a good balance between low verbosity and rich details about controller
-events.  <code>3</code> is also available and provides even more details.</p>
 
 <hr />
 
@@ -1405,8 +1524,11 @@ changes in one single shot. The default value is <code>200ms</code>.</p>
 
 <p>Since v0.13</p>
 
-<p>Enables Gateway API watch and parse. The Gateway API CRDs should be installed before enable
-this option. See also the Gateway API configuration <a href="/docs/configuration/gateway-api/">doc</a>.</p>
+<p>Enables Gateway API watch and parse. This option is enabled by default since v0.14 and controller
+will start the listener only if the Gateway API CRDs are found. Add <code>--watch-gateway=false</code>
+option to instruct the controller to not try to listen to the CRDs. The controller should be
+restarted if the CRDs are installed after starting the controller. See also the Gateway API
+configuration <a href="/docs/configuration/gateway-api/">doc</a>.</p>
 
 <hr />
 
@@ -1422,7 +1544,7 @@ configmaps or the default backend service located in a different namespace than 
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified September 23, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/7638d52b13003a35bccbaab8410ca0fe16ecfd3c">add --ingress-class-precedence command-line option (7638d52b)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified November 20, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/78c90696c7092d4f8a754416e52755eed80e7c46">add zap as a logger sink option (78c90696)</a>
 </div>
 </div>
 

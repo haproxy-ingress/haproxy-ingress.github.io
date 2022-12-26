@@ -26,7 +26,7 @@
 
 &lt;p&gt;This example demonstrates how to configure
 &lt;a href=&#34;https://www.martinfowler.com/bliki/BlueGreenDeployment.html&#34;&gt;blue/green deployment&lt;/a&gt;
-on HAProxy Ingress controller, in order to route requests based on distict weight on
+on HAProxy Ingress controller, in order to route requests based on distinct weight on
 deployment groups as well as selecting a group based on http header or cookie value.&lt;/p&gt;
 
 &lt;h2 id=&#34;prerequisites&#34;&gt;Prerequisites&lt;/h2&gt;
@@ -329,10 +329,10 @@ following content:&lt;/p&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;enabled&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;image&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;repository&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;haproxy&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
-&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;tag&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2.3.12&lt;/span&gt;-alpine&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;      &lt;/span&gt;tag&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;2.3.9&lt;/span&gt;-alpine&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Change the hostNetwork to &lt;code&gt;true&lt;/code&gt; if your cluster doesn&amp;rsquo;t provide a service loadbalancer.
-These parameters are also configuring an external haproxy and configuring it to log to
-stdout.&lt;/p&gt;
+These parameters are also configuring an external haproxy and configuring haproxy to log
+to stdout.&lt;/p&gt;
 
 &lt;p&gt;Add the HAProxy Ingress Helm repository if using HAProxy Ingress&amp;rsquo; chart for the first time:&lt;/p&gt;
 
@@ -423,10 +423,9 @@ default installation.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;init&lt;/code&gt;, a Kubernetes&amp;rsquo; &lt;a href=&#34;https://kubernetes.io/docs/concepts/workloads/pods/init-containers/&#34;&gt;initContainer&lt;/a&gt; used to create an initial and valid haproxy configuration.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;The &lt;code&gt;haproxy&lt;/code&gt; container references the official Alpine based image &lt;code&gt;haproxy:2.3.12-alpine&lt;/code&gt;,
-but can be any other, provided that it isn&amp;rsquo;t older than the minimal required version. The
-minimal version for the external HAProxy can be found in the
-&lt;a href=&#34;https://github.com/jcmoraisjr/haproxy-ingress/#use-haproxy-ingress&#34;&gt;README&lt;/a&gt; file.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;haproxy&lt;/code&gt; container references the official Alpine based image &lt;code&gt;haproxy:2.3.4-alpine&lt;/code&gt;,
+but can be any other. The only requisite is to be 2.0 or newer due to some new keywords
+used by HAProxy Ingress.&lt;/p&gt;
 
 &lt;p&gt;The &lt;code&gt;init&lt;/code&gt; container just copy a minimum and valid &lt;code&gt;haproxy.cfg&lt;/code&gt;. This file is used
 to properly starts haproxy and configures its master CLI that HAProxy Ingress uses
@@ -574,7 +573,7 @@ Bitnami has also a Prometheus Operator &lt;a href=&#34;https://github.com/bitnam
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;        &lt;/span&gt;targetLabel&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;proxy&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;h2 id=&#34;configure-the-dashboard&#34;&gt;Configure the dashboard&lt;/h2&gt;
 
-&lt;p&gt;Import &lt;a href=&#34;https://grafana.com/grafana/dashboards/12056&#34;&gt;this&lt;/a&gt; Grafana dashboard. If Grafana was deployed using the steps provided in this walktrought:&lt;/p&gt;
+&lt;p&gt;Import &lt;a href=&#34;https://grafana.com/grafana/dashboards/12056&#34;&gt;this&lt;/a&gt; Grafana dashboard. If Grafana was deployed using the steps provided in this walkthrough:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Open Grafana page - the URL is the same provided in the &lt;code&gt;prometheus-operator-values.yaml&lt;/code&gt; file and should resolve to the ingress deployment&lt;/li&gt;
@@ -629,7 +628,7 @@ Status Codes  [code:count]               200:1
 Error Set:
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Now the real test. Adjust the duration and rate (number of requests per second) if needed. A dual core VM dedicated to HAProxy Ingress should accept a few thousands requests per second. Lets configure &lt;code&gt;200&lt;/code&gt; which should move some lines in the dashoard:&lt;/p&gt;
+&lt;p&gt;Now the real test. Adjust the duration and rate (number of requests per second) if needed. A dual core VM dedicated to HAProxy Ingress should accept a few thousands requests per second. Lets configure &lt;code&gt;200&lt;/code&gt; which should move some lines in the dashboard:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;IP=192.168.0.11
 echo &amp;quot;GET http://$IP&amp;quot; |\
@@ -711,8 +710,8 @@ remember to adjust them before moving to production.
 &lt;p&gt;Check if the agent is up and running:&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;$ kubectl -n ingress-controller get deployment modsecurity-spoa
-NAME                     READY     UP-TO-DATE   AVAILABLE  AGE  
-modsecurity-spoa         3/3       3            3          7s   
+NAME                     READY     UP-TO-DATE   AVAILABLE  AGE
+modsecurity-spoa         3/3       3            3          7s
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;You can now create the service that provides a ClusterIP address for the HAProxy ConfigMap.&lt;/p&gt;
@@ -837,6 +836,33 @@ modsecurity-spoa-6596c6b444-cht27   2/2     Running   0          14m
 modsecurity-spoa-6596c6b444-kw2tr   2/2     Running   0          14m
 modsecurity-spoa-6596c6b444-mkndw   2/2     Running   0          14m
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;using-coraza-instead-of-modsecurity&#34;&gt;Using Coraza instead of ModSecurity&lt;/h2&gt;
+
+&lt;p&gt;Since the maintainers of ModSecurity are dropping support in 2024, &lt;a href=&#34;https://coreruleset.org/20211222/talking-about-modsecurity-and-the-new-coraza-waf/&#34;&gt;OWASP has created a replacement called Coraza&lt;/a&gt; which is a drop-in replacement for ModSecurity.&lt;/p&gt;
+
+&lt;p&gt;In order to use Coraza, the process is essentially the same as described in the above sections, with a few exceptions. First, in the haproxy-ingress ConfigMap, add the following two additional keys:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;modsecurity-use-coraza&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#204a87;font-weight:bold&#34;&gt;true&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
+&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;  &lt;/span&gt;modsecurity-args&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#4e9a06&#34;&gt;&amp;#34;app=hdr(host) id=unique-id src-ip=src src-port=src_port dst-ip=dst dst-port=dst_port method=method path=path query=query version=req.ver headers=req.hdrs body=req.body&amp;#34;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You may require different &lt;code&gt;modsecurity-args&lt;/code&gt; depending on your Coraza config and your version of coraza-spoa. Check the &lt;a href=&#34;https://github.com/corazawaf/coraza-spoa&#34;&gt;coraza-spoa README&lt;/a&gt; for full details.&lt;/p&gt;
+
+&lt;p&gt;Second, you&amp;rsquo;ll need to change the spoa-modsecurity container image to a coraza-spoa image and create a configmap to hold the Coraza config.yaml. A complete example with all the changes can be found &lt;a href=&#34;/resources/coraza-deployment.yaml&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+
+
+&lt;div class=&#34;alert alert-warning&#34; role=&#34;alert&#34;&gt;
+&lt;h4 class=&#34;alert-heading&#34;&gt;Warning&lt;/h4&gt;
+The coraza-spoa image that we provide in the above example is based on &lt;a href=&#34;https://github.com/corazawaf/coraza-spoa/pull/36&#34;&gt;an experimental branch of coraza-spoa&lt;/a&gt;. For production environments, it would be best to wait until the experimental changes are merged and &lt;a href=&#34;https://github.com/corazawaf/coraza-spoa/issues/37&#34;&gt;an official image is released&lt;/a&gt;.
+&lt;/div&gt;
+
+
+&lt;h3 id=&#34;troubleshooting-coraza&#34;&gt;Troubleshooting Coraza&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Ensure that the &lt;code&gt;bind&lt;/code&gt; port in Coraza&amp;rsquo;s config.yaml matches the port in &lt;code&gt;modsecurity-endpoints&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Pay close attention to the &lt;code&gt;modsecurity-args&lt;/code&gt; (specifically the &lt;code&gt;app&lt;/code&gt; arg) and make sure they are set according to the coraza-spoa docs since the exact args may vary depending on your version of coraza-spoa.&lt;/li&gt;
+&lt;li&gt;For more complex issues, it may help to set &lt;code&gt;log_level: debug&lt;/code&gt; in Coraza.&lt;/li&gt;
+&lt;/ul&gt;
 
       </description>
     </item>

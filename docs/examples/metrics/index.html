@@ -25,13 +25,13 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/examples/metrics/" />
-<meta property="article:modified_time" content="2022-05-01T15:24:14-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2022-06-20T22:37:59-04:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Metrics">
 <meta itemprop="description" content="Demonstrate how to collect and expose ingress controller and haproxy metrics.
 ">
 
 
-<meta itemprop="dateModified" content="2022-05-01T15:24:14-03:00" />
+<meta itemprop="dateModified" content="2022-06-20T22:37:59-04:00" />
 <meta itemprop="wordCount" content="824">
 
 
@@ -119,13 +119,13 @@
 			
 			<li class="nav-item dropdown d-none d-lg-block">
 				<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	v0.13 (latest)
+	v0.14 (latest)
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.14/docs">v0.14 (beta)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.14 (latest)</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">v0.13 (latest)</a>
+	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.13/docs">v0.13</a>
 	
 	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.12/docs">v0.12</a>
 	
@@ -559,7 +559,7 @@ Bitnami has also a Prometheus Operator <a href="https://github.com/bitnami/chart
 </span><span style="color:#f8f8f8;text-decoration:underline">        </span>targetLabel<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>proxy</code></pre></div>
 <h2 id="configure-the-dashboard">Configure the dashboard</h2>
 
-<p>Import <a href="https://grafana.com/grafana/dashboards/12056">this</a> Grafana dashboard. If Grafana was deployed using the steps provided in this walktrought:</p>
+<p>Import <a href="https://grafana.com/grafana/dashboards/12056">this</a> Grafana dashboard. If Grafana was deployed using the steps provided in this walkthrough:</p>
 
 <ul>
 <li>Open Grafana page - the URL is the same provided in the <code>prometheus-operator-values.yaml</code> file and should resolve to the ingress deployment</li>
@@ -614,7 +614,7 @@ Status Codes  [code:count]               200:1
 Error Set:
 </code></pre>
 
-<p>Now the real test. Adjust the duration and rate (number of requests per second) if needed. A dual core VM dedicated to HAProxy Ingress should accept a few thousands requests per second. Lets configure <code>200</code> which should move some lines in the dashoard:</p>
+<p>Now the real test. Adjust the duration and rate (number of requests per second) if needed. A dual core VM dedicated to HAProxy Ingress should accept a few thousands requests per second. Lets configure <code>200</code> which should move some lines in the dashboard:</p>
 
 <pre><code>IP=192.168.0.11
 echo &quot;GET http://$IP&quot; |\
@@ -644,7 +644,7 @@ echo &quot;GET https://$IP&quot; |\
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified May 1, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/18d268641d9823b77c9c833235027d5c7176f6b4">change metrics example to use servicemonitor (18d26864)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified June 20, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/3f904ee4e2476dfc2fb4e4f93d78b48977aa5052">Spelling fixes (3f904ee4)</a>
 </div>
 </div>
 
