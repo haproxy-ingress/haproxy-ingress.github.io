@@ -58,9 +58,11 @@
 &lt;li&gt;Resources status aren&amp;rsquo;t updated.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;Version v1alpha2 should be fully implemented in v0.15 (Q2&amp;rsquo;22).&lt;/p&gt;
+&lt;p&gt;Version v1beta1 should be fully implemented in v0.15 (Q1&amp;rsquo;23).&lt;/p&gt;
 
-&lt;p&gt;Version v1alpha1 support should be dropped in v0.16.&lt;/p&gt;
+&lt;p&gt;Version v1alpha1 support should be dropped in v0.15.&lt;/p&gt;
+
+&lt;p&gt;Version v1alpha2 support should be dropped in v0.16.&lt;/p&gt;
 
 &lt;h2 id=&#34;ingress&#34;&gt;Ingress&lt;/h2&gt;
 
@@ -787,6 +789,20 @@ TCP port number.&lt;/p&gt;
 &lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#configuration-snippet&#34;&gt;&lt;code&gt;config-frontend&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;multiline HTTP and HTTPS frontend config&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#configuration-snippet&#34;&gt;&lt;code&gt;config-frontend-early&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;multiline HTTP and HTTPS frontend config, applied before any builtin logic&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#configuration-snippet&#34;&gt;&lt;code&gt;config-frontend-late&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;multiline HTTP and HTTPS frontend config, same as &lt;code&gt;config-frontend&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
 &lt;/tr&gt;
@@ -2705,7 +2721,7 @@ the DN of the certificate.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;auth-tls-error-page&lt;/code&gt;: Optional URL of the page to redirect the user if he doesn&amp;rsquo;t provide a certificate or the certificate is invalid.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;auth-tls-secret&lt;/code&gt;: Mandatory secret name with &lt;code&gt;ca.crt&lt;/code&gt; key providing all certificate authority bundles used to validate client certificates. Since v0.9, an optional &lt;code&gt;ca.crl&lt;/code&gt; key can also provide a CRL in PEM format for the server to verify against. A filename prefixed with &lt;code&gt;file://&lt;/code&gt; can be used containing the CA bundle in PEM format, and optionally followed by a comma and the filename with the crl, eg &lt;code&gt;file:///dir/ca.pem&lt;/code&gt; or &lt;code&gt;file:///dir/ca.pem,/dir/crl.pem&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;auth-tls-strict&lt;/code&gt;: Defines if a wrong or incomplete configuration, eg missing secret with &lt;code&gt;ca.crt&lt;/code&gt;, should forbid connection attempts. If &lt;code&gt;false&lt;/code&gt;, a wrong or incomplete configuration will ignore the authentication config, allowing anonymous connection. If &lt;code&gt;true&lt;/code&gt;, a strict configuration is used: all requests will be rejected with HTTP 495 or 496, or redirected to the error page if configured, until a proper &lt;code&gt;ca.crt&lt;/code&gt; is provided. Strict configuration will only be used if &lt;code&gt;auth-tls-secret&lt;/code&gt; has a secret name and &lt;code&gt;auth-tls-verify-client&lt;/code&gt; is missing or is not configured as &lt;code&gt;off&lt;/code&gt;. This options used to have &lt;code&gt;false&lt;/code&gt; as the default value up to v0.13, changing its default to &lt;code&gt;true&lt;/code&gt; since v0.14 to improve security.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;auth-tls-verify-client&lt;/code&gt;: Optional configuration of Client Verification behavior. Supported values are &lt;code&gt;off&lt;/code&gt;, &lt;code&gt;on&lt;/code&gt;, &lt;code&gt;optional&lt;/code&gt; and &lt;code&gt;optional_no_ca&lt;/code&gt;. The default value is &lt;code&gt;on&lt;/code&gt; if a valid secret is provided, &lt;code&gt;off&lt;/code&gt; otherwise.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;auth-tls-verify-client&lt;/code&gt;: Optional configuration of Client Verification behavior. Supported values are &lt;code&gt;off&lt;/code&gt;, &lt;code&gt;on&lt;/code&gt;, &lt;code&gt;optional&lt;/code&gt; and &lt;code&gt;optional_no_ca&lt;/code&gt;. The default value is &lt;code&gt;on&lt;/code&gt; if a valid secret is provided, &lt;code&gt;off&lt;/code&gt; otherwise. &lt;code&gt;optional&lt;/code&gt; makes the certificate optional but validates it when provided by the client. From v0.8 to v0.13 controller versions, &lt;code&gt;optional_no_ca&lt;/code&gt; used to validate the certificate as well, since v0.14 it makes the proxy bypass any validation.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;ssl-fingerprint-lower&lt;/code&gt;: Defines if the certificate fingerprint should be in lowercase hexadecimal digits. The default value is &lt;code&gt;false&lt;/code&gt;, which uses uppercase digits.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;ssl-fingerprint-sha2-bits&lt;/code&gt;: Defines the number of bits of the SHA-2 fingerprint of the client certificate. Valid values are &lt;code&gt;224&lt;/code&gt;, &lt;code&gt;256&lt;/code&gt;, &lt;code&gt;384&lt;/code&gt; or &lt;code&gt;512&lt;/code&gt;. The header &lt;code&gt;X-SSL-Client-SHA2&lt;/code&gt; will only be added if this option is declared.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;ssl-headers-prefix&lt;/code&gt;: Configures which prefix should be used on HTTP headers. Since &lt;a href=&#34;https://tools.ietf.org/html/rfc6648&#34;&gt;RFC 6648&lt;/a&gt; &lt;code&gt;X-&lt;/code&gt; prefix on unstandardized headers changed from a convention to deprecation. This configuration allows to select which pattern should be used on header names.&lt;/li&gt;
@@ -3321,6 +3337,20 @@ configuration. If the suffix is a percentage, the value should be between &lt;co
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;code&gt;config-frontend-early&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.15&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;config-frontend-late&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td&gt;v0.15&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;code&gt;config-global&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
@@ -3363,7 +3393,9 @@ to add more than one line of configuration.&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;config-backend&lt;/code&gt;: Adds a configuration snippet to a HAProxy backend section.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;config-defaults&lt;/code&gt;: Adds a configuration snippet to the end of the HAProxy defaults section.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;config-frontend&lt;/code&gt;: Adds a configuration snippet to the HTTP and HTTPS frontend sections.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;config-frontend&lt;/code&gt;: Adds a configuration snippet to the HTTP and HTTPS frontend sections, alias for &lt;code&gt;config-frontend-late&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;config-frontend-early&lt;/code&gt;: Adds a configuration snippet to the HTTP and HTTPS frontend sections, before any builtin logic.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;config-frontend-late&lt;/code&gt;: Adds a configuration snippet to the HTTP and HTTPS frontend sections, same as &lt;code&gt;config-frontend&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;config-global&lt;/code&gt;: Adds a configuration snippet to the end of the HAProxy global section.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;config-proxy&lt;/code&gt;: Adds a configuration snippet to any HAProxy proxy - listen, frontend or backend. It accepts a multi section configuration, where the name of the section is the name of a HAProxy proxy without the listen/frontend/backend prefix. A section whose proxy is not found is ignored. The content of each section should be indented, the first line without indentation is the start of a new section which will configure another proxy.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;config-sections&lt;/code&gt;: Allows to declare new HAProxy sections. The configuration is used verbatim, without any indentation or validation.&lt;/li&gt;
@@ -3390,6 +3422,8 @@ to add more than one line of configuration.&lt;/p&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;          &lt;/span&gt;timeout&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;connect&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;5s&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;          &lt;/span&gt;timeout&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;server&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;10s&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;
 &lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;          &lt;/span&gt;server&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;syslogsrv&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;127.0.0.1&lt;/span&gt;&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#0000cf;font-weight:bold&#34;&gt;6514&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;log-proto&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;octet-count&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;config-frontend&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;|
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;      capture request header X-User-Id len 32&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;config-frontend-early&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;|
+&lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;      tcp-request connection reject if !{ src 10.0.0.0/8 }&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;config-frontend-late&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt; &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;|
 &lt;/span&gt;&lt;span style=&#34;color:#8f5902;font-style:italic&#34;&gt;      capture request header X-User-Id len 32&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Annotations:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-yaml&#34; data-lang=&#34;yaml&#34;&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;    &lt;/span&gt;annotations&lt;span style=&#34;color:#000;font-weight:bold&#34;&gt;:&lt;/span&gt;&lt;span style=&#34;color:#f8f8f8;text-decoration:underline&#34;&gt;

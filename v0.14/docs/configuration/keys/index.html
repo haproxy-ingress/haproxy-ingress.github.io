@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.14/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2022-12-03T18:09:25-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2022-12-24T11:28:16-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2022-12-03T18:09:25-03:00" />
-<meta itemprop="wordCount" content="17344">
+<meta itemprop="dateModified" content="2022-12-24T11:28:16-03:00" />
+<meta itemprop="wordCount" content="17458">
 
 
 
@@ -1182,6 +1182,20 @@ TCP port number.</p>
 <tr>
 <td><a href="#configuration-snippet"><code>config-frontend</code></a></td>
 <td>multiline HTTP and HTTPS frontend config</td>
+<td>Global</td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="#configuration-snippet"><code>config-frontend-early</code></a></td>
+<td>multiline HTTP and HTTPS frontend config, applied before any builtin logic</td>
+<td>Global</td>
+<td></td>
+</tr>
+
+<tr>
+<td><a href="#configuration-snippet"><code>config-frontend-late</code></a></td>
+<td>multiline HTTP and HTTPS frontend config, same as <code>config-frontend</code></td>
 <td>Global</td>
 <td></td>
 </tr>
@@ -3100,7 +3114,7 @@ the DN of the certificate.</p>
 <li><code>auth-tls-error-page</code>: Optional URL of the page to redirect the user if he doesn&rsquo;t provide a certificate or the certificate is invalid.</li>
 <li><code>auth-tls-secret</code>: Mandatory secret name with <code>ca.crt</code> key providing all certificate authority bundles used to validate client certificates. Since v0.9, an optional <code>ca.crl</code> key can also provide a CRL in PEM format for the server to verify against. A filename prefixed with <code>file://</code> can be used containing the CA bundle in PEM format, and optionally followed by a comma and the filename with the crl, eg <code>file:///dir/ca.pem</code> or <code>file:///dir/ca.pem,/dir/crl.pem</code>.</li>
 <li><code>auth-tls-strict</code>: Defines if a wrong or incomplete configuration, eg missing secret with <code>ca.crt</code>, should forbid connection attempts. If <code>false</code>, a wrong or incomplete configuration will ignore the authentication config, allowing anonymous connection. If <code>true</code>, a strict configuration is used: all requests will be rejected with HTTP 495 or 496, or redirected to the error page if configured, until a proper <code>ca.crt</code> is provided. Strict configuration will only be used if <code>auth-tls-secret</code> has a secret name and <code>auth-tls-verify-client</code> is missing or is not configured as <code>off</code>. This options used to have <code>false</code> as the default value up to v0.13, changing its default to <code>true</code> since v0.14 to improve security.</li>
-<li><code>auth-tls-verify-client</code>: Optional configuration of Client Verification behavior. Supported values are <code>off</code>, <code>on</code>, <code>optional</code> and <code>optional_no_ca</code>. The default value is <code>on</code> if a valid secret is provided, <code>off</code> otherwise.</li>
+<li><code>auth-tls-verify-client</code>: Optional configuration of Client Verification behavior. Supported values are <code>off</code>, <code>on</code>, <code>optional</code> and <code>optional_no_ca</code>. The default value is <code>on</code> if a valid secret is provided, <code>off</code> otherwise. <code>optional</code> makes the certificate optional but validates it when provided by the client. From v0.8 to v0.13 controller versions, <code>optional_no_ca</code> used to validate the certificate as well, since v0.14 it makes the proxy bypass any validation.</li>
 <li><code>ssl-fingerprint-lower</code>: Defines if the certificate fingerprint should be in lowercase hexadecimal digits. The default value is <code>false</code>, which uses uppercase digits.</li>
 <li><code>ssl-fingerprint-sha2-bits</code>: Defines the number of bits of the SHA-2 fingerprint of the client certificate. Valid values are <code>224</code>, <code>256</code>, <code>384</code> or <code>512</code>. The header <code>X-SSL-Client-SHA2</code> will only be added if this option is declared.</li>
 <li><code>ssl-headers-prefix</code>: Configures which prefix should be used on HTTP headers. Since <a href="https://tools.ietf.org/html/rfc6648">RFC 6648</a> <code>X-</code> prefix on unstandardized headers changed from a convention to deprecation. This configuration allows to select which pattern should be used on header names.</li>
@@ -3716,6 +3730,20 @@ configuration. If the suffix is a percentage, the value should be between <code>
 </tr>
 
 <tr>
+<td><code>config-frontend-early</code></td>
+<td><code>Global</code></td>
+<td></td>
+<td>v0.15</td>
+</tr>
+
+<tr>
+<td><code>config-frontend-late</code></td>
+<td><code>Global</code></td>
+<td></td>
+<td>v0.15</td>
+</tr>
+
+<tr>
 <td><code>config-global</code></td>
 <td><code>Global</code></td>
 <td></td>
@@ -3758,7 +3786,9 @@ to add more than one line of configuration.</p>
 <ul>
 <li><code>config-backend</code>: Adds a configuration snippet to a HAProxy backend section.</li>
 <li><code>config-defaults</code>: Adds a configuration snippet to the end of the HAProxy defaults section.</li>
-<li><code>config-frontend</code>: Adds a configuration snippet to the HTTP and HTTPS frontend sections.</li>
+<li><code>config-frontend</code>: Adds a configuration snippet to the HTTP and HTTPS frontend sections, alias for <code>config-frontend-late</code>.</li>
+<li><code>config-frontend-early</code>: Adds a configuration snippet to the HTTP and HTTPS frontend sections, before any builtin logic.</li>
+<li><code>config-frontend-late</code>: Adds a configuration snippet to the HTTP and HTTPS frontend sections, same as <code>config-frontend</code>.</li>
 <li><code>config-global</code>: Adds a configuration snippet to the end of the HAProxy global section.</li>
 <li><code>config-proxy</code>: Adds a configuration snippet to any HAProxy proxy - listen, frontend or backend. It accepts a multi section configuration, where the name of the section is the name of a HAProxy proxy without the listen/frontend/backend prefix. A section whose proxy is not found is ignored. The content of each section should be indented, the first line without indentation is the start of a new section which will configure another proxy.</li>
 <li><code>config-sections</code>: Allows to declare new HAProxy sections. The configuration is used verbatim, without any indentation or validation.</li>
@@ -3785,6 +3815,8 @@ to add more than one line of configuration.</p>
 </span><span style="color:#f8f8f8;text-decoration:underline">          </span>timeout<span style="color:#f8f8f8;text-decoration:underline"> </span>connect<span style="color:#f8f8f8;text-decoration:underline"> </span>5s<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">          </span>timeout<span style="color:#f8f8f8;text-decoration:underline"> </span>server<span style="color:#f8f8f8;text-decoration:underline"> </span>10s<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">          </span>server<span style="color:#f8f8f8;text-decoration:underline"> </span>syslogsrv<span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">127.0.0.1</span><span style="color:#000;font-weight:bold">:</span><span style="color:#0000cf;font-weight:bold">6514</span><span style="color:#f8f8f8;text-decoration:underline"> </span>log-proto<span style="color:#f8f8f8;text-decoration:underline"> </span>octet-count</code></pre></div><div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f8f8f8;text-decoration:underline">    </span>config-frontend<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#8f5902;font-style:italic">|
+</span><span style="color:#8f5902;font-style:italic">      capture request header X-User-Id len 32</span></code></pre></div><div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f8f8f8;text-decoration:underline">    </span>config-frontend-early<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#8f5902;font-style:italic">|
+</span><span style="color:#8f5902;font-style:italic">      tcp-request connection reject if !{ src 10.0.0.0/8 }</span></code></pre></div><div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f8f8f8;text-decoration:underline">    </span>config-frontend-late<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#8f5902;font-style:italic">|
 </span><span style="color:#8f5902;font-style:italic">      capture request header X-User-Id len 32</span></code></pre></div>
 <p>Annotations:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#f8f8f8;text-decoration:underline">    </span>annotations<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
@@ -7098,7 +7130,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified December 3, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/409a076a36cffcc5ab18b41b9e110c7566a95440">makes auth-headers not copying on empty string (409a076a)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified December 24, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/55a8c36bb3e086c9dbbe6884785bc24ee474bd11">makes optional_no_ca bypass proxy side validations (55a8c36b)</a>
 </div>
 </div>
 
