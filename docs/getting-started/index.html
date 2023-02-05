@@ -505,7 +505,7 @@ echoserver-5b6fb6dd96-68jwp   <span style="color:#0000cf;font-weight:bold">1</sp
 <p>Obs.: <code>nip.io</code> is a convenient service which converts a valid domain name to any IP, either public or local. See <a href="https://nip.io">here</a> how it works.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl --namespace default create ingress echoserver<span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  --annotation kubernetes.io/ingress.class<span style="color:#ce5c00;font-weight:bold">=</span>haproxy<span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  --rule<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#4e9a06">&#34;echoserver.local/*=echoserver:8080&#34;</span></code></pre></div>
+</span><span style="color:#4e9a06"></span>  --rule<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#4e9a06">&#34;echoserver.local/*=echoserver:8080,tls&#34;</span></code></pre></div>
 <p>4) Send a request to our echoserver.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ curl -k https://echoserver.local
 $ wget -qO- --no-check-certificate https://echoserver.local</code></pre></div>
@@ -574,7 +574,7 @@ $ wget -qO- --no-check-certificate https://echoserver.local</code></pre></div>
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified December 26, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/f1bc500831ae430d1479cfcb3de57f540fd38339">update to v0.14.0 (f1bc5008)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified February 5, 2023: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/77a5e79e50eba0f0d222e28ae54d4e24b5494f07">docs: add tls in the getting started example (77a5e79e)</a>
 </div>
 </div>
 
@@ -633,7 +633,7 @@ $ wget -qO- --no-check-certificate https://echoserver.local</code></pre></div>
       </div>
       <div class="col-12 col-sm-8 text-center py-2 order-sm-2">
         
-          <small class="text-white">Made with <div class="fa fa-heart"></div> & <div class="fa fa-coffee"></div> | &copy; 2022 The HAProxy Ingress Controller Authors</small>
+          <small class="text-white">Made with <div class="fa fa-heart"></div> & <div class="fa fa-coffee"></div> | &copy; 2023 The HAProxy Ingress Controller Authors</small>
         
         <small class="text-white"> | Image by <a href="https://pixabay.com/users/TheDigitalArtist-202249/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pete Linforth</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pixabay</a></small>
         
