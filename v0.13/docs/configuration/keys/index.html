@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.13/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2022-08-01T09:07:25-07:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2023-02-05T12:32:49-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2022-08-01T09:07:25-07:00" />
-<meta itemprop="wordCount" content="16018">
+<meta itemprop="dateModified" content="2023-02-05T12:32:49-03:00" />
+<meta itemprop="wordCount" content="16047">
 
 
 
@@ -48,8 +48,8 @@
 
 
 
-<link rel="preload" href="/v0.13/scss/main.min.09e7d522d5846094a77df8fe690c2672d05ec6a02218a7463cb37d7c6962580c.css" as="style">
-<link href="/v0.13/scss/main.min.09e7d522d5846094a77df8fe690c2672d05ec6a02218a7463cb37d7c6962580c.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/v0.13/scss/main.min.b6abf7afe987a739b1f28ac49b37565fa26ca767a8a9e0c1f4a68e258ba42c91.css" as="style">
+<link href="/v0.13/scss/main.min.b6abf7afe987a739b1f28ac49b37565fa26ca767a8a9e0c1f4a68e258ba42c91.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -2889,7 +2889,7 @@ Up to v0.12 the configuration key <code>auth-type</code> was mandatory, it enabl
 <ul>
 <li><code>&lt;proto&gt;</code>: can be <code>http</code>, <code>https</code>, <code>service</code> or <code>svc</code>.</li>
 <li><code>&lt;name&gt;</code>: the IP or hostname if <code>http</code> or <code>https</code>, or the name of a service if <code>service</code>. <code>svc</code> is an alias to <code>service</code>. Note that the hostname is resolved to a list of IP when the ingress is parsed and will not be dynamically updated later if the DNS record changes.</li>
-<li><code>&lt;port&gt;</code>: the port number, must be provided if a service is used and can be omitted if using <code>http</code> or <code>https</code>.</li>
+<li><code>&lt;port&gt;</code>: the port number, must be provided if a service is used and can be omitted if using <code>http</code> or <code>https</code>. If the service uses named ports, use the service&rsquo;s <code>port.targetPort</code> field value instead.</li>
 <li><code>&lt;path&gt;</code>: optional, the fully qualified path to the authentication service.</li>
 </ul>
 
@@ -2918,7 +2918,7 @@ Up to v0.12 the configuration key <code>auth-type</code> was mandatory, it enabl
 
 <p>The first option will always be used, the second one only on succeeded requests, the last one only on failures.</p>
 
-<p>These configuration keys can be defined as a comma-separated list of header names. All HTTP headers will be copied if not declared. Each header name can use wildcard.</p>
+<p>These configuration keys can be defined as a comma-separated list of header names. All HTTP headers will be copied if not declared. Each header name can use wildcard. Using a dash <code>-</code> or an empty string instructs the controller not to copy any header.</p>
 
 <p>Configuration examples:</p>
 
@@ -6698,7 +6698,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified August 1, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/a7556193502a83e79dd23b83123c07d6b089c184">Documents the expected format for --configmap key (a7556193)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified February 5, 2023: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/47b99d59a353df9695555084215ff30fc79dcded">add warning if auth external svc isnt found (47b99d59)</a>
 </div>
 </div>
 
@@ -6758,7 +6758,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
       </div>
       <div class="col-12 col-sm-8 text-center py-2 order-sm-2">
         
-          <small class="text-white">Made with <div class="fa fa-heart"></div> & <div class="fa fa-coffee"></div> | &copy; 2022 The HAProxy Ingress Controller Authors</small>
+          <small class="text-white">Made with <div class="fa fa-heart"></div> & <div class="fa fa-coffee"></div> | &copy; 2023 The HAProxy Ingress Controller Authors</small>
         
         <small class="text-white"> | Image by <a href="https://pixabay.com/users/TheDigitalArtist-202249/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pete Linforth</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pixabay</a></small>
         

@@ -2503,7 +2503,7 @@ Up to v0.12 the configuration key &lt;code&gt;auth-type&lt;/code&gt; was mandato
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;&amp;lt;proto&amp;gt;&lt;/code&gt;: can be &lt;code&gt;http&lt;/code&gt;, &lt;code&gt;https&lt;/code&gt;, &lt;code&gt;service&lt;/code&gt; or &lt;code&gt;svc&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;&amp;lt;name&amp;gt;&lt;/code&gt;: the IP or hostname if &lt;code&gt;http&lt;/code&gt; or &lt;code&gt;https&lt;/code&gt;, or the name of a service if &lt;code&gt;service&lt;/code&gt;. &lt;code&gt;svc&lt;/code&gt; is an alias to &lt;code&gt;service&lt;/code&gt;. Note that the hostname is resolved to a list of IP when the ingress is parsed and will not be dynamically updated later if the DNS record changes.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;&amp;lt;port&amp;gt;&lt;/code&gt;: the port number, must be provided if a service is used and can be omitted if using &lt;code&gt;http&lt;/code&gt; or &lt;code&gt;https&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;&amp;lt;port&amp;gt;&lt;/code&gt;: the port number, must be provided if a service is used and can be omitted if using &lt;code&gt;http&lt;/code&gt; or &lt;code&gt;https&lt;/code&gt;. If the service uses named ports, use the service&amp;rsquo;s &lt;code&gt;port.targetPort&lt;/code&gt; field value instead.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;&amp;lt;path&amp;gt;&lt;/code&gt;: optional, the fully qualified path to the authentication service.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -2532,7 +2532,7 @@ Up to v0.12 the configuration key &lt;code&gt;auth-type&lt;/code&gt; was mandato
 
 &lt;p&gt;The first option will always be used, the second one only on succeeded requests, the last one only on failures.&lt;/p&gt;
 
-&lt;p&gt;These configuration keys can be defined as a comma-separated list of header names. All HTTP headers will be copied if not declared. Each header name can use wildcard.&lt;/p&gt;
+&lt;p&gt;These configuration keys can be defined as a comma-separated list of header names. All HTTP headers will be copied if not declared. Each header name can use wildcard. Using a dash &lt;code&gt;-&lt;/code&gt; or an empty string instructs the controller not to copy any header.&lt;/p&gt;
 
 &lt;p&gt;Configuration examples:&lt;/p&gt;
 
