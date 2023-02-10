@@ -42,8 +42,8 @@
 
 
 
-<link rel="preload" href="/v0.12/scss/main.min.09e7d522d5846094a77df8fe690c2672d05ec6a02218a7463cb37d7c6962580c.css" as="style">
-<link href="/v0.12/scss/main.min.09e7d522d5846094a77df8fe690c2672d05ec6a02218a7463cb37d7c6962580c.css" rel="stylesheet" integrity="">
+<link rel="preload" href="/v0.12/scss/main.min.b6abf7afe987a739b1f28ac49b37565fa26ca767a8a9e0c1f4a68e258ba42c91.css" as="style">
+<link href="/v0.12/scss/main.min.b6abf7afe987a739b1f28ac49b37565fa26ca767a8a9e0c1f4a68e258ba42c91.css" rel="stylesheet" integrity="">
 
 
 <script
@@ -445,7 +445,7 @@
 <p>5) Install HAProxy Ingress using <code>haproxy-ingress</code> as the release name and <code>haproxy-ingress-values.yaml</code> file as the custom parameters:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ helm install haproxy-ingress haproxy-ingress/haproxy-ingress<span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  --create-namespace --namespace ingress-controller<span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  --version <span style="color:#0000cf;font-weight:bold">0</span>.12.14<span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  --version <span style="color:#0000cf;font-weight:bold">0</span>.12.15<span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  -f haproxy-ingress-values.yaml</code></pre></div>
 
 
@@ -496,6 +496,9 @@ $ kubectl create -f - <span style="color:#4e9a06">&lt;&lt;EOF
 </span><span style="color:#4e9a06">          serviceName: echoserver
 </span><span style="color:#4e9a06">          servicePort: 8080
 </span><span style="color:#4e9a06">        path: /
+</span><span style="color:#4e9a06">  tls:
+</span><span style="color:#4e9a06">  - hosts:
+</span><span style="color:#4e9a06">    - $HOST
 </span><span style="color:#4e9a06">EOF</span></code></pre></div>
 <p>4) Send a request to our echoserver.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ curl -k https://echoserver.192.168.1.11.nip.io
@@ -552,7 +555,7 @@ $ wget -qO- --no-check-certificate https://echoserver.192.168.1.11.nip.io</code>
     
 </div>
 
-	<div class="text-muted mt-5 pt-3 border-top">Last modified July 3, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/0061f3ceea394f65b55563984d503a07e9c87adb">update to v0.12.14 (0061f3ce)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified February 10, 2023: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/1f9b025d6e4fd17df29d57aa5666cc397a4ccf64">update to v0.12.15 (1f9b025d)</a>
 </div>
 </div>
 
@@ -611,7 +614,7 @@ $ wget -qO- --no-check-certificate https://echoserver.192.168.1.11.nip.io</code>
       </div>
       <div class="col-12 col-sm-8 text-center py-2 order-sm-2">
         
-          <small class="text-white">Made with <div class="fa fa-heart"></div> & <div class="fa fa-coffee"></div> | &copy; 2022 The HAProxy Ingress Controller Authors</small>
+          <small class="text-white">Made with <div class="fa fa-heart"></div> & <div class="fa fa-coffee"></div> | &copy; 2023 The HAProxy Ingress Controller Authors</small>
         
         <small class="text-white"> | Image by <a href="https://pixabay.com/users/TheDigitalArtist-202249/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pete Linforth</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pixabay</a></small>
         
