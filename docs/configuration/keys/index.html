@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2022-12-24T11:28:16-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2023-02-05T12:32:49-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2022-12-24T11:28:16-03:00" />
-<meta itemprop="wordCount" content="17458">
+<meta itemprop="dateModified" content="2023-02-05T12:32:49-03:00" />
+<meta itemprop="wordCount" content="17471">
 
 
 
@@ -2954,7 +2954,7 @@ Up to v0.12 the configuration key <code>auth-type</code> was mandatory, it enabl
 <ul>
 <li><code>&lt;proto&gt;</code>: can be <code>http</code>, <code>https</code>, <code>service</code> or <code>svc</code>.</li>
 <li><code>&lt;name&gt;</code>: the IP or hostname if <code>http</code> or <code>https</code>, or the name of a service if <code>service</code>. <code>svc</code> is an alias to <code>service</code>. Note that the hostname is resolved to a list of IP when the ingress is parsed and will not be dynamically updated later if the DNS record changes.</li>
-<li><code>&lt;port&gt;</code>: the port number, must be provided if a service is used and can be omitted if using <code>http</code> or <code>https</code>.</li>
+<li><code>&lt;port&gt;</code>: the port number, must be provided if a service is used and can be omitted if using <code>http</code> or <code>https</code>. If the service uses named ports, use the service&rsquo;s <code>port.targetPort</code> field value instead.</li>
 <li><code>&lt;path&gt;</code>: optional, the fully qualified path to the authentication service.</li>
 </ul>
 
@@ -7128,7 +7128,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified December 24, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/55a8c36bb3e086c9dbbe6884785bc24ee474bd11">makes optional_no_ca bypass proxy side validations (55a8c36b)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified February 5, 2023: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/cbacd01debe136a5a8c63ca489539c582f97dee7">add warning if auth external svc isnt found (cbacd01d)</a>
 </div>
 </div>
 
