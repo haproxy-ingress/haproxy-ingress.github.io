@@ -1,0 +1,470 @@
+<!doctype html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.110.0">
+<meta name="robots" content="index, follow">
+
+
+<link rel="shortcut icon" href="/v0.15/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/v0.15/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/v0.15/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/v0.15/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/v0.15/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/v0.15/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/v0.15/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/v0.15/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/v0.15/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/v0.15/favicons/android-192x192.png" sizes="192x192">
+
+<title>Metrics | HAProxy Ingress</title>
+<meta name="description" content="Demonstrate how to collect and expose ingress controller and haproxy metrics.
+">
+<meta property="og:title" content="Metrics" />
+<meta property="og:description" content="Demonstrate how to collect and expose ingress controller and haproxy metrics.
+" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/v0.15/docs/examples/metrics/" /><meta property="article:section" content="docs" />
+
+<meta property="article:modified_time" content="2022-06-20T22:37:59-04:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta itemprop="name" content="Metrics">
+<meta itemprop="description" content="Demonstrate how to collect and expose ingress controller and haproxy metrics.
+">
+<meta itemprop="dateModified" content="2022-06-20T22:37:59-04:00" />
+<meta itemprop="wordCount" content="892">
+<meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Metrics"/>
+<meta name="twitter:description" content="Demonstrate how to collect and expose ingress controller and haproxy metrics.
+"/>
+
+
+
+
+<link rel="preload" href="/v0.15/scss/main.min.8e956a3c9d46b1d0b25e34c8f47151afa18d128c4626421f1852462bc8e49cb9.css" as="style">
+<link href="/v0.15/scss/main.min.8e956a3c9d46b1d0b25e34c8f47151afa18d128c4626421f1852462bc8e49cb9.css" rel="stylesheet" integrity="">
+
+<script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK"
+  crossorigin="anonymous"></script>
+
+<script>
+  var _paq = window._paq = window._paq || [];
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//tags.joaomora.is/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '3']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="//tags.joaomora.is/matomo.php?idsite=3&amp;rec=1" style="border:0;" alt="" /></p></noscript>
+
+
+  </head>
+  <body class="td-page">
+    <header>
+      <nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+  <a class="navbar-brand" href="/v0.15/"><span class="navbar-brand__logo navbar-logo"></span><span class="navbar-brand__name">HAProxy Ingress</span></a>
+  <div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+    <ul class="navbar-nav mt-2 mt-lg-0">
+      <li class="nav-item mr-4 mb-2 mb-lg-0">
+        <a class="nav-link" href="/v0.15/about/"><span>About</span></a>
+      </li>
+      <li class="nav-item mr-4 mb-2 mb-lg-0">
+        <a class="nav-link active" href="/v0.15/docs/"><span class="active">Documentation</span></a>
+      </li>
+      <li class="nav-item mr-4 mb-2 mb-lg-0">
+        <a class="nav-link" href="/v0.15/community/"><span>Community</span></a>
+      </li>
+      <li class="nav-item dropdown mr-4 d-none d-lg-block">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	v0.15
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+	
+	
+	
+	<a class="dropdown-item" href="/docs">Latest</a>
+	
+	<a class="dropdown-item" href="/v0.15/docs">v0.15</a>
+	
+	<a class="dropdown-item" href="/v0.14/docs">v0.14</a>
+	
+	<a class="dropdown-item" href="/v0.13/docs">v0.13</a>
+	
+	<a class="dropdown-item" href="/v0.12/docs">v0.12</a>
+	
+	<a class="dropdown-item" href="/v0.10/docs">v0.10</a>
+	
+</div>
+</li>
+      </ul>
+  </div>
+  <div class="navbar-nav d-none d-lg-block">
+    
+  </div>
+</nav>
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <aside class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  <form class="td-sidebar__search d-flex align-items-center">
+    
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-section-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  <nav class="collapse td-sidebar-nav" id="td-section-nav">
+    <ul class="td-sidebar-nav__section pr-md-3 ul-0">
+      <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-v015docs-li">
+  <a href="/v0.15/docs/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section tree-root" id="m-v015docs"><span class="">Documentation</span></a>
+  <ul class="ul-1">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsoverview-li">
+  <a href="/v0.15/docs/overview/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-v015docsoverview"><span class="">Overview</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsgetting-started-li">
+  <a href="/v0.15/docs/getting-started/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-v015docsgetting-started"><span class="">Getting Started</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-v015docsexamples-li">
+  <a href="/v0.15/docs/examples/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-v015docsexamples"><span class="">Examples</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsexamplesblue-green-li">
+  <a href="/v0.15/docs/examples/blue-green/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-v015docsexamplesblue-green"><span class="">Blue/green</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsexamplesexternal-haproxy-li">
+  <a href="/v0.15/docs/examples/external-haproxy/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-v015docsexamplesexternal-haproxy"><span class="">External haproxy</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-v015docsexamplesmetrics-li">
+  <a href="/v0.15/docs/examples/metrics/" class="align-left pl-0 active td-sidebar-link td-sidebar-link__page" id="m-v015docsexamplesmetrics"><span class="td-sidebar-nav-active-item">Metrics</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsexamplesmodsecurity-li">
+  <a href="/v0.15/docs/examples/modsecurity/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-v015docsexamplesmodsecurity"><span class="">ModSecurity</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-v015docsconfiguration-li">
+  <a href="/v0.15/docs/configuration/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-v015docsconfiguration"><span class="">Configuration</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsconfigurationgateway-api-li">
+  <a href="/v0.15/docs/configuration/gateway-api/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-v015docsconfigurationgateway-api"><span class="">Gateway API</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsconfigurationkeys-li">
+  <a href="/v0.15/docs/configuration/keys/" title="Configuration keys" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-v015docsconfigurationkeys"><span class="">Keys</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsconfigurationcommand-line-li">
+  <a href="/v0.15/docs/configuration/command-line/" title="Command-line options" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-v015docsconfigurationcommand-line"><span class="">Command-line</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsconfigurationtemplate-li">
+  <a href="/v0.15/docs/configuration/template/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-v015docsconfigurationtemplate"><span class="">Template</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsfaq-li">
+  <a href="/v0.15/docs/faq/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-v015docsfaq"><span class="">FAQ</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docscontribution-guidelines-li">
+  <a href="/v0.15/docs/contribution-guidelines/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-v015docscontribution-guidelines"><span class="">Contribution Guidelines</span></a>
+</li>
+  </ul>
+</li>
+    </ul>
+  </nav>
+</div>
+
+          </aside>
+          <aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none">
+            
+<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
+<a href="https://github.com/jcmoraisjr/haproxy-ingress/tree/master/docs/content/en/docs/examples/metrics.md" class="td-page-meta--view" target="_blank" rel="noopener"><i class="fa-solid fa-file-lines fa-fw"></i> View page source</a>
+  <a href="https://github.com/jcmoraisjr/haproxy-ingress/edit/master/docs/content/en/docs/examples/metrics.md" class="td-page-meta--edit" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> Edit this page</a>
+  <a href="https://github.com/jcmoraisjr/haproxy-ingress/new/master/docs/content/en/docs/examples/metrics.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> Create child page</a>
+  <a href="https://github.com/jcmoraisjr/haproxy-ingress/issues/new?title=Metrics" class="td-page-meta--issue" target="_blank" rel="noopener"><i class="fa-solid fa-list-check fa-fw"></i> Create doc issue</a>
+  
+</div>
+
+            <div class="td-toc">
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#prerequisites">Prerequisites</a></li>
+    <li><a href="#configure-prometheus-operator">Configure Prometheus Operator</a></li>
+    <li><a href="#configure-haproxy-ingress">Configure HAProxy Ingress</a></li>
+    <li><a href="#compatibility">Compatibility</a></li>
+    <li><a href="#configure-the-dashboard">Configure the dashboard</a></li>
+    <li><a href="#test">Test</a></li>
+  </ul>
+</nav>
+      </div>
+    
+            
+
+	
+		
+
+
+
+  
+  
+
+	
+		
+
+
+
+  
+  
+
+	
+
+          </aside>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            
+  
+
+            <nav aria-label="breadcrumb" class="td-breadcrumbs">
+  <ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="/v0.15/docs/">Documentation</a>
+  </li>
+  <li class="breadcrumb-item">
+    <a href="/v0.15/docs/examples/">Examples</a>
+  </li>
+  <li class="breadcrumb-item active" aria-current="page">
+    <a href="/v0.15/docs/examples/metrics/" aria-disabled="true" class="btn-link disabled">Metrics</a>
+  </li>
+  </ol>
+</nav>
+            
+<div class="td-content">
+	<h1>Metrics</h1>
+	<div class="lead">Demonstrate how to collect and expose ingress controller and haproxy metrics.</div>
+	<header class="article-meta">
+		
+
+  
+    
+
+
+  
+    
+
+
+  
+
+		
+	</header>    
+	<p>This example demonstrates how to configure <a href="https://prometheus.io">Prometheus</a> and <a href="https://grafana.com">Grafana</a> to collect and expose HAProxy and HAProxy Ingress metrics using <a href="https://prometheus-operator.dev">Prometheus Operator</a>.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>This document requires only a Kubernetes cluster. HAProxy Ingress doesn&rsquo;t need to be installed, and if so, the installation process should use the <a href="/v0.15/docs/getting-started/#installation">Helm chart</a>.</p>
+<h2 id="configure-prometheus-operator">Configure Prometheus Operator</h2>
+<p>This section can be skipped if the Kubernetes cluster has already a running Prometheus Operator.</p>
+<p>HAProxy Ingress installation configures Prometheus using a ServiceMonitor custom resource. This resource is used by <a href="https://prometheus-operator.dev">Prometheus Operator</a> to configure Prometheus instances. The following steps deploy Prometheus Operator via <a href="https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack"><code>kube-prometheus-stack</code></a> Helm chart.</p>
+<p>Create a file named <code>prometheus-operator-values.yaml</code> - change both hostnames with a name that resolves to the Kubernetes cluster:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">grafana</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">enabled</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">ingress</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">enabled</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">annotations</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">kubernetes.io/ingress.class</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">haproxy</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">hosts</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span>- <span style="color:#000">grafana.192.168.0.11.nip.io</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">tls</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span>- <span style="color:#204a87;font-weight:bold">hosts</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#000">grafana.192.168.0.11.nip.io</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span></code></pre></div><p>Add <code>kube-prometheus-stack</code> helm repo:</p>
+<pre tabindex="0"><code>helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+</code></pre><p>Install the chart:</p>
+<pre tabindex="0"><code>helm install prometheus prometheus-community/kube-prometheus-stack\
+  --create-namespace --namespace monitoring\
+  -f prometheus-operator-values.yaml
+</code></pre>
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">Note</h4>
+
+    Bitnami has also a Prometheus Operator <a href="https://github.com/bitnami/charts/tree/master/bitnami/kube-prometheus">helm chart</a> and it&rsquo;s also a good option. Note however that the values file has a different syntax.
+
+</div>
+
+<h2 id="configure-haproxy-ingress">Configure HAProxy Ingress</h2>
+<p>The steps below configures HAProxy Ingress&rsquo; Helm chart to add a new ServiceMonitor custom resource. This resource will be responsible for HAProxy and HAProxy Ingress metrics scrape.</p>
+<p>Merge the content below to the actual <code>haproxy-ingress-values.yaml</code> file:</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">controller</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">stats</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">enabled</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">metrics</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">enabled</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">serviceMonitor</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">enabled</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">labels</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">release</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">prometheus</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">metrics</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">relabelings</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">replacement</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">cl1</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">targetLabel</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">cluster</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">sourceLabels</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">[</span><span style="color:#000">__meta_kubernetes_pod_node_name]</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">targetLabel</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">hostname</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">ctrlMetrics</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">relabelings</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">replacement</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">cl1</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">targetLabel</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">cluster</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">sourceLabels</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">[</span><span style="color:#000">__meta_kubernetes_pod_node_name]</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">targetLabel</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">hostname</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span></code></pre></div><p>There are two important configurations in the snippet above:</p>
+<ul>
+<li>Added a label <code>release: prometheus</code> in the ServiceMonitor. HAProxy Ingress metrics will share the same Prometheus instance installed by Prometheus Operator. This can be changed to another dedicated instance, and must be checked if using another customized Prometheus Operator deployment.</li>
+<li>Added relabels to HAProxy and HAProxy Ingress metrics. The HAProxy Ingress dashboard uses <code>hostname</code> label as a way to distinguish two controller instances, and also <code>cluster</code> label to distinguish controllers running on distinct clusters. The source of the name can be adjusted but the label name should be the same.</li>
+</ul>
+<p>Now upgrade the chart - change <code>upgrade</code> to <code>install</code> if HAProxy Ingress isn&rsquo;t installed yet:</p>
+<pre tabindex="0"><code>helm upgrade haproxy-ingress haproxy-ingress/haproxy-ingress\
+  --create-namespace --namespace ingress-controller\
+  -f haproxy-ingress-values.yaml
+</code></pre><h2 id="compatibility">Compatibility</h2>
+<p>This dashboard works with HAProxy&rsquo;s internal Prometheus exporter. Follow these steps to adjust the scrape config and the dashboard if using <a href="https://github.com/prometheus/haproxy_exporter">Prometheus&rsquo; HAProxy Exporter</a>:</p>
+<p>Change the metric name of &ldquo;Backend status / Top 5 max/avg connection time&rdquo; to <code>haproxy_backend_http_connect_time_average_seconds</code></p>
+<p>Add this relabel configuration in the <code>haproxy-ingress-values.yaml</code> file</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">controller</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#000">...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">serviceMonitor</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#000">...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">metrics</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#000">...</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">metricRelabelings</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">sourceLabels</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">[</span><span style="color:#000">frontend]</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">targetLabel</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">proxy</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">      </span>- <span style="color:#204a87;font-weight:bold">sourceLabels</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">[</span><span style="color:#000">backend]</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">targetLabel</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">proxy</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span></code></pre></div><h2 id="configure-the-dashboard">Configure the dashboard</h2>
+<p>Import <a href="https://grafana.com/grafana/dashboards/12056">this</a> Grafana dashboard. If Grafana was deployed using the steps provided in this walkthrough:</p>
+<ul>
+<li>Open Grafana page - the URL is the same provided in the <code>prometheus-operator-values.yaml</code> file and should resolve to the ingress deployment</li>
+<li>Log in to Grafana, user is <code>admin</code> and the first password is <code>prom-operator</code></li>
+<li>Click the big plus <code>+</code> sign in the left side, Import, type <code>12056</code> as the Grafana.com ID, Load, select a Prometheus datasource, Import</li>
+</ul>
+<p>If everything worked as expected, the dashboard should look like this:</p>
+<p><img src="/docs/examples/metrics/dashboard-1.png" alt=""></p>
+<h2 id="test">Test</h2>
+<p>Lets make some noise and see what the dashboard tell us about our HAProxy Ingress cluster.</p>
+<p>Deploy a demo application and a custom (self-signed) certificate:</p>
+<pre tabindex="0"><code>openssl req -x509 -subj &#34;/CN=dory.localdomain&#34; -nodes -days 30 -newkey rsa:2048 -keyout /tmp/h.key -out /tmp/h.crt
+kubectl --namespace default create secret tls dory --cert /tmp/h.crt --key /tmp/h.key
+rm -fv /tmp/h.crt /tmp/h.key
+kubectl --namespace default create deploy dory --image jcmoraisjr/dory
+kubectl --namespace default scale deploy dory --replicas=4
+kubectl --namespace default expose deploy dory --port 8000
+kubectl --namespace default create ingress dory\
+  --annotation kubernetes.io/ingress.class=haproxy\
+  --annotation haproxy-ingress.github.io/ssl-redirect=false\
+  --rule=&#34;dory.localdomain/*=dory:8000,tls=dory&#34;
+</code></pre><p>Check if the app is up and running:</p>
+<pre tabindex="0"><code>kubectl --namespace default get pod -lapp=dory -w
+</code></pre><p>Download <a href="https://github.com/tsenart/vegeta/releases">vegeta</a> and place it in the path.</p>
+<p>Make a test and check if everything is working as expected. Change IP below to the IP of a HAProxy Ingress node:</p>
+<pre tabindex="0"><code>IP=192.168.0.11
+## Using Fish?
+# set IP 192.168.0.11
+echo &#34;GET http://$IP&#34; |\
+  vegeta attack -duration=1s -rate=1 -header &#34;Host: dory.localdomain&#34; -keepalive=true |\
+  vegeta report
+</code></pre><p>The output should look like this. The most important part is Success ratio=100% and an Error Set empty:</p>
+<pre tabindex="0"><code>...
+Success       [ratio]                    100.00%
+Status Codes  [code:count]               200:1
+Error Set:
+</code></pre><p>Now the real test. Adjust the duration and rate (number of requests per second) if needed. A dual core VM dedicated to HAProxy Ingress should accept a few thousands requests per second. Lets configure <code>200</code> which should move some lines in the dashboard:</p>
+<pre tabindex="0"><code>IP=192.168.0.11
+echo &#34;GET http://$IP&#34; |\
+  vegeta attack -duration=5m -rate=200 -header &#34;Host: dory.localdomain&#34; -keepalive=true |\
+  vegeta report
+</code></pre><p>Follow the dashboard while the test is running. Most metrics have its resolution in <code>1m</code> (one minute) so wait at least this amount of time to see the correct conns/s, rps, proc use and so on.</p>
+<p>What&rsquo;s the impact of not using keepalive? Try the same test, changing only <code>-keepalive</code> to  <code>false</code>:</p>
+<pre tabindex="0"><code>IP=192.168.0.11
+ulimit -n 2048 # avoids &#39;too many open files&#39; error in the client side
+echo &#34;GET http://$IP&#34; |\
+  vegeta attack -duration=5m -rate=200 -header &#34;Host: dory.localdomain&#34; -keepalive=false |\
+  vegeta report
+</code></pre><p>Last test: what about TLS connections without keepalive? Change <code>http</code> to <code>https</code> and add <code>-insecure</code> command-line option to Vegeta:</p>
+<pre tabindex="0"><code>IP=192.168.0.11
+ulimit -n 2048
+echo &#34;GET https://$IP&#34; |\
+  vegeta attack -insecure -duration=5m -rate=200 -header &#34;Host: dory.localdomain&#34; -keepalive=false |\
+  vegeta report
+</code></pre>
+	
+	
+	<div class="text-muted mt-5 pt-3 border-top">
+  Last modified June 20, 2022: <a href="https://github.com/jcmoraisjr/haproxy-ingress/commit/3f904ee4e2476dfc2fb4e4f93d78b48977aa5052">Spelling fixes (3f904ee4)</a>
+</div>
+
+</div>
+
+
+          </main>
+        </div>
+      </div>
+      
+<footer class="bg-dark py-5 row d-print-none">
+  <div class="container-fluid mx-sm-5">
+    <div class="row">
+      <div class="col-6 col-sm-2 text-xs-center order-sm-2">
+        
+        
+        
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Slack" aria-label="Slack">
+    <a class="text-white" target="_blank" href="https://kubernetes.slack.com/channels/haproxy-ingress">
+      <i class="fab fa-slack"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Users mailing list" aria-label="Users mailing list">
+    <a class="text-white" target="_blank" href="https://groups.google.com/forum/#!forum/haproxy-ingress">
+      <i class="fa fa-envelope"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Stack Overflow" aria-label="Stack Overflow">
+    <a class="text-white" target="_blank" href="https://stackoverflow.com/questions/tagged/haproxy-ingress">
+      <i class="fab fa-stack-overflow"></i>
+    </a>
+  </li>
+  
+</ul>
+
+        
+        
+      </div>
+      <div class="col-6 col-sm-2 text-right text-xs-center order-sm-3">
+        
+        
+        
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="GitHub" aria-label="GitHub">
+    <a class="text-white" target="_blank" href="https://github.com/jcmoraisjr/haproxy-ingress">
+      <i class="fab fa-github"></i>
+    </a>
+  </li>
+  
+</ul>
+
+        
+        
+      </div>
+      <div class="col-12 col-sm-8 text-center py-2 order-sm-2">
+        
+          <small class="text-white">Made with <div class="fa fa-heart"></div> & <div class="fa fa-coffee"></div> | &copy; 2023 The HAProxy Ingress Controller Authors</small>
+        
+        <small class="text-white"> | Image by <a href="https://pixabay.com/users/TheDigitalArtist-202249/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pete Linforth</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pixabay</a></small>
+        
+	
+		<p class="mt-2"><a href="/v0.15/about/">About</a></p>
+	
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    
+  <script src="/v0.15/js/main.min.0151dcbf91ba86eb5941c13f5cb1c835767e2c420481cf10ad4bc631e8c1a8f9.js" integrity="sha256-AVHcv5G6hutZQcE/XLHINXZ&#43;LEIEgc8QrUvGMejBqPk=" crossorigin="anonymous"></script>
+<script src='/v0.15/js/tabpane-persist.js'></script>
+
+  </body>
+</html>

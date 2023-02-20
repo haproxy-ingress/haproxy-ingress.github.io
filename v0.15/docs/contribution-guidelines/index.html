@@ -1,0 +1,401 @@
+<!doctype html>
+<html itemscope itemtype="http://schema.org/WebPage" lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="generator" content="Hugo 0.110.0">
+<link rel="alternate" type="application/rss&#43;xml" href="/v0.15/docs/contribution-guidelines/index.xml">
+<meta name="robots" content="index, follow">
+
+
+<link rel="shortcut icon" href="/v0.15/favicons/favicon.ico" >
+<link rel="apple-touch-icon" href="/v0.15/favicons/apple-touch-icon-180x180.png" sizes="180x180">
+<link rel="icon" type="image/png" href="/v0.15/favicons/favicon-16x16.png" sizes="16x16">
+<link rel="icon" type="image/png" href="/v0.15/favicons/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="/v0.15/favicons/android-36x36.png" sizes="36x36">
+<link rel="icon" type="image/png" href="/v0.15/favicons/android-48x48.png" sizes="48x48">
+<link rel="icon" type="image/png" href="/v0.15/favicons/android-72x72.png" sizes="72x72">
+<link rel="icon" type="image/png" href="/v0.15/favicons/android-96x96.png" sizes="96x96">
+<link rel="icon" type="image/png" href="/v0.15/favicons/android-144x144.png" sizes="144x144">
+<link rel="icon" type="image/png" href="/v0.15/favicons/android-192x192.png" sizes="192x192">
+
+<title>Contribution Guidelines | HAProxy Ingress</title>
+<meta name="description" content="How to contribute to the docs.
+">
+<meta property="og:title" content="Contribution Guidelines" />
+<meta property="og:description" content="How to contribute to the docs.
+" />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="/v0.15/docs/contribution-guidelines/" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta itemprop="name" content="Contribution Guidelines">
+<meta itemprop="description" content="How to contribute to the docs.
+"><meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Contribution Guidelines"/>
+<meta name="twitter:description" content="How to contribute to the docs.
+"/>
+
+
+
+
+<link rel="preload" href="/v0.15/scss/main.min.8e956a3c9d46b1d0b25e34c8f47151afa18d128c4626421f1852462bc8e49cb9.css" as="style">
+<link href="/v0.15/scss/main.min.8e956a3c9d46b1d0b25e34c8f47151afa18d128c4626421f1852462bc8e49cb9.css" rel="stylesheet" integrity="">
+
+<script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha384-vtXRMe3mGCbOeY7l30aIg8H9p3GdeSe4IFlP6G8JMa7o7lXvnz3GFKzPxzJdPfGK"
+  crossorigin="anonymous"></script>
+
+<script>
+  var _paq = window._paq = window._paq || [];
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//tags.joaomora.is/";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '3']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<noscript><p><img src="//tags.joaomora.is/matomo.php?idsite=3&amp;rec=1" style="border:0;" alt="" /></p></noscript>
+
+
+  </head>
+  <body class="td-section">
+    <header>
+      <nav class="js-navbar-scroll navbar navbar-expand navbar-dark flex-column flex-md-row td-navbar">
+  <a class="navbar-brand" href="/v0.15/"><span class="navbar-brand__logo navbar-logo"></span><span class="navbar-brand__name">HAProxy Ingress</span></a>
+  <div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+    <ul class="navbar-nav mt-2 mt-lg-0">
+      <li class="nav-item mr-4 mb-2 mb-lg-0">
+        <a class="nav-link" href="/v0.15/about/"><span>About</span></a>
+      </li>
+      <li class="nav-item mr-4 mb-2 mb-lg-0">
+        <a class="nav-link active" href="/v0.15/docs/"><span class="active">Documentation</span></a>
+      </li>
+      <li class="nav-item mr-4 mb-2 mb-lg-0">
+        <a class="nav-link" href="/v0.15/community/"><span>Community</span></a>
+      </li>
+      <li class="nav-item dropdown mr-4 d-none d-lg-block">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	v0.15
+</a>
+<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+	
+	
+	
+	<a class="dropdown-item" href="/docs">Latest</a>
+	
+	<a class="dropdown-item" href="/v0.15/docs">v0.15</a>
+	
+	<a class="dropdown-item" href="/v0.14/docs">v0.14</a>
+	
+	<a class="dropdown-item" href="/v0.13/docs">v0.13</a>
+	
+	<a class="dropdown-item" href="/v0.12/docs">v0.12</a>
+	
+	<a class="dropdown-item" href="/v0.10/docs">v0.10</a>
+	
+</div>
+</li>
+      </ul>
+  </div>
+  <div class="navbar-nav d-none d-lg-block">
+    
+  </div>
+</nav>
+    </header>
+    <div class="container-fluid td-outer">
+      <div class="td-main">
+        <div class="row flex-xl-nowrap">
+          <aside class="col-12 col-md-3 col-xl-2 td-sidebar d-print-none">
+            
+<div id="td-sidebar-menu" class="td-sidebar__inner">
+  <form class="td-sidebar__search d-flex align-items-center">
+    
+    <button class="btn btn-link td-sidebar__toggle d-md-none p-0 ml-3 fas fa-bars" type="button" data-toggle="collapse" data-target="#td-section-nav" aria-controls="td-section-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    </button>
+  </form>
+  <nav class="collapse td-sidebar-nav" id="td-section-nav">
+    <ul class="td-sidebar-nav__section pr-md-3 ul-0">
+      <li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child active-path" id="m-v015docs-li">
+  <a href="/v0.15/docs/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section tree-root" id="m-v015docs"><span class="">Documentation</span></a>
+  <ul class="ul-1">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsoverview-li">
+  <a href="/v0.15/docs/overview/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-v015docsoverview"><span class="">Overview</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsgetting-started-li">
+  <a href="/v0.15/docs/getting-started/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-v015docsgetting-started"><span class="">Getting Started</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-v015docsexamples-li">
+  <a href="/v0.15/docs/examples/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-v015docsexamples"><span class="">Examples</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsexamplesblue-green-li">
+  <a href="/v0.15/docs/examples/blue-green/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-v015docsexamplesblue-green"><span class="">Blue/green</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsexamplesexternal-haproxy-li">
+  <a href="/v0.15/docs/examples/external-haproxy/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-v015docsexamplesexternal-haproxy"><span class="">External haproxy</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsexamplesmetrics-li">
+  <a href="/v0.15/docs/examples/metrics/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-v015docsexamplesmetrics"><span class="">Metrics</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsexamplesmodsecurity-li">
+  <a href="/v0.15/docs/examples/modsecurity/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-v015docsexamplesmodsecurity"><span class="">ModSecurity</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section with-child" id="m-v015docsconfiguration-li">
+  <a href="/v0.15/docs/configuration/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-v015docsconfiguration"><span class="">Configuration</span></a>
+  <ul class="ul-2 foldable">
+    <li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsconfigurationgateway-api-li">
+  <a href="/v0.15/docs/configuration/gateway-api/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-v015docsconfigurationgateway-api"><span class="">Gateway API</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsconfigurationkeys-li">
+  <a href="/v0.15/docs/configuration/keys/" title="Configuration keys" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-v015docsconfigurationkeys"><span class="">Keys</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsconfigurationcommand-line-li">
+  <a href="/v0.15/docs/configuration/command-line/" title="Command-line options" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-v015docsconfigurationcommand-line"><span class="">Command-line</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsconfigurationtemplate-li">
+  <a href="/v0.15/docs/configuration/template/" class="align-left pl-0 td-sidebar-link td-sidebar-link__page" id="m-v015docsconfigurationtemplate"><span class="">Template</span></a>
+</li>
+  </ul>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child" id="m-v015docsfaq-li">
+  <a href="/v0.15/docs/faq/" class="align-left pl-0 td-sidebar-link td-sidebar-link__section" id="m-v015docsfaq"><span class="">FAQ</span></a>
+</li><li class="td-sidebar-nav__section-title td-sidebar-nav__section without-child active-path" id="m-v015docscontribution-guidelines-li">
+  <a href="/v0.15/docs/contribution-guidelines/" class="align-left pl-0 active td-sidebar-link td-sidebar-link__section" id="m-v015docscontribution-guidelines"><span class="td-sidebar-nav-active-item">Contribution Guidelines</span></a>
+</li>
+  </ul>
+</li>
+    </ul>
+  </nav>
+</div>
+
+          </aside>
+          <aside class="d-none d-xl-block col-xl-2 td-sidebar-toc d-print-none">
+            
+<div class="td-page-meta ml-2 pb-1 pt-2 mb-0">
+<a href="https://github.com/jcmoraisjr/haproxy-ingress/tree/master/docs/content/en/docs/contribution-guidelines/_index.md" class="td-page-meta--view" target="_blank" rel="noopener"><i class="fa-solid fa-file-lines fa-fw"></i> View page source</a>
+  <a href="https://github.com/jcmoraisjr/haproxy-ingress/edit/master/docs/content/en/docs/contribution-guidelines/_index.md" class="td-page-meta--edit" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> Edit this page</a>
+  <a href="https://github.com/jcmoraisjr/haproxy-ingress/new/master/docs/content/en/docs/contribution-guidelines/_index.md?filename=change-me.md&amp;value=---%0Atitle%3A&#43;%22Long&#43;Page&#43;Title%22%0AlinkTitle%3A&#43;%22Short&#43;Nav&#43;Title%22%0Aweight%3A&#43;100%0Adescription%3A&#43;%3E-%0A&#43;&#43;&#43;&#43;&#43;Page&#43;description&#43;for&#43;heading&#43;and&#43;indexes.%0A---%0A%0A%23%23&#43;Heading%0A%0AEdit&#43;this&#43;template&#43;to&#43;create&#43;your&#43;new&#43;page.%0A%0A%2A&#43;Give&#43;it&#43;a&#43;good&#43;name%2C&#43;ending&#43;in&#43;%60.md%60&#43;-&#43;e.g.&#43;%60getting-started.md%60%0A%2A&#43;Edit&#43;the&#43;%22front&#43;matter%22&#43;section&#43;at&#43;the&#43;top&#43;of&#43;the&#43;page&#43;%28weight&#43;controls&#43;how&#43;its&#43;ordered&#43;amongst&#43;other&#43;pages&#43;in&#43;the&#43;same&#43;directory%3B&#43;lowest&#43;number&#43;first%29.%0A%2A&#43;Add&#43;a&#43;good&#43;commit&#43;message&#43;at&#43;the&#43;bottom&#43;of&#43;the&#43;page&#43;%28%3C80&#43;characters%3B&#43;use&#43;the&#43;extended&#43;description&#43;field&#43;for&#43;more&#43;detail%29.%0A%2A&#43;Create&#43;a&#43;new&#43;branch&#43;so&#43;you&#43;can&#43;preview&#43;your&#43;new&#43;file&#43;and&#43;request&#43;a&#43;review&#43;via&#43;Pull&#43;Request.%0A" class="td-page-meta--child" target="_blank" rel="noopener"><i class="fa-solid fa-pen-to-square fa-fw"></i> Create child page</a>
+  <a href="https://github.com/jcmoraisjr/haproxy-ingress/issues/new?title=Contribution%20Guidelines" class="td-page-meta--issue" target="_blank" rel="noopener"><i class="fa-solid fa-list-check fa-fw"></i> Create doc issue</a>
+  
+</div>
+
+            <div class="td-toc">
+        <nav id="TableOfContents">
+  <ul>
+    <li><a href="#updating-a-single-page">Updating a single page</a></li>
+    <li><a href="#previewing-your-changes-locally">Previewing your changes locally</a></li>
+    <li><a href="#creating-an-issue">Creating an issue</a></li>
+    <li><a href="#useful-resources">Useful resources</a></li>
+  </ul>
+</nav>
+      </div>
+    
+            
+
+	
+		
+
+
+
+  
+  
+
+	
+		
+
+
+
+  
+  
+
+	
+
+          </aside>
+          <main class="col-12 col-md-9 col-xl-8 pl-md-5" role="main">
+            
+  
+
+            <nav aria-label="breadcrumb" class="td-breadcrumbs">
+  <ol class="breadcrumb">
+  <li class="breadcrumb-item">
+    <a href="/v0.15/docs/">Documentation</a>
+  </li>
+  <li class="breadcrumb-item active" aria-current="page">
+    <a href="/v0.15/docs/contribution-guidelines/" aria-disabled="true" class="btn-link disabled">Contribution Guidelines</a>
+  </li>
+  </ol>
+</nav>
+            
+<div class="td-content">
+	<h1>Contribution Guidelines</h1>
+  <div class="lead">How to contribute to the docs.</div>
+	<header class="article-meta">
+		
+
+  
+    
+
+
+  
+    
+
+
+  
+
+		
+	</header>
+	<p>We use <a href="https://gohugo.io/">Hugo</a> to format and generate this website and the
+<a href="https://github.com/google/docsy">Docsy</a> theme for styling and site structure.
+Hugo is an open-source static site generator that provides us with templates,
+content organisation in a standard directory structure, and a website generation
+engine. You write the pages in Markdown (or HTML if you want), and Hugo wraps them
+up into a website.</p>
+<p>All submissions, including submissions by project members, require review. We
+use GitHub pull requests for this purpose. Consult
+<a href="https://help.github.com/articles/about-pull-requests/">GitHub Help</a> for more
+information on using pull requests.</p>
+<h2 id="updating-a-single-page">Updating a single page</h2>
+<p>If you&rsquo;ve just spotted something you&rsquo;d like to change while using the docs,
+Docsy has a shortcut for you:</p>
+<ol>
+<li>Click <strong>Edit this page</strong> in the top right hand corner of the page.</li>
+<li>If you don&rsquo;t already have an up to date fork of the project repo, you are prompted to get one - click <strong>Fork this repository and propose changes</strong> or <strong>Update your Fork</strong> to get an up to date version of the project to edit. The appropriate page in your fork is displayed in edit mode.</li>
+<li>Make your changes and send a pull request (PR).</li>
+<li>If you&rsquo;re not yet ready for a review:</li>
+</ol>
+<ul>
+<li>Add &ldquo;WIP&rdquo; to the PR name to indicate it&rsquo;s a work in progress.</li>
+<li>Continue updating your doc and pushing your changes until you&rsquo;re happy with the content.</li>
+<li>When you&rsquo;re ready for a review, add a comment to the PR, and remove any &ldquo;WIP&rdquo; markers.</li>
+</ul>
+<h2 id="previewing-your-changes-locally">Previewing your changes locally</h2>
+<p>If you want to run your own local Hugo server to preview your changes as you work:</p>
+<ol>
+<li>
+<p>Install <a href="https://gohugo.io/getting-started/installing">Hugo</a> and any other tools you need. You&rsquo;ll need at least <strong>Hugo version 0.110.0</strong> (we recommend using the most recent available version), and it must be the <strong>extended</strong> version, which supports SCSS.</p>
+</li>
+<li>
+<p>Fork the <a href="https://github.com/jcmoraisjr/haproxy-ingress">HAProxy Ingress</a> repo into your own project, then create a local copy using <code>git clone</code>. Don’t forget to use <code>--recurse-submodules</code> or you won’t pull down some of the code you need to generate a working site. The clone may take a while since the docsy submodules are large.</p>
+<pre><code>git clone --recurse-submodules --depth 1 https://github.com/jcmoraisjr/haproxy-ingress.git
+
+# Or if you already have the repo cloned, you can run this instead:
+git submodule update --init --recursive --recommend-shallow
+</code></pre>
+</li>
+<li>
+<p>From inside the <code>/docs</code> directory, install the node modules: <code>npm install</code></p>
+</li>
+<li>
+<p>You&rsquo;ll also need to install Docsy&rsquo;s node modules: <code>cd themes/docsy &amp;&amp; npm install</code></p>
+</li>
+<li>
+<p>Run <code>hugo server</code> in the <code>/docs</code> subdirectory. By default your site will be available at http://localhost:1313/. Now that you&rsquo;re serving your site locally, Hugo will watch for changes to the content and automatically refresh your site.</p>
+<ul>
+<li>On macOS, if you get a <code>pipe failed</code> error, you may need to add the <code>--watch=false</code> flag.</li>
+</ul>
+</li>
+<li>
+<p>Continue with the usual GitHub workflow to edit files, commit them, push the changes up to your fork, and create a pull request.</p>
+</li>
+</ol>
+<h2 id="creating-an-issue">Creating an issue</h2>
+<p>If you&rsquo;ve found a problem in the docs, but you&rsquo;re not sure how to fix it yourself, please create
+an issue in the <a href="https://github.com/jcmoraisjr/haproxy-ingress/issues">HAProxy Ingress issue tracker</a>.
+You can also create an issue about a specific page by clicking the <strong>Create doc issue</strong> link
+in the top right hand corner of the page.</p>
+<h2 id="useful-resources">Useful resources</h2>
+<ul>
+<li><a href="https://www.docsy.dev/docs/">Docsy user guide</a>: All about Docsy, including how it manages navigation, look and feel, and multi-language support.</li>
+<li><a href="https://gohugo.io/documentation/">Hugo documentation</a>: Comprehensive reference for Hugo.</li>
+<li><a href="https://guides.github.com/activities/hello-world/">GitHub Hello World!</a>: A basic introduction to GitHub concepts and workflow.</li>
+</ul>
+
+        <div class="section-index">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+	
+	
+	<div class="text-muted mt-5 pt-3 border-top">
+  Last modified February 6, 2023: <a href="https://github.com/jcmoraisjr/haproxy-ingress/commit/49f4bf7c2ac442704e4b6e0ac335410f8c16f066">Update to hugo v0.110.0 and upgrade Docsy to 0.6.0 (49f4bf7c)</a>
+</div>
+
+</div>
+
+          </main>
+        </div>
+      </div>
+      
+<footer class="bg-dark py-5 row d-print-none">
+  <div class="container-fluid mx-sm-5">
+    <div class="row">
+      <div class="col-6 col-sm-2 text-xs-center order-sm-2">
+        
+        
+        
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Slack" aria-label="Slack">
+    <a class="text-white" target="_blank" href="https://kubernetes.slack.com/channels/haproxy-ingress">
+      <i class="fab fa-slack"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Users mailing list" aria-label="Users mailing list">
+    <a class="text-white" target="_blank" href="https://groups.google.com/forum/#!forum/haproxy-ingress">
+      <i class="fa fa-envelope"></i>
+    </a>
+  </li>
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="Stack Overflow" aria-label="Stack Overflow">
+    <a class="text-white" target="_blank" href="https://stackoverflow.com/questions/tagged/haproxy-ingress">
+      <i class="fab fa-stack-overflow"></i>
+    </a>
+  </li>
+  
+</ul>
+
+        
+        
+      </div>
+      <div class="col-6 col-sm-2 text-right text-xs-center order-sm-3">
+        
+        
+        
+<ul class="list-inline mb-0">
+  
+  <li class="list-inline-item mx-2 h3" data-toggle="tooltip" data-placement="top" title="GitHub" aria-label="GitHub">
+    <a class="text-white" target="_blank" href="https://github.com/jcmoraisjr/haproxy-ingress">
+      <i class="fab fa-github"></i>
+    </a>
+  </li>
+  
+</ul>
+
+        
+        
+      </div>
+      <div class="col-12 col-sm-8 text-center py-2 order-sm-2">
+        
+          <small class="text-white">Made with <div class="fa fa-heart"></div> & <div class="fa fa-coffee"></div> | &copy; 2023 The HAProxy Ingress Controller Authors</small>
+        
+        <small class="text-white"> | Image by <a href="https://pixabay.com/users/TheDigitalArtist-202249/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pete Linforth</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pixabay</a></small>
+        
+	
+		<p class="mt-2"><a href="/v0.15/about/">About</a></p>
+	
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+    </div>
+    
+  <script src="/v0.15/js/main.min.0151dcbf91ba86eb5941c13f5cb1c835767e2c420481cf10ad4bc631e8c1a8f9.js" integrity="sha256-AVHcv5G6hutZQcE/XLHINXZ&#43;LEIEgc8QrUvGMejBqPk=" crossorigin="anonymous"></script>
+<script src='/v0.15/js/tabpane-persist.js'></script>
+
+  </body>
+</html>
