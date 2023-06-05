@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.12/docs/examples/external-haproxy/" />
-<meta property="article:modified_time" content="2021-07-11T07:35:57-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2023-06-04T20:58:37-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="External haproxy">
 <meta itemprop="description" content="Demonstrate how to configure HAProxy Ingress to use an external haproxy deployment.
 ">
 
 
-<meta itemprop="dateModified" content="2021-07-11T07:35:57-03:00" />
-<meta itemprop="wordCount" content="692">
+<meta itemprop="dateModified" content="2023-06-04T20:58:37-03:00" />
+<meta itemprop="wordCount" content="928">
 
 
 
@@ -375,7 +375,11 @@
 <li>
 <ul>
 <li><a href="#prerequisites">Prerequisites</a></li>
-<li><a href="#configure-the-controller">Configure the controller</a></li>
+<li><a href="#configure-the-controller">Configure the controller</a>
+<ul>
+<li><a href="#a-word-about-security">A word about security</a></li>
+</ul></li>
+<li><a href="#install-the-controller">Install the controller</a></li>
 <li><a href="#test">Test</a></li>
 <li><a href="#what-was-changed">What was changed?</a>
 <ul>
@@ -451,18 +455,92 @@ installed, and if so, the installation process should use the
 chart with a customized values file. Create the <code>haproxy-ingress-values.yaml</code> file with the
 following content:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">controller<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">  </span>hostNetwork<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">false</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">  </span>config<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">    </span>syslog-endpoint<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>stdout<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">    </span>syslog-format<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>raw<span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">  </span>haproxy<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span><span style="color:#f8f8f8;text-decoration:underline">    </span>enabled<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">    </span>image<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">      </span>repository<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>haproxy<span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">      </span>tag<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">2.3.12</span>-alpine</code></pre></div>
-<p>Change the hostNetwork to <code>true</code> if your cluster doesn&rsquo;t provide a service loadbalancer.
-These parameters are also configuring an external haproxy and configuring it to log to
-stdout.</p>
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>securityContext<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>runAsUser<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">0</span></code></pre></div>
+<p>These parameters are configuring an external haproxy and configuring haproxy to log
+to stdout. Also, haproxy is configured as root so it has permission to bind ports <code>:80</code>
+and <code>:443</code>. By default haproxy container is started as UID <code>99</code>.</p>
+
+<h3 id="a-word-about-security">A word about security</h3>
+
+<p>haproxy historically started as root so it has the permissions needed to bind to privileged ports,
+configure chroot, configure file descriptor limits, and other administrative tasks. haproxy then
+drops its own privileges just before starting its event loop. See
+<a href="https://docs.haproxy.org/2.4/management.html#13">Security Considerations</a> from the documentation.</p>
+
+<p>Since 2.4, haproxy container has been started as UID <code>99</code>. There are a few ways to give it
+permissions to bind privileged port, none of them is provided by default by HAProxy Ingress Helm
+chart because all of them has some sort of limitation. Choose one of the options below that best
+suits the needs of your environment:</p>
+
+<ol>
+<li>Configure haproxy to start as root, This is the configuration provided above, but it will not
+work if cluster policies deny containers running as root.</li>
+
+<li><p>Some container runtime engines, like Docker <code>20.10</code> or newer, or Containerd embedded in k3s,
+reconfigure the starting of unprivileged ports so haproxy should work out of the box listening
+to <code>:80</code> and <code>:443</code> without the need to run as root. Give it a try by removing the
+<code>securityContext</code> configuration altogether:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">controller<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>config<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>syslog-endpoint<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>stdout<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>syslog-format<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>raw<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>haproxy<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>enabled<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span></code></pre></div></li>
+
+<li><p>Change haproxy listening port to unprivileged ports, like <code>8080</code> and <code>8443</code>:</p>
+
+<blockquote>
+<p>Note that, if exposing haproxy via <code>hostNetwork</code>, end users would need to connect to <code>:8443</code> instead of the well known <code>:443</code>, so this is only an option if the cluster provides LoadBalancer services</p>
+</blockquote>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">controller<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>config<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>syslog-endpoint<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>stdout<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>syslog-format<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>raw<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>http-port<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#4e9a06">&#34;8080&#34;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>https-port<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#4e9a06">&#34;8443&#34;</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>service<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>httpPorts<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>port<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">80</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>targetPort<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">8080</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>httpsPorts<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>-<span style="color:#f8f8f8;text-decoration:underline"> </span>port<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">443</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>targetPort<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#0000cf;font-weight:bold">8443</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>type<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>LoadBalancer<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>haproxy<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>enabled<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span></code></pre></div></li>
+
+<li><p>Change the haproxy image by adding the <code>NET_BIND_SERVICE</code>
+<a href="https://man7.org/linux/man-pages/man7/capabilities.7.html">capability</a> to the haproxy binary:</p>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Dockerfile" data-lang="Dockerfile"><span style="color:#204a87;font-weight:bold">FROM</span><span style="color:#4e9a06"> haproxy:X.X-alpine</span><span style="color:#a40000">
+</span><span style="color:#a40000"></span>USER root<span style="color:#a40000">
+</span><span style="color:#a40000"></span><span style="color:#204a87;font-weight:bold">RUN</span> apk add -U libcap-utils<span style="color:#a40000">
+</span><span style="color:#a40000"></span><span style="color:#204a87;font-weight:bold">RUN</span> setcap <span style="color:#4e9a06">&#39;cap_net_bind_service=+ep&#39;</span> /usr/local/sbin/haproxy<span style="color:#a40000">
+</span><span style="color:#a40000"></span>USER haproxy</code></pre></div></li>
+
+<li><p>Reconfigure the start of unprivileged port to <code>80</code> or below using the following configuration:</p>
+
+<blockquote>
+<p>This configuration does not work if <code>hostNetwork</code> is configured as <code>true</code>, and does not work on Kernel versions older than 4.11.</p>
+</blockquote>
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">controller<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>config<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>syslog-endpoint<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>stdout<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>syslog-format<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>raw<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>haproxy<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>enabled<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>securityContext<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">      </span>sysctls<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span>name<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span>net.ipv4.ip_unprivileged_port_start<span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">        </span>value<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#4e9a06">&#34;1&#34;</span></code></pre></div></li>
+</ol>
+
+<h2 id="install-the-controller">Install the controller</h2>
 
 <p>Add the HAProxy Ingress Helm repository if using HAProxy Ingress&rsquo; chart for the first time:</p>
 
@@ -471,22 +549,8 @@ stdout.</p>
 
 <p>Install or upgrade HAProxy Ingress using the <code>haproxy-ingress-values.yaml</code> parameters:</p>
 
-<p>Hint: change <code>install</code> to <code>upgrade</code> if HAProxy Ingress is already installed with Helm.</p>
-
-
-
-<div class="alert alert-primary" role="alert">
-<h4 class="alert-heading">Note</h4>
-We&rsquo;re asking helm to install the latest v0.12 controller version, which will work
-on this example, but it&rsquo;s a best practice to use a proper chart version when moving to
-staging or production. Check all stable versions with <code>helm search repo haproxy-ingress/ -l</code>
-and update the <code>--version</code> command-line below.
-</div>
-
-
-<pre><code>$ helm install haproxy-ingress haproxy-ingress/haproxy-ingress\
-  --create-namespace --namespace=ingress-controller\
-  --version 0.12\
+<pre><code>$ helm upgrade haproxy-ingress haproxy-ingress/haproxy-ingress\
+  --install --create-namespace --namespace=ingress-controller\
   -f haproxy-ingress-values.yaml
 </code></pre>
 
@@ -586,7 +650,7 @@ works well.</p>
 check URI. This example changes the liveness probe from the HAProxy Ingress
 container to the haproxy one.</p>
 
-	<div class="text-muted mt-5 pt-3 border-top">Last modified July 11, 2021: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/4bcef6ec9eb40dc264514a976cfb4809d8553d7a">update to v0.12.6 (4bcef6ec)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified June 4, 2023: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/520ca15992df514376876249d3e1edfc820ae15c">add security considerations on external haproxy (520ca159)</a>
 </div>
 </div>
 
