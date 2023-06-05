@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.14/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2022-11-20T18:01:28-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2023-04-24T15:37:51-07:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Command-line options">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2022-11-20T18:01:28-03:00" />
-<meta itemprop="wordCount" content="3987">
+<meta itemprop="dateModified" content="2023-04-24T15:37:51-07:00" />
+<meta itemprop="wordCount" content="4019">
 
 
 
@@ -123,15 +123,15 @@
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">Latest</a>
+	<a class="dropdown-item" href="/docs">Latest</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.14/docs">v0.14</a>
+	<a class="dropdown-item" href="/v0.14/docs">v0.14</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.13/docs">v0.13</a>
+	<a class="dropdown-item" href="/v0.13/docs">v0.13</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.12/docs">v0.12</a>
+	<a class="dropdown-item" href="/v0.12/docs">v0.12</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.10/docs">v0.10</a>
+	<a class="dropdown-item" href="/v0.10/docs">v0.10</a>
 	
 </div>
 
@@ -417,6 +417,7 @@
 <li><a href="#disable-external-name">&ndash;disable-external-name</a></li>
 <li><a href="#disable-pod-list">&ndash;disable-pod-list</a></li>
 <li><a href="#election-id">&ndash;election-id</a></li>
+<li><a href="#enable-endpointslices-api">&ndash;enable-endpointslices-api</a></li>
 <li><a href="#force-namespace-isolation">&ndash;force-namespace-isolation</a></li>
 <li><a href="#ingress-class">Ingress Class</a></li>
 <li><a href="#kubeconfig">&ndash;kubeconfig</a></li>
@@ -658,6 +659,13 @@
 <td>identifier</td>
 <td><code>ingress-controller-leader</code></td>
 <td></td>
+</tr>
+
+<tr>
+<td><a href="#enable-endpointslices-api"><code>--enable-endpointslices-api</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.14.3</td>
 </tr>
 
 <tr>
@@ -1094,6 +1102,14 @@ deprecation. The default behavior is to log all API server warnings.</p>
 <h2 id="election-id">&ndash;election-id</h2>
 
 <p>The ID to be used for electing ingress controller leader.  Defaults to <code>ingress-controller-leader</code>.</p>
+
+<hr />
+
+<h2 id="enable-endpointslices-api">&ndash;enable-endpointslices-api</h2>
+
+<p>Since v0.14.3</p>
+
+<p>Uses EndpointSlices API info, rather than Endpoints API, to fetch service endpoints info. By default it is disabled. EndpointSlices API was stablised from Kubernetes v1.21.</p>
 
 <hr />
 
@@ -1546,7 +1562,7 @@ configmaps or the default backend service located in a different namespace than 
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified November 20, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/78c90696c7092d4f8a754416e52755eed80e7c46">add zap as a logger sink option (78c90696)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified April 24, 2023: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/2c0dfc922566fb4c4de03f24f7306d829fa32cc6">Adds support for EndpointSlice API (2c0dfc92)</a>
 </div>
 </div>
 

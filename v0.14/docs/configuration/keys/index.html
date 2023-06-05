@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.14/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2023-02-05T12:32:49-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2023-03-05T21:20:34-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2023-02-05T12:32:49-03:00" />
-<meta itemprop="wordCount" content="17471">
+<meta itemprop="dateModified" content="2023-03-05T21:20:34-03:00" />
+<meta itemprop="wordCount" content="17522">
 
 
 
@@ -123,15 +123,15 @@
 </a>
 <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/docs">Latest</a>
+	<a class="dropdown-item" href="/docs">Latest</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.14/docs">v0.14</a>
+	<a class="dropdown-item" href="/v0.14/docs">v0.14</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.13/docs">v0.13</a>
+	<a class="dropdown-item" href="/v0.13/docs">v0.13</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.12/docs">v0.12</a>
+	<a class="dropdown-item" href="/v0.12/docs">v0.12</a>
 	
-	<a class="dropdown-item" href="https://haproxy-ingress.github.io/v0.10/docs">v0.10</a>
+	<a class="dropdown-item" href="/v0.10/docs">v0.10</a>
 	
 </div>
 
@@ -1695,6 +1695,13 @@ TCP port number.</p>
 <td>number of threads</td>
 <td>Global</td>
 <td></td>
+</tr>
+
+<tr>
+<td><a href="#redirect"><code>no-redirect-locations</code></a></td>
+<td>comma-separated list of URIs</td>
+<td>Global</td>
+<td><code>/.well-known/acme-challenge</code></td>
 </tr>
 
 <tr>
@@ -5715,6 +5722,13 @@ resource.</p>
 
 <tbody>
 <tr>
+<td><code>no-redirect-locations</code></td>
+<td><code>Global</code></td>
+<td><code>/.well-known/acme-challenge</code></td>
+<td>v0.14.3</td>
+</tr>
+
+<tr>
 <td><code>redirect-from</code></td>
 <td><code>Host</code></td>
 <td></td>
@@ -5762,6 +5776,7 @@ examples below.</p>
 <li><code>redirect-from-code</code>: Which HTTP status code should be used in the redirect from. A <code>302</code> response is used by default if not configured.</li>
 <li><code>redirect-to</code>: Defines the destination URL to redirect the incoming request. The declared hostname and path are used only to match the request, the backend will not be used and it&rsquo;s only needed to be declared to satisfy ingress spec validation.</li>
 <li><code>redirect-to-code</code>: Which HTTP status code should be used in the redirect to. A <code>302</code> response is used by default if not configured.</li>
+<li><code>no-redirect-locations</code>: Defines a comma-separated list of paths that should be ignored by all the redirects. Default value is <code>/.well-known/acme-challenge</code>, used by ACME protocol. Configure as an empty string to make the redirect happen on all paths, including the ACME challenge.</li>
 </ul>
 
 <p><strong>Using redirect-from</strong></p>
@@ -7130,7 +7145,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified February 5, 2023: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/cbacd01debe136a5a8c63ca489539c582f97dee7">add warning if auth external svc isnt found (cbacd01d)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified March 5, 2023: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/ee2014ade1c0dc752189bded1076f880e75a0246">skip acme-challenge path on to/from redirects (ee2014ad)</a>
 </div>
 </div>
 

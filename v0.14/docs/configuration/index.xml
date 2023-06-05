@@ -1305,6 +1305,13 @@ TCP port number.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#redirect&#34;&gt;&lt;code&gt;no-redirect-locations&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;comma-separated list of URIs&lt;/td&gt;
+&lt;td&gt;Global&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/.well-known/acme-challenge&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#ssl-redirect&#34;&gt;&lt;code&gt;no-tls-redirect-locations&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;comma-separated list of URIs&lt;/td&gt;
 &lt;td&gt;Global&lt;/td&gt;
@@ -5322,6 +5329,13 @@ resource.&lt;/p&gt;
 
 &lt;tbody&gt;
 &lt;tr&gt;
+&lt;td&gt;&lt;code&gt;no-redirect-locations&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;Global&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/.well-known/acme-challenge&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.14.3&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;code&gt;redirect-from&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;Host&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;/td&gt;
@@ -5369,6 +5383,7 @@ examples below.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;redirect-from-code&lt;/code&gt;: Which HTTP status code should be used in the redirect from. A &lt;code&gt;302&lt;/code&gt; response is used by default if not configured.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;redirect-to&lt;/code&gt;: Defines the destination URL to redirect the incoming request. The declared hostname and path are used only to match the request, the backend will not be used and it&amp;rsquo;s only needed to be declared to satisfy ingress spec validation.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;redirect-to-code&lt;/code&gt;: Which HTTP status code should be used in the redirect to. A &lt;code&gt;302&lt;/code&gt; response is used by default if not configured.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;no-redirect-locations&lt;/code&gt;: Defines a comma-separated list of paths that should be ignored by all the redirects. Default value is &lt;code&gt;/.well-known/acme-challenge&lt;/code&gt;, used by ACME protocol. Configure as an empty string to make the redirect happen on all paths, including the ACME challenge.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;&lt;strong&gt;Using redirect-from&lt;/strong&gt;&lt;/p&gt;
@@ -6917,6 +6932,13 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#enable-endpointslices-api&#34;&gt;&lt;code&gt;--enable-endpointslices-api&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.14.3&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#force-namespace-isolation&#34;&gt;&lt;code&gt;--force-namespace-isolation&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;[true|false]&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
@@ -7350,6 +7372,14 @@ deprecation. The default behavior is to log all API server warnings.&lt;/p&gt;
 &lt;h2 id=&#34;election-id&#34;&gt;&amp;ndash;election-id&lt;/h2&gt;
 
 &lt;p&gt;The ID to be used for electing ingress controller leader.  Defaults to &lt;code&gt;ingress-controller-leader&lt;/code&gt;.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;enable-endpointslices-api&#34;&gt;&amp;ndash;enable-endpointslices-api&lt;/h2&gt;
+
+&lt;p&gt;Since v0.14.3&lt;/p&gt;
+
+&lt;p&gt;Uses EndpointSlices API info, rather than Endpoints API, to fetch service endpoints info. By default it is disabled. EndpointSlices API was stablised from Kubernetes v1.21.&lt;/p&gt;
 
 &lt;hr /&gt;
 
