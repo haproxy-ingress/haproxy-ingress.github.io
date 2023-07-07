@@ -465,13 +465,15 @@
 
 <p>4) Create a <code>haproxy-ingress-values.yaml</code> file with custom parameters:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml">controller<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span><span style="color:#f8f8f8;text-decoration:underline">  </span>hostNetwork<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span></code></pre></div>
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>hostNetwork<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">  </span>ingressClassResource<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span><span style="color:#f8f8f8;text-decoration:underline">    </span>enabled<span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span></code></pre></div>
 <p>HAProxy Ingress chart <a href="https://github.com/haproxy-ingress/charts/blob/release-0.14/haproxy-ingress/README.md#configuration">documentation</a> has all the available options. See also further documentation in the <a href="https://github.com/haproxy-ingress/charts/blob/release-0.14/haproxy-ingress/values.yaml">default values</a> file.</p>
 
 <p>5) Install HAProxy Ingress using <code>haproxy-ingress</code> as the release name and <code>haproxy-ingress-values.yaml</code> file as the custom parameters:</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ helm install haproxy-ingress haproxy-ingress/haproxy-ingress<span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  --create-namespace --namespace ingress-controller<span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  --version <span style="color:#0000cf;font-weight:bold">0</span>.14.3<span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  --version <span style="color:#0000cf;font-weight:bold">0</span>.14.4<span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  -f haproxy-ingress-values.yaml</code></pre></div>
 
 
@@ -481,12 +483,13 @@ The command <code>install</code> above can be changed to <code>upgrade</code> to
 </div>
 
 
-<p>The controller should be running in a few seconds. There are three important customizations made in the example above:</p>
+<p>The controller should be running in a few seconds. There are four important customizations made in the example above:</p>
 
 <ul>
 <li>version: a good practice, this will ensure that you&rsquo;ll have the same version installed even if a new release issued.</li>
 <li>namespace: we&rsquo;re instructing helm to install HAProxy Ingress in the <code>ingress-controller</code> namespace. This namespace will be created if it does not exist yet. The default behavior, if namespace is not provided, is to deploy the controller in the kubectl&rsquo;s current namespace.</li>
 <li>hostNetwork: we&rsquo;re configuring the deployment to expose haproxy in the host network, which means bind all haproxy ports, including but not limited to 80 and 443, in the node&rsquo;s IPs. Maybe this isn&rsquo;t a proper configuration for your production - it depends on the options you have to expose a Kubernetes&rsquo; service, but doing so we&rsquo;ll be able to send http/s requests on local development environments, or even baremetal and on premise deployments that doesn&rsquo;t have a fronting router or load balancer to expose the controller. In any case a service is also configured in the <code>ingress-controller</code> namespace which tries to expose haproxy.</li>
+<li>ingressClassResource.enabled: This causes the helm chart to apply an <a href="https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-class">IngressClass</a> to your cluster. IngressClasses are how HAProxy Ingress knows which of your Ingresses that it should control. IngressClasses replace the <a href="https://kubernetes.io/docs/concepts/services-networking/ingress/#deprecated-annotation">kubernetes.io/ingress.class</a> annotation used in Kubernetes versions before v1.18.</li>
 </ul>
 
 <p>HAProxy Ingress&rsquo; Helm chart has a few more configuration options, see all of them in the chart <a href="https://github.com/haproxy-ingress/charts/blob/release-0.14/haproxy-ingress/README.md">documentation</a> and in the <a href="https://github.com/haproxy-ingress/charts/blob/release-0.14/haproxy-ingress/values.yaml">default values</a> file.</p>
@@ -505,8 +508,8 @@ echoserver-5b6fb6dd96-68jwp   <span style="color:#0000cf;font-weight:bold">1</sp
 <p>3) Make HAProxy Ingress exposes the echoserver service. Change <code>echoserver.local</code> value in the <code>--rule</code> option below to a hostname that resolves to an ingress controller node.</p>
 
 <p>Obs.: <code>nip.io</code> is a convenient service which converts a valid domain name to any IP, either public or local. See <a href="https://nip.io">here</a> how it works.</p>
-<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl --namespace default create ingress echoserver<span style="color:#4e9a06">\
-</span><span style="color:#4e9a06"></span>  --annotation kubernetes.io/ingress.class<span style="color:#ce5c00;font-weight:bold">=</span>haproxy<span style="color:#4e9a06">\
+<div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ kubectl --namespace default create ingress echoserver <span style="color:#4e9a06">\
+</span><span style="color:#4e9a06"></span>  --class<span style="color:#ce5c00;font-weight:bold">=</span>haproxy <span style="color:#4e9a06">\
 </span><span style="color:#4e9a06"></span>  --rule<span style="color:#ce5c00;font-weight:bold">=</span><span style="color:#4e9a06">&#34;echoserver.local/*=echoserver:8080,tls&#34;</span></code></pre></div>
 <p>4) Send a request to our echoserver.</p>
 <div class="highlight"><pre style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">$ curl -k https://echoserver.local
@@ -576,7 +579,7 @@ $ wget -qO- --no-check-certificate https://echoserver.local</code></pre></div>
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified June 5, 2023: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/62cf6a3711580bf1cf84ea6116420c3750800be2">update to v0.14.3 (62cf6a37)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified July 7, 2023: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/a673faed894e8ff13937e82197d647689a4170cf">update to v0.14.4 (a673faed)</a>
 </div>
 </div>
 
