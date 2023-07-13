@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.110.0">
+<meta name="generator" content="Hugo 0.112.3">
 <meta name="robots" content="index, follow">
 
 
@@ -27,12 +27,12 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.15/docs/configuration/keys/" /><meta property="article:section" content="docs" />
 
-<meta property="article:modified_time" content="2023-02-14T08:12:43-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2023-03-05T21:20:34-03:00" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
-<meta itemprop="dateModified" content="2023-02-14T08:12:43-03:00" />
-<meta itemprop="wordCount" content="18117">
+<meta itemprop="dateModified" content="2023-03-05T21:20:34-03:00" />
+<meta itemprop="wordCount" content="18168">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Configuration keys"/>
 <meta name="twitter:description" content="List of all annotations and global ConfigMap options.
@@ -1335,6 +1335,12 @@ TCP port number.</p>
 <td>number of threads</td>
 <td>Global</td>
 <td></td>
+</tr>
+<tr>
+<td><a href="#redirect"><code>no-redirect-locations</code></a></td>
+<td>comma-separated list of URIs</td>
+<td>Global</td>
+<td><code>/.well-known/acme-challenge</code></td>
 </tr>
 <tr>
 <td><a href="#ssl-redirect"><code>no-tls-redirect-locations</code></a></td>
@@ -3120,11 +3126,11 @@ to add more than one line of configuration.</p>
 </ul>
 <p>Examples - ConfigMap:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">config-global</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">|</span><span style="color:#8f5902;font-style:italic">
-</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">      </span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#000">tune.bufsize 32768</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">      tune.bufsize 32768</span><span style="color:#f8f8f8;text-decoration:underline">      
 </span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">config-defaults</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">|</span><span style="color:#8f5902;font-style:italic">
-</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">      </span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#000">option redispatch</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">      option redispatch</span><span style="color:#f8f8f8;text-decoration:underline">      
 </span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">config-tcp</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">|</span><span style="color:#8f5902;font-style:italic">
-</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">      </span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#000">tcp-request content reject if !{ src 10.0.0.0/8 }</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">      tcp-request content reject if !{ src 10.0.0.0/8 }</span><span style="color:#f8f8f8;text-decoration:underline">      
 </span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">config-proxy</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">|</span><span style="color:#8f5902;font-style:italic">
 </span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">      _tcp_default_postgresql_5432
 </span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">          tcp-request content reject if !{ src 10.0.0.0/8 }
@@ -3142,11 +3148,11 @@ to add more than one line of configuration.</p>
 </span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">          timeout server 10s
 </span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">          server syslogsrv 127.0.0.1:6514 log-proto octet-count</span><span style="color:#f8f8f8;text-decoration:underline">      
 </span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">config-frontend</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">|</span><span style="color:#8f5902;font-style:italic">
-</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">      </span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#000">capture request header X-User-Id len 32</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">      capture request header X-User-Id len 32</span><span style="color:#f8f8f8;text-decoration:underline">      
 </span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">config-frontend-early</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">|</span><span style="color:#8f5902;font-style:italic">
-</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">      </span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#000">tcp-request connection reject if !{ src 10.0.0.0/8 }</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">      tcp-request connection reject if !{ src 10.0.0.0/8 }</span><span style="color:#f8f8f8;text-decoration:underline">      
 </span></span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">config-frontend-late</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">|</span><span style="color:#8f5902;font-style:italic">
-</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">      </span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#000">capture request header X-User-Id len 32</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">      capture request header X-User-Id len 32</span><span style="color:#f8f8f8;text-decoration:underline">      
 </span></span></span></code></pre></div><p>Annotations:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">annotations</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">haproxy-ingress.github.io/config-backend</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">|</span><span style="color:#8f5902;font-style:italic">
@@ -3955,7 +3961,7 @@ This limitation doesn&rsquo;t exist on v0.8 or above.
 </span></span></span></code></pre></div><p>Match the header <code>X-Env</code> with value that matches the regex <code>^(test|staging)$</code>:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">annotations</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">haproxy-ingress.github.io/http-header-match-regex</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">|</span><span style="color:#8f5902;font-style:italic">
-</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">        </span><span style="color:#f8f8f8;text-decoration:underline">        </span><span style="color:#204a87;font-weight:bold">X-Env</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">^(test|staging)$</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">        X-Env: ^(test|staging)$</span><span style="color:#f8f8f8;text-decoration:underline">        
 </span></span></span></code></pre></div><p>See also:</p>
 <ul>
 <li><a href="#auth-external"><code>auth-external-placement</code></a> configuration key</li>
@@ -4148,11 +4154,11 @@ This limitation doesn&rsquo;t exist on v0.8 or above.
 </span></span></span></code></pre></div><p>Response without header and with an empty body:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">data</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">http-response-404</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">|</span><span style="color:#8f5902;font-style:italic">
-</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">      </span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#0000cf;font-weight:bold">404</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">Not Found</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">      404 Not Found</span><span style="color:#f8f8f8;text-decoration:underline">      
 </span></span></span></code></pre></div><p>Response with the headers only:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">data</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">http-response-404</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000;font-weight:bold">|</span><span style="color:#8f5902;font-style:italic">
-</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">      </span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">connection</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">close</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#8f5902;font-style:italic">      connection: close</span><span style="color:#f8f8f8;text-decoration:underline">      
 </span></span></span></code></pre></div><p>Response with only the body - discouraged, at least the content-type should be added:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">data</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">http-response-404</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">|</span><span style="color:#f8f8f8;text-decoration:underline">
@@ -4792,6 +4798,12 @@ resource.</p>
 </thead>
 <tbody>
 <tr>
+<td><code>no-redirect-locations</code></td>
+<td><code>Global</code></td>
+<td><code>/.well-known/acme-challenge</code></td>
+<td>v0.14.3</td>
+</tr>
+<tr>
 <td><code>redirect-from</code></td>
 <td><code>Host</code></td>
 <td></td>
@@ -4833,6 +4845,7 @@ examples below.</p>
 <li><code>redirect-from-code</code>: Which HTTP status code should be used in the redirect from. A <code>302</code> response is used by default if not configured.</li>
 <li><code>redirect-to</code>: Defines the destination URL to redirect the incoming request. The declared hostname and path are used only to match the request, the backend will not be used and it&rsquo;s only needed to be declared to satisfy ingress spec validation.</li>
 <li><code>redirect-to-code</code>: Which HTTP status code should be used in the redirect to. A <code>302</code> response is used by default if not configured.</li>
+<li><code>no-redirect-locations</code>: Defines a comma-separated list of paths that should be ignored by all the redirects. Default value is <code>/.well-known/acme-challenge</code>, used by ACME protocol. Configure as an empty string to make the redirect happen on all paths, including the ACME challenge.</li>
 </ul>
 <p><strong>Using redirect-from</strong></p>
 <p>The following configuration redirects <code>app.local</code> to <code>www.app.local</code>, preserving protocol,
@@ -5967,7 +5980,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified February 14, 2023: <a href="https://github.com/jcmoraisjr/haproxy-ingress/commit/4b0afcf6db0be74b2f8fec38b4d09486da7692d1">add converter for the frontend based auth external (4b0afcf6)</a>
+  Last modified March 5, 2023: <a href="https://github.com/jcmoraisjr/haproxy-ingress/commit/0b543ae089aee0b203f974c31de2abf26effac62">skip acme-challenge path on to/from redirects (0b543ae0)</a>
 </div>
 
 </div>

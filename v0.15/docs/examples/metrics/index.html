@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.110.0">
+<meta name="generator" content="Hugo 0.112.3">
 <meta name="robots" content="index, follow">
 
 
@@ -27,12 +27,12 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.15/docs/examples/metrics/" /><meta property="article:section" content="docs" />
 
-<meta property="article:modified_time" content="2022-06-20T22:37:59-04:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2023-02-22T11:14:27-05:00" />
 <meta itemprop="name" content="Metrics">
 <meta itemprop="description" content="Demonstrate how to collect and expose ingress controller and haproxy metrics.
 ">
-<meta itemprop="dateModified" content="2022-06-20T22:37:59-04:00" />
-<meta itemprop="wordCount" content="892">
+<meta itemprop="dateModified" content="2023-02-22T11:14:27-05:00" />
+<meta itemprop="wordCount" content="893">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Metrics"/>
 <meta name="twitter:description" content="Demonstrate how to collect and expose ingress controller and haproxy metrics.
@@ -258,8 +258,7 @@
 </span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">enabled</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">ingress</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">enabled</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
-</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">annotations</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
-</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">      </span><span style="color:#204a87;font-weight:bold">kubernetes.io/ingress.class</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">haproxy</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">ingressClassName</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#000">haproxy</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">hosts</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span>- <span style="color:#000">grafana.192.168.0.11.nip.io</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">tls</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
@@ -284,6 +283,8 @@
 <p>The steps below configures HAProxy Ingress&rsquo; Helm chart to add a new ServiceMonitor custom resource. This resource will be responsible for HAProxy and HAProxy Ingress metrics scrape.</p>
 <p>Merge the content below to the actual <code>haproxy-ingress-values.yaml</code> file:</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#204a87;font-weight:bold">controller</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">ingressClassResource</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
+</span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">enabled</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">stats</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">    </span><span style="color:#204a87;font-weight:bold">enabled</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline"> </span><span style="color:#204a87;font-weight:bold">true</span><span style="color:#f8f8f8;text-decoration:underline">
 </span></span></span><span style="display:flex;"><span><span style="color:#f8f8f8;text-decoration:underline">  </span><span style="color:#204a87;font-weight:bold">metrics</span><span style="color:#000;font-weight:bold">:</span><span style="color:#f8f8f8;text-decoration:underline">
@@ -347,7 +348,7 @@ kubectl --namespace default create deploy dory --image jcmoraisjr/dory
 kubectl --namespace default scale deploy dory --replicas=4
 kubectl --namespace default expose deploy dory --port 8000
 kubectl --namespace default create ingress dory\
-  --annotation kubernetes.io/ingress.class=haproxy\
+  --class=haproxy\
   --annotation haproxy-ingress.github.io/ssl-redirect=false\
   --rule=&#34;dory.localdomain/*=dory:8000,tls=dory&#34;
 </code></pre><p>Check if the app is up and running:</p>
@@ -387,7 +388,7 @@ echo &#34;GET https://$IP&#34; |\
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified June 20, 2022: <a href="https://github.com/jcmoraisjr/haproxy-ingress/commit/3f904ee4e2476dfc2fb4e4f93d78b48977aa5052">Spelling fixes (3f904ee4)</a>
+  Last modified February 22, 2023: <a href="https://github.com/jcmoraisjr/haproxy-ingress/commit/df7ce876a9473134db01d5c6361ba87afab036aa">Recommend setting ingressClassResource.enabled=true (df7ce876)</a>
 </div>
 
 </div>

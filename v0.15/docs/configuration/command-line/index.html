@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="generator" content="Hugo 0.110.0">
+<meta name="generator" content="Hugo 0.112.3">
 <meta name="robots" content="index, follow">
 
 
@@ -27,12 +27,12 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.15/docs/configuration/command-line/" /><meta property="article:section" content="docs" />
 
-<meta property="article:modified_time" content="2022-10-30T15:58:50-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2023-04-24T15:37:51-07:00" />
 <meta itemprop="name" content="Command-line options">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
-<meta itemprop="dateModified" content="2022-10-30T15:58:50-03:00" />
-<meta itemprop="wordCount" content="4335">
+<meta itemprop="dateModified" content="2023-04-24T15:37:51-07:00" />
+<meta itemprop="wordCount" content="4367">
 <meta itemprop="keywords" content="" /><meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Command-line options"/>
 <meta name="twitter:description" content="Static command-line configuration options.
@@ -211,6 +211,7 @@
     <li><a href="#--shutdown-timeout">&ndash;shutdown-timeout</a></li>
     <li><a href="#--sort-backends">&ndash;sort-backends</a></li>
     <li><a href="#--sort-endpoints-by">&ndash;sort-endpoints-by</a></li>
+    <li><a href="#--enable-endpointslices-api">&ndash;enable-endpointslices-api</a></li>
     <li><a href="#stats">Stats</a></li>
     <li><a href="#--sync-period">&ndash;sync-period</a></li>
     <li><a href="#--tcp-services-configmap">&ndash;tcp-services-configmap</a></li>
@@ -595,6 +596,12 @@
 <td>[endpoint|ip|name|random]</td>
 <td><code>endpoint</code></td>
 <td>v0.11</td>
+</tr>
+<tr>
+<td><a href="#enable-endpointslices-api"><code>--enable-endpointslices-api</code></a></td>
+<td>[true|false]</td>
+<td><code>false</code></td>
+<td>v0.14</td>
 </tr>
 <tr>
 <td><a href="#stats"><code>--stats-collect-processing-period</code></a></td>
@@ -1011,6 +1018,10 @@ option, because the default value builds the server name using a numeric sequenc
 <li><code>random</code>: randomly shuffle the endpoints every time haproxy needs to be reloaded, this option avoids to always send requests to the same endpoints depending on the balancing algorithm</li>
 </ul>
 <hr>
+<h2 id="--enable-endpointslices-api">&ndash;enable-endpointslices-api</h2>
+<p>Since v0.14</p>
+<p>Uses EndpointSlices API info, rather than Endpoints API, to fetch service endpoints info. By default it is disabled. EndpointSlices API was stablised from Kubernetes v1.21.</p>
+<hr>
 <h2 id="stats">Stats</h2>
 <p>Configures an endpoint with statistics, debugging and health checks. The following URIs are provided:</p>
 <ul>
@@ -1176,7 +1187,7 @@ single namespace.</p>
 	
 	
 	<div class="text-muted mt-5 pt-3 border-top">
-  Last modified October 30, 2022: <a href="https://github.com/jcmoraisjr/haproxy-ingress/commit/cdf5a70c1dd7469edd4667b113eb743e640b681a">doc: controller-runtime update (cdf5a70c)</a>
+  Last modified April 24, 2023: <a href="https://github.com/jcmoraisjr/haproxy-ingress/commit/af4a740615442b28626362c5ab59691a37cd73fe">Adds support for EndpointSlice API (af4a7406)</a>
 </div>
 
 </div>
