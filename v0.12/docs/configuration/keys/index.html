@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.12/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2022-01-19T07:38:31-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2024-06-07T10:10:24-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2022-01-19T07:38:31-03:00" />
-<meta itemprop="wordCount" content="12363">
+<meta itemprop="dateModified" content="2024-06-07T10:10:24-03:00" />
+<meta itemprop="wordCount" content="12410">
 
 
 
@@ -5551,6 +5551,13 @@ if a path couldn&rsquo;t be matched.</p>
 <li><code>syslog-tag</code>: Configure the tag field in the syslog header to the supplied string.</li>
 </ul>
 
+<p>The HAProxy process can also send logs to stdout, instead of an external syslog endpoint or a syslog sidecar, by following the steps below:</p>
+
+<ul>
+<li>Configure <code>syslog-endpoint</code> as <code>stdout</code> and <code>syslog-format</code> as <code>raw</code></li>
+<li>From v0.12 and newer, configure HAProxy to run as a sidecar, see the <a href="/v0.12/docs/examples/external-haproxy/">example page</a></li>
+</ul>
+
 <p>See also:</p>
 
 <ul>
@@ -5827,7 +5834,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 <li><a href="#modsecurity">Modsecurity</a> configuration keys.</li>
 </ul>
 
-	<div class="text-muted mt-5 pt-3 border-top">Last modified January 19, 2022: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/7511f6545a2b322f96b98d8780fa74af30b97b95">docs: fix default backend-server-slots-increment (7511f654)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified June 7, 2024: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/328b6458a168a8e7407c163da4ba13954539ba46">doc: add haproxy logging to stdout (328b6458)</a>
 </div>
 </div>
 
