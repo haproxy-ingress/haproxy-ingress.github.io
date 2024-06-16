@@ -5971,6 +5971,13 @@ if a path couldn&amp;rsquo;t be matched.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;syslog-tag&lt;/code&gt;: Configure the tag field in the syslog header to the supplied string.&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;p&gt;The HAProxy process can also send logs to stdout, instead of an external syslog endpoint or a syslog sidecar, by following the steps below:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Configure &lt;code&gt;syslog-endpoint&lt;/code&gt; as &lt;code&gt;stdout&lt;/code&gt; and &lt;code&gt;syslog-format&lt;/code&gt; as &lt;code&gt;raw&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;From v0.12 and newer, configure HAProxy to run as a sidecar, see the &lt;a href=&#34;/v0.13/v0.13/docs/examples/external-haproxy/&#34;&gt;example page&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;p&gt;See also:&lt;/p&gt;
 
 &lt;ul&gt;
