@@ -1550,6 +1550,13 @@ TCP port number.&lt;/p&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#ssl-always-add-https&#34;&gt;&lt;code&gt;ssl-always-follow-redirect&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;[true|false]&lt;/td&gt;
+&lt;td&gt;Host&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#ssl-ciphers&#34;&gt;&lt;code&gt;ssl-cipher-suites&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;colon-separated list&lt;/td&gt;
 &lt;td&gt;Host&lt;/td&gt;
@@ -5874,6 +5881,13 @@ The source IP is a static configuration added on each backend server. This confi
 &lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;v0.12.4&lt;/td&gt;
 &lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;ssl-always-follow-redirect&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Host&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;true&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.14.7&lt;/td&gt;
+&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
@@ -5881,7 +5895,11 @@ The source IP is a static configuration added on each backend server. This confi
 
 &lt;p&gt;&lt;code&gt;ssl-always-add-https&lt;/code&gt; asks the controller to always add the domain in the internal HTTP and HTTPS maps, even if the &lt;code&gt;tls&lt;/code&gt; attribute isn&amp;rsquo;t declared. If &lt;code&gt;false&lt;/code&gt;, a missing &lt;code&gt;tls&lt;/code&gt; attribute will only declare the domain in the HTTP map and &lt;code&gt;ssl-redirect&lt;/code&gt; is ignored. If &lt;code&gt;true&lt;/code&gt;, a missing &lt;code&gt;tls&lt;/code&gt; attribute adds the domain in the HTTPS map, and the TLS handshake will use the default certificate. If &lt;code&gt;tls&lt;/code&gt; attribute is used, this configuration is ignored.&lt;/p&gt;
 
-&lt;p&gt;The default value is &lt;code&gt;false&lt;/code&gt; since v0.13 to correctly implement Ingress spec. The default value can be globally changed in the global ConfigMap.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;ssl-always-follow-redirect&lt;/code&gt; configures how the &lt;code&gt;ssl-redirect&lt;/code&gt; option should be used when the &lt;code&gt;tls&lt;/code&gt; attribute is missing, but the host is added in the HTTPS map. When &lt;code&gt;false&lt;/code&gt;, it makes the controller to mimic a v0.11 and older behavior by not redirecting to HTTPS if the ingress does not declare the &lt;code&gt;tls&lt;/code&gt; attribute. When &lt;code&gt;true&lt;/code&gt;, SSL redirect will happen if configured, regardless the presence of the &lt;code&gt;tls&lt;/code&gt; attribute. This option is ignored if &lt;code&gt;ssl-always-add-https&lt;/code&gt; is false.&lt;/p&gt;
+
+&lt;p&gt;The default value for &lt;code&gt;ssl-always-add-https&lt;/code&gt; is &lt;code&gt;false&lt;/code&gt; since v0.13 to correctly implement Ingress spec. The default value can be globally changed in the global ConfigMap.&lt;/p&gt;
+
+&lt;p&gt;These options are implemented to help teams upgrade from older controller versions without disruptions. It is suggested not to be changed, and if so, it is also suggested to evolve ingress resources to a state that does not depend on it in the mid term.&lt;/p&gt;
 
 &lt;hr /&gt;
 
@@ -6404,6 +6422,14 @@ if a path couldn&amp;rsquo;t be matched.&lt;/p&gt;
 &lt;li&gt;&lt;code&gt;syslog-format&lt;/code&gt;: Configures the log format to be either &lt;code&gt;rfc5424&lt;/code&gt; (default), &lt;code&gt;rfc3164&lt;/code&gt; or &lt;code&gt;raw&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;syslog-length&lt;/code&gt;: The maximum line length, log lines larger than this value will be truncated. Defaults to &lt;code&gt;1024&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;syslog-tag&lt;/code&gt;: Configure the tag field in the syslog header to the supplied string.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The HAProxy process can also send logs to stdout, instead of an external syslog endpoint or a syslog sidecar, by following the steps below:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Configure &lt;code&gt;syslog-endpoint&lt;/code&gt; as &lt;code&gt;stdout&lt;/code&gt; and &lt;code&gt;syslog-format&lt;/code&gt; as &lt;code&gt;raw&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;From v0.12 and newer, configure HAProxy to run as a sidecar, see the &lt;a href=&#34;/docs/examples/external-haproxy/&#34;&gt;example page&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;From v0.14 and newer, it is also possible to make embedded HAProxy send logs to the controller container by adding &lt;a href=&#34;/docs/configuration/command-line/#master-worker&#34;&gt;&lt;code&gt;--master-worker&lt;/code&gt;&lt;/a&gt; command-line option - in this case, both controller and haproxy logs will share the same stream&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;See also:&lt;/p&gt;
