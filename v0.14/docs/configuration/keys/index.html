@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.14/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2023-03-05T21:20:34-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2024-06-07T14:58:02-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2023-03-05T21:20:34-03:00" />
-<meta itemprop="wordCount" content="17522">
+<meta itemprop="dateModified" content="2024-06-07T14:58:02-03:00" />
+<meta itemprop="wordCount" content="17735">
 
 
 
@@ -1940,6 +1940,13 @@ TCP port number.</p>
 <td>[true|false]</td>
 <td>Host</td>
 <td><code>false</code></td>
+</tr>
+
+<tr>
+<td><a href="#ssl-always-add-https"><code>ssl-always-follow-redirect</code></a></td>
+<td>[true|false]</td>
+<td>Host</td>
+<td><code>true</code></td>
 </tr>
 
 <tr>
@@ -6267,6 +6274,13 @@ The source IP is a static configuration added on each backend server. This confi
 <td><code>false</code></td>
 <td>v0.12.4</td>
 </tr>
+
+<tr>
+<td><code>ssl-always-follow-redirect</code></td>
+<td>Host</td>
+<td><code>true</code></td>
+<td>v0.14.7</td>
+</tr>
 </tbody>
 </table>
 
@@ -6274,7 +6288,11 @@ The source IP is a static configuration added on each backend server. This confi
 
 <p><code>ssl-always-add-https</code> asks the controller to always add the domain in the internal HTTP and HTTPS maps, even if the <code>tls</code> attribute isn&rsquo;t declared. If <code>false</code>, a missing <code>tls</code> attribute will only declare the domain in the HTTP map and <code>ssl-redirect</code> is ignored. If <code>true</code>, a missing <code>tls</code> attribute adds the domain in the HTTPS map, and the TLS handshake will use the default certificate. If <code>tls</code> attribute is used, this configuration is ignored.</p>
 
-<p>The default value is <code>false</code> since v0.13 to correctly implement Ingress spec. The default value can be globally changed in the global ConfigMap.</p>
+<p><code>ssl-always-follow-redirect</code> configures how the <code>ssl-redirect</code> option should be used when the <code>tls</code> attribute is missing, but the host is added in the HTTPS map. When <code>false</code>, it makes the controller to mimic a v0.11 and older behavior by not redirecting to HTTPS if the ingress does not declare the <code>tls</code> attribute. When <code>true</code>, SSL redirect will happen if configured, regardless the presence of the <code>tls</code> attribute. This option is ignored if <code>ssl-always-add-https</code> is false.</p>
+
+<p>The default value for <code>ssl-always-add-https</code> is <code>false</code> since v0.13 to correctly implement Ingress spec. The default value can be globally changed in the global ConfigMap.</p>
+
+<p>These options are implemented to help teams upgrade from older controller versions without disruptions. It is suggested not to be changed, and if so, it is also suggested to evolve ingress resources to a state that does not depend on it in the mid term.</p>
 
 <hr />
 
@@ -6799,6 +6817,14 @@ if a path couldn&rsquo;t be matched.</p>
 <li><code>syslog-tag</code>: Configure the tag field in the syslog header to the supplied string.</li>
 </ul>
 
+<p>The HAProxy process can also send logs to stdout, instead of an external syslog endpoint or a syslog sidecar, by following the steps below:</p>
+
+<ul>
+<li>Configure <code>syslog-endpoint</code> as <code>stdout</code> and <code>syslog-format</code> as <code>raw</code></li>
+<li>From v0.12 and newer, configure HAProxy to run as a sidecar, see the <a href="/v0.14/docs/examples/external-haproxy/">example page</a></li>
+<li>From v0.14 and newer, it is also possible to make embedded HAProxy send logs to the controller container by adding <a href="/v0.14/docs/configuration/command-line/#master-worker"><code>--master-worker</code></a> command-line option - in this case, both controller and haproxy logs will share the same stream</li>
+</ul>
+
 <p>See also:</p>
 
 <ul>
@@ -7145,7 +7171,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified March 5, 2023: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/ee2014ade1c0dc752189bded1076f880e75a0246">skip acme-challenge path on to/from redirects (ee2014ad)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified June 7, 2024: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/b2d75192a2951e8fafee675c24b535229ce9174d">doc: add haproxy logging to stdout (b2d75192)</a>
 </div>
 </div>
 
