@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.14/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2024-06-07T14:58:02-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2024-09-22T19:14:10-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2024-06-07T14:58:02-03:00" />
-<meta itemprop="wordCount" content="17735">
+<meta itemprop="dateModified" content="2024-09-22T19:14:10-03:00" />
+<meta itemprop="wordCount" content="17933">
 
 
 
@@ -6877,6 +6877,19 @@ if a path couldn&rsquo;t be matched.</p>
 </ul></li>
 </ul>
 
+<p>TLS configuration is also applied to the TCP service if configured, making HAProxy to ssl offload requests on that port. Default certificate can be used by leaving <code>.spec.tls[].secretName</code> empty. Up to <code>v0.14.7</code>, a single certificate can be configured for all incoming requests. Since <code>v0.14.8</code>, distinct TLS hosts sections can configure distinct certificates for the TLS handshake, chosen based on the provided TLS SNI extension. The first declared secret act as the default certificate if an incoming SNI does not match any host entry. Distinct TLS related configurations, via annotations, can be applied to distinct secrets by splitting the TCP service configuration into distinct ingress resources.</p>
+
+
+
+<div class="alert alert-primary" role="alert">
+<h4 class="alert-heading">Note</h4>
+<p>Note that hostname based selection relies on SNI, so it works only on TLS requests. The encrypted content can be offloaded either by HAProxy, providing the hostname in <code>.spec.rules[].host</code> and <code>.spec.tls</code>, or offloaded by the backend server, providing the hostname only in <code>.spec.rules[].host</code>. Non TLS content cannot be multiplexed on the same TCP port for more than one backend.</p>
+
+<p>Note also that, in the case a hostname does not match, HAProxy will select a backend only if <code>.spec.defaultBackend</code> or an empty <code>.spec.rules[].host</code> is configured, otherwise the connection is closed without a response.</p>
+
+</div>
+
+
 <p>Every TCP service port creates a dedicated haproxy frontend that can be <a href="#configuration-snippet">customized</a> in three distinct ways:</p>
 
 <ul>
@@ -7171,7 +7184,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified June 7, 2024: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/b2d75192a2951e8fafee675c24b535229ce9174d">doc: add haproxy logging to stdout (b2d75192)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified September 22, 2024: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/850961f83b87a8c5e9f2ec8477c8246c83070391">support list of server crt on tls tcp service (850961f8)</a>
 </div>
 </div>
 
@@ -7231,7 +7244,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
       </div>
       <div class="col-12 col-sm-8 text-center py-2 order-sm-2">
         
-          <small class="text-white">Made with <div class="fa fa-heart"></div> & <div class="fa fa-coffee"></div> | &copy; 2024 The HAProxy Ingress Controller Authors</small>
+          <small class="text-white">Made with <div class="fa fa-heart"></div> & <div class="fa fa-coffee"></div> | &copy; 2025 The HAProxy Ingress Controller Authors</small>
         
         <small class="text-white"> | Image by <a href="https://pixabay.com/users/TheDigitalArtist-202249/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pete Linforth</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pixabay</a></small>
         
