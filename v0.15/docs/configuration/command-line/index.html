@@ -18,8 +18,7 @@
 <link rel="icon" type="image/png" href="/v0.15/favicons/android-192x192.png" sizes="192x192">
 
 <title>Command-line options | HAProxy Ingress</title>
-<meta name="description" content="Static command-line configuration options.
-">
+<meta name="description" content="Static command-line configuration options.">
 <meta property="og:url" content="/v0.15/docs/configuration/command-line/">
   <meta property="og:site_name" content="HAProxy Ingress">
   <meta property="og:title" content="Command-line options">
@@ -27,22 +26,17 @@
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="docs">
-    <meta property="article:modified_time" content="2024-06-11T21:43:02-03:00">
+    <meta property="article:modified_time" content="2025-03-09T12:35:42-03:00">
 
   <meta itemprop="name" content="Command-line options">
   <meta itemprop="description" content="Static command-line configuration options.">
-  <meta itemprop="dateModified" content="2024-06-11T21:43:02-03:00">
-  <meta itemprop="wordCount" content="4522">
+  <meta itemprop="dateModified" content="2025-03-09T12:35:42-03:00">
+  <meta itemprop="wordCount" content="4546">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Command-line options">
   <meta name="twitter:description" content="Static command-line configuration options.">
-
-
-
-
-<link rel="preload" href="/v0.15/scss/main.min.cdf23cb2263e8a301c7dab13a0db7c06d78d923b739c4c5292d884701ad38756.css" as="style">
-<link href="/v0.15/scss/main.min.cdf23cb2263e8a301c7dab13a0db7c06d78d923b739c4c5292d884701ad38756.css" rel="stylesheet" integrity="">
-
+<link rel="preload" href="/v0.15/scss/main.min.42d2ae4d348f2d260a6d71a249ae9d24d4b389d32aa69d9af784d86972b46512.css" as="style" integrity="sha256-QtKuTTSPLSYKbXGiSa6dJNSzidMqpp2a94TYaXK0ZRI=" crossorigin="anonymous">
+<link href="/v0.15/scss/main.min.42d2ae4d348f2d260a6d71a249ae9d24d4b389d32aa69d9af784d86972b46512.css" rel="stylesheet" integrity="sha256-QtKuTTSPLSYKbXGiSa6dJNSzidMqpp2a94TYaXK0ZRI=" crossorigin="anonymous">
 <script
   src="https://code.jquery.com/jquery-3.7.1.min.js"
   integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
@@ -246,6 +240,7 @@
     <li><a href="#publish-service">publish-service</a></li>
     <li><a href="#rate-limit-update">rate-limit-update</a></li>
     <li><a href="#reload-interval">reload-interval</a></li>
+    <li><a href="#reload-retry">reload-retry</a></li>
     <li><a href="#reload-strategy">reload-strategy</a></li>
     <li><a href="#report-node-internal-ip-address">report-node-internal-ip-address</a></li>
     <li><a href="#shutdown-timeout">shutdown-timeout</a></li>
@@ -295,418 +290,424 @@
 </header>
 	<p>The following command-line options are supported:</p>
 <table>
-<thead>
-<tr>
-<th>Name</th>
-<th>Type</th>
-<th>Default</th>
-<th>Since</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="#acme"><code>--acme-check-period</code></a></td>
-<td>time</td>
-<td><code>24h</code></td>
-<td>v0.9</td>
-</tr>
-<tr>
-<td><a href="#acme"><code>--acme-election-id</code></a></td>
-<td>[namespace]/configmap-name</td>
-<td><code>acme-leader</code></td>
-<td>v0.9</td>
-</tr>
-<tr>
-<td><a href="#acme"><code>--acme-fail-initial-duration</code></a></td>
-<td>time</td>
-<td><code>5m</code></td>
-<td>v0.9</td>
-</tr>
-<tr>
-<td><a href="#acme"><code>--acme-fail-max-duration</code></a></td>
-<td>time</td>
-<td><code>8h</code></td>
-<td>v0.9</td>
-</tr>
-<tr>
-<td><a href="#acme"><code>--acme-secret-key-name</code></a></td>
-<td>[namespace]/secret-name</td>
-<td><code>acme-private-key</code></td>
-<td>v0.9</td>
-</tr>
-<tr>
-<td><a href="#acme"><code>--acme-server</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td>v0.9</td>
-</tr>
-<tr>
-<td><a href="#acme"><code>--acme-token-configmap-name</code></a></td>
-<td>[namespace]/configmap-name</td>
-<td><code>acme-validation-tokens</code></td>
-<td>v0.9</td>
-</tr>
-<tr>
-<td><a href="#acme"><code>--acme-track-tls-annotation</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td>v0.9</td>
-</tr>
-<tr>
-<td><a href="#allow-cross-namespace"><code>--allow-cross-namespace</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#annotations-prefix"><code>--annotations-prefix</code></a></td>
-<td>prefix list without <code>/</code></td>
-<td><code>haproxy-ingress.github.io,ingress.kubernetes.io</code></td>
-<td>v0.8</td>
-</tr>
-<tr>
-<td><a href="#apiserver-host"><code>--apiserver-host</code></a></td>
-<td>address of K8s API server</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#backend-shards"><code>--backend-shards</code></a></td>
-<td>int</td>
-<td><code>0</code></td>
-<td>v0.11</td>
-</tr>
-<tr>
-<td><a href="#buckets-response-time"><code>--buckets-response-time</code></a></td>
-<td>float64 slice</td>
-<td><code>.0005,.001,.002,.005,.01</code></td>
-<td>v0.10</td>
-</tr>
-<tr>
-<td><a href="#configmap"><code>--configmap</code></a></td>
-<td>namespace/configmapname</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#ingress-class"><code>--controller-class</code></a></td>
-<td>suffix</td>
-<td><code>&quot;&quot;</code></td>
-<td>v0.12</td>
-</tr>
-<tr>
-<td><a href="#default-backend-service"><code>--default-backend-service</code></a></td>
-<td>namespace/servicename</td>
-<td>haproxy&rsquo;s 404 page</td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#default-ssl-certificate"><code>--default-ssl-certificate</code></a></td>
-<td>namespace/secretname</td>
-<td>fake, auto generated</td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#disable-api-warnings"><code>--disable-api-warnings</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td>v0.12</td>
-</tr>
-<tr>
-<td><a href="#disable-config-keywords"><code>--disable-config-keywords</code></a></td>
-<td>comma-separated list of keywords</td>
-<td><code>&quot;&quot;</code></td>
-<td>v0.10</td>
-</tr>
-<tr>
-<td><a href="#disable-external-name"><code>--disable-external-name</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td>v0.10</td>
-</tr>
-<tr>
-<td><a href="#disable-pod-list"><code>--disable-pod-list</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td>v0.11</td>
-</tr>
-<tr>
-<td><a href="#election-id"><code>--election-id</code></a></td>
-<td>identifier</td>
-<td><code>ingress-controller-leader</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#force-namespace-isolation"><code>--force-namespace-isolation</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#stats"><code>--health-check-path</code></a></td>
-<td>path</td>
-<td><code>/healthz</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#stats"><code>--healthz-addr</code></a></td>
-<td>tcp address</td>
-<td><code>:10254</code></td>
-<td>v0.15</td>
-</tr>
-<tr>
-<td><a href="#stats"><code>--healthz-port</code></a></td>
-<td>port number</td>
-<td><code>10254</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#ingress-class"><code>--ingress-class</code></a></td>
-<td>name</td>
-<td><code>haproxy</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#ingress-class"><code>--ingress-class-precedence</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td>v0.13.5</td>
-</tr>
-<tr>
-<td><a href="#kubeconfig"><code>--kubeconfig</code></a></td>
-<td>/path/to/kubeconfig</td>
-<td>in cluster config</td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#local-filesystem-prefix"><code>--local-filesystem-prefix</code></a></td>
-<td>temporary base directory</td>
-<td></td>
-<td>v0.14</td>
-</tr>
-<tr>
-<td><a href="#logging"><code>--log-zap</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td>v0.14</td>
-</tr>
-<tr>
-<td><a href="#logging"><code>--log-dev</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td>v0.14</td>
-</tr>
-<tr>
-<td><a href="#logging"><code>--log-caller</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td>v0.14</td>
-</tr>
-<tr>
-<td><a href="#logging"><code>--log-enable-stacktrace</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td>v0.14</td>
-</tr>
-<tr>
-<td><a href="#logging"><code>--log-encoder</code></a></td>
-<td>encoder name</td>
-<td><code>json</code> (prod), <code>console</code> (dev)</td>
-<td>v0.14</td>
-</tr>
-<tr>
-<td><a href="#logging"><code>--log-encode-time</code></a></td>
-<td>encoder name</td>
-<td><code>rfc3339nano</code> (prod), <code>iso8601</code> (dev)</td>
-<td>v0.14</td>
-</tr>
-<tr>
-<td><a href="#master-socket"><code>--master-socket</code></a></td>
-<td>socket path</td>
-<td>use embedded haproxy</td>
-<td>v0.12</td>
-</tr>
-<tr>
-<td><a href="#master-worker"><code>--master-worker</code></a></td>
-<td>[true|false]</td>
-<td>false</td>
-<td>v0.14</td>
-</tr>
-<tr>
-<td><a href="#max-old-config-files"><code>--max-old-config-files</code></a></td>
-<td>num of files</td>
-<td><code>0</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#stats"><code>--profiling</code></a></td>
-<td>[true|false]</td>
-<td><code>true</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#publish-address"><code>--publish-address</code></a></td>
-<td>list of hostname/IP</td>
-<td></td>
-<td>v0.15</td>
-</tr>
-<tr>
-<td><a href="#publish-service"><code>--publish-service</code></a></td>
-<td>namespace/servicename</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#rate-limit-update"><code>--rate-limit-update</code></a></td>
-<td>uploads per second (float)</td>
-<td><code>0.5</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#reload-interval"><code>--reload-interval</code></a></td>
-<td>time</td>
-<td><code>0</code></td>
-<td>v0.13</td>
-</tr>
-<tr>
-<td><a href="#stats"><code>--ready-check-path</code></a></td>
-<td>path</td>
-<td><code>/readyz</code></td>
-<td>v0.15</td>
-</tr>
-<tr>
-<td><a href="#reload-strategy"><code>--reload-strategy</code></a></td>
-<td>[native|reusesocket]</td>
-<td><code>reusesocket</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#report-node-internal-ip-address"><code>--report-node-internal-ip-address</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#sort-backends"><code>--sort-backends</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#shutdown-timeout"><code>--shutdown-timeout</code></a></td>
-<td>time</td>
-<td><code>25s</code></td>
-<td>v0.15</td>
-</tr>
-<tr>
-<td><a href="#sort-endpoints-by"><code>--sort-endpoints-by</code></a></td>
-<td>[endpoint|ip|name|random]</td>
-<td><code>endpoint</code></td>
-<td>v0.11</td>
-</tr>
-<tr>
-<td><a href="#enable-endpointslices-api"><code>--enable-endpointslices-api</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td>v0.14</td>
-</tr>
-<tr>
-<td><a href="#stats"><code>--stats-collect-processing-period</code></a></td>
-<td>time</td>
-<td><code>500ms</code></td>
-<td>v0.10</td>
-</tr>
-<tr>
-<td><a href="#stats"><code>--stop-handler</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td>v0.15</td>
-</tr>
-<tr>
-<td><a href="#sync-period"><code>--sync-period</code></a></td>
-<td>time</td>
-<td><code>10m</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#tcp-services-configmap"><code>--tcp-services-configmap</code></a></td>
-<td>namespace/configmapname</td>
-<td>no tcp svc</td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#track-old-instances"><code>--track-old-instances</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td>v0.14</td>
-</tr>
-<tr>
-<td><a href="#update-status"><code>--update-status</code></a></td>
-<td>[true|false]</td>
-<td><code>true</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#update-status-on-shutdown"><code>--update-status-on-shutdown</code></a></td>
-<td>[true|false]</td>
-<td><code>true</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#logging"><code>--v</code></a></td>
-<td>log level as integer</td>
-<td><code>2</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#validate-config"><code>--validate-config</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#verify-hostname"><code>--verify-hostname</code></a></td>
-<td>[true|false]</td>
-<td><code>true</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#version"><code>--version</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td></td>
-</tr>
-<tr>
-<td><a href="#wait-before-shutdown"><code>--wait-before-shutdown</code></a></td>
-<td>seconds as integer</td>
-<td><code>0</code></td>
-<td>v0.8</td>
-</tr>
-<tr>
-<td><a href="#wait-before-update"><code>--wait-before-update</code></a></td>
-<td>duration</td>
-<td><code>200ms</code></td>
-<td>v0.11</td>
-</tr>
-<tr>
-<td><a href="#watch-gateway"><code>--watch-gateway</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td>v0.13</td>
-</tr>
-<tr>
-<td><a href="#ingress-class"><code>--watch-ingress-without-class</code></a></td>
-<td>[true|false]</td>
-<td><code>false</code></td>
-<td>v0.12</td>
-</tr>
-<tr>
-<td><a href="#watch-namespace"><code>--watch-namespace</code></a></td>
-<td>namespace</td>
-<td>all namespaces</td>
-<td></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Default</th>
+          <th>Since</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><a href="#acme"><code>--acme-check-period</code></a></td>
+          <td>time</td>
+          <td><code>24h</code></td>
+          <td>v0.9</td>
+      </tr>
+      <tr>
+          <td><a href="#acme"><code>--acme-election-id</code></a></td>
+          <td>[namespace]/configmap-name</td>
+          <td><code>acme-leader</code></td>
+          <td>v0.9</td>
+      </tr>
+      <tr>
+          <td><a href="#acme"><code>--acme-fail-initial-duration</code></a></td>
+          <td>time</td>
+          <td><code>5m</code></td>
+          <td>v0.9</td>
+      </tr>
+      <tr>
+          <td><a href="#acme"><code>--acme-fail-max-duration</code></a></td>
+          <td>time</td>
+          <td><code>8h</code></td>
+          <td>v0.9</td>
+      </tr>
+      <tr>
+          <td><a href="#acme"><code>--acme-secret-key-name</code></a></td>
+          <td>[namespace]/secret-name</td>
+          <td><code>acme-private-key</code></td>
+          <td>v0.9</td>
+      </tr>
+      <tr>
+          <td><a href="#acme"><code>--acme-server</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td>v0.9</td>
+      </tr>
+      <tr>
+          <td><a href="#acme"><code>--acme-token-configmap-name</code></a></td>
+          <td>[namespace]/configmap-name</td>
+          <td><code>acme-validation-tokens</code></td>
+          <td>v0.9</td>
+      </tr>
+      <tr>
+          <td><a href="#acme"><code>--acme-track-tls-annotation</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td>v0.9</td>
+      </tr>
+      <tr>
+          <td><a href="#allow-cross-namespace"><code>--allow-cross-namespace</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#annotations-prefix"><code>--annotations-prefix</code></a></td>
+          <td>prefix list without <code>/</code></td>
+          <td><code>haproxy-ingress.github.io,ingress.kubernetes.io</code></td>
+          <td>v0.8</td>
+      </tr>
+      <tr>
+          <td><a href="#apiserver-host"><code>--apiserver-host</code></a></td>
+          <td>address of K8s API server</td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#backend-shards"><code>--backend-shards</code></a></td>
+          <td>int</td>
+          <td><code>0</code></td>
+          <td>v0.11</td>
+      </tr>
+      <tr>
+          <td><a href="#buckets-response-time"><code>--buckets-response-time</code></a></td>
+          <td>float64 slice</td>
+          <td><code>.0005,.001,.002,.005,.01</code></td>
+          <td>v0.10</td>
+      </tr>
+      <tr>
+          <td><a href="#configmap"><code>--configmap</code></a></td>
+          <td>namespace/configmapname</td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#ingress-class"><code>--controller-class</code></a></td>
+          <td>suffix</td>
+          <td><code>&quot;&quot;</code></td>
+          <td>v0.12</td>
+      </tr>
+      <tr>
+          <td><a href="#default-backend-service"><code>--default-backend-service</code></a></td>
+          <td>namespace/servicename</td>
+          <td>haproxy&rsquo;s 404 page</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#default-ssl-certificate"><code>--default-ssl-certificate</code></a></td>
+          <td>namespace/secretname</td>
+          <td>fake, auto generated</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#disable-api-warnings"><code>--disable-api-warnings</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td>v0.12</td>
+      </tr>
+      <tr>
+          <td><a href="#disable-config-keywords"><code>--disable-config-keywords</code></a></td>
+          <td>comma-separated list of keywords</td>
+          <td><code>&quot;&quot;</code></td>
+          <td>v0.10</td>
+      </tr>
+      <tr>
+          <td><a href="#disable-external-name"><code>--disable-external-name</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td>v0.10</td>
+      </tr>
+      <tr>
+          <td><a href="#disable-pod-list"><code>--disable-pod-list</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td>v0.11</td>
+      </tr>
+      <tr>
+          <td><a href="#election-id"><code>--election-id</code></a></td>
+          <td>identifier</td>
+          <td><code>ingress-controller-leader</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#force-namespace-isolation"><code>--force-namespace-isolation</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#stats"><code>--health-check-path</code></a></td>
+          <td>path</td>
+          <td><code>/healthz</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#stats"><code>--healthz-addr</code></a></td>
+          <td>tcp address</td>
+          <td><code>:10254</code></td>
+          <td>v0.15</td>
+      </tr>
+      <tr>
+          <td><a href="#stats"><code>--healthz-port</code></a></td>
+          <td>port number</td>
+          <td><code>10254</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#ingress-class"><code>--ingress-class</code></a></td>
+          <td>name</td>
+          <td><code>haproxy</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#ingress-class"><code>--ingress-class-precedence</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td>v0.13.5</td>
+      </tr>
+      <tr>
+          <td><a href="#kubeconfig"><code>--kubeconfig</code></a></td>
+          <td>/path/to/kubeconfig</td>
+          <td>in cluster config</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#local-filesystem-prefix"><code>--local-filesystem-prefix</code></a></td>
+          <td>temporary base directory</td>
+          <td></td>
+          <td>v0.14</td>
+      </tr>
+      <tr>
+          <td><a href="#logging"><code>--log-zap</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td>v0.14</td>
+      </tr>
+      <tr>
+          <td><a href="#logging"><code>--log-dev</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td>v0.14</td>
+      </tr>
+      <tr>
+          <td><a href="#logging"><code>--log-caller</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td>v0.14</td>
+      </tr>
+      <tr>
+          <td><a href="#logging"><code>--log-enable-stacktrace</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td>v0.14</td>
+      </tr>
+      <tr>
+          <td><a href="#logging"><code>--log-encoder</code></a></td>
+          <td>encoder name</td>
+          <td><code>json</code> (prod), <code>console</code> (dev)</td>
+          <td>v0.14</td>
+      </tr>
+      <tr>
+          <td><a href="#logging"><code>--log-encode-time</code></a></td>
+          <td>encoder name</td>
+          <td><code>rfc3339nano</code> (prod), <code>iso8601</code> (dev)</td>
+          <td>v0.14</td>
+      </tr>
+      <tr>
+          <td><a href="#master-socket"><code>--master-socket</code></a></td>
+          <td>socket path</td>
+          <td>use embedded haproxy</td>
+          <td>v0.12</td>
+      </tr>
+      <tr>
+          <td><a href="#master-worker"><code>--master-worker</code></a></td>
+          <td>[true|false]</td>
+          <td>false</td>
+          <td>v0.14</td>
+      </tr>
+      <tr>
+          <td><a href="#max-old-config-files"><code>--max-old-config-files</code></a></td>
+          <td>num of files</td>
+          <td><code>0</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#stats"><code>--profiling</code></a></td>
+          <td>[true|false]</td>
+          <td><code>true</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#publish-address"><code>--publish-address</code></a></td>
+          <td>list of hostname/IP</td>
+          <td></td>
+          <td>v0.15</td>
+      </tr>
+      <tr>
+          <td><a href="#publish-service"><code>--publish-service</code></a></td>
+          <td>namespace/servicename</td>
+          <td></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#rate-limit-update"><code>--rate-limit-update</code></a></td>
+          <td>uploads per second (float)</td>
+          <td><code>0.5</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#stats"><code>--ready-check-path</code></a></td>
+          <td>path</td>
+          <td><code>/readyz</code></td>
+          <td>v0.15</td>
+      </tr>
+      <tr>
+          <td><a href="#reload-interval"><code>--reload-interval</code></a></td>
+          <td>time</td>
+          <td><code>0</code></td>
+          <td>v0.13</td>
+      </tr>
+      <tr>
+          <td><a href="#reload-retry"><code>--reload-retry</code></a></td>
+          <td>time</td>
+          <td><code>30s</code></td>
+          <td>v0.15</td>
+      </tr>
+      <tr>
+          <td><a href="#reload-strategy"><code>--reload-strategy</code></a></td>
+          <td>[native|reusesocket]</td>
+          <td><code>reusesocket</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#report-node-internal-ip-address"><code>--report-node-internal-ip-address</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#sort-backends"><code>--sort-backends</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#shutdown-timeout"><code>--shutdown-timeout</code></a></td>
+          <td>time</td>
+          <td><code>25s</code></td>
+          <td>v0.15</td>
+      </tr>
+      <tr>
+          <td><a href="#sort-endpoints-by"><code>--sort-endpoints-by</code></a></td>
+          <td>[endpoint|ip|name|random]</td>
+          <td><code>endpoint</code></td>
+          <td>v0.11</td>
+      </tr>
+      <tr>
+          <td><a href="#enable-endpointslices-api"><code>--enable-endpointslices-api</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td>v0.14</td>
+      </tr>
+      <tr>
+          <td><a href="#stats"><code>--stats-collect-processing-period</code></a></td>
+          <td>time</td>
+          <td><code>500ms</code></td>
+          <td>v0.10</td>
+      </tr>
+      <tr>
+          <td><a href="#stats"><code>--stop-handler</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td>v0.15</td>
+      </tr>
+      <tr>
+          <td><a href="#sync-period"><code>--sync-period</code></a></td>
+          <td>time</td>
+          <td><code>10m</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#tcp-services-configmap"><code>--tcp-services-configmap</code></a></td>
+          <td>namespace/configmapname</td>
+          <td>no tcp svc</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#track-old-instances"><code>--track-old-instances</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td>v0.14</td>
+      </tr>
+      <tr>
+          <td><a href="#update-status"><code>--update-status</code></a></td>
+          <td>[true|false]</td>
+          <td><code>true</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#update-status-on-shutdown"><code>--update-status-on-shutdown</code></a></td>
+          <td>[true|false]</td>
+          <td><code>true</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#logging"><code>--v</code></a></td>
+          <td>log level as integer</td>
+          <td><code>2</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#validate-config"><code>--validate-config</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#verify-hostname"><code>--verify-hostname</code></a></td>
+          <td>[true|false]</td>
+          <td><code>true</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#version"><code>--version</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#wait-before-shutdown"><code>--wait-before-shutdown</code></a></td>
+          <td>seconds as integer</td>
+          <td><code>0</code></td>
+          <td>v0.8</td>
+      </tr>
+      <tr>
+          <td><a href="#wait-before-update"><code>--wait-before-update</code></a></td>
+          <td>duration</td>
+          <td><code>200ms</code></td>
+          <td>v0.11</td>
+      </tr>
+      <tr>
+          <td><a href="#watch-gateway"><code>--watch-gateway</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td>v0.13</td>
+      </tr>
+      <tr>
+          <td><a href="#ingress-class"><code>--watch-ingress-without-class</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td>v0.12</td>
+      </tr>
+      <tr>
+          <td><a href="#watch-namespace"><code>--watch-namespace</code></a></td>
+          <td>namespace</td>
+          <td>all namespaces</td>
+          <td></td>
+      </tr>
+  </tbody>
 </table>
 <hr>
 <h2 id="acme">Acme<a class="td-heading-self-link" href="#acme" aria-label="Heading self-link"></a></h2>
@@ -1049,6 +1050,12 @@ this interval.</p>
 with long connections. Note however that, if two consecutive updates require a reload, the second
 one will delay up to the configured duration to be reflected by HAProxy.</p>
 <hr>
+<h2 id="reload-retry">reload-retry<a class="td-heading-self-link" href="#reload-retry" aria-label="Heading self-link"></a></h2>
+<ul>
+<li><code>--reload-retry</code></li>
+</ul>
+<p>How long HAProxy Ingress should wait before trying to reload HAProxy if an error happens. Defaults to <code>30s</code>.</p>
+<hr>
 <h2 id="reload-strategy">reload-strategy<a class="td-heading-self-link" href="#reload-strategy" aria-label="Heading self-link"></a></h2>
 <ul>
 <li><code>--reload-strategy</code></li>
@@ -1318,7 +1325,7 @@ configuration <a href="/v0.15/docs/configuration/gateway-api/">doc</a>.</p>
 single namespace.</p>
 
 	<div class="td-page-meta__lastmod">
-  Last modified June 11, 2024: <a href="https://github.com/jcmoraisjr/haproxy-ingress/commit/232de55a12102f63a2f3204131096e0386d77cad">update docsy from v0.6.0 to v0.10.0 (232de55a)</a>
+  Last modified March 9, 2025: <a href="https://github.com/jcmoraisjr/haproxy-ingress/commit/cdf19fbcdeb4fc81d3ee374d3691676324fa463a">retry reload haproxy if failed (cdf19fbc)</a>
 </div>
 
 </div>
@@ -1369,7 +1376,7 @@ single namespace.</p>
       <div class="td-footer__center col-12 col-sm-8 py-2 order-sm-2">
         <small class="td-footer__authors">
   Made with <div class="fa fa-heart"></div> &amp; <div class="fa fa-coffee"></div>
-  | &copy; 2017&ndash;2024 The HAProxy Ingress Controller Authors
+  | &copy; 2017&ndash;2025 The HAProxy Ingress Controller Authors
   | Image by <a href="https://pixabay.com/users/TheDigitalArtist-202249/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank" rel="noopener">Pete Linforth</a>
     from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank" rel="noopener">Pixabay</a>
 </small>
@@ -1380,7 +1387,7 @@ single namespace.</p>
 </footer>
 
     </div>
-    <script src="/v0.15/js/main.min.eef56ba2856812bbb54ea002f2a1ef309f50e6315808df62a16961d711fd39f3.js" integrity="sha256-7vVrooVoEru1TqAC8qHvMJ9Q5jFYCN9ioWlh1xH9OfM=" crossorigin="anonymous"></script>
+    <script src="/v0.15/js/main.min.f98d70bf1196eab096dc77229bcb8a844f743355e79dcf22dd7b1f9017efc203.js" integrity="sha256-&#43;Y1wvxGW6rCW3Hcim8uKhE90M1Xnnc8i3XsfkBfvwgM=" crossorigin="anonymous"></script>
 <script defer src="/v0.15/js/click-to-copy.min.73478a7d4807698aed7e355eb23f9890ca18fea3158604c8471746d046702bad.js" integrity="sha256-c0eKfUgHaYrtfjVesj&#43;YkMoY/qMVhgTIRxdG0EZwK60=" crossorigin="anonymous"></script>
 <script src='/v0.15/js/tabpane-persist.js'></script>
 

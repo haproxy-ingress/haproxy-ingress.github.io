@@ -18,8 +18,7 @@
 <link rel="icon" type="image/png" href="/v0.15/favicons/android-192x192.png" sizes="192x192">
 
 <title>Metrics | HAProxy Ingress</title>
-<meta name="description" content="Demonstrate how to collect and expose ingress controller and haproxy metrics.
-">
+<meta name="description" content="Demonstrate how to collect and expose ingress controller and haproxy metrics.">
 <meta property="og:url" content="/v0.15/docs/examples/metrics/">
   <meta property="og:site_name" content="HAProxy Ingress">
   <meta property="og:title" content="Metrics">
@@ -27,22 +26,17 @@
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="docs">
-    <meta property="article:modified_time" content="2024-06-11T21:43:02-03:00">
+    <meta property="article:modified_time" content="2025-03-15T17:39:07-03:00">
 
   <meta itemprop="name" content="Metrics">
   <meta itemprop="description" content="Demonstrate how to collect and expose ingress controller and haproxy metrics.">
-  <meta itemprop="dateModified" content="2024-06-11T21:43:02-03:00">
-  <meta itemprop="wordCount" content="893">
+  <meta itemprop="dateModified" content="2025-03-15T17:39:07-03:00">
+  <meta itemprop="wordCount" content="878">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Metrics">
   <meta name="twitter:description" content="Demonstrate how to collect and expose ingress controller and haproxy metrics.">
-
-
-
-
-<link rel="preload" href="/v0.15/scss/main.min.cdf23cb2263e8a301c7dab13a0db7c06d78d923b739c4c5292d884701ad38756.css" as="style">
-<link href="/v0.15/scss/main.min.cdf23cb2263e8a301c7dab13a0db7c06d78d923b739c4c5292d884701ad38756.css" rel="stylesheet" integrity="">
-
+<link rel="preload" href="/v0.15/scss/main.min.42d2ae4d348f2d260a6d71a249ae9d24d4b389d32aa69d9af784d86972b46512.css" as="style" integrity="sha256-QtKuTTSPLSYKbXGiSa6dJNSzidMqpp2a94TYaXK0ZRI=" crossorigin="anonymous">
+<link href="/v0.15/scss/main.min.42d2ae4d348f2d260a6d71a249ae9d24d4b389d32aa69d9af784d86972b46512.css" rel="stylesheet" integrity="sha256-QtKuTTSPLSYKbXGiSa6dJNSzidMqpp2a94TYaXK0ZRI=" crossorigin="anonymous">
 <script
   src="https://code.jquery.com/jquery-3.7.1.min.js"
   integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
@@ -317,8 +311,9 @@
 <li>Added a label <code>release: prometheus</code> in the ServiceMonitor. HAProxy Ingress metrics will share the same Prometheus instance installed by Prometheus Operator. This can be changed to another dedicated instance, and must be checked if using another customized Prometheus Operator deployment.</li>
 <li>Added relabels to HAProxy and HAProxy Ingress metrics. The HAProxy Ingress dashboard uses <code>hostname</code> label as a way to distinguish two controller instances, and also <code>cluster</code> label to distinguish controllers running on distinct clusters. The source of the name can be adjusted but the label name should be the same.</li>
 </ul>
-<p>Now upgrade the chart - change <code>upgrade</code> to <code>install</code> if HAProxy Ingress isn&rsquo;t installed yet:</p>
+<p>Now install or upgrade the chart:</p>
 <pre tabindex="0"><code>helm upgrade haproxy-ingress haproxy-ingress/haproxy-ingress\
+  --install\
   --create-namespace --namespace ingress-controller\
   -f haproxy-ingress-values.yaml
 </code></pre><h2 id="compatibility">Compatibility<a class="td-heading-self-link" href="#compatibility" aria-label="Heading self-link"></a></h2>
@@ -341,7 +336,7 @@
 <ul>
 <li>Open Grafana page - the URL is the same provided in the <code>prometheus-operator-values.yaml</code> file and should resolve to the ingress deployment</li>
 <li>Log in to Grafana, user is <code>admin</code> and the first password is <code>prom-operator</code></li>
-<li>Click the big plus <code>+</code> sign in the left side, Import, type <code>12056</code> as the Grafana.com ID, Load, select a Prometheus datasource, Import</li>
+<li>Click <code>Dashboards</code>, <code>New</code>, <code>Import</code>, type <code>12056</code> as the Grafana.com ID, Load, select a Prometheus datasource, Import</li>
 </ul>
 <p>If everything worked as expected, the dashboard should look like this:</p>
 <p><img src="/docs/examples/metrics/dashboard-1.png" alt=""></p>
@@ -393,7 +388,7 @@ echo &#34;GET https://$IP&#34; |\
   vegeta report
 </code></pre>
 	<div class="td-page-meta__lastmod">
-  Last modified June 11, 2024: <a href="https://github.com/jcmoraisjr/haproxy-ingress/commit/232de55a12102f63a2f3204131096e0386d77cad">update docsy from v0.6.0 to v0.10.0 (232de55a)</a>
+  Last modified March 15, 2025: <a href="https://github.com/jcmoraisjr/haproxy-ingress/commit/a71e6867cb255fad06ceb4c3af1657795f144f61">improve metrics doc and configuration (a71e6867)</a>
 </div>
 
 </div>
@@ -444,7 +439,7 @@ echo &#34;GET https://$IP&#34; |\
       <div class="td-footer__center col-12 col-sm-8 py-2 order-sm-2">
         <small class="td-footer__authors">
   Made with <div class="fa fa-heart"></div> &amp; <div class="fa fa-coffee"></div>
-  | &copy; 2017&ndash;2024 The HAProxy Ingress Controller Authors
+  | &copy; 2017&ndash;2025 The HAProxy Ingress Controller Authors
   | Image by <a href="https://pixabay.com/users/TheDigitalArtist-202249/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank" rel="noopener">Pete Linforth</a>
     from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank" rel="noopener">Pixabay</a>
 </small>
@@ -455,7 +450,7 @@ echo &#34;GET https://$IP&#34; |\
 </footer>
 
     </div>
-    <script src="/v0.15/js/main.min.eef56ba2856812bbb54ea002f2a1ef309f50e6315808df62a16961d711fd39f3.js" integrity="sha256-7vVrooVoEru1TqAC8qHvMJ9Q5jFYCN9ioWlh1xH9OfM=" crossorigin="anonymous"></script>
+    <script src="/v0.15/js/main.min.f98d70bf1196eab096dc77229bcb8a844f743355e79dcf22dd7b1f9017efc203.js" integrity="sha256-&#43;Y1wvxGW6rCW3Hcim8uKhE90M1Xnnc8i3XsfkBfvwgM=" crossorigin="anonymous"></script>
 <script defer src="/v0.15/js/click-to-copy.min.73478a7d4807698aed7e355eb23f9890ca18fea3158604c8471746d046702bad.js" integrity="sha256-c0eKfUgHaYrtfjVesj&#43;YkMoY/qMVhgTIRxdG0EZwK60=" crossorigin="anonymous"></script>
 <script src='/v0.15/js/tabpane-persist.js'></script>
 

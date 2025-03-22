@@ -18,8 +18,7 @@
 <link rel="icon" type="image/png" href="/v0.15/favicons/android-192x192.png" sizes="192x192">
 
 <title>External haproxy | HAProxy Ingress</title>
-<meta name="description" content="Demonstrate how to configure HAProxy Ingress to use an external haproxy deployment.
-">
+<meta name="description" content="Demonstrate how to configure HAProxy Ingress to use an external haproxy deployment.">
 <meta property="og:url" content="/v0.15/docs/examples/external-haproxy/">
   <meta property="og:site_name" content="HAProxy Ingress">
   <meta property="og:title" content="External haproxy">
@@ -36,13 +35,8 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="External haproxy">
   <meta name="twitter:description" content="Demonstrate how to configure HAProxy Ingress to use an external haproxy deployment.">
-
-
-
-
-<link rel="preload" href="/v0.15/scss/main.min.cdf23cb2263e8a301c7dab13a0db7c06d78d923b739c4c5292d884701ad38756.css" as="style">
-<link href="/v0.15/scss/main.min.cdf23cb2263e8a301c7dab13a0db7c06d78d923b739c4c5292d884701ad38756.css" rel="stylesheet" integrity="">
-
+<link rel="preload" href="/v0.15/scss/main.min.42d2ae4d348f2d260a6d71a249ae9d24d4b389d32aa69d9af784d86972b46512.css" as="style" integrity="sha256-QtKuTTSPLSYKbXGiSa6dJNSzidMqpp2a94TYaXK0ZRI=" crossorigin="anonymous">
+<link href="/v0.15/scss/main.min.42d2ae4d348f2d260a6d71a249ae9d24d4b389d32aa69d9af784d86972b46512.css" rel="stylesheet" integrity="sha256-QtKuTTSPLSYKbXGiSa6dJNSzidMqpp2a94TYaXK0ZRI=" crossorigin="anonymous">
 <script
   src="https://code.jquery.com/jquery-3.7.1.min.js"
   integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
@@ -315,8 +309,7 @@ to <code>:80</code> and <code>:443</code> without the need to run as root. Give 
 <li>
 <p>Change haproxy listening port to unprivileged ports, like <code>8080</code> and <code>8443</code>:</p>
 <blockquote>
-<p>Note that, if exposing haproxy via <code>hostNetwork</code>, end users would need to connect to <code>:8443</code> instead of the well known <code>:443</code>, so this is only an option if the cluster provides LoadBalancer services</p>
-</blockquote>
+<p>Note that, if exposing haproxy via <code>hostNetwork</code>, end users would need to connect to <code>:8443</code> instead of the well known <code>:443</code>, so this is only an option if the cluster provides LoadBalancer services</p></blockquote>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">controller</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">syslog-endpoint</span><span class="p">:</span><span class="w"> </span><span class="l">stdout</span><span class="w">
@@ -346,8 +339,7 @@ to <code>:80</code> and <code>:443</code> without the need to run as root. Give 
 <li>
 <p>Reconfigure the start of unprivileged port to <code>80</code> or below using the following configuration:</p>
 <blockquote>
-<p>This configuration does not work if <code>hostNetwork</code> is configured as <code>true</code>, and does not work on Kernel versions older than 4.11.</p>
-</blockquote>
+<p>This configuration does not work if <code>hostNetwork</code> is configured as <code>true</code>, and does not work on Kernel versions older than 4.11.</p></blockquote>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">controller</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">syslog-endpoint</span><span class="p">:</span><span class="w"> </span><span class="l">stdout</span><span class="w">
@@ -481,7 +473,7 @@ container to the haproxy one.</p>
       <div class="td-footer__center col-12 col-sm-8 py-2 order-sm-2">
         <small class="td-footer__authors">
   Made with <div class="fa fa-heart"></div> &amp; <div class="fa fa-coffee"></div>
-  | &copy; 2017&ndash;2024 The HAProxy Ingress Controller Authors
+  | &copy; 2017&ndash;2025 The HAProxy Ingress Controller Authors
   | Image by <a href="https://pixabay.com/users/TheDigitalArtist-202249/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank" rel="noopener">Pete Linforth</a>
     from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank" rel="noopener">Pixabay</a>
 </small>
@@ -492,7 +484,7 @@ container to the haproxy one.</p>
 </footer>
 
     </div>
-    <script src="/v0.15/js/main.min.eef56ba2856812bbb54ea002f2a1ef309f50e6315808df62a16961d711fd39f3.js" integrity="sha256-7vVrooVoEru1TqAC8qHvMJ9Q5jFYCN9ioWlh1xH9OfM=" crossorigin="anonymous"></script>
+    <script src="/v0.15/js/main.min.f98d70bf1196eab096dc77229bcb8a844f743355e79dcf22dd7b1f9017efc203.js" integrity="sha256-&#43;Y1wvxGW6rCW3Hcim8uKhE90M1Xnnc8i3XsfkBfvwgM=" crossorigin="anonymous"></script>
 <script defer src="/v0.15/js/click-to-copy.min.73478a7d4807698aed7e355eb23f9890ca18fea3158604c8471746d046702bad.js" integrity="sha256-c0eKfUgHaYrtfjVesj&#43;YkMoY/qMVhgTIRxdG0EZwK60=" crossorigin="anonymous"></script>
 <script src='/v0.15/js/tabpane-persist.js'></script>
 

@@ -18,8 +18,7 @@
 <link rel="icon" type="image/png" href="/v0.15/favicons/android-192x192.png" sizes="192x192">
 
 <title>Getting Started | HAProxy Ingress</title>
-<meta name="description" content="How to install HAProxy Ingress and expose the first service.
-">
+<meta name="description" content="How to install HAProxy Ingress and expose the first service.">
 <meta property="og:url" content="/v0.15/docs/getting-started/">
   <meta property="og:site_name" content="HAProxy Ingress">
   <meta property="og:title" content="Getting Started">
@@ -29,18 +28,13 @@
 
   <meta itemprop="name" content="Getting Started">
   <meta itemprop="description" content="How to install HAProxy Ingress and expose the first service.">
-  <meta itemprop="dateModified" content="2024-06-16T16:30:53-03:00">
-  <meta itemprop="wordCount" content="825">
+  <meta itemprop="dateModified" content="2025-03-22T17:19:46-03:00">
+  <meta itemprop="wordCount" content="834">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Getting Started">
   <meta name="twitter:description" content="How to install HAProxy Ingress and expose the first service.">
-
-
-
-
-<link rel="preload" href="/v0.15/scss/main.min.cdf23cb2263e8a301c7dab13a0db7c06d78d923b739c4c5292d884701ad38756.css" as="style">
-<link href="/v0.15/scss/main.min.cdf23cb2263e8a301c7dab13a0db7c06d78d923b739c4c5292d884701ad38756.css" rel="stylesheet" integrity="">
-
+<link rel="preload" href="/v0.15/scss/main.min.42d2ae4d348f2d260a6d71a249ae9d24d4b389d32aa69d9af784d86972b46512.css" as="style" integrity="sha256-QtKuTTSPLSYKbXGiSa6dJNSzidMqpp2a94TYaXK0ZRI=" crossorigin="anonymous">
+<link href="/v0.15/scss/main.min.42d2ae4d348f2d260a6d71a249ae9d24d4b389d32aa69d9af784d86972b46512.css" rel="stylesheet" integrity="sha256-QtKuTTSPLSYKbXGiSa6dJNSzidMqpp2a94TYaXK0ZRI=" crossorigin="anonymous">
 <script
   src="https://code.jquery.com/jquery-3.7.1.min.js"
   integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
@@ -272,15 +266,13 @@
 <li>
 <p>Create a <code>haproxy-ingress-values.yaml</code> file with custom parameters:</p>
 <blockquote>
-<p>Use the content below if HAProxy Ingress should expose HAProxy via a service loadbalancer, like ELB, kube-vip, ServiceLB (k3s), etc.</p>
-</blockquote>
+<p>Use the content below if HAProxy Ingress should expose HAProxy via a service loadbalancer, like ELB, kube-vip, ServiceLB (k3s), etc.</p></blockquote>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="c"># Expose HAProxy via a service loadbalancer</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">controller</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">ingressClassResource</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span></code></pre></div><blockquote>
-<p>Use the content below to expose HAProxy via host port on all cluster nodes.</p>
-</blockquote>
+<p>Use the content below to expose HAProxy via host port on all cluster nodes.</p></blockquote>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="c"># Expose HAProxy via host port on all cluster nodes</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">controller</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">ingressClassResource</span><span class="p">:</span><span class="w">
@@ -297,11 +289,10 @@
 <pre tabindex="0"><code>$ helm upgrade haproxy-ingress haproxy-ingress/haproxy-ingress\
   --install\
   --create-namespace --namespace ingress-controller\
-  --version 0.15.0-alpha.3 --devel\
+  --version 0.15.0-beta.1 --devel\
   -f haproxy-ingress-values.yaml
 </code></pre><blockquote>
-<p>Note that the command <code>upgrade</code> above, along with the <code>--install</code> command-line option, starts a new HAProxy Ingress deployment if it is missing, or starts a rolling update if HAProxy Ingress is already installed. <code>template</code> can be used instead to generate the manifests without installing them - add either a redirect <code>... &gt;haproxy-ingress-install.yaml</code> to save the output, or <code>--output-dir output/</code> command line option to save one file per manifest.</p>
-</blockquote>
+<p>Note that the command <code>upgrade</code> above, along with the <code>--install</code> command-line option, starts a new HAProxy Ingress deployment if it is missing, or starts a rolling update if HAProxy Ingress is already installed. <code>template</code> can be used instead to generate the manifests without installing them - add either a redirect <code>... &gt;haproxy-ingress-install.yaml</code> to save the output, or <code>--output-dir output/</code> command line option to save one file per manifest.</p></blockquote>
 </li>
 </ol>
 <p>The controller should be running in a few seconds. There are four important customizations made in the example above:</p>
@@ -329,8 +320,7 @@ echoserver-5b6fb6dd96-68jwp   1/1     Running   0          27s
 <li>
 <p>Make HAProxy Ingress expose the echoserver service. Change <code>echoserver.local</code> value in the <code>--rule</code> option below to a hostname that resolves to an ingress controller node.</p>
 <blockquote>
-<p>Obs.: <code>nip.io</code> is a convenient service which converts a valid domain name to any IP, either public or local. See <a href="https://nip.io"target="_blank" rel="noopener">here</a> how it works.</p>
-</blockquote>
+<p>Obs.: <code>nip.io</code> is a convenient service which converts a valid domain name to any IP, either public or local. See <a href="https://nip.io"target="_blank" rel="noopener">here</a> how it works.</p></blockquote>
 <pre tabindex="0"><code>$ kubectl --namespace default create ingress echoserver \
   --class=haproxy \
   --rule=&#34;echoserver.local/*=echoserver:8080,tls&#34;
@@ -342,6 +332,10 @@ $ wget -qO- --no-check-certificate https://echoserver.local
 </code></pre></li>
 </ol>
 <h2 id="whats-next">What&rsquo;s next<a class="td-heading-self-link" href="#whats-next" aria-label="Heading self-link"></a></h2>
+<p>Expose HAProxy Ingress metrics:</p>
+<ul>
+<li>See the <a href="/v0.15/docs/examples/metrics/">metrics example page</a></li>
+</ul>
 <p>See what differs to expose services using Gateway API:</p>
 <ul>
 <li><a href="https://gateway-api.sigs.k8s.io/"target="_blank" rel="noopener">Gateway API introduction</a> from Kubernetes&rsquo; SIG-Network documentation</li>
@@ -363,7 +357,7 @@ $ wget -qO- --no-check-certificate https://echoserver.local
     
     </div>
 <div class="td-page-meta__lastmod">
-  Last modified June 16, 2024: <a href="https://github.com/jcmoraisjr/haproxy-ingress/commit/2e173134e0ba86294ad45ccfefdd5073fd53f89d">update to v0.15.0-alpha.3 (2e173134)</a>
+  Last modified March 22, 2025: <a href="https://github.com/jcmoraisjr/haproxy-ingress/commit/e56ce9fda7c7fdcc174ff43b121230cc274123dc">update to v0.15.0-beta.1 (e56ce9fd)</a>
 </div>
 </div>
 
@@ -412,7 +406,7 @@ $ wget -qO- --no-check-certificate https://echoserver.local
       <div class="td-footer__center col-12 col-sm-8 py-2 order-sm-2">
         <small class="td-footer__authors">
   Made with <div class="fa fa-heart"></div> &amp; <div class="fa fa-coffee"></div>
-  | &copy; 2017&ndash;2024 The HAProxy Ingress Controller Authors
+  | &copy; 2017&ndash;2025 The HAProxy Ingress Controller Authors
   | Image by <a href="https://pixabay.com/users/TheDigitalArtist-202249/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank" rel="noopener">Pete Linforth</a>
     from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank" rel="noopener">Pixabay</a>
 </small>
@@ -423,7 +417,7 @@ $ wget -qO- --no-check-certificate https://echoserver.local
 </footer>
 
     </div>
-    <script src="/v0.15/js/main.min.eef56ba2856812bbb54ea002f2a1ef309f50e6315808df62a16961d711fd39f3.js" integrity="sha256-7vVrooVoEru1TqAC8qHvMJ9Q5jFYCN9ioWlh1xH9OfM=" crossorigin="anonymous"></script>
+    <script src="/v0.15/js/main.min.f98d70bf1196eab096dc77229bcb8a844f743355e79dcf22dd7b1f9017efc203.js" integrity="sha256-&#43;Y1wvxGW6rCW3Hcim8uKhE90M1Xnnc8i3XsfkBfvwgM=" crossorigin="anonymous"></script>
 <script defer src="/v0.15/js/click-to-copy.min.73478a7d4807698aed7e355eb23f9890ca18fea3158604c8471746d046702bad.js" integrity="sha256-c0eKfUgHaYrtfjVesj&#43;YkMoY/qMVhgTIRxdG0EZwK60=" crossorigin="anonymous"></script>
 <script src='/v0.15/js/tabpane-persist.js'></script>
 
