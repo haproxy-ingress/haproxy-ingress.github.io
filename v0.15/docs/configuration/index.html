@@ -33,8 +33,8 @@
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Configuration">
   <meta name="twitter:description" content="All configuration options: ingress/service annotations, global ConfigMap options, command-line options and template overwriting.">
-<link rel="preload" href="/v0.15/scss/main.min.42d2ae4d348f2d260a6d71a249ae9d24d4b389d32aa69d9af784d86972b46512.css" as="style" integrity="sha256-QtKuTTSPLSYKbXGiSa6dJNSzidMqpp2a94TYaXK0ZRI=" crossorigin="anonymous">
-<link href="/v0.15/scss/main.min.42d2ae4d348f2d260a6d71a249ae9d24d4b389d32aa69d9af784d86972b46512.css" rel="stylesheet" integrity="sha256-QtKuTTSPLSYKbXGiSa6dJNSzidMqpp2a94TYaXK0ZRI=" crossorigin="anonymous">
+<link rel="preload" href="/v0.15/scss/main.min.ef636bd1daaf15068d80e3e9a84fe5178631cbf9630bfb3caf25b384ce33b2d0.css" as="style" integrity="sha256-72Nr0dqvFQaNgOPpqE/lF4Yxy/ljC/s8ryWzhM4zstA=" crossorigin="anonymous">
+<link href="/v0.15/scss/main.min.ef636bd1daaf15068d80e3e9a84fe5178631cbf9630bfb3caf25b384ce33b2d0.css" rel="stylesheet" integrity="sha256-72Nr0dqvFQaNgOPpqE/lF4Yxy/ljC/s8ryWzhM4zstA=" crossorigin="anonymous">
 <script
   src="https://code.jquery.com/jquery-3.7.1.min.js"
   integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
@@ -60,7 +60,7 @@
     <header>
       <nav class="td-navbar js-navbar-scroll" data-bs-theme="dark">
 <div class="container-fluid flex-column flex-md-row">
-  <a class="navbar-brand" href="/v0.15/"><span class="navbar-brand__logo navbar-logo"><svg version="1.2" width="36" height="36" viewBox="1e3 15893 12742 12808" preserveAspectRatio="xMidYMid" fill-rule="evenodd" stroke-width="28.222" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" xmlns:ooo="http://xml.openoffice.org/svg/export" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:presentation="http://sun.com/xmlns/staroffice/presentation" xmlns:smil="http://www.w3.org/2001/SMIL20/" xmlns:anim="urn:oasis:names:tc:opendocument:xmlns:animation:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0"><g class="Page"><g class="com.sun.star.drawing.ClosedBezierShape"><g id="id3"><path fill="#fff" stroke="none" d="M27e2 16421c-212 0-419 56-603 161-183 106-335 258-441 442-105 183-161 390-161 602v9341c0 212 56 419 161 603 106 183 258 335 442 441 183 105 390 161 602 161h9341c212 0 419-56 603-161 183-106 335-258 441-441 105-184 161-391 161-603V17626c0-212-56-419-161-602-106-184-258-336-441-442-184-105-391-161-603-161H27e2zm4080 1084 1167 1095c-605 1626-1266 3168-1899 4559l2564-391 1704-4531 1162 1167-1439 3043 1417-445c-234 5e2-537 1014-878 1340l-1060 152c-617 1274-1268 2531-1947 3678-213-245-459-441-741-561-186-1192-626-2017-1050-2855L4154 26991l-804-598c1459-2883 2450-5827 3430-8888zM2619 15893h1c-284 0-564 75-810 217s-451 347-593 593-217 526-217 810v9567c0 284 75 564 217 810s347 451 593 593 526 217 810 217h95e2 1c284 0 564-75 810-217s451-347 593-593 217-526 217-810l-1-9567h1c0-284-75-564-217-810s-347-451-593-593-526-217-810-217H2619zm3787 7994c602-70 1205-141 1807-211l-936 2055c-248-669-532-1229-871-1844z"/></g></g></g></svg></span><span class="navbar-brand__name">HAProxy Ingress</span></a>
+  <a class="navbar-brand" href="/v0.15/"><span class="navbar-brand__logo navbar-logo"><svg version="1.2" width="36" height="36" viewBox="1e3 15893 12742 12808" preserveAspectRatio="xMidYMid" fill-rule="evenodd" stroke-width="28.222" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g class="Page"><g class="com.sun.star.drawing.ClosedBezierShape"><g id="id3"><path fill="#FFF" stroke="none" d="M27e2 16421c-212 0-419 56-603 161-183 106-335 258-441 442-105 183-161 390-161 602v9341c0 212 56 419 161 603 106 183 258 335 442 441 183 105 390 161 602 161h9341c212 0 419-56 603-161 183-106 335-258 441-441 105-184 161-391 161-603V17626c0-212-56-419-161-602-106-184-258-336-441-442-184-105-391-161-603-161H27e2zm4080 1084 1167 1095c-605 1626-1266 3168-1899 4559l2564-391 1704-4531 1162 1167-1439 3043 1417-445c-234 5e2-537 1014-878 1340l-1060 152c-617 1274-1268 2531-1947 3678-213-245-459-441-741-561-186-1192-626-2017-1050-2855L4154 26991l-804-598c1459-2883 2450-5827 3430-8888zM2619 15893h1c-284 0-564 75-810 217s-451 347-593 593-217 526-217 810v9567c0 284 75 564 217 810s347 451 593 593 526 217 810 217h95e2 1c284 0 564-75 810-217s451-347 593-593 217-526 217-810l-1-9567h1c0-284-75-564-217-810s-347-451-593-593-526-217-810-217H2619zm3787 7994c602-70 1205-141 1807-211l-936 2055c-248-669-532-1229-871-1844z"/></g></g></g></svg></span><span class="navbar-brand__name">HAProxy Ingress</span></a>
   <div class="td-navbar-nav-scroll ms-md-auto" id="main_navbar">
     <ul class="navbar-nav">
       <li class="nav-item">
@@ -225,7 +225,6 @@
     Configuration</li>
   </ol>
 </nav>
-            
 <div class="td-content">
 	<h1>Configuration</h1>
   <div class="lead">All configuration options: ingress/service annotations, global ConfigMap options, command-line options and template overwriting.</div>
@@ -234,7 +233,7 @@
 </header>
 	<p>See below all the supported HAProxy Ingress configuration options.</p>
 
-  <div class="section-index">
+	<div class="section-index">
     
     
     <hr class="panel-line">
@@ -264,7 +263,7 @@
             </div>
         </div>
 <div class="td-page-meta__lastmod">
-  Last modified January 10, 2020: <a href="https://github.com/jcmoraisjr/haproxy-ingress/commit/8874e6a1d0d63dc0a4a4a54273a1f0fea4ab0ba2">[DOCS] Rename configmap to ConfigMap (8874e6a1)</a>
+  Last modified January 10, 2020: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/8874e6a1d0d63dc0a4a4a54273a1f0fea4ab0ba2">[DOCS] Rename configmap to ConfigMap (8874e6a1)</a>
 </div>
 </div>
 
@@ -324,7 +323,7 @@
 </footer>
 
     </div>
-    <script src="/v0.15/js/main.min.f98d70bf1196eab096dc77229bcb8a844f743355e79dcf22dd7b1f9017efc203.js" integrity="sha256-&#43;Y1wvxGW6rCW3Hcim8uKhE90M1Xnnc8i3XsfkBfvwgM=" crossorigin="anonymous"></script>
+    <script src="/v0.15/js/main.min.25bfbcec02244bb78eb05c49eed9e6154823760a463e31f7979354fad331a67f.js" integrity="sha256-Jb&#43;87AIkS7eOsFxJ7tnmFUgjdgpGPjH3l5NU&#43;tMxpn8=" crossorigin="anonymous"></script>
 <script defer src="/v0.15/js/click-to-copy.min.73478a7d4807698aed7e355eb23f9890ca18fea3158604c8471746d046702bad.js" integrity="sha256-c0eKfUgHaYrtfjVesj&#43;YkMoY/qMVhgTIRxdG0EZwK60=" crossorigin="anonymous"></script>
 <script src='/v0.15/js/tabpane-persist.js'></script>
 
