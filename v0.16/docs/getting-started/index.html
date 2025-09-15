@@ -28,7 +28,7 @@
 
   <meta itemprop="name" content="Getting Started">
   <meta itemprop="description" content="How to install HAProxy Ingress and expose the first service.">
-  <meta itemprop="dateModified" content="2025-08-20T06:56:42-03:00">
+  <meta itemprop="dateModified" content="2025-09-15T07:41:18-03:00">
   <meta itemprop="wordCount" content="834">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Getting Started">
@@ -244,7 +244,7 @@
 </header>
 	<p>The following sections walk through steps to have HAProxy Ingress working, watching ingress resources and exposing services.</p>
 <h2 id="prerequisites">Prerequisites<a class="td-heading-self-link" href="#prerequisites" aria-label="Heading self-link"></a></h2>
-<p>HAProxy Ingress needs a running Kubernetes cluster. Controller version v0.15 needs Kubernetes 1.19 or newer, see other supported versions in the <a href="https://github.com/jcmoraisjr/haproxy-ingress/#use-haproxy-ingress"target="_blank" rel="noopener">README</a> file. HAProxy Ingress also works fine on local k8s deployments like <a href="https://minikube.sigs.k8s.io"target="_blank" rel="noopener">minikube</a>, <a href="https://kind.sigs.k8s.io"target="_blank" rel="noopener">kind</a>, <a href="https://k3s.io"target="_blank" rel="noopener">k3s</a>, <a href="https://k3d.io"target="_blank" rel="noopener">k3d</a> or <a href="https://github.com/abiosoft/colima"target="_blank" rel="noopener">colima</a>.</p>
+<p>HAProxy Ingress needs a running Kubernetes cluster. Controller version v0.16 needs Kubernetes 1.21 or newer, see other supported versions in the <a href="https://github.com/jcmoraisjr/haproxy-ingress/#use-haproxy-ingress"target="_blank" rel="noopener">README</a> file. HAProxy Ingress also works fine on local k8s deployments like <a href="https://minikube.sigs.k8s.io"target="_blank" rel="noopener">minikube</a>, <a href="https://kind.sigs.k8s.io"target="_blank" rel="noopener">kind</a>, <a href="https://k3s.io"target="_blank" rel="noopener">k3s</a>, <a href="https://k3d.io"target="_blank" rel="noopener">k3d</a> or <a href="https://github.com/abiosoft/colima"target="_blank" rel="noopener">colima</a>.</p>
 <p>An ingress controller works exposing internal services to the external world, so another pre-requisite is that at least one cluster node is accessible externally. On cloud environments, a cloud load balancer can be configured to reach the ingress controller nodes.</p>
 <p>HAProxy Ingress uses <a href="https://en.wikipedia.org/wiki/Server_Name_Indication"target="_blank" rel="noopener">TLS SNI extension</a> and the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Host"target="_blank" rel="noopener">Host header</a> to associate requests and ingress&rsquo; <code>host</code>s. The easiest way to accomplish this on local environment is using <a href="https://nip.io"target="_blank" rel="noopener">nip.io</a>. A production environment should consider a <a href="https://en.wikipedia.org/wiki/Dynamic_DNS"target="_blank" rel="noopener">dynamic DNS</a> solution or a <a href="https://en.wikipedia.org/wiki/Wildcard_DNS_record"target="_blank" rel="noopener">wildcard DNS record</a>.</p>
 <h2 id="installation">Installation<a class="td-heading-self-link" href="#installation" aria-label="Heading self-link"></a></h2>
@@ -282,14 +282,14 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">useHostPort</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">service</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterIP</span><span class="w">
-</span></span></span></code></pre></div><p>HAProxy Ingress chart <a href="https://github.com/haproxy-ingress/charts/blob/release-0.15/haproxy-ingress/README.md#configuration"target="_blank" rel="noopener">documentation</a> has all the available options. See also further documentation in the <a href="https://github.com/haproxy-ingress/charts/blob/release-0.15/haproxy-ingress/values.yaml"target="_blank" rel="noopener">default values</a> file.</p>
+</span></span></span></code></pre></div><p>HAProxy Ingress chart <a href="https://github.com/haproxy-ingress/charts/blob/release-0.16/haproxy-ingress/README.md#configuration"target="_blank" rel="noopener">documentation</a> has all the available options. See also further documentation in the <a href="https://github.com/haproxy-ingress/charts/blob/release-0.16/haproxy-ingress/values.yaml"target="_blank" rel="noopener">default values</a> file.</p>
 </li>
 <li>
 <p>Install HAProxy Ingress using <code>haproxy-ingress</code> as the release name and <code>haproxy-ingress-values.yaml</code> file as the custom parameters:</p>
 <pre tabindex="0"><code>$ helm upgrade haproxy-ingress haproxy-ingress/haproxy-ingress\
   --install\
   --create-namespace --namespace ingress-controller\
-  --version 0.16.0-alpha.1 --devel\
+  --version 0.16.0-alpha.2 --devel\
   -f haproxy-ingress-values.yaml
 </code></pre><blockquote>
 <p>Note that the command <code>upgrade</code> above, along with the <code>--install</code> command-line option, starts a new HAProxy Ingress deployment if it is missing, or starts a rolling update if HAProxy Ingress is already installed. <code>template</code> can be used instead to generate the manifests without installing them - add either a redirect <code>... &gt;haproxy-ingress-install.yaml</code> to save the output, or <code>--output-dir output/</code> command line option to save one file per manifest.</p></blockquote>
@@ -302,7 +302,7 @@
 <li><code>ingressClassResource.enabled</code>: This causes the helm chart to apply an <a href="https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-class"target="_blank" rel="noopener">IngressClass</a> to your cluster. IngressClasses are how HAProxy Ingress knows which of your Ingresses it should control. IngressClasses replace the <a href="https://kubernetes.io/docs/concepts/services-networking/ingress/#deprecated-annotation"target="_blank" rel="noopener">kubernetes.io/ingress.class</a> annotation used in Kubernetes versions before v1.18.</li>
 <li><code>kind</code>, <code>daemonset.useHostPort</code> and <code>service.type</code>, only used when service loadbalancer should not be used: disables service load balancer and exposes HAProxy via host port on all cluster nodes.</li>
 </ul>
-<p>HAProxy Ingress&rsquo; Helm chart has a few more configuration options, see all of them in the chart <a href="https://github.com/haproxy-ingress/charts/blob/release-0.15/haproxy-ingress/README.md"target="_blank" rel="noopener">documentation</a> and in the <a href="https://github.com/haproxy-ingress/charts/blob/release-0.15/haproxy-ingress/values.yaml"target="_blank" rel="noopener">default values</a> file.</p>
+<p>HAProxy Ingress&rsquo; Helm chart has a few more configuration options, see all of them in the chart <a href="https://github.com/haproxy-ingress/charts/blob/release-0.16/haproxy-ingress/README.md"target="_blank" rel="noopener">documentation</a> and in the <a href="https://github.com/haproxy-ingress/charts/blob/release-0.16/haproxy-ingress/values.yaml"target="_blank" rel="noopener">default values</a> file.</p>
 <h2 id="deploy-and-expose">Deploy and expose<a class="td-heading-self-link" href="#deploy-and-expose" aria-label="Heading self-link"></a></h2>
 <p>The following steps deploy an echoserver image and exposes it in the current namespace using an Ingress resource. See <a href="/v0.16/docs/configuration/gateway-api/">here</a> how to expose using Gateway API.</p>
 <ol>
@@ -357,7 +357,7 @@ $ wget -qO- --no-check-certificate https://echoserver.local
     
     </div>
 <div class="td-page-meta__lastmod">
-  Last modified August 20, 2025: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/63d50f3716bd971069d2c43a9aaf6c6cc4a18a6a">update to v0.16.0-alpha.1 (63d50f37)</a>
+  Last modified September 15, 2025: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/51082286f85886a5d5a8cca8b6c32fc01549ede7">update to v0.16.0-alpha.2 (51082286)</a>
 </div>
 </div>
 
