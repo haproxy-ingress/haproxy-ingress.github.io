@@ -28,7 +28,7 @@
 
   <meta itemprop="name" content="Getting Started">
   <meta itemprop="description" content="How to install HAProxy Ingress and expose the first service.">
-  <meta itemprop="dateModified" content="2025-09-15T07:41:18-03:00">
+  <meta itemprop="dateModified" content="2025-10-15T07:20:53-03:00">
   <meta itemprop="wordCount" content="834">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Getting Started">
@@ -289,7 +289,7 @@
 <pre tabindex="0"><code>$ helm upgrade haproxy-ingress haproxy-ingress/haproxy-ingress\
   --install\
   --create-namespace --namespace ingress-controller\
-  --version 0.16.0-alpha.2 --devel\
+  --version 0.16.0-beta.1 --devel\
   -f haproxy-ingress-values.yaml
 </code></pre><blockquote>
 <p>Note that the command <code>upgrade</code> above, along with the <code>--install</code> command-line option, starts a new HAProxy Ingress deployment if it is missing, or starts a rolling update if HAProxy Ingress is already installed. <code>template</code> can be used instead to generate the manifests without installing them - add either a redirect <code>... &gt;haproxy-ingress-install.yaml</code> to save the output, or <code>--output-dir output/</code> command line option to save one file per manifest.</p></blockquote>
@@ -357,7 +357,7 @@ $ wget -qO- --no-check-certificate https://echoserver.local
     
     </div>
 <div class="td-page-meta__lastmod">
-  Last modified September 15, 2025: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/51082286f85886a5d5a8cca8b6c32fc01549ede7">update to v0.16.0-alpha.2 (51082286)</a>
+  Last modified October 15, 2025: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/6fe84a7d5b67ffc23a0a24858d9d35b53946a567">update to v0.16.0-beta.1 (6fe84a7d)</a>
 </div>
 </div>
 
