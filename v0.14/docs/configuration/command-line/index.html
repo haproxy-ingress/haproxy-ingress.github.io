@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.14/docs/configuration/command-line/" />
-<meta property="article:modified_time" content="2023-04-24T15:37:51-07:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2025-12-16T14:10:14-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Command-line options">
 <meta itemprop="description" content="Static command-line configuration options.
 ">
 
 
-<meta itemprop="dateModified" content="2023-04-24T15:37:51-07:00" />
-<meta itemprop="wordCount" content="4019">
+<meta itemprop="dateModified" content="2025-12-16T14:10:14-03:00" />
+<meta itemprop="wordCount" content="4080">
 
 
 
@@ -436,6 +436,7 @@
 <li><a href="#stats">Stats</a></li>
 <li><a href="#sync-period">&ndash;sync-period</a></li>
 <li><a href="#tcp-services-configmap">&ndash;tcp-services-configmap</a></li>
+<li><a href="#timeout">Timeout</a></li>
 <li><a href="#track-old-instances">&ndash;track-old-instances</a></li>
 <li><a href="#update-status">&ndash;update-status</a></li>
 <li><a href="#update-status-on-shutdown">&ndash;update-status-on-shutdown</a></li>
@@ -603,6 +604,13 @@
 <td>namespace/configmapname</td>
 <td></td>
 <td></td>
+</tr>
+
+<tr>
+<td><a href="#timeout"><code>--connection-timeout</code></a></td>
+<td>duration</td>
+<td><code>30s</code></td>
+<td>v0.14.11</td>
 </tr>
 
 <tr>
@@ -1456,6 +1464,16 @@ data:
 
 <hr />
 
+<h2 id="timeout">Timeout</h2>
+
+<p>Timeout configuration.</p>
+
+<ul>
+<li><code>--connection-timeout</code>: (since v0.14.11) Defines the maximum amount of time HAProxy Ingress should wait for HAProxy responses when connecting to its master or admin sockets. This configuration is specially useful on HAProxy v2.7+ and large configurations, since its <code>reload</code> command became synchronous and should take some time to finish. Defaults to <code>30s</code> if not configured.</li>
+</ul>
+
+<hr />
+
 <h2 id="track-old-instances">&ndash;track-old-instances</h2>
 
 <p>Since v0.14</p>
@@ -1562,7 +1580,7 @@ configmaps or the default backend service located in a different namespace than 
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified April 24, 2023: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/2c0dfc922566fb4c4de03f24f7306d829fa32cc6">Adds support for EndpointSlice API (2c0dfc92)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified December 16, 2025: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/35bca982b5cd075459ad56a3b72a8ded8ab71a37">add connection timeout command-line option (#1348) (35bca982)</a>
 </div>
 </div>
 
@@ -1622,7 +1640,7 @@ configmaps or the default backend service located in a different namespace than 
       </div>
       <div class="col-12 col-sm-8 text-center py-2 order-sm-2">
         
-          <small class="text-white">Made with <div class="fa fa-heart"></div> & <div class="fa fa-coffee"></div> | &copy; 2025 The HAProxy Ingress Controller Authors</small>
+          <small class="text-white">Made with <div class="fa fa-heart"></div> & <div class="fa fa-coffee"></div> | &copy; 2026 The HAProxy Ingress Controller Authors</small>
         
         <small class="text-white"> | Image by <a href="https://pixabay.com/users/TheDigitalArtist-202249/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pete Linforth</a> from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank">Pixabay</a></small>
         

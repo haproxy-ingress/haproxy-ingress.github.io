@@ -6915,6 +6915,13 @@ If the WAF is in &lt;code&gt;detect&lt;/code&gt; mode the requests are passed to
 &lt;/tr&gt;
 
 &lt;tr&gt;
+&lt;td&gt;&lt;a href=&#34;#timeout&#34;&gt;&lt;code&gt;--connection-timeout&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
+&lt;td&gt;duration&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;30s&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;v0.14.11&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
 &lt;td&gt;&lt;a href=&#34;#ingress-class&#34;&gt;&lt;code&gt;--controller-class&lt;/code&gt;&lt;/a&gt;&lt;/td&gt;
 &lt;td&gt;suffix&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;&amp;quot;&amp;quot;&lt;/code&gt;&lt;/td&gt;
@@ -7761,6 +7768,16 @@ data:
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;/v0.14/v0.14/docs/configuration/keys/#tcp-services&#34;&gt;TCP Services&lt;/a&gt; configuration keys&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&#34;timeout&#34;&gt;Timeout&lt;/h2&gt;
+
+&lt;p&gt;Timeout configuration.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;--connection-timeout&lt;/code&gt;: (since v0.14.11) Defines the maximum amount of time HAProxy Ingress should wait for HAProxy responses when connecting to its master or admin sockets. This configuration is specially useful on HAProxy v2.7+ and large configurations, since its &lt;code&gt;reload&lt;/code&gt; command became synchronous and should take some time to finish. Defaults to &lt;code&gt;30s&lt;/code&gt; if not configured.&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;hr /&gt;
