@@ -26,12 +26,12 @@
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="docs">
-    <meta property="article:modified_time" content="2025-07-26T18:41:57-03:00">
+    <meta property="article:modified_time" content="2025-12-16T14:10:14-03:00">
 
   <meta itemprop="name" content="Command-line options">
   <meta itemprop="description" content="Static command-line configuration options.">
-  <meta itemprop="dateModified" content="2025-07-26T18:41:57-03:00">
-  <meta itemprop="wordCount" content="4552">
+  <meta itemprop="dateModified" content="2025-12-16T14:10:14-03:00">
+  <meta itemprop="wordCount" content="4613">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Command-line options">
   <meta name="twitter:description" content="Static command-line configuration options.">
@@ -250,6 +250,7 @@
     <li><a href="#stats">Stats</a></li>
     <li><a href="#sync-period">sync-period</a></li>
     <li><a href="#tcp-services-configmap">tcp-services-configmap</a></li>
+    <li><a href="#timeout">Timeout</a></li>
     <li><a href="#track-old-instances">track-old-instances</a></li>
     <li><a href="#update-status">update-status</a></li>
     <li><a href="#update-status-on-shutdown">update-status-on-shutdown</a></li>
@@ -381,6 +382,12 @@
           <td>namespace/configmapname</td>
           <td></td>
           <td></td>
+      </tr>
+      <tr>
+          <td><a href="#timeout"><code>--connection-timeout</code></a></td>
+          <td>duration</td>
+          <td><code>30s</code></td>
+          <td>v0.14.11</td>
       </tr>
       <tr>
           <td><a href="#ingress-class"><code>--controller-class</code></a></td>
@@ -1208,6 +1215,12 @@ data:
 <li><a href="/v0.15/docs/configuration/keys/#tcp-services">TCP Services</a> configuration keys</li>
 </ul>
 <hr>
+<h2 id="timeout">Timeout<a class="td-heading-self-link" href="#timeout" aria-label="Heading self-link"></a></h2>
+<p>Timeout configuration.</p>
+<ul>
+<li><code>--connection-timeout</code>: (since v0.14.11) Defines the maximum amount of time HAProxy Ingress should wait for HAProxy responses when connecting to its master or admin sockets. This configuration is specially useful on HAProxy v2.7+ and large configurations, since its <code>reload</code> command became synchronous and should take some time to finish. Defaults to <code>30s</code> if not configured.</li>
+</ul>
+<hr>
 <h2 id="track-old-instances">track-old-instances<a class="td-heading-self-link" href="#track-old-instances" aria-label="Heading self-link"></a></h2>
 <ul>
 <li><code>--track-old-instances</code></li>
@@ -1324,7 +1337,7 @@ configuration <a href="/v0.15/docs/configuration/gateway-api/">doc</a>.</p>
 single namespace.</p>
 
 	<div class="td-page-meta__lastmod">
-  Last modified July 26, 2025: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/6974cdbb5e812ad2a4f17df82fb536e2e681cc04">move to endpointslice by default (6974cdbb)</a>
+  Last modified December 16, 2025: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/48f2c0f0e5412565d269f4a105740a802d9c8115">add connection timeout command-line option (#1348) (48f2c0f0)</a>
 </div>
 
 </div>
@@ -1375,7 +1388,7 @@ single namespace.</p>
       <div class="td-footer__center col-12 col-sm-8 py-2 order-sm-2">
         <small class="td-footer__authors">
   Made with <div class="fa fa-heart"></div> &amp; <div class="fa fa-coffee"></div>
-  | &copy; 2017&ndash;2025 The HAProxy Ingress Controller Authors
+  | &copy; 2017&ndash;2026 The HAProxy Ingress Controller Authors
   | Image by <a href="https://pixabay.com/users/TheDigitalArtist-202249/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank" rel="noopener">Pete Linforth</a>
     from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank" rel="noopener">Pixabay</a>
 </small>

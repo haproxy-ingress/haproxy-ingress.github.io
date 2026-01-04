@@ -28,7 +28,7 @@
 
   <meta itemprop="name" content="Getting Started">
   <meta itemprop="description" content="How to install HAProxy Ingress and expose the first service.">
-  <meta itemprop="dateModified" content="2025-10-15T07:08:40-03:00">
+  <meta itemprop="dateModified" content="2026-01-04T10:31:38-03:00">
   <meta itemprop="wordCount" content="833">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Getting Started">
@@ -288,7 +288,7 @@
 <pre tabindex="0"><code>$ helm upgrade haproxy-ingress haproxy-ingress/haproxy-ingress\
   --install\
   --create-namespace --namespace ingress-controller\
-  --version 0.15.0\
+  --version 0.15.1\
   -f haproxy-ingress-values.yaml
 </code></pre><blockquote>
 <p>Note that the command <code>upgrade</code> above, along with the <code>--install</code> command-line option, starts a new HAProxy Ingress deployment if it is missing, or starts a rolling update if HAProxy Ingress is already installed. <code>template</code> can be used instead to generate the manifests without installing them - add either a redirect <code>... &gt;haproxy-ingress-install.yaml</code> to save the output, or <code>--output-dir output/</code> command line option to save one file per manifest.</p></blockquote>
@@ -356,7 +356,7 @@ $ wget -qO- --no-check-certificate https://echoserver.local
     
     </div>
 <div class="td-page-meta__lastmod">
-  Last modified October 15, 2025: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/780021f1175f16abff850f0605abdb5c76416373">update to v0.15.0 (780021f1)</a>
+  Last modified January 4, 2026: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/68590ace32bb8d9f59c2fa2a29045e51c6f7936d">update to v0.15.1 (68590ace)</a>
 </div>
 </div>
 
@@ -405,7 +405,7 @@ $ wget -qO- --no-check-certificate https://echoserver.local
       <div class="td-footer__center col-12 col-sm-8 py-2 order-sm-2">
         <small class="td-footer__authors">
   Made with <div class="fa fa-heart"></div> &amp; <div class="fa fa-coffee"></div>
-  | &copy; 2017&ndash;2025 The HAProxy Ingress Controller Authors
+  | &copy; 2017&ndash;2026 The HAProxy Ingress Controller Authors
   | Image by <a href="https://pixabay.com/users/TheDigitalArtist-202249/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank" rel="noopener">Pete Linforth</a>
     from <a href="https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=3866609" target="_blank" rel="noopener">Pixabay</a>
 </small>
