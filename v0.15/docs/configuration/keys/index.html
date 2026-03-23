@@ -26,12 +26,12 @@
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="docs">
-    <meta property="article:modified_time" content="2025-08-20T13:26:46-03:00">
+    <meta property="article:modified_time" content="2026-03-10T08:00:13-03:00">
 
   <meta itemprop="name" content="Configuration keys">
   <meta itemprop="description" content="List of all annotations and global ConfigMap options.">
-  <meta itemprop="dateModified" content="2025-08-20T13:26:46-03:00">
-  <meta itemprop="wordCount" content="18579">
+  <meta itemprop="dateModified" content="2026-03-10T08:00:13-03:00">
+  <meta itemprop="wordCount" content="18627">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Configuration keys">
   <meta name="twitter:description" content="List of all annotations and global ConfigMap options.">
@@ -4668,7 +4668,7 @@ or any other compatible implementation running as a backend of the same domain t
 <ul>
 <li><code>begin</code>: Case insensitive, matches the beginning of the path from the incoming request. This is the default value if not declared.</li>
 <li><code>exact</code>: Case sensitive, matches the whole path. Implements the <code>Exact</code> path type from the ingress spec.</li>
-<li><code>prefix</code>: Case sensitive, matches a whole subdirectory from the incoming path. A declared <code>/app</code> path matches <code>/app</code> and <code>/app/1</code> but does not match <code>/app1</code>. Implements the <code>Prefix</code> path type from the ingress spec.</li>
+<li><code>prefix</code>: Case sensitive, matches a whole subdirectory from the incoming path. A declared <code>/app</code> or <code>/app/</code> path has the same behavior and matches <code>/app</code>, <code>/app/</code> and <code>/app/1</code> but does not match <code>/app1</code>. Implements the <code>Prefix</code> path type from the ingress spec.</li>
 <li><code>regex</code>: Case sensitive, matches the incoming path using POSIX extended regular expression. The regular expression has an implicit start <code>^</code> and no ending <code>$</code> boundary, so a declared <code>/app[0-9]+/?</code> will match paths starting with this pattern. Add a trailing <code>$</code> if an exact match is desired.</li>
 </ul>
 <p>Request and match examples:</p>
@@ -4676,9 +4676,9 @@ or any other compatible implementation running as a backend of the same domain t
   <thead>
       <tr>
           <th>Path type</th>
-          <th>Request</th>
-          <th>Match</th>
-          <th>Do not match</th>
+          <th>Ingress path</th>
+          <th>Matching requests</th>
+          <th>No matching requests</th>
       </tr>
   </thead>
   <tbody>
@@ -4686,7 +4686,7 @@ or any other compatible implementation running as a backend of the same domain t
           <td><code>begin</code></td>
           <td><code>/app</code></td>
           <td><code>/App</code> <!-- raw HTML omitted --> <code>/app</code> <!-- raw HTML omitted --> <code>/app/1</code> <!-- raw HTML omitted --> <code>/app1</code></td>
-          <td><code>/ap</code></td>
+          <td><code>/ap</code> <!-- raw HTML omitted --> <code>/app/</code></td>
       </tr>
       <tr>
           <td><code>exact</code></td>
@@ -4696,7 +4696,7 @@ or any other compatible implementation running as a backend of the same domain t
       </tr>
       <tr>
           <td><code>prefix</code></td>
-          <td><code>/app</code></td>
+          <td><code>/app</code> <!-- raw HTML omitted --> <code>/app/</code></td>
           <td><code>/app</code> <!-- raw HTML omitted --> <code>/app/</code> <!-- raw HTML omitted --> <code>/app/1</code></td>
           <td><code>/App</code> <!-- raw HTML omitted --> <code>/app1</code></td>
       </tr>
@@ -4710,13 +4710,13 @@ or any other compatible implementation running as a backend of the same domain t
           <td><code>regex</code></td>
           <td><code>/app[0-9]+$</code></td>
           <td><code>/app1</code> <!-- raw HTML omitted --> <code>/app15</code></td>
-          <td><code>/App1</code> <!-- raw HTML omitted --> <code>/app15/</code></td>
+          <td><code>/App1</code> <!-- raw HTML omitted --> <code>/app15/</code> <!-- raw HTML omitted --> <code>/app25xx</code></td>
       </tr>
       <tr>
           <td><code>regex</code></td>
           <td><code>/app[0-9]+/?</code></td>
           <td><code>/app1</code> <!-- raw HTML omitted --> <code>/app15/</code> <!-- raw HTML omitted --> <code>/app25/sub</code></td>
-          <td><code>/App15</code> <!-- raw HTML omitted --> <code>/app/25sub</code></td>
+          <td><code>/App15</code> <!-- raw HTML omitted --> <code>/app/25sub</code> <!-- raw HTML omitted --> <code>/app25xx/sub</code></td>
       </tr>
   </tbody>
 </table>
@@ -4932,8 +4932,9 @@ below will not be used.</p>
       </tr>
   </tbody>
 </table>
-<p>Configures how URI of the requests should be rewritten before send the request to the backend.
-The following table shows some examples:</p>
+<p>Configures how URI of the requests should be rewritten before send the request to the backend.</p>
+<p>If <a href="#path-type"><code>path-type</code></a> is <code>regex</code>, HAProxy Ingress copies ingress path and <code>rewrite-target</code> verbatim, adding only an implicit <code>^</code> anchor in front of the path, just like in the regex path match.</p>
+<p>The following table shows some examples for non regex paths:</p>
 <table>
   <thead>
       <tr>
@@ -6016,7 +6017,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 </ul>
 
 	<div class="td-page-meta__lastmod">
-  Last modified August 20, 2025: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/ceac2753746d1523269dcf83a19ac413e66f4e74">haproxy doc to 2.6 (ceac2753)</a>
+  Last modified March 10, 2026: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/5e527394e59d049e57602f95e433f5f04012be10">fix rewrite path handling for regex paths (#1411) (5e527394)</a>
 </div>
 
 </div>
