@@ -26,12 +26,12 @@
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="docs">
-    <meta property="article:modified_time" content="2025-09-10T19:03:36-03:00">
+    <meta property="article:modified_time" content="2026-03-10T08:00:13-03:00">
 
   <meta itemprop="name" content="Configuration keys">
   <meta itemprop="description" content="List of all annotations and global ConfigMap options.">
-  <meta itemprop="dateModified" content="2025-09-10T19:03:36-03:00">
-  <meta itemprop="wordCount" content="19841">
+  <meta itemprop="dateModified" content="2026-03-10T08:00:13-03:00">
+  <meta itemprop="wordCount" content="20045">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Configuration keys">
   <meta name="twitter:description" content="List of all annotations and global ConfigMap options.">
@@ -726,6 +726,12 @@ TCP port number.</p>
           <td><a href="#auth-tls"><code>auth-tls-cert-header</code></a></td>
           <td>[true|false]</td>
           <td>Backend</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><a href="#auth-tls"><code>auth-tls-default-secret</code></a></td>
+          <td>namespace/secret name</td>
+          <td>Global</td>
           <td></td>
       </tr>
       <tr>
@@ -2553,6 +2559,12 @@ context path, so it needs to be declared in the same Ingress that configures it.
           <td></td>
       </tr>
       <tr>
+          <td><code>auth-tls-default-secret</code></td>
+          <td><code>Global</code></td>
+          <td></td>
+          <td>v0.16</td>
+      </tr>
+      <tr>
           <td><code>auth-tls-error-page</code></td>
           <td><code>Host</code></td>
           <td></td>
@@ -2615,6 +2627,7 @@ the DN of the certificate.</p>
 <ul>
 <li><code>auth-tls-cert-header</code>: If <code>true</code> HAProxy will add <code>X-SSL-Client-Cert</code> http header with a base64 encoding of the X509 certificate provided by the client. Default is to not provide the client certificate.</li>
 <li><code>auth-tls-error-page</code>: Optional URL of the page to redirect the user if he doesn&rsquo;t provide a certificate or the certificate is invalid.</li>
+<li><code>auth-tls-default-secret</code>: Optional, defines the namespace/name of the secret with <code>ca.crt</code> key to be used if the client does not provide the SNI extension in the TLS handshake. An optional <code>ca.crl</code> key can also provide a CRL in PEM format for the server to verify against. Note that this option will also apply on requests having SNI, but unknown in the configuration, asking them to optionally provide a client certificate. Currently there is no way to make a client certificate mandatory during the TLS handshake, so if the client does not provide one, the handshake will succeed and the SSL related headers will be empty. Ingress handling this request should configure <code>auth-tls-verify-client</code> as <code>optional</code>, HAProxy will refuse the request otherwise because SNI and Host header would not match.</li>
 <li><code>auth-tls-secret</code>: Mandatory secret name with <code>ca.crt</code> key providing all certificate authority bundles used to validate client certificates. Since v0.9, an optional <code>ca.crl</code> key can also provide a CRL in PEM format for the server to verify against. A filename prefixed with <code>file://</code> can be used containing the CA bundle in PEM format, and optionally followed by a comma and the filename with the crl, eg <code>file:///dir/ca.pem</code> or <code>file:///dir/ca.pem,/dir/crl.pem</code>.</li>
 <li><code>auth-tls-strict</code>: Defines if a wrong or incomplete configuration, eg missing secret with <code>ca.crt</code>, should forbid connection attempts. If <code>false</code>, a wrong or incomplete configuration will ignore the authentication config, allowing anonymous connection. If <code>true</code>, a strict configuration is used: all requests will be rejected with HTTP 495 or 496, or redirected to the error page if configured, until a proper <code>ca.crt</code> is provided. Strict configuration will only be used if <code>auth-tls-secret</code> has a secret name and <code>auth-tls-verify-client</code> is missing or is not configured as <code>off</code>. This options used to have <code>false</code> as the default value up to v0.13, changing its default to <code>true</code> since v0.14 to improve security.</li>
 <li><code>auth-tls-verify-client</code>: Optional configuration of Client Verification behavior. Supported values are <code>off</code>, <code>on</code>, <code>optional</code> and <code>optional_no_ca</code>. The default value is <code>on</code> if a valid secret is provided, <code>off</code> otherwise. <code>optional</code> makes the certificate optional but validates it when provided by the client. From v0.8 to v0.13 controller versions, <code>optional_no_ca</code> used to validate the certificate as well, since v0.14 it makes the proxy bypass any validation.</li>
@@ -4432,8 +4445,20 @@ impact for them. Whitelist can be used to these IPs.</p>
 </table>
 <p>Define if HAProxy should save and reload it&rsquo;s current state between server reloads, like
 uptime of backends, qty of requests and so on.</p>
-<p>This is an experimental feature and has currently some issues if using with <code>dynamic-scaling</code>:
-an old state with disabled servers will disable them in the new configuration.</p>
+
+
+<div class="alert alert-warning" role="alert">
+<h4 class="alert-heading">Warning</h4>
+
+    This feature has currently some issues if using with <a href="#dynamic-scaling"><code>dynamic-scaling</code></a>:
+an old state with disabled servers will disable them in the new configuration. There are other
+reported issues with loading server state at <a href="https://github.com/haproxy/haproxy/issues/2103"target="_blank" rel="noopener">#2103</a>,
+<a href="https://github.com/haproxy/haproxy/issues/3296"target="_blank" rel="noopener">#3296</a> and
+<a href="https://www.mail-archive.com/haproxy@formilux.org/msg46626.html"target="_blank" rel="noopener">mailing-list</a>.
+Understand the risks if using with dynamic scaling before configure it.
+
+</div>
+
 <p>See also:</p>
 <ul>
 <li><a href="https://docs.haproxy.org/2.8/configuration.html#3.1-server-state-file"target="_blank" rel="noopener">https://docs.haproxy.org/2.8/configuration.html#3.1-server-state-file</a></li>
@@ -4819,7 +4844,7 @@ or any other compatible implementation running as a backend of the same domain t
 <ul>
 <li><code>begin</code>: Case insensitive, matches the beginning of the path from the incoming request. This is the default value if not declared.</li>
 <li><code>exact</code>: Case sensitive, matches the whole path. Implements the <code>Exact</code> path type from the ingress spec.</li>
-<li><code>prefix</code>: Case sensitive, matches a whole subdirectory from the incoming path. A declared <code>/app</code> path matches <code>/app</code> and <code>/app/1</code> but does not match <code>/app1</code>. Implements the <code>Prefix</code> path type from the ingress spec.</li>
+<li><code>prefix</code>: Case sensitive, matches a whole subdirectory from the incoming path. A declared <code>/app</code> or <code>/app/</code> path has the same behavior and matches <code>/app</code>, <code>/app/</code> and <code>/app/1</code> but does not match <code>/app1</code>. Implements the <code>Prefix</code> path type from the ingress spec.</li>
 <li><code>regex</code>: Case sensitive, matches the incoming path using POSIX extended regular expression. The regular expression has an implicit start <code>^</code> and no ending <code>$</code> boundary, so a declared <code>/app[0-9]+/?</code> will match paths starting with this pattern. Add a trailing <code>$</code> if an exact match is desired.</li>
 </ul>
 <p>Request and match examples:</p>
@@ -4827,9 +4852,9 @@ or any other compatible implementation running as a backend of the same domain t
   <thead>
       <tr>
           <th>Path type</th>
-          <th>Request</th>
-          <th>Match</th>
-          <th>Do not match</th>
+          <th>Ingress path</th>
+          <th>Matching requests</th>
+          <th>No matching requests</th>
       </tr>
   </thead>
   <tbody>
@@ -4837,7 +4862,7 @@ or any other compatible implementation running as a backend of the same domain t
           <td><code>begin</code></td>
           <td><code>/app</code></td>
           <td><code>/App</code> <!-- raw HTML omitted --> <code>/app</code> <!-- raw HTML omitted --> <code>/app/1</code> <!-- raw HTML omitted --> <code>/app1</code></td>
-          <td><code>/ap</code></td>
+          <td><code>/ap</code> <!-- raw HTML omitted --> <code>/app/</code></td>
       </tr>
       <tr>
           <td><code>exact</code></td>
@@ -4847,7 +4872,7 @@ or any other compatible implementation running as a backend of the same domain t
       </tr>
       <tr>
           <td><code>prefix</code></td>
-          <td><code>/app</code></td>
+          <td><code>/app</code> <!-- raw HTML omitted --> <code>/app/</code></td>
           <td><code>/app</code> <!-- raw HTML omitted --> <code>/app/</code> <!-- raw HTML omitted --> <code>/app/1</code></td>
           <td><code>/App</code> <!-- raw HTML omitted --> <code>/app1</code></td>
       </tr>
@@ -4861,13 +4886,13 @@ or any other compatible implementation running as a backend of the same domain t
           <td><code>regex</code></td>
           <td><code>/app[0-9]+$</code></td>
           <td><code>/app1</code> <!-- raw HTML omitted --> <code>/app15</code></td>
-          <td><code>/App1</code> <!-- raw HTML omitted --> <code>/app15/</code></td>
+          <td><code>/App1</code> <!-- raw HTML omitted --> <code>/app15/</code> <!-- raw HTML omitted --> <code>/app25xx</code></td>
       </tr>
       <tr>
           <td><code>regex</code></td>
           <td><code>/app[0-9]+/?</code></td>
           <td><code>/app1</code> <!-- raw HTML omitted --> <code>/app15/</code> <!-- raw HTML omitted --> <code>/app25/sub</code></td>
-          <td><code>/App15</code> <!-- raw HTML omitted --> <code>/app/25sub</code></td>
+          <td><code>/App15</code> <!-- raw HTML omitted --> <code>/app/25sub</code> <!-- raw HTML omitted --> <code>/app25xx/sub</code></td>
       </tr>
   </tbody>
 </table>
@@ -5198,8 +5223,9 @@ below will not be used.</p>
       </tr>
   </tbody>
 </table>
-<p>Configures how URI of the requests should be rewritten before send the request to the backend.
-The following table shows some examples:</p>
+<p>Configures how URI of the requests should be rewritten before send the request to the backend.</p>
+<p>If <a href="#path-type"><code>path-type</code></a> is <code>regex</code>, HAProxy Ingress copies ingress path and <code>rewrite-target</code> verbatim, adding only an implicit <code>^</code> anchor in front of the path, just like in the regex path match.</p>
+<p>The following table shows some examples for non regex paths:</p>
 <table>
   <thead>
       <tr>
@@ -6282,7 +6308,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 </ul>
 
 	<div class="td-page-meta__lastmod">
-  Last modified September 10, 2025: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/76a70ec3627ece3d3d0b987aa5f6a511e28e6c6d">add backend scoped stick tables (#1293) (76a70ec3)</a>
+  Last modified March 10, 2026: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/f1361cc79c0e2a628ef04f8428a2bdef61ac1b4c">fix rewrite path handling for regex paths (#1411) (f1361cc7)</a>
 </div>
 
 </div>
