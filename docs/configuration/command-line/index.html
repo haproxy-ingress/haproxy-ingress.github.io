@@ -31,7 +31,7 @@
   <meta itemprop="name" content="Command-line options">
   <meta itemprop="description" content="Static command-line configuration options.">
   <meta itemprop="dateModified" content="2025-12-16T14:10:14-03:00">
-  <meta itemprop="wordCount" content="4613">
+  <meta itemprop="wordCount" content="4874">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Command-line options">
   <meta name="twitter:description" content="Static command-line configuration options.">
@@ -76,11 +76,11 @@
       </li>
       <li class="nav-item dropdown d-none d-lg-block">
         <div class="dropdown">
-  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">v0.15 (latest)</a>
+  <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">v0.16 (latest)</a>
   <ul class="dropdown-menu">
     <li><a class="dropdown-item" href="/v0.17/docs">v0.17 (alpha)</a></li>
-    <li><a class="dropdown-item" href="/v0.16/docs">v0.16 (beta)</a></li>
-    <li><a class="dropdown-item" href="/v0.15/docs">v0.15 (latest)</a></li>
+    <li><a class="dropdown-item" href="/v0.16/docs">v0.16 (latest)</a></li>
+    <li><a class="dropdown-item" href="/v0.15/docs">v0.15</a></li>
     <li><a class="dropdown-item" href="/v0.14/docs">v0.14</a></li>
     <li><a class="dropdown-item" href="/v0.13/docs">v0.13</a></li>
     <li><a class="dropdown-item" href="/v0.12/docs">v0.12</a></li>
@@ -231,6 +231,7 @@
     <li><a href="#election-id">election-id</a></li>
     <li><a href="#enable-endpointslices-api">enable-endpointslices-api</a></li>
     <li><a href="#force-namespace-isolation">force-namespace-isolation</a></li>
+    <li><a href="#haproxy-grace-period">haproxy-grace-period</a></li>
     <li><a href="#ingress-class">Ingress Class</a></li>
     <li><a href="#kubeconfig">kubeconfig</a></li>
     <li><a href="#local-filesystem-prefix">local-filesystem-prefix</a></li>
@@ -427,6 +428,12 @@
           <td>v0.10</td>
       </tr>
       <tr>
+          <td><a href="#ingress-class"><code>--disable-ingress-class-api</code></a></td>
+          <td>[true|false]</td>
+          <td><code>false</code></td>
+          <td>v0.16</td>
+      </tr>
+      <tr>
           <td><a href="#disable-pod-list"><code>--disable-pod-list</code></a></td>
           <td>[true|false]</td>
           <td><code>false</code></td>
@@ -449,6 +456,12 @@
           <td>[true|false]</td>
           <td><code>false</code></td>
           <td></td>
+      </tr>
+      <tr>
+          <td><a href="#haproxy-grace-period"><code>--haproxy-grace-period</code></a></td>
+          <td>time</td>
+          <td><code>20s</code></td>
+          <td>v0.16</td>
       </tr>
       <tr>
           <td><a href="#stats"><code>--health-check-path</code></a></td>
@@ -869,8 +882,9 @@ deprecation. The default behavior is to log all API server warnings.</p>
 <ul>
 <li><code>--enable-endpointslices-api</code></li>
 </ul>
-<p>Since v0.14</p>
-<p>Uses EndpointSlices API info, rather than Endpoints API, to fetch service endpoints info. It is disabled on v0.14, and defaults to enabled on v0.15. EndpointSlices API was stablised from Kubernetes v1.21.</p>
+<p>Since v0.14, deprecated since v0.16</p>
+<p>Uses EndpointSlices API info, rather than Endpoints API, to fetch service endpoints info.</p>
+<p>Endpoints API is deprecated since Kubernetes 1.33, and HAProxy Ingress only supports EndpointSlices API since v0.16. This option is ignored if configured.</p>
 <hr>
 <h2 id="force-namespace-isolation">force-namespace-isolation<a class="td-heading-self-link" href="#force-namespace-isolation" aria-label="Heading self-link"></a></h2>
 <ul>
@@ -887,6 +901,19 @@ deprecated.</p>
 <ul>
 <li><a href="#allow-cross-namespace"><code>--allow-cross-namespace</code></a> command-line option</li>
 <li><a href="#watch-namespace"><code>--watch-namespace</code></a> command-line option</li>
+</ul>
+<hr>
+<h2 id="haproxy-grace-period">haproxy-grace-period<a class="td-heading-self-link" href="#haproxy-grace-period" aria-label="Heading self-link"></a></h2>
+<ul>
+<li><code>--haproxy-grace-period</code></li>
+</ul>
+<p>Since v0.16</p>
+<p>Defines the duration HAProxy should wait all requests to finish before terminates its process. This option is only used on embedded, master-worker configured proxy, see <a href="#master-worker"><code>--master-worker</code></a>. Daemon mode cannot have grace period configured, and external mode should be configured directly on HAProxy container. Defaults to <code>20s</code>.</p>
+<p>This option should be below the controller shutdown timeout, since it will terminate the controller process despite any other internal grace period.</p>
+<p>On <a href="/docs/examples/external-haproxy/">External HAProxy</a>, its container already uses SIGUSR1 as the stop signal, which makes HAProxy to wait for active connections to finish, just need to configure the container&rsquo;s grace period if need to change from its default of 30s.</p>
+<p>See also:</p>
+<ul>
+<li><a href="#shutdown-timeout"><code>--shutdown-timeout</code></a> command-line option.</li>
 </ul>
 <hr>
 <h2 id="ingress-class">Ingress Class<a class="td-heading-self-link" href="#ingress-class" aria-label="Heading self-link"></a></h2>
@@ -912,6 +939,7 @@ kubernetes.io/ingress.class annotation if both are defined and conflicting.</li>
 that doesn&rsquo;t declare neither the <code>kubernetes.io/ingress.class</code> annotation nor the
 <code>&lt;ingress&gt;.spec.ingressClassName</code> field. The default since v0.12 is to ignore ingress without class
 annotation and class name.</li>
+<li><code>--disable-ingress-class-api</code>: Since v0.16. Configures controller to not list or watch IngressClass API, useful on deployments that cannot allow controller to have cluster permission. If configured, the only way to watch ingress resources is using the deprecated, but still supported <code>kubernetes.io/ingress.class</code> annotation, or use <code>--watch-ingress-without-class</code>.</li>
 <li><code>--ignore-ingress-without-class</code>: this option is ignored since v0.12. Use
 <code>--watch-ingress-without-class</code> instead.</li>
 </ul>
@@ -1098,10 +1126,13 @@ instead of the external IP address. Defaults to <code>false</code>. This option 
 <ul>
 <li><code>--shutdown-timeout</code></li>
 </ul>
-<p>Defines the amount of time the controller should wait, after receiving a
-SIGINT or a SIGTERM, for all of its internal services to gracefully stop before
-shutting down the process. It starts to count after &ndash;wait-before-shutdown has
-been passed, if configured. Defaults to <code>25s</code>.</p>
+<p>Defines the amount of time the controller should wait, after receiving a SIGUSR1, SIGINT or SIGTERM, for all of its internal services to gracefully stop before shutting down the process. It starts to count after <a href="#wait-before-shutdown"><code>--wait-before-shutdown</code></a> has been passed, if configured. Defaults to <code>25s</code>.</p>
+<p>If changing its default value, consider also to change <a href="#haproxy-grace-period"><code>--haproxy-grace-period</code></a> to at most <code>1s</code> less than the shutdown timeout. If changing the shutdown timeout to <code>30s</code> or more, remember to also configure controller&rsquo;s pod grace period to at least <code>1s</code> more than the sum of the <code>--wait-before-shutdown</code> and the <code>--shutdown-timeout</code>.</p>
+<p>See also:</p>
+<ul>
+<li><a href="#wait-before-shutdown"><code>--wait-before-shutdown</code></a> command-line option.</li>
+<li><a href="#haproxy-grace-period"><code>--haproxy-grace-period</code></a> command-line option.</li>
+</ul>
 <hr>
 <h2 id="sort-backends">sort-backends<a class="td-heading-self-link" href="#sort-backends" aria-label="Heading self-link"></a></h2>
 <ul>
@@ -1307,6 +1338,11 @@ the certificate declared in the <code>secretName</code> ignoring if the certific
 <p>If argument <code>--wait-before-shutdown</code> is defined, controller will wait defined time in seconds
 before it starts shutting down components when SIGTERM was received. By default, it&rsquo;s 0, which means
 the controller starts shutting down itself right after signal was sent.</p>
+<p>This option, along with <a href="#shutdown-timeout"><code>--shutdown-timeout</code></a>, should be lesser than the controller&rsquo;s pod grace period, otherwise controller should be SIGKILLed before its timeout expires.</p>
+<p>See also:</p>
+<ul>
+<li><a href="#shutdown-timeout"><code>--shutdown-timeout</code></a> command-line option.</li>
+</ul>
 <hr>
 <h2 id="wait-before-update">wait-before-update<a class="td-heading-self-link" href="#wait-before-update" aria-label="Heading self-link"></a></h2>
 <ul>
@@ -1338,7 +1374,7 @@ configuration <a href="/docs/configuration/gateway-api/">doc</a>.</p>
 single namespace.</p>
 
 	<div class="td-page-meta__lastmod">
-  Last modified December 16, 2025: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/48f2c0f0e5412565d269f4a105740a802d9c8115">add connection timeout command-line option (#1348) (48f2c0f0)</a>
+  Last modified December 16, 2025: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/978f2ddb71c5c7066e50101cd9e34c6f22626344">add connection timeout command-line option (#1348) (978f2ddb)</a>
 </div>
 
 </div>
