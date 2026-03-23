@@ -5163,7 +5163,7 @@ Wildcard hostnames and alias-regex match incoming requests using the regex path 
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;begin&lt;/code&gt;: Case insensitive, matches the beginning of the path from the incoming request. This is the default value if not declared.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;exact&lt;/code&gt;: Case sensitive, matches the whole path. Implements the &lt;code&gt;Exact&lt;/code&gt; path type from the ingress spec.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;prefix&lt;/code&gt;: Case sensitive, matches a whole subdirectory from the incoming path. A declared &lt;code&gt;/app&lt;/code&gt; path matches &lt;code&gt;/app&lt;/code&gt; and &lt;code&gt;/app/1&lt;/code&gt; but does not match &lt;code&gt;/app1&lt;/code&gt;. Implements the &lt;code&gt;Prefix&lt;/code&gt; path type from the ingress spec.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;prefix&lt;/code&gt;: Case sensitive, matches a whole subdirectory from the incoming path. A declared &lt;code&gt;/app&lt;/code&gt; or &lt;code&gt;/app/&lt;/code&gt; path has the same behavior and matches &lt;code&gt;/app&lt;/code&gt;, &lt;code&gt;/app/&lt;/code&gt; and &lt;code&gt;/app/1&lt;/code&gt; but does not match &lt;code&gt;/app1&lt;/code&gt;. Implements the &lt;code&gt;Prefix&lt;/code&gt; path type from the ingress spec.&lt;/li&gt;
 &lt;li&gt;&lt;code&gt;regex&lt;/code&gt;: Case sensitive, matches the incoming path using POSIX extended regular expression. The regular expression has an implicit start &lt;code&gt;^&lt;/code&gt; and no ending &lt;code&gt;$&lt;/code&gt; boundary, so a declared &lt;code&gt;/app[0-9]+/?&lt;/code&gt; will match paths starting with this pattern. Add a trailing &lt;code&gt;$&lt;/code&gt; if an exact match is desired.&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -5173,9 +5173,9 @@ Wildcard hostnames and alias-regex match incoming requests using the regex path 
 &lt;thead&gt;
 &lt;tr&gt;
 &lt;th&gt;Path type&lt;/th&gt;
-&lt;th&gt;Request&lt;/th&gt;
-&lt;th&gt;Match&lt;/th&gt;
-&lt;th&gt;Do not match&lt;/th&gt;
+&lt;th&gt;Ingress path&lt;/th&gt;
+&lt;th&gt;Matching requests&lt;/th&gt;
+&lt;th&gt;No matching requests&lt;/th&gt;
 &lt;/tr&gt;
 &lt;/thead&gt;
 
@@ -5184,7 +5184,7 @@ Wildcard hostnames and alias-regex match incoming requests using the regex path 
 &lt;td&gt;&lt;code&gt;begin&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;/app&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;/App&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app/1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app1&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;/ap&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/ap&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app/&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
@@ -5196,7 +5196,7 @@ Wildcard hostnames and alias-regex match incoming requests using the regex path 
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;prefix&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;/app&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/app&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app/&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;/app&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app/&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app/1&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;/App&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app1&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
@@ -5212,14 +5212,14 @@ Wildcard hostnames and alias-regex match incoming requests using the regex path 
 &lt;td&gt;&lt;code&gt;regex&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;/app[0-9]+$&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;/app1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app15&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;/App1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app15/&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/App1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app15/&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app25xx&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 
 &lt;tr&gt;
 &lt;td&gt;&lt;code&gt;regex&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;/app[0-9]+/?&lt;/code&gt;&lt;/td&gt;
 &lt;td&gt;&lt;code&gt;/app1&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app15/&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app25/sub&lt;/code&gt;&lt;/td&gt;
-&lt;td&gt;&lt;code&gt;/App15&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app/25sub&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/App15&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app/25sub&lt;/code&gt; &lt;br/&gt; &lt;code&gt;/app25xx/sub&lt;/code&gt;&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -5482,8 +5482,11 @@ spec:
 &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;p&gt;Configures how URI of the requests should be rewritten before send the request to the backend.
-The following table shows some examples:&lt;/p&gt;
+&lt;p&gt;Configures how URI of the requests should be rewritten before send the request to the backend.&lt;/p&gt;
+
+&lt;p&gt;If &lt;a href=&#34;#path-type&#34;&gt;&lt;code&gt;path-type&lt;/code&gt;&lt;/a&gt; is &lt;code&gt;regex&lt;/code&gt;, HAProxy Ingress copies ingress path and &lt;code&gt;rewrite-target&lt;/code&gt; verbatim, adding only an implicit &lt;code&gt;^&lt;/code&gt; anchor in front of the path, just like in the regex path match.&lt;/p&gt;
+
+&lt;p&gt;The following table shows some examples for non regex paths:&lt;/p&gt;
 
 &lt;table&gt;
 &lt;thead&gt;

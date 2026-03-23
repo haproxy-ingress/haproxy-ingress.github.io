@@ -25,14 +25,14 @@
 " />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/v0.14/docs/configuration/keys/" />
-<meta property="article:modified_time" content="2024-09-22T19:14:10-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
+<meta property="article:modified_time" content="2026-03-10T08:00:13-03:00" /><meta property="og:site_name" content="HAProxy Ingress" />
 <meta itemprop="name" content="Configuration keys">
 <meta itemprop="description" content="List of all annotations and global ConfigMap options.
 ">
 
 
-<meta itemprop="dateModified" content="2024-09-22T19:14:10-03:00" />
-<meta itemprop="wordCount" content="17933">
+<meta itemprop="dateModified" content="2026-03-10T08:00:13-03:00" />
+<meta itemprop="wordCount" content="17981">
 
 
 
@@ -5556,7 +5556,7 @@ Wildcard hostnames and alias-regex match incoming requests using the regex path 
 <ul>
 <li><code>begin</code>: Case insensitive, matches the beginning of the path from the incoming request. This is the default value if not declared.</li>
 <li><code>exact</code>: Case sensitive, matches the whole path. Implements the <code>Exact</code> path type from the ingress spec.</li>
-<li><code>prefix</code>: Case sensitive, matches a whole subdirectory from the incoming path. A declared <code>/app</code> path matches <code>/app</code> and <code>/app/1</code> but does not match <code>/app1</code>. Implements the <code>Prefix</code> path type from the ingress spec.</li>
+<li><code>prefix</code>: Case sensitive, matches a whole subdirectory from the incoming path. A declared <code>/app</code> or <code>/app/</code> path has the same behavior and matches <code>/app</code>, <code>/app/</code> and <code>/app/1</code> but does not match <code>/app1</code>. Implements the <code>Prefix</code> path type from the ingress spec.</li>
 <li><code>regex</code>: Case sensitive, matches the incoming path using POSIX extended regular expression. The regular expression has an implicit start <code>^</code> and no ending <code>$</code> boundary, so a declared <code>/app[0-9]+/?</code> will match paths starting with this pattern. Add a trailing <code>$</code> if an exact match is desired.</li>
 </ul>
 
@@ -5566,9 +5566,9 @@ Wildcard hostnames and alias-regex match incoming requests using the regex path 
 <thead>
 <tr>
 <th>Path type</th>
-<th>Request</th>
-<th>Match</th>
-<th>Do not match</th>
+<th>Ingress path</th>
+<th>Matching requests</th>
+<th>No matching requests</th>
 </tr>
 </thead>
 
@@ -5577,7 +5577,7 @@ Wildcard hostnames and alias-regex match incoming requests using the regex path 
 <td><code>begin</code></td>
 <td><code>/app</code></td>
 <td><code>/App</code> <br/> <code>/app</code> <br/> <code>/app/1</code> <br/> <code>/app1</code></td>
-<td><code>/ap</code></td>
+<td><code>/ap</code> <br/> <code>/app/</code></td>
 </tr>
 
 <tr>
@@ -5589,7 +5589,7 @@ Wildcard hostnames and alias-regex match incoming requests using the regex path 
 
 <tr>
 <td><code>prefix</code></td>
-<td><code>/app</code></td>
+<td><code>/app</code> <br/> <code>/app/</code></td>
 <td><code>/app</code> <br/> <code>/app/</code> <br/> <code>/app/1</code></td>
 <td><code>/App</code> <br/> <code>/app1</code></td>
 </tr>
@@ -5605,14 +5605,14 @@ Wildcard hostnames and alias-regex match incoming requests using the regex path 
 <td><code>regex</code></td>
 <td><code>/app[0-9]+$</code></td>
 <td><code>/app1</code> <br/> <code>/app15</code></td>
-<td><code>/App1</code> <br/> <code>/app15/</code></td>
+<td><code>/App1</code> <br/> <code>/app15/</code> <br/> <code>/app25xx</code></td>
 </tr>
 
 <tr>
 <td><code>regex</code></td>
 <td><code>/app[0-9]+/?</code></td>
 <td><code>/app1</code> <br/> <code>/app15/</code> <br/> <code>/app25/sub</code></td>
-<td><code>/App15</code> <br/> <code>/app/25sub</code></td>
+<td><code>/App15</code> <br/> <code>/app/25sub</code> <br/> <code>/app25xx/sub</code></td>
 </tr>
 </tbody>
 </table>
@@ -5875,8 +5875,11 @@ spec:
 </tbody>
 </table>
 
-<p>Configures how URI of the requests should be rewritten before send the request to the backend.
-The following table shows some examples:</p>
+<p>Configures how URI of the requests should be rewritten before send the request to the backend.</p>
+
+<p>If <a href="#path-type"><code>path-type</code></a> is <code>regex</code>, HAProxy Ingress copies ingress path and <code>rewrite-target</code> verbatim, adding only an implicit <code>^</code> anchor in front of the path, just like in the regex path match.</p>
+
+<p>The following table shows some examples for non regex paths:</p>
 
 <table>
 <thead>
@@ -7184,7 +7187,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 
 	
 	
-	<div class="text-muted mt-5 pt-3 border-top">Last modified September 22, 2024: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/850961f83b87a8c5e9f2ec8477c8246c83070391">support list of server crt on tls tcp service (850961f8)</a>
+	<div class="text-muted mt-5 pt-3 border-top">Last modified March 10, 2026: <a  href="https://github.com/jcmoraisjr/haproxy-ingress/commit/5efe5e58bb51a12145c84205013e7d6746bf1c92">fix rewrite path handling for regex paths (#1411) (5efe5e58)</a>
 </div>
 </div>
 
