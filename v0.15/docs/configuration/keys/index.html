@@ -26,12 +26,12 @@
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="docs">
-    <meta property="article:modified_time" content="2026-03-10T08:00:13-03:00">
+    <meta property="article:modified_time" content="2026-04-30T12:50:50+02:00">
 
   <meta itemprop="name" content="Configuration keys">
   <meta itemprop="description" content="List of all annotations and global ConfigMap options.">
-  <meta itemprop="dateModified" content="2026-03-10T08:00:13-03:00">
-  <meta itemprop="wordCount" content="18627">
+  <meta itemprop="dateModified" content="2026-04-30T12:50:50+02:00">
+  <meta itemprop="wordCount" content="18651">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Configuration keys">
   <meta name="twitter:description" content="List of all annotations and global ConfigMap options.">
@@ -2435,9 +2435,9 @@ context path, so it needs to be declared in the same Ingress that configures it.
 <li><code>auth-url</code>: Configures the endpoint(s) of the authentication service. All requests made to the target backend server will be validated by the authentication service before continue, which should respond with <code>2xx</code> HTTP status code, otherwise the request is considered as failed. In the case of a failure, the backend server is not used and the client receives the response from the authentication service.</li>
 <li><code>auth-external-placement</code>: Defines where the external service call should be configured. Options are <code>backend</code> and <code>frontend</code>. Default value is <code>backend</code> and this is the value that has the better performance. Use <code>frontend</code> if the external service create HTTP headers used on early stages, e.g. <a href="#http-match">HTTP header routing constraints</a>. Note that placing the external authentication configuration in the frontend comes with a performance penalty, because all the incomming requests will need to evaluate the ACLs of this configuration. Avoid placing too much (dozens) paths in the frontend on high loaded proxies.</li>
 <li><code>auth-method</code>: Configures the HTTP method used in the request to the external authentication service. Use an asterisk <code>*</code> to copy the same method used in the client request. The default value is <code>GET</code>.</li>
-<li><code>auth-headers-request</code>: Configures a comma-separated list of header names that should be copied from the client to the authentication service. All HTTP headers will be copied if not declared.</li>
-<li><code>auth-headers-succeed</code>: Configures a comma-separated list of header names that should be copied from the authentication service to the backend server if the authentication succeed. All HTTP headers will be copied if not declared.</li>
-<li><code>auth-headers-fail</code>: Configures a comma-separated list of header names that should be copied from the authentication service to the client if the authentication fail. This option is ignored if <code>auth-signin</code> is used. All HTTP headers will be copied if not declared.</li>
+<li><code>auth-headers-request</code>: Configures a comma-separated list of header names that should be copied from the client to the authentication service. The match is done in a case-insensitive way. All HTTP headers will be copied if not declared.</li>
+<li><code>auth-headers-succeed</code>: Configures a comma-separated list of header names that should be copied from the authentication service to the backend server if the authentication succeed. The match is done in a case-insensitive way. All HTTP headers will be copied if not declared.</li>
+<li><code>auth-headers-fail</code>: Configures a comma-separated list of header names that should be copied from the authentication service to the client if the authentication fail. The match is done in a case-insensitive way. This option is ignored if <code>auth-signin</code> is used. All HTTP headers will be copied if not declared.</li>
 <li><code>auth-signin</code>: Optional, configures the endpoint of the sign in server used to redirect failed requests. The content is parsed by haproxy as a <a href="https://docs.haproxy.org/2.6/configuration.html#8.2.4"target="_blank" rel="noopener">log-format</a> string and the result is copied verbatim to the <code>Location</code> header of a HTTP 302 response. The default behavior is to use the authentication service response.</li>
 <li><code>auth-proxy</code>: Optional, changes the name of a frontend proxy and a free TCP port range, used by <code>auth-request.lua</code> script to query the external authentication endpoint.</li>
 </ul>
@@ -6017,7 +6017,7 @@ If the WAF is in <code>detect</code> mode the requests are passed to ModSecurity
 </ul>
 
 	<div class="td-page-meta__lastmod">
-  Last modified March 10, 2026: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/5e527394e59d049e57602f95e433f5f04012be10">fix rewrite path handling for regex paths (#1411) (5e527394)</a>
+  Last modified April 30, 2026: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/6c0045c5cd6513c48c27e320d9810d2a9148607f">convert user-provided auth external header names to lowercase (#1429) (6c0045c5)</a>
 </div>
 
 </div>
