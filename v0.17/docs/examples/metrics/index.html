@@ -26,12 +26,12 @@
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="docs">
-    <meta property="article:modified_time" content="2025-03-15T17:39:07-03:00">
+    <meta property="article:modified_time" content="2026-03-23T07:31:56-03:00">
 
   <meta itemprop="name" content="Metrics">
   <meta itemprop="description" content="Demonstrate how to collect and expose ingress controller and haproxy metrics.">
-  <meta itemprop="dateModified" content="2025-03-15T17:39:07-03:00">
-  <meta itemprop="wordCount" content="878">
+  <meta itemprop="dateModified" content="2026-03-23T07:31:56-03:00">
+  <meta itemprop="wordCount" content="908">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Metrics">
   <meta name="twitter:description" content="Demonstrate how to collect and expose ingress controller and haproxy metrics.">
@@ -255,9 +255,11 @@
 <h2 id="configure-prometheus-operator">Configure Prometheus Operator<a class="td-heading-self-link" href="#configure-prometheus-operator" aria-label="Heading self-link"></a></h2>
 <p>This section can be skipped if the Kubernetes cluster has already a running Prometheus Operator.</p>
 <p>HAProxy Ingress installation configures Prometheus using a ServiceMonitor custom resource. This resource is used by <a href="https://prometheus-operator.dev"target="_blank" rel="noopener">Prometheus Operator</a> to configure Prometheus instances. The following steps deploy Prometheus Operator via <a href="https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack"target="_blank" rel="noopener"><code>kube-prometheus-stack</code></a> Helm chart.</p>
-<p>Create a file named <code>prometheus-operator-values.yaml</code> - change both hostnames with a name that resolves to the Kubernetes cluster:</p>
+<p>Create a file named <code>prometheus-operator-values.yaml</code> - change both hostnames with a name that resolves to the Kubernetes cluster, and optionally the admin user and password:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">grafana</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">adminUser</span><span class="p">:</span><span class="w"> </span><span class="l">admin</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">adminPassword</span><span class="p">:</span><span class="w"> </span><span class="l">prom-operator</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">ingress</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">ingressClassName</span><span class="p">:</span><span class="w"> </span><span class="l">haproxy</span><span class="w">
@@ -269,7 +271,8 @@
 </span></span></span></code></pre></div><p>Add <code>kube-prometheus-stack</code> helm repo:</p>
 <pre tabindex="0"><code>helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 </code></pre><p>Install the chart:</p>
-<pre tabindex="0"><code>helm install prometheus prometheus-community/kube-prometheus-stack\
+<pre tabindex="0"><code>helm upgrade prometheus prometheus-community/kube-prometheus-stack\
+  --install\
   --create-namespace --namespace monitoring\
   -f prometheus-operator-values.yaml
 </code></pre>
@@ -334,9 +337,12 @@
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">targetLabel</span><span class="p">:</span><span class="w"> </span><span class="l">proxy</span><span class="w">
 </span></span></span></code></pre></div><h2 id="configure-the-dashboard">Configure the dashboard<a class="td-heading-self-link" href="#configure-the-dashboard" aria-label="Heading self-link"></a></h2>
 <p>Import <a href="https://grafana.com/grafana/dashboards/12056"target="_blank" rel="noopener">this</a> Grafana dashboard. If Grafana was deployed using the steps provided in this walkthrough:</p>
+<blockquote>
+<p>Minimum HAProxy Ingress version is v0.14, use revision 3 if using on an older one.</p>
+</blockquote>
 <ul>
 <li>Open Grafana page - the URL is the same provided in the <code>prometheus-operator-values.yaml</code> file and should resolve to the ingress deployment</li>
-<li>Log in to Grafana, user is <code>admin</code> and the first password is <code>prom-operator</code></li>
+<li>Log in to Grafana, the <code>prometheus-operator-values.yaml</code> file configures user as <code>admin</code> and the password as <code>prom-operator</code></li>
 <li>Click <code>Dashboards</code>, <code>New</code>, <code>Import</code>, type <code>12056</code> as the Grafana.com ID, Load, select a Prometheus datasource, Import</li>
 </ul>
 <p>If everything worked as expected, the dashboard should look like this:</p>
@@ -389,7 +395,7 @@ echo &#34;GET https://$IP&#34; |\
   vegeta report
 </code></pre>
 	<div class="td-page-meta__lastmod">
-  Last modified March 15, 2025: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/a71e6867cb255fad06ceb4c3af1657795f144f61">improve metrics doc and configuration (a71e6867)</a>
+  Last modified March 23, 2026: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/5607dce154a51b9af8747c86aad1a6d7f50cbe9d">update metrics page and dashboard (#1435) (5607dce1)</a>
 </div>
 
 </div>

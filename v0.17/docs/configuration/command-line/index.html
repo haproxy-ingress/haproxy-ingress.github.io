@@ -26,12 +26,12 @@
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="docs">
-    <meta property="article:modified_time" content="2025-12-16T14:10:14-03:00">
+    <meta property="article:modified_time" content="2026-05-17T10:40:40-03:00">
 
   <meta itemprop="name" content="Command-line options">
   <meta itemprop="description" content="Static command-line configuration options.">
-  <meta itemprop="dateModified" content="2025-12-16T14:10:14-03:00">
-  <meta itemprop="wordCount" content="4931">
+  <meta itemprop="dateModified" content="2026-05-17T10:40:40-03:00">
+  <meta itemprop="wordCount" content="5172">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Command-line options">
   <meta name="twitter:description" content="Static command-line configuration options.">
@@ -234,6 +234,7 @@
     <li><a href="#force-namespace-isolation">force-namespace-isolation</a></li>
     <li><a href="#haproxy-grace-period">haproxy-grace-period</a></li>
     <li><a href="#ingress-class">Ingress Class</a></li>
+    <li><a href="#ip-mode">ip-mode</a></li>
     <li><a href="#kubeconfig">kubeconfig</a></li>
     <li><a href="#local-filesystem-prefix">local-filesystem-prefix</a></li>
     <li><a href="#logging">Logging</a></li>
@@ -263,6 +264,7 @@
     <li><a href="#wait-before-shutdown">wait-before-shutdown</a></li>
     <li><a href="#wait-before-update">wait-before-update</a></li>
     <li><a href="#watch-gateway">watch-gateway</a></li>
+    <li><a href="#watch-ingress">watch-ingress</a></li>
     <li><a href="#watch-namespace">watch-namespace</a></li>
   </ul>
 </nav>
@@ -495,6 +497,12 @@
           <td>v0.13.5</td>
       </tr>
       <tr>
+          <td><a href="#ip-mode"><code>--ip-mode</code></a></td>
+          <td>[v4|v6|v4v6|lo|node|auto]</td>
+          <td><code>auto</code></td>
+          <td>v0.17</td>
+      </tr>
+      <tr>
           <td><a href="#kubeconfig"><code>--kubeconfig</code></a></td>
           <td>/path/to/kubeconfig</td>
           <td>in cluster config</td>
@@ -713,8 +721,14 @@
       <tr>
           <td><a href="#watch-gateway"><code>--watch-gateway</code></a></td>
           <td>[true|false]</td>
-          <td><code>false</code></td>
+          <td><code>true</code></td>
           <td>v0.13</td>
+      </tr>
+      <tr>
+          <td><a href="#watch-ingress"><code>--watch-ingress</code></a></td>
+          <td>[true|false]</td>
+          <td><code>true</code></td>
+          <td>v0.17</td>
       </tr>
       <tr>
           <td><a href="#ingress-class"><code>--watch-ingress-without-class</code></a></td>
@@ -948,6 +962,26 @@ annotation and class name.</li>
 <ul>
 <li><a href="/v0.17/docs/configuration/keys/#class-matter">Class matter</a> in the Configuration Keys doc</li>
 <li><a href="https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-class"target="_blank" rel="noopener">https://kubernetes.io/docs/concepts/services-networking/ingress/#ingress-class</a></li>
+</ul>
+<hr>
+<h2 id="ip-mode">ip-mode<a class="td-heading-self-link" href="#ip-mode" aria-label="Heading self-link"></a></h2>
+<ul>
+<li><code>--ip-mode</code></li>
+</ul>
+<p>Since v0.17</p>
+<p>Defines the IP mode used on frontends (listening bind) if not configured in the frontend binding, and loopback addresses created by HAProxy Ingress (auth-proxy and empty slots). Defaults to <code>auto</code> if not configured.</p>
+<p>The following options are available:</p>
+<ul>
+<li><code>v4</code>: uses only IPv4 on default listening bind configurations, and IPv4 on loopback addresses.</li>
+<li><code>v6</code>: uses only IPv6 on default listening bind configurations, and IPv6 on loopback addresses.</li>
+<li><code>v4v6</code>: uses both IPv4 and IPv6 on default listening bind configurations, and IPv4 on loopback addresses.</li>
+<li><code>lo</code>: uses IP addresses of the loopback interface to determine the IP mode. The initialization fails in case of a failure finding and reading the loopback interface.</li>
+<li><code>node</code>: uses both Internal and External IP addresses of the Node where controller is running to determine the IP mode. The initialization fails in case the node status cannot be read.</li>
+<li><code>auto</code>: same as node, but defaults to IPv4 instead of failing the initialization in case the node status cannot be read.</li>
+</ul>
+<p>See also:</p>
+<ul>
+<li><a href="/v0.17/docs/configuration/keys/#bind">Bind</a> configuration keys</li>
 </ul>
 <hr>
 <h2 id="kubeconfig">kubeconfig<a class="td-heading-self-link" href="#kubeconfig" aria-label="Heading self-link"></a></h2>
@@ -1367,6 +1401,13 @@ restarted if the CRDs are installed after starting the controller. See also the 
 configuration <a href="/v0.17/docs/configuration/gateway-api/">doc</a>.</p>
 <p>When enabled, <code>--watch-gateway</code> enforces a leader election. A leader must be elected to update Gateway API status. See also <a href="#election-id"><code>--election-id</code></a>.</p>
 <hr>
+<h2 id="watch-ingress">watch-ingress<a class="td-heading-self-link" href="#watch-ingress" aria-label="Heading self-link"></a></h2>
+<ul>
+<li><code>--watch-ingress</code></li>
+</ul>
+<p>Since v0.17</p>
+<p>Enables Ingress API watch and parse. This option is enabled by default. Add <code>--watch-ingress=false</code> option to instruct the controller to not watch, parse and synchronize any ingress resource. Disabling this configuration is similar to not have neither an ingress class nor the ingress class annotation configured, with the advantage of saving memory by not caching or watching ingress resources.</p>
+<hr>
 <h2 id="watch-namespace">watch-namespace<a class="td-heading-self-link" href="#watch-namespace" aria-label="Heading self-link"></a></h2>
 <ul>
 <li><code>--watch-namespace</code></li>
@@ -1376,7 +1417,7 @@ configuration <a href="/v0.17/docs/configuration/gateway-api/">doc</a>.</p>
 single namespace.</p>
 
 	<div class="td-page-meta__lastmod">
-  Last modified December 16, 2025: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/8364b3fe5e8394011c05cfa7782bc2343891376a">add connection timeout command-line option (#1348) (8364b3fe)</a>
+  Last modified May 17, 2026: <a data-proofer-ignore href="https://github.com/jcmoraisjr/haproxy-ingress/commit/c5b5e97fa897fafa3183f1caf9ee52b3ebcc5d2b">docs: fix watch-ingress entry (c5b5e97f)</a>
 </div>
 
 </div>
